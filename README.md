@@ -8,9 +8,9 @@
       <a href="https://github.com/EaminC/EnvGym/actions" alt="Build status">
     <img src="https://img.shields.io/github/actions/workflow/status/EaminC/EnvGym/build.yml?branch=main" />
   </a>
-    <a href="https://semver.org" alt="Version">
-        <img src="https://img.shields.io/github/v/release/EaminC/EnvGym" />
-    </a>
+  <a href="https://github.com/EaminC/EnvGym/releases" alt="Latest Version">
+  <img src="https://img.shields.io/github/v/release/EaminC/EnvGym?label=version" />
+</a>
     <a href="https://google.github.io/styleguide/javaguide.html" alt="Code style">
         <img src="https://img.shields.io/badge/style-Google-blue" />
     </a>
