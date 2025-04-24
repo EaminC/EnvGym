@@ -4,6 +4,24 @@
 <img align="center" src="assets/image.png" width="498" />
 </p>
 
+<p align="center">
+    <a href="https://github.com/EaminC/EnvGym/actions/new" alt="Build status">
+        <img src="https://img.shields.io/github/actions/workflow/status/EaminC/EnvGym/build.yml" />
+    </a>
+    <a href="https://semver.org" alt="Version">
+        <img src="https://img.shields.io/github/v/release/EaminC/EnvGym" />
+    </a>
+    <a href="https://google.github.io/styleguide/javaguide.html" alt="Code style">
+        <img src="https://img.shields.io/badge/style-Google-blue" />
+    </a>
+    <a href="https://dl.acm.org/doi/10.1145/3600006.3613140" alt="SOSP 2023">
+        <img src="https://img.shields.io/badge/2025-ICLR-8A2BE2" />
+    </a>
+    <a href="https://opensource.org/licenses/MIT" alt="License">
+        <img src="https://img.shields.io/github/license/EaminC/EnvGym" />
+    </a>
+</p>
+
 A general multi-agent framework for automated environment construction and reproducibility in research software.
 
 ---
