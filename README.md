@@ -5,9 +5,9 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/EaminC/EnvGym/actions/new" alt="Build status">
-        <img src="https://img.shields.io/github/actions/workflow/status/EaminC/EnvGym/build.yml" />
-    </a>
+      <a href="https://github.com/EaminC/EnvGym/actions" alt="Build status">
+    <img src="https://img.shields.io/github/actions/workflow/status/EaminC/EnvGym/build.yml?branch=main" />
+  </a>
     <a href="https://semver.org" alt="Version">
         <img src="https://img.shields.io/github/v/release/EaminC/EnvGym" />
     </a>
