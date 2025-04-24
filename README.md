@@ -1,7 +1,7 @@
 # EnvGym 🤖🏋️🔧
 
 <p align="center">
-<img align="center" src="assets/image.png" width="498" />
+<img align="center" src="assets/title.png" width="498" />
 </p>
 
 <p align="center">
