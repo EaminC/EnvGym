@@ -91,4 +91,4 @@ We welcome contributions! Please open issues, submit pull requests, or contact u
 
 ## 📜 License
 
-MIT License. See [LICENSE](./LICENSE) for details.
+MIT License. See [LICENSE](./LICENSE.md) for details.
