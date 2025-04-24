@@ -1,6 +1,10 @@
-# EnvGym 🧪🔧
+# EnvGym 🤖🏋️🔧
 
-> A general multi-agent framework for automated environment construction and reproducibility in research software.
+<p align="center">
+<img align="center" src="assets/image.png" width="498" />
+</p>
+
+A general multi-agent framework for automated environment construction and reproducibility in research software.
 
 ---
 
