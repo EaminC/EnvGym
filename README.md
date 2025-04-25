@@ -1,5 +1,4 @@
-# 🤖 EnvGym: Automated Code Environment Construction via General
-Multi-Agent Framework
+# 🤖 EnvGym: Automated Code Environment Construction via General Multi-Agent Framework
 
 <p align="center">
 <img align="center" src="assets/title.png" width="498" />
