@@ -1,9 +1,8 @@
-# EnvGym 🤖🏋️🔧
+# 🤖 EnvGym: A Multi-Agent Framework for Reproducing Research Prototypes
 
 <p align="center">
 <img align="center" src="assets/title.png" width="498" />
 </p>
-
 <p align="center">
       <a href="https://github.com/EaminC/EnvGym/actions" alt="Build status">
     <img src="https://img.shields.io/github/actions/workflow/status/EaminC/EnvGym/build.yml?branch=main" />
@@ -22,67 +21,42 @@
     </a>
 </p>
 
-A general multi-agent framework for automated environment construction and reproducibility in research software.
+EnvGym is a **general multi-agent framework** designed to **automatically construct executable environments** for reproducing research prototypes from **top-tier academic conferences and journals**.Despite the growing interest in reproducibility, setting up research environments is still **time-consuming and error-prone**. EnvGym tackles this by building a **generalizable agentic system** to automate environment setup—reducing human effort while increasing reliability and repeatability.
+
+
+Our system leverages the power of **Large Language Model (LLM) agents** to analyze project instructions, resolve dependencies, configure environments, and validate successful execution.
+
+## 🚀 Key Design
+
+<p align="center">
+<img align="center" src="assets/Image2.jpg" width="498" />
+</p>
+<p align="center">
+<img align="center" src="assets/Image1.jpg" width="498" />
+</p>
+
+
+## 🚀 Key Features
+
+- ⚙️ **Automatic Environment Construction**  
+  Converts research repository instructions into executable environments end-to-end.
+
+- 🤖 **LLM-Powered Agents**  
+  Agents use large language models to interpret README files, resolve dependencies, and run setup commands.
+
+- 📐 **Verifiable Rubrics**  
+  Fine-grained, programmable evaluation criteria to check correctness and completeness of reproduction.
+
+- ✅ **Auto & Human Evaluation**  
+  Automatic LLM-based evaluators, validated by human experts, to ensure execution fidelity.
+
+- 🧩 **Extensible & Modular Design**  
+  Built to easily incorporate new agent workflows and debugging tools.
 
 ---
 
-## 🌐 Overview
 
-**EnvGym** is a general-purpose multi-agent framework designed to automatically construct **executable environments** for reproducing research prototypes from top-tier academic conferences and journals. It leverages **Large Language Model (LLM)** agents to analyze project instructions, resolve dependencies, configure systems, and validate the final setup.
 
-EnvGym aims to provide a scalable, extensible infrastructure to support reproducibility across a wide range of research artifacts.
-
----
-
-## 🧠 Key Components
-
-### ⚙️ EnvAgent
-
-An LLM-driven agent that performs the following tasks:
-
-- Parses installation guides and configuration files
-- Resolves software and system dependencies
-- Executes setup steps in a sandboxed environment
-- Verifies environment health via structured feedback
-
-### 📝 EnvEval
-
-A fine-grained, rubric-based evaluation framework used to:
-
-- Automatically assess the success of agent executions
-- Verify task completion through rule-based and LLM-based validators
-- Support human-in-the-loop expert validation
-
----
-
-## 🚀 Goals
-
-- Automate the end-to-end setup process for research repositories
-- Support robust execution, even in the presence of undocumented or broken configurations
-- Provide standard evaluation rubrics for benchmarking agent behavior
-- Explore fine-tuning, instruction tuning, and reinforcement learning to enhance agent performance on challenging tasks
-
----
-
-## 📈 Current Progress
-
-- ✅ Proof-of-concept prototype using off-the-shelf LLM agents
-- ✅ Successful installation of handcrafted benchmark repositories
-- ⚠️ Ongoing challenges with complex, real-world system-level dependencies
-- 🔧 Upcoming focus on improving agent reasoning for debugging and recovery
-
----
-
-## 🧪 Research Focus
-
-We are actively exploring:
-
-- Robust LLM planning workflows under noisy or partial instructions
-- Diagnosing environment setup failures and repairing buggy code
-- Augmenting existing ReAct-style frameworks for system-level decision making
-- Incorporating feedback from human experts and automated grading mechanisms
-
----
 
 ## 📂 Repository Structure (WIP)
 
