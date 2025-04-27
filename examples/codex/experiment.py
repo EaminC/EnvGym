@@ -7,15 +7,23 @@ import json
 
 # List of interesting repos as local directory paths (edit as needed)
 interesting_repos = [
-    "../Metis"
+    "../../data/Metis"
 ]
 
 # Instruction prompt for Codex CLI
 CODEX_INSTRUCTION = "Follow the README carefully in the repo and set up all the dependency requirements to run the code. Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."
 
-# Log file paths
-LOG_FILE = "experiment_log.txt"
-CONCISE_LOG_FILE = "experiment_concise_log.txt"
+# Create output directory if it doesn't exist
+os.makedirs("output", exist_ok=True)
+
+# Log file paths will be set per repo with timestamp
+def get_log_paths(repo_name):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    base_filename = f"{repo_name}_{timestamp}"
+    return (
+        f"output/{base_filename}_log.txt",
+        f"output/{base_filename}_concise_log.txt"
+    )
 
 # Log truncation length
 LOG_TRUNCATE_LENGTH = 250
@@ -92,9 +100,13 @@ def run_codex_in_repo(repo_path):
         "exception": None,
     }
     abspath = os.path.abspath(repo_path)
+    
+    # Get repo name from path
+    repo_name = os.path.basename(repo_path)
+    log_file, concise_log_file = get_log_paths(repo_name)
 
     # Log the start of the run
-    with open(LOG_FILE, 'a', encoding='utf-8') as f, open(CONCISE_LOG_FILE, 'a', encoding='utf-8') as cf:
+    with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
         f.write("="*80 + "\n")
         start_info = {
             "repo": result['repo'],
@@ -123,11 +135,11 @@ def run_codex_in_repo(repo_path):
         # Start threads to log stdout and stderr in real-time
         stdout_thread = threading.Thread(
             target=log_output, 
-            args=(proc.stdout, LOG_FILE, CONCISE_LOG_FILE, f"[{repo_path}][STDOUT]")
+            args=(proc.stdout, log_file, concise_log_file, f"[{repo_path}][STDOUT]")
         )
         stderr_thread = threading.Thread(
             target=log_output, 
-            args=(proc.stderr, LOG_FILE, CONCISE_LOG_FILE, f"[{repo_path}][STDERR]")
+            args=(proc.stderr, log_file, concise_log_file, f"[{repo_path}][STDERR]")
         )
         
         stdout_thread.daemon = True
@@ -145,13 +157,13 @@ def run_codex_in_repo(repo_path):
     except Exception as e:
         result["exception"] = str(e)
         # Log the exception
-        with open(LOG_FILE, 'a', encoding='utf-8') as f, open(CONCISE_LOG_FILE, 'a', encoding='utf-8') as cf:
+        with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
             exception_info = {"exception": result['exception']}
             f.write(json.dumps(exception_info, indent=4) + "\n")
             cf.write(f"Exception: {result['exception']}\n")
     
     # Log completion
-    with open(LOG_FILE, 'a', encoding='utf-8') as f, open(CONCISE_LOG_FILE, 'a', encoding='utf-8') as cf:
+    with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
         completion_info = {"completed_with_return_code": result['returncode']}
         f.write(json.dumps(completion_info, indent=4) + "\n")
         f.write("="*80 + "\n\n")
