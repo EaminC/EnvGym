@@ -33,14 +33,31 @@ def log_output(pipe, logfile, concise_logfile, prefix):
     with open(logfile, 'a', encoding='utf-8') as log, open(concise_logfile, 'a', encoding='utf-8') as concise_log:
         for line in iter(pipe.readline, ''):
             try:
+                # Maintain a set of seen message IDs to avoid duplicates in concise log
+                if not hasattr(log_output, 'seen_ids'):
+                    log_output.seen_ids = set()
+                
                 # Try to parse as JSON for prettier logging
                 parsed_json = json.loads(line.strip())
                 
-                # Save prettified JSON to detailed log
+                # Save prettified JSON to detailed log (always)
                 pretty_json = json.dumps(parsed_json, indent=4)
                 log.write(f"{prefix}: {pretty_json}\n")
                 log.flush()
                 
+                # Check for duplicate based on id field
+                is_duplicate = False
+                if "id" in parsed_json:
+                    message_id = parsed_json["id"]
+                    if message_id in log_output.seen_ids:
+                        is_duplicate = True
+                    else:
+                        log_output.seen_ids.add(message_id)
+                
+                # Skip duplicate entries in concise log
+                if is_duplicate:
+                    continue
+                    
                 # Create concise log entry
                 if "type" in parsed_json:
                     # Extract the most relevant content based on type
