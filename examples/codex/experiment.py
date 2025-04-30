@@ -7,11 +7,28 @@ import json
 
 # List of interesting repos as local directory paths (edit as needed)
 interesting_repos = [
-    "../../data/Metis"
+    "../../data/cli",
+    "../../data/Metis",
+    "../../data/grpc-go",
+    "../../data/go-zero",
+    "../../data/ripgrep",
+    "../../data/clap",
+    "../../data/nushell",
+    "../../data/serde",
+    "../../data/bat",
+    "../../data/fd",
+    "../../data/rayon",
+    "../../data/bytes",
+    "../../data/tokio",
+    "../../data/tracing",
+    "../../data/darkreader",
+    "../../data/material-ui",
+    "../../data/core", 
 ]
 
 # Instruction prompt for Codex CLI
-CODEX_INSTRUCTION = "Follow the README carefully in the repo and set up all the dependency requirements to run the code. Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."
+CODEX_INSTRUCTION = "Please create a Dockerfile named with repo and date,e.g.repo0430.dockerfile. Follow the README carefully in the repo and set up all the dependency requirements to run the code.Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."
+
 
 # Create output directory if it doesn't exist
 os.makedirs("output", exist_ok=True)
@@ -133,6 +150,9 @@ def run_codex_in_repo(repo_path):
         cf.write("="*80 + "\n")
         cf.write(f"Starting run for {result['repo']} at {result['start_time']}\n")
     
+    
+    instruction = f"The name of the repo you are processing is: {repo_name}\n{CODEX_INSTRUCTION}"
+
     # Call codex CLI in the repo directory
     try:
         proc = subprocess.Popen(
@@ -140,7 +160,7 @@ def run_codex_in_repo(repo_path):
                 "codex",
                 "--approval-mode", "full-auto",
                 "--quiet",
-                CODEX_INSTRUCTION,
+                instruction,
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -204,4 +224,5 @@ def main():
         print(json.dumps(result_json))
 
 if __name__ == "__main__":
+
     main()
