@@ -1,0 +1,95 @@
+================================================================================
+Starting run for ../../data/insomnia at 2025-04-30T22:01:01.847076
+[../../data/insomnia][STDOUT] (shell) $ ls
+[../../data/insomnia][STDOUT] OUTPUT: CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+DEVELOPMENT.md
+LICENSE
+README.md
+SECURITY.md
+build-secure-wrapper.sh
+eslint.config.mjs
+flake.lock
+flake.nix
+package-lock.json
+package.json
+packages
+patches
+screenshots
+
+[../../data/insomnia][STDOUT] (shell) $ cat README.md
+[../../data/insomnia][STDOUT] OUTPUT: # Insomnia API Client
+
+[![Website](https://img.shields.io/badge/Get%20started%20for%20free-8A2BE2)](https://insomnia.rest)
+![Stars](https://img.shields.io/github/stars/Kong/insomnia?style=flat-square)
+![GitHub commit activity](https://img.shields....
+[../../data/insomnia][STDOUT] (shell) $ ls -a
+[../../data/insomnia][STDOUT] OUTPUT: .
+..
+.clang-format
+.dockerignore
+.git
+.gitattributes
+.github
+.gitignore
+.markdownlint.yaml
+.npmrc
+.nvmrc
+.prettierignore
+.prettierrc
+.vscode
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+DEVELOPMENT.md
+LICENSE
+README.md
+SECURITY.md
+build-secure-...
+[../../data/insomnia][STDOUT] (shell) $ cat .nvmrc
+[../../data/insomnia][STDOUT] OUTPUT: 22.14.0
+
+[../../data/insomnia][STDOUT] (shell) $ node --version
+[../../data/insomnia][STDOUT] OUTPUT: v22.14.0
+
+[../../data/insomnia][STDOUT] (shell) $ npm --version
+[../../data/insomnia][STDOUT] OUTPUT: 9.2.0
+
+[../../data/insomnia][STDOUT] (shell) $ uname -a
+[../../data/insomnia][STDOUT] OUTPUT: Linux ip-172-31-5-180 6.8.0-1027-aws #29-Ubuntu SMP Thu Mar 27 17:28:55 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+[../../data/insomnia][STDOUT] (shell) $ sudo apt-get update
+[../../data/insomnia][STDOUT] OUTPUT: Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:4 http://security....
+[../../data/insomnia][STDOUT] (shell) $ sudo apt-get install -y libfontconfig-dev
+[../../data/insomnia][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  bzip2-doc libbz2-dev libfreetype-dev libpng-dev libpng-tools
+Suggested packages:
+  freetype2-doc
+The following...
+[../../data/insomnia][STDOUT] (shell) $ npm install
+[../../data/insomnia][STDOUT] OUTPUT: npm ERR! code EBADENGINE
+npm ERR! engine Unsupported engine
+npm ERR! engine Not compatible with your version of node/npm: insomnia@1.0.0
+npm ERR! notsup Not compatible with your version of node/npm: insomnia@1.0.0
+npm ERR! notsup Required: {"node"...
+[../../data/insomnia][STDOUT] (shell) $ sudo npm install -g npm@latest
+[../../data/insomnia][STDOUT] OUTPUT: 
+added 1 package in 2s
+
+25 packages are looking for funding
+  run `npm fund` for details
+
+[../../data/insomnia][STDOUT] (shell) $ npm --version
+[../../data/insomnia][STDOUT] OUTPUT: 11.3.0
+
+[../../data/insomnia][STDOUT] (shell) $ npm install
+Completed with return code: 0
+================================================================================
+

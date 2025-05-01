@@ -1,0 +1,195 @@
+================================================================================
+Starting run for ../../data/fmt at 2025-04-29T08:54:51.858675
+[../../data/fmt][STDOUT] (shell) $ ls
+[../../data/fmt][STDOUT] OUTPUT: CMakeLists.txt
+CONTRIBUTING.md
+ChangeLog.md
+LICENSE
+README.md
+doc
+include
+src
+support
+test
+
+[../../data/fmt][STDOUT] (shell) $ cat README.md
+[../../data/fmt][STDOUT] OUTPUT: 
+
+[Output truncated: too many lines or bytes]
+[../../data/fmt][STDOUT] (shell) $ head -60 README.md
+[../../data/fmt][STDOUT] OUTPUT: <img src="https://user-images.githubusercontent.com/576385/156254208-f5b743a9-88cf-439d-b0c0-923d53e8d551.png" alt="{fmt}" width="25%"/>
+
+[![image](https://github.com/fmtlib/fmt/workflows/linux/badge.svg)](https://github.com/fmtlib/fmt/actions?que...
+[../../data/fmt][STDOUT] (shell) $ head -120 README.md
+[../../data/fmt][STDOUT] OUTPUT: <img src="https://user-images.githubusercontent.com/576385/156254208-f5b743a9-88cf-439d-b0c0-923d53e8d551.png" alt="{fmt}" width="25%"/>
+
+[![image](https://github.com/fmtlib/fmt/workflows/linux/badge.svg)](https://github.com/fmtlib/fmt/actions?que...
+[../../data/fmt][STDOUT] (shell) $ head -200 README.md
+[../../data/fmt][STDOUT] OUTPUT: <img src="https://user-images.githubusercontent.com/576385/156254208-f5b743a9-88cf-439d-b0c0-923d53e8d551.png" alt="{fmt}" width="25%"/>
+
+[![image](https://github.com/fmtlib/fmt/workflows/linux/badge.svg)](https://github.com/fmtlib/fmt/actions?que...
+[../../data/fmt][STDOUT] (shell) $ head -300 README.md
+[../../data/fmt][STDOUT] OUTPUT: 
+
+[Output truncated: too many lines or bytes]
+[../../data/fmt][STDOUT] (shell) $ grep -i requirements README.md
+[../../data/fmt][STDOUT] OUTPUT: 
+[../../data/fmt][STDOUT] (shell) $ grep -i dependen README.md
+[../../data/fmt][STDOUT] OUTPUT:   dependencies, permissive MIT
+- Locale independence by default
+It is also quite big and has a heavy dependency, on STLSoft, which might be
+
+[../../data/fmt][STDOUT] (shell) $ grep -i install README.md
+[../../data/fmt][STDOUT] OUTPUT: 
+[../../data/fmt][STDOUT] (shell) $ head -400 README.md
+[../../data/fmt][STDOUT] OUTPUT: 
+
+[Output truncated: too many lines or bytes]
+[../../data/fmt][STDOUT] (shell) $ tail -60 README.md
+[../../data/fmt][STDOUT] OUTPUT: code bloat issues (see [Benchmarks](#benchmarks)).
+
+## FastFormat
+
+This is an interesting library that is fast, safe and has positional
+arguments. However, it has significant limitations, citing its author:
+
+> Three features that have no hope of b...
+[../../data/fmt][STDOUT] (shell) $ ls -l
+[../../data/fmt][STDOUT] OUTPUT: total 180
+-rw-rw-r-- 1 ubuntu ubuntu  19750 Apr 29 08:34 CMakeLists.txt
+-rw-rw-r-- 1 ubuntu ubuntu    710 Apr 29 08:34 CONTRIBUTING.md
+-rw-rw-r-- 1 ubuntu ubuntu 111299 Apr 29 08:34 ChangeLog.md
+-rw-rw-r-- 1 ubuntu ubuntu   1431 Apr 29 08:34 LICEN...
+[../../data/fmt][STDOUT] (shell) $ ls -l test
+[../../data/fmt][STDOUT] OUTPUT: total 516
+-rw-rw-r-- 1 ubuntu ubuntu  9148 Apr 29 08:34 CMakeLists.txt
+drwxrwxr-x 2 ubuntu ubuntu  4096 Apr 29 08:34 add-subdirectory-test
+-rw-rw-r-- 1 ubuntu ubuntu  5494 Apr 29 08:34 args-test.cc
+-rw-rw-r-- 1 ubuntu ubuntu   852 Apr 29 08:34 ass...
+[../../data/fmt][STDOUT] (shell) $ ls -l src
+[../../data/fmt][STDOUT] OUTPUT: total 20
+-rw-rw-r-- 1 ubuntu ubuntu  3287 Apr 29 08:34 fmt.cc
+-rw-rw-r-- 1 ubuntu ubuntu  1393 Apr 29 08:34 format.cc
+-rw-rw-r-- 1 ubuntu ubuntu 11368 Apr 29 08:34 os.cc
+
+[../../data/fmt][STDOUT] (shell) $ ls -l doc
+[../../data/fmt][STDOUT] OUTPUT: total 208
+-rw-rw-r-- 1 ubuntu ubuntu 112569 Apr 29 08:34 ChangeLog-old.md
+-rw-rw-r-- 1 ubuntu ubuntu  20222 Apr 29 08:34 api.md
+-rw-rw-r-- 1 ubuntu ubuntu   1267 Apr 29 08:34 fmt.css
+-rw-rw-r-- 1 ubuntu ubuntu     76 Apr 29 08:34 fmt.js
+-rw-rw-r--...
+[../../data/fmt][STDOUT] (shell) $ ls -l support
+[../../data/fmt][STDOUT] OUTPUT: total 152
+-rw-rw-r-- 1 ubuntu ubuntu   299 Apr 29 08:34 Android.mk
+-rw-rw-r-- 1 ubuntu ubuntu    31 Apr 29 08:34 AndroidManifest.xml
+-rw-rw-r-- 1 ubuntu ubuntu 72324 Apr 29 08:34 C++.sublime-syntax
+-rw-rw-r-- 1 ubuntu ubuntu    85 Apr 29 08:34 REA...
+[../../data/fmt][STDOUT] (shell) $ ls -l include
+[../../data/fmt][STDOUT] OUTPUT: total 4
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:34 fmt
+
+[../../data/fmt][STDOUT] (shell) $ ls -l include/fmt
+[../../data/fmt][STDOUT] OUTPUT: total 588
+-rw-rw-r-- 1 ubuntu ubuntu   7180 Apr 29 08:34 args.h
+-rw-rw-r-- 1 ubuntu ubuntu 103990 Apr 29 08:34 base.h
+-rw-rw-r-- 1 ubuntu ubuntu  79718 Apr 29 08:34 chrono.h
+-rw-rw-r-- 1 ubuntu ubuntu  24290 Apr 29 08:34 color.h
+-rw-rw-r-- 1 ubunt...
+[../../data/fmt][STDOUT] (shell) $ head -60 doc/get-started.md
+[../../data/fmt][STDOUT] OUTPUT: # Get Started
+
+Compile and run {fmt} examples online with [Compiler Explorer](
+https://godbolt.org/z/P7h6cd6o3).
+
+{fmt} is compatible with any build system. The next section describes its usage
+with CMake, while the [Build Systems](#build-systems)...
+[../../data/fmt][STDOUT] (shell) $ head -120 doc/get-started.md
+[../../data/fmt][STDOUT] OUTPUT: # Get Started
+
+Compile and run {fmt} examples online with [Compiler Explorer](
+https://godbolt.org/z/P7h6cd6o3).
+
+{fmt} is compatible with any build system. The next section describes its usage
+with CMake, while the [Build Systems](#build-systems)...
+[../../data/fmt][STDOUT] (shell) $ sudo apt-get update
+[../../data/fmt][STDOUT] OUTPUT: Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:4 http://security....
+[../../data/fmt][STDOUT] (shell) $ sudo apt-get install libfmt-dev cmake build-essential
+[../../data/fmt][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+cmake is already the newest version (3.28.3-1build7).
+build-essential is already the newest version (12.10ubuntu1).
+The following additional packages will be install...
+[../../data/fmt][STDOUT] (shell) $ sudo apt-get install -y libfmt-dev cmake build-essential
+[../../data/fmt][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+cmake is already the newest version (3.28.3-1build7).
+build-essential is already the newest version (12.10ubuntu1).
+The following additional packages will be install...
+[../../data/fmt][STDOUT] (shell) $ mkdir build
+[../../data/fmt][STDOUT] OUTPUT: 
+[../../data/fmt][STDOUT] (shell) $ cmake ..
+[../../data/fmt][STDOUT] OUTPUT: -- CMake version: 3.28.3
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- D...
+[../../data/fmt][STDOUT] (shell) $ make -j4
+[../../data/fmt][STDOUT] OUTPUT: [  1%] Building CXX object test/gtest/CMakeFiles/gtest.dir/gmock-gtest-all.cc.o
+[  4%] Building CXX object CMakeFiles/fmt.dir/src/os.cc.o
+[  4%] Building CXX object CMakeFiles/fmt.dir/src/format.cc.o
+[  5%] Linking CXX static library libfmt.a
+[  5...
+[../../data/fmt][STDOUT] (shell) $ make test
+[../../data/fmt][STDOUT] OUTPUT: Running tests...
+Test project /home/ubuntu/EnvGym/data/fmt/build
+      Start  1: args-test
+ 1/21 Test  #1: args-test ........................   Passed    0.01 sec
+      Start  2: base-test
+ 2/21 Test  #2: base-test ........................   Passe...
+[../../data/fmt][STDOUT] (shell) $ ls build/bin
+[../../data/fmt][STDOUT] OUTPUT: args-test
+assert-test
+base-test
+chrono-test
+color-test
+compile-fp-test
+compile-test
+enforce-checks-test
+format-impl-test
+format-test
+gtest-extra-test
+no-builtin-types-test
+os-test
+ostream-test
+perf-sanity
+posix-mock-test
+printf-test
+ranges-test
+sc...
+[../../data/fmt][STDOUT] (shell) $ ./format-test
+[../../data/fmt][STDOUT] OUTPUT: [==========] Running 130 tests from 9 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from uint128_test
+[ RUN      ] uint128_test.ctor
+[       OK ] uint128_test.ctor (0 ms)
+[ RUN      ] uint128_test.shift
+[       OK ...
+[../../data/fmt][STDOUT] (shell) $ ./perf-sanity
+[../../data/fmt][STDOUT] OUTPUT: 875.9
+
+[../../data/fmt][STDOUT] MESSAGE: **Setup and Verification Summary:**
+
+- Carefully followed the README and its companion `doc/get-started.md` for env/dependency setup and usage instructions.
+- Installed all necessary system packages (`libfmt-dev`, `cmake`, `build-essential`).
+- Pr...
+Completed with return code: 0
+================================================================================
+

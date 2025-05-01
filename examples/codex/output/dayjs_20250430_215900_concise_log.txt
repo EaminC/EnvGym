@@ -1,0 +1,125 @@
+================================================================================
+Starting run for ../../data/dayjs at 2025-04-30T21:59:00.321873
+[../../data/dayjs][STDOUT] (shell) $ ls
+[../../data/dayjs][STDOUT] OUTPUT: CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
+README.md
+babel.config.js
+build
+docs
+karma.sauce.conf.js
+package-lock.json
+package.json
+prettier.config.js
+src
+test
+types
+
+[../../data/dayjs][STDOUT] (shell) $ head -40 README.md
+[../../data/dayjs][STDOUT] OUTPUT: English | [简体中文](./docs/zh-cn/README.zh-CN.md) | [日本語](./docs/ja/README-ja.md) | [Português Brasileiro](./docs/pt-br/README-pt-br.md) | [한국어](./docs/ko/README-ko.md) | [Español (España)](./docs/es-es/README-es-es.md) | [Русский](./docs/ru/README-r...
+[../../data/dayjs][STDOUT] (shell) $ head -80 README.md
+[../../data/dayjs][STDOUT] OUTPUT: English | [简体中文](./docs/zh-cn/README.zh-CN.md) | [日本語](./docs/ja/README-ja.md) | [Português Brasileiro](./docs/pt-br/README-pt-br.md) | [한국어](./docs/ko/README-ko.md) | [Español (España)](./docs/es-es/README-es-es.md) | [Русский](./docs/ru/README-r...
+[../../data/dayjs][STDOUT] (shell) $ head -120 README.md
+[../../data/dayjs][STDOUT] OUTPUT: English | [简体中文](./docs/zh-cn/README.zh-CN.md) | [日本語](./docs/ja/README-ja.md) | [Português Brasileiro](./docs/pt-br/README-pt-br.md) | [한국어](./docs/ko/README-ko.md) | [Español (España)](./docs/es-es/README-es-es.md) | [Русский](./docs/ru/README-r...
+[../../data/dayjs][STDOUT] (shell) $ npm install
+[../../data/dayjs][STDOUT] OUTPUT: 
+added 1525 packages, and audited 1526 packages in 27s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+143 vulnerabilities (4 low, 50 moderate, 59 high, 30 critical)
+
+To address issues that do not require attention, run:
+  npm a...
+[../../data/dayjs][STDOUT] (shell) $ ls test
+[../../data/dayjs][STDOUT] OUTPUT: __mocks__
+browser.spec.js
+comparison.test.js
+constructor.test.js
+display.test.js
+get-set.test.js
+issues
+locale
+locale.test.js
+manipulate.test.js
+parse.test.js
+plugin
+plugin.test.js
+query.test.js
+timezone.test.js
+utils.test.js
+
+[../../data/dayjs][STDOUT] (shell) $ ls src
+[../../data/dayjs][STDOUT] OUTPUT: constant.js
+index.js
+locale
+plugin
+utils.js
+
+[../../data/dayjs][STDOUT] (shell) $ npm test
+[../../data/dayjs][STDOUT] OUTPUT: 
+> dayjs@0.0.0-development test
+> TZ=Pacific/Auckland npm run test-tz && TZ=Europe/London npm run test-tz && TZ=America/Whitehorse npm run test-tz && npm run test-tz && jest
+
+
+> dayjs@0.0.0-development test-tz
+> date && jest test/timezone.test --c...
+[../../data/dayjs][STDOUT] (shell) $ npm run build
+[../../data/dayjs][STDOUT] OUTPUT: 
+> dayjs@0.0.0-development build
+> cross-env BABEL_ENV=build node build && npm run size
+
+
+> dayjs@0.0.0-development size
+> size-limit && gzip-size dayjs.min.js
+
+
+[../../data/dayjs][STDOUT] (shell) $ ls -lh dayjs.min.js
+[../../data/dayjs][STDOUT] OUTPUT: -rw-rw-r-- 1 ubuntu ubuntu 7.0K Apr 30 22:00 dayjs.min.js
+
+[../../data/dayjs][STDOUT] (shell) $ npm run size
+[../../data/dayjs][STDOUT] OUTPUT: 
+> dayjs@0.0.0-development size
+> size-limit && gzip-size dayjs.min.js
+
+
+[../../data/dayjs][STDOUT] (shell) $ npx size-limit
+[../../data/dayjs][STDOUT] OUTPUT: node:internal/crypto/hash:79
+  this[kHandle] = new _Hash(algorithm, xofLen, algorithmId, getHashCache());
+                  ^
+
+Error: error:0308010C:digital envelope routines::unsupported
+    at new Hash (node:internal/crypto/hash:79:19)
+    at Ob...
+[../../data/dayjs][STDOUT] (shell) $ node -v
+[../../data/dayjs][STDOUT] OUTPUT: v22.14.0
+
+[../../data/dayjs][STDOUT] (shell) $ cat .nvmrc
+[../../data/dayjs][STDOUT] OUTPUT: cat: .nvmrc: No such file or directory
+
+[../../data/dayjs][STDOUT] (shell) $ cat package.json
+[../../data/dayjs][STDOUT] OUTPUT: {
+  "name": "dayjs",
+  "version": "0.0.0-development",
+  "description": "2KB immutable date time library alternative to Moment.js with the same modern API ",
+  "main": "dayjs.min.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "TZ=Pacific...
+[../../data/dayjs][STDOUT] (shell) $ npx node --help
+[../../data/dayjs][STDOUT] OUTPUT: Usage: node [options] [ script.js ] [arguments]
+       node inspect [options] [ script.js | host:port ] [arguments]
+
+Options:
+  -                           script read from stdin (default if no
+                              file name is provided, ...
+[../../data/dayjs][STDOUT] MESSAGE: **Environment/Dependency setup summary for the repo:**
+
+- Ran `npm install` successfully, all dependencies installed.
+- Ran `npm test`, tests passed with very high coverage, showing the code works.
+- Built the code using `npm run build`, which pro...
+Completed with return code: 0
+================================================================================
+

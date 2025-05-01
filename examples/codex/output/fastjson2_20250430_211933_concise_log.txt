@@ -1,0 +1,101 @@
+================================================================================
+Starting run for ../../data/fastjson2 at 2025-04-30T21:19:33.565981
+[../../data/fastjson2][STDOUT] (shell) $ ls
+[../../data/fastjson2][STDOUT] OUTPUT: CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE
+README.md
+README_EN.md
+SECURITY.md
+android-test
+benchmark
+benchmark_21
+codegen
+codegen-test
+config
+core
+docs
+example-graalvm-native
+example-solon-test
+example-spring-test
+example-spring6-test
+extension
+ex...
+[../../data/fastjson2][STDOUT] (shell) $ cat README.md
+[../../data/fastjson2][STDOUT] OUTPUT: [![Java CI](https://img.shields.io/github/actions/workflow/status/alibaba/fastjson2/ci.yaml?branch=main&logo=github&logoColor=white)](https://github.com/alibaba/fastjson2/actions/workflows/ci.yaml)
+[![Codecov](https://img.shields.io/codecov/c/gith...
+[../../data/fastjson2][STDOUT] (shell) $ cat README_EN.md
+[../../data/fastjson2][STDOUT] OUTPUT: [![Java CI](https://img.shields.io/github/actions/workflow/status/alibaba/fastjson2/ci.yaml?branch=main&logo=github&logoColor=white)](https://github.com/alibaba/fastjson2/actions/workflows/ci.yaml)
+[![Codecov](https://img.shields.io/codecov/c/gith...
+[../../data/fastjson2][STDOUT] (shell) $ ls -l
+[../../data/fastjson2][STDOUT] OUTPUT: total 216
+-rw-rw-r-- 1 ubuntu ubuntu  5494 Apr 30 20:25 CODE_OF_CONDUCT.md
+-rw-rw-r-- 1 ubuntu ubuntu  1670 Apr 30 20:25 CONTRIBUTING.md
+-rw-rw-r-- 1 ubuntu ubuntu 11357 Apr 30 20:25 LICENSE
+-rw-rw-r-- 1 ubuntu ubuntu 10712 Apr 30 20:25 README.md
+...
+[../../data/fastjson2][STDOUT] (shell) $ head -40 pom.xml
+[../../data/fastjson2][STDOUT] OUTPUT: <?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/mav...
+[../../data/fastjson2][STDOUT] (shell) $ ./mvnw --version
+[../../data/fastjson2][STDOUT] OUTPUT: The JAVA_HOME environment variable is not defined correctly,
+this environment variable is needed to run this program.
+
+[../../data/fastjson2][STDOUT] (shell) $ java -version
+[../../data/fastjson2][STDOUT] OUTPUT: Error: spawn java ENOENT
+[../../data/fastjson2][STDOUT] (shell) $ sudo apt-get update
+[../../data/fastjson2][STDOUT] OUTPUT: Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Get:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:...
+[../../data/fastjson2][STDOUT] (shell) $ sudo apt-get install -y openjdk-17-jdk
+[../../data/fastjson2][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  adwaita-icon-theme alsa-topology-conf alsa-ucm-conf at-spi2-common
+  at-spi2-core ca-certificates-java dconf-g...
+[../../data/fastjson2][STDOUT] (shell) $ java -version
+[../../data/fastjson2][STDOUT] OUTPUT: openjdk version "17.0.14" 2025-01-21
+OpenJDK Runtime Environment (build 17.0.14+7-Ubuntu-124.04)
+OpenJDK 64-Bit Server VM (build 17.0.14+7-Ubuntu-124.04, mixed mode, sharing)
+
+[../../data/fastjson2][STDOUT] (shell) $ ./mvnw clean install -DskipTests
+[../../data/fastjson2][STDOUT] OUTPUT: [INFO] Scanning for projects...
+Downloading from central: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-bom/2.18.3/jackson-bom-2.18.3.pom
+Progress (1): 1.4/19 kBProgress (1): 2.8/19 kBProgress (1): 4.1/19 kBProgress (1): 5....
+[../../data/fastjson2][STDOUT] (shell) $ ./mvnw test
+[../../data/fastjson2][STDOUT] OUTPUT: [INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] fastjson2-parent                                                   [pom]
+[INFO] fastjson2   ...
+[../../data/fastjson2][STDOUT] (shell) $ ./mvnw test -Dtest=*JSONTest*
+[../../data/fastjson2][STDOUT] OUTPUT: [INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] fastjson2-parent                                                   [pom]
+[INFO] fastjson2   ...
+[../../data/fastjson2][STDOUT] (shell) $ ./mvnw test -DfailIfNoSpecifiedTests=false
+[../../data/fastjson2][STDOUT] OUTPUT: [INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] fastjson2-parent                                                   [pom]
+[INFO] fastjson2   ...
+[../../data/fastjson2][STDOUT] (shell) $ git status
+[../../data/fastjson2][STDOUT] OUTPUT: 
+[../../data/fastjson2][STDOUT] (shell) $ git diff
+[../../data/fastjson2][STDOUT] OUTPUT: 
+[../../data/fastjson2][STDOUT] MESSAGE: **Environment setup complete, all dependencies installed, the code was built, and tests ran successfully.**
+
+**Summary of steps performed:**
+- Detected a Maven/Java project from the README and file structure.
+- Installed OpenJDK 17 (`openjdk-17-jd...
+Completed with return code: 0
+================================================================================
+

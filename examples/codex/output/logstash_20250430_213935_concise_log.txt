@@ -1,0 +1,215 @@
+================================================================================
+Starting run for ../../data/logstash at 2025-04-30T21:39:35.577922
+[../../data/logstash][STDOUT] (shell) $ ls
+[../../data/logstash][STDOUT] OUTPUT: CONTRIBUTING.md
+CONTRIBUTORS
+COPYING.csv
+Gemfile
+Gemfile.lock
+Gemfile.template
+LICENSE.txt
+NOTICE.TXT
+README.md
+ROADMAP.md
+Rakefile
+SECURITY.md
+STYLE.md
+bin
+build
+build.gradle
+buildSrc
+catalog-info.yaml
+ci
+config
+data
+devtools
+docker
+docs
+gradle
+g...
+[../../data/logstash][STDOUT] (shell) $ head -40 README.md
+[../../data/logstash][STDOUT] OUTPUT: # Logstash
+
+Logstash is part of the [Elastic Stack](https://www.elastic.co/products) along with Beats, Elasticsearch and Kibana. Logstash is a server-side data processing pipeline that ingests data from a multitude of sources simultaneously, trans...
+[../../data/logstash][STDOUT] (shell) $ head -60 README.md
+[../../data/logstash][STDOUT] OUTPUT: # Logstash
+
+Logstash is part of the [Elastic Stack](https://www.elastic.co/products) along with Beats, Elasticsearch and Kibana. Logstash is a server-side data processing pipeline that ingests data from a multitude of sources simultaneously, trans...
+[../../data/logstash][STDOUT] (shell) $ head -100 README.md
+[../../data/logstash][STDOUT] OUTPUT: # Logstash
+
+Logstash is part of the [Elastic Stack](https://www.elastic.co/products) along with Beats, Elasticsearch and Kibana. Logstash is a server-side data processing pipeline that ingests data from a multitude of sources simultaneously, trans...
+[../../data/logstash][STDOUT] (shell) $ cat .ruby-version
+[../../data/logstash][STDOUT] OUTPUT: jruby-9.4.9.0
+
+[../../data/logstash][STDOUT] (shell) $ java -version
+[../../data/logstash][STDOUT] OUTPUT: openjdk version "17.0.14" 2025-01-21
+OpenJDK Runtime Environment (build 17.0.14+7-Ubuntu-124.04)
+OpenJDK 64-Bit Server VM (build 17.0.14+7-Ubuntu-124.04, mixed mode, sharing)
+
+[../../data/logstash][STDOUT] (shell) $ jruby -v
+[../../data/logstash][STDOUT] OUTPUT: jruby 9.4.9.0 (3.1.4) 2024-11-04 547c6b150e OpenJDK 64-Bit Server VM 17.0.14+7-Ubuntu-124.04 on 17.0.14+7-Ubuntu-124.04 +jit [x86_64-linux]
+
+[../../data/logstash][STDOUT] (shell) $ gem install rake
+[../../data/logstash][STDOUT] OUTPUT: ERROR:  While executing gem ... (Gem::FilePermissionError)
+    You don't have write permissions for the /var/lib/gems/3.2.0 directory.
+	/usr/lib/ruby/vendor_ruby/rubygems/installer.rb:713:in `verify_gem_home'
+	/usr/lib/ruby/vendor_ruby/rubygems/in...
+[../../data/logstash][STDOUT] (shell) $ sudo gem install rake
+[../../data/logstash][STDOUT] OUTPUT: Successfully installed rake-13.2.1
+Parsing documentation for rake-13.2.1
+Done installing documentation for rake after 0 seconds
+1 gem installed
+
+[../../data/logstash][STDOUT] (shell) $ sudo gem install bundler
+[../../data/logstash][STDOUT] OUTPUT: Successfully installed bundler-2.6.8
+Parsing documentation for bundler-2.6.8
+Done installing documentation for bundler after 0 seconds
+1 gem installed
+
+[../../data/logstash][STDOUT] (shell) $ ./gradlew installDevelopmentGems
+[../../data/logstash][STDOUT] OUTPUT: 
+[../../data/logstash][STDOUT] (shell) $ ls -l
+[../../data/logstash][STDOUT] OUTPUT: total 31972
+-rw-rw-r-- 1 ubuntu ubuntu    15116 Apr 30 20:25 CONTRIBUTING.md
+-rw-rw-r-- 1 ubuntu ubuntu     2276 Apr 30 20:25 CONTRIBUTORS
+-rw-rw-r-- 1 ubuntu ubuntu     1836 Apr 30 20:25 COPYING.csv
+-rw-rw-r-- 1 ubuntu ubuntu     4643 Apr 30 21:3...
+[../../data/logstash][STDOUT] (shell) $ ./gradlew installDevelopmentGems
+[../../data/logstash][STDOUT] OUTPUT: 
+[../../data/logstash][STDOUT] (shell) $ ls -l .gradle
+[../../data/logstash][STDOUT] OUTPUT: total 20
+drwxrwxr-x 9 ubuntu ubuntu 4096 Apr 30 21:37 8.7
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 30 21:34 buildOutputCleanup
+-rw-rw-r-- 1 ubuntu ubuntu    8 Apr 30 21:38 file-system.probe
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 30 21:33 noVersion
+drwxrwx...
+[../../data/logstash][STDOUT] (shell) $ ./gradlew installDefaultGems
+[../../data/logstash][STDOUT] OUTPUT: To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.7/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+
+[../../data/logstash][STDOUT] (shell) $ ./gradlew --no-daemon installDevelopmentGems
+[../../data/logstash][STDOUT] OUTPUT: To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.7/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+
+[../../data/logstash][STDOUT] (shell) $ ps aux
+[../../data/logstash][STDOUT] OUTPUT: USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.2  22640 11060 ?        Ss   Apr27   0:07 /sbin/init
+root           2  0.0  0.0      0     0 ?        S    Apr27   0:00 [kthreadd]
+root           3...
+[../../data/logstash][STDOUT] (shell) $ dmesg | tail -40
+[../../data/logstash][STDOUT] OUTPUT: dmesg: invalid option -- '4'
+Try 'dmesg --help' for more information.
+
+[../../data/logstash][STDOUT] (shell) $ ./gradlew --stop
+[../../data/logstash][STDOUT] OUTPUT: No Gradle daemons are running.
+
+[../../data/logstash][STDOUT] (shell) $ free -h
+[../../data/logstash][STDOUT] OUTPUT:                total        used        free      shared  buff/cache   available
+Mem:           3.8Gi       1.4Gi       2.3Gi       932Ki       465Mi       2.4Gi
+Swap:             0B          0B          0B
+
+[../../data/logstash][STDOUT] (shell) $ df -h
+[../../data/logstash][STDOUT] OUTPUT: Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        23G   21G  1.7G  93% /
+tmpfs           2.0G     0  2.0G   0% /dev/shm
+tmpfs           783M  920K  782M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/xvda16     881M...
+[../../data/logstash][STDOUT] (shell) $ ls -lh jruby-bin-9.4.9.0.tar.gz
+[../../data/logstash][STDOUT] OUTPUT: -rw-rw-r-- 1 ubuntu ubuntu 31M Apr 30 21:33 jruby-bin-9.4.9.0.tar.gz
+
+[../../data/logstash][STDOUT] (shell) $ tar xzvf jruby-bin-9.4.9.0.tar.gz
+[../../data/logstash][STDOUT] OUTPUT: jruby-9.4.9.0/lib/ruby/stdlib/strscan.jar
+jruby-9.4.9.0/lib/ruby/stdlib/stringio.jar
+jruby-9.4.9.0/lib/ruby/stdlib/io/wait.jar
+jruby-9.4.9.0/lib/ruby/stdlib/cgi/escape.jar
+jruby-9.4.9.0/lib/ruby/stdlib/jline/jline/2.14.6/jline-2.14.6.jar
+jruby-9.4...
+[../../data/logstash][STDOUT] (shell) $ ls -lh jruby-9.4.9.0
+[../../data/logstash][STDOUT] OUTPUT: total 4.0K
+drwxrwxr-x 3 ubuntu ubuntu 4.0K Apr 30 21:40 lib
+
+[../../data/logstash][STDOUT] (shell) $ ./gradlew installDevelopmentGems --no-daemon --stacktrace
+[../../data/logstash][STDOUT] OUTPUT: To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.7/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+
+[../../data/logstash][STDOUT] (shell) $ gradle --version
+[../../data/logstash][STDOUT] OUTPUT: Error: spawn gradle ENOENT
+[../../data/logstash][STDOUT] (shell) $ ./gradlew --version
+[../../data/logstash][STDOUT] OUTPUT: 
+------------------------------------------------------------
+Gradle 8.7
+------------------------------------------------------------
+
+Build time:   2024-03-22 15:52:46 UTC
+Revision:     650af14d7653aa949fce5e886e685efc9cf97c10
+
+Kotlin:       1.9....
+[../../data/logstash][STDOUT] (shell) $ ./gradlew installDevelopmentGems --no-daemon --info
+[../../data/logstash][STDOUT] OUTPUT: Initialized native services in: /home/ubuntu/.gradle/native
+Initialized jansi services in: /home/ubuntu/.gradle/native
+Received JVM installation metadata from '/usr/lib/jvm/java-17-openjdk-amd64': {JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64, JAV...
+[../../data/logstash][STDOUT] (shell) $ tail -40 build.gradle
+[../../data/logstash][STDOUT] OUTPUT:     description = "Download, unpack and copy the JDK"
+    // CLI project properties: -Pjdk_bundle_os=[windows|linux|darwin] -Pjdk_arch=[arm64|x86_64]
+    doLast {
+        System.out.println "Download location is ${project.ext.jdkDownloadLocation},...
+[../../data/logstash][STDOUT] (shell) $ ls -l /usr/lib/jvm
+[../../data/logstash][STDOUT] OUTPUT: total 8
+lrwxrwxrwx 1 root root   21 Jan 22 23:11 java-1.17.0-openjdk-amd64 -> java-17-openjdk-amd64
+drwxr-xr-x 9 root root 4096 Apr 30 21:20 java-17-openjdk-amd64
+drwxr-xr-x 2 root root 4096 Apr 30 21:20 openjdk-17
+
+[../../data/logstash][STDOUT] (shell) $ env
+[../../data/logstash][STDOUT] OUTPUT: SHELL=/bin/bash
+COLORTERM=truecolor
+TERM_PROGRAM_VERSION=1.99.3
+OPENAI_API_KEY=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
+PWD...
+[../../data/logstash][STDOUT] (shell) $ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+[../../data/logstash][STDOUT] OUTPUT: Error: spawn export ENOENT
+[../../data/logstash][STDOUT] (shell) $ env JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 ./gradlew installDevelopmentGems --no-daemon --info
+[../../data/logstash][STDOUT] OUTPUT: Initialized native services in: /home/ubuntu/.gradle/native
+Initialized jansi services in: /home/ubuntu/.gradle/native
+Received JVM installation metadata from '/usr/lib/jvm/java-17-openjdk-amd64': {JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64, JAV...
+[../../data/logstash][STDOUT] (shell) $ jruby -S gem install bundler
+[../../data/logstash][STDOUT] OUTPUT: 
+[../../data/logstash][STDOUT] (shell) $ ulimit -a
+[../../data/logstash][STDOUT] OUTPUT: Error: spawn ulimit ENOENT
+[../../data/logstash][STDOUT] (shell) $ ls -lhart
+[../../data/logstash][STDOUT] OUTPUT: total 32M
+drwxrwxr-x  4 ubuntu ubuntu 4.0K Apr 30 20:25 .github
+-rwxrwxr-x  1 ubuntu ubuntu 1.3K Apr 30 20:25 .fossa.yml
+-rw-rw-r--  1 ubuntu ubuntu   20 Apr 30 20:25 .dockerignore
+drwxrwxr-x  2 ubuntu ubuntu 4.0K Apr 30 20:25 .ci
+drwxrwxr-x  3 ub...
+[../../data/logstash][STDOUT] (shell) $ ./gradlew --no-daemon installDevelopmentGems --max-workers=1 --stacktrace
+[../../data/logstash][STDOUT] OUTPUT: To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.7/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be s...
+[../../data/logstash][STDOUT] (shell) $ bundler --version
+[../../data/logstash][STDOUT] OUTPUT: Bundler version 2.6.8
+
+[../../data/logstash][STDOUT] (shell) $ bundle install
+[../../data/logstash][STDOUT] OUTPUT: Bundler 2.6.8 is running, but your lockfile was generated with 2.3.26. Installing Bundler 2.3.26 and restarting using that version.
+
+[../../data/logstash][STDOUT] (shell) $ gem install bundler -v 2.3.26
+[../../data/logstash][STDOUT] OUTPUT: ERROR:  While executing gem ... (Gem::FilePermissionError)
+    You don't have write permissions for the /var/lib/gems/3.2.0 directory.
+	/usr/lib/ruby/vendor_ruby/rubygems/installer.rb:713:in `verify_gem_home'
+	/usr/lib/ruby/vendor_ruby/rubygems/in...
+[../../data/logstash][STDOUT] (shell) $ sudo gem install bundler -v 2.3.26
+[../../data/logstash][STDOUT] OUTPUT: Successfully installed bundler-2.3.26
+Parsing documentation for bundler-2.3.26
+Installing ri documentation for bundler-2.3.26
+Done installing documentation for bundler after 0 seconds
+1 gem installed
+
+[../../data/logstash][STDOUT] (shell) $ bundle _2.3.26_ install
+[../../data/logstash][STDOUT] OUTPUT: 
+[!] There was an error while loading `logstash-core-plugin-api.gemspec`: The logstash-core-api need to be build on jruby. Bundler cannot continue.
+
+ #  from /home/ubuntu/EnvGym/data/logstash/logstash-core-plugin-api/logstash-core-plugin-api.gemsp...
+[../../data/logstash][STDOUT] (shell) $ jruby -S bundle _2.3.26_ install
+[../../data/logstash][STDOUT] OUTPUT: 
+[../../data/logstash][STDOUT] MESSAGE: There appears to be a consistent issue where any long-running process (Gradle, tar, bundle, jruby) is killed with exit code 143 (which means SIGTERM). This almost always suggests the environment is forcibly terminating processes, possibly due to r...
+Completed with return code: 0
+================================================================================
+

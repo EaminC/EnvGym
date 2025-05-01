@@ -1,0 +1,38 @@
+================================================================================
+Starting run for ../../data/jq at 2025-04-29T08:41:57.051547
+[../../data/jq][STDOUT] (shell) $ ls
+[../../data/jq][STDOUT] OUTPUT: AUTHORS
+COPYING
+ChangeLog
+Dockerfile
+KEYS
+Makefile.am
+NEWS.md
+README.md
+SECURITY.md
+build
+compile-ios.sh
+config
+configure.ac
+docs
+jq.1.prebuilt
+jq.spec
+libjq.pc.in
+m4
+scripts
+sig
+src
+tests
+vendor
+
+[../../data/jq][STDOUT] (shell) $ head -50 README.md
+[../../data/jq][STDOUT] OUTPUT: # jq
+
+`jq` is a lightweight and flexible command-line JSON processor akin to `sed`,`awk`,`grep`, and friends for JSON data. It's written in portable C and has zero runtime dependencies, allowing you to easily slice, filter, map, and transform stru...
+[../../data/jq][STDOUT] (shell) $ head -100 README.md
+[../../data/jq][STDOUT] OUTPUT: # jq
+
+`jq` is a lightweight and flexible command-line JSON processor akin to `sed`,`awk`,`grep`, and friends for JSON data. It's written in portable C and has zero runtime dependencies, allowing you to easily slice, filter, map, and transform stru...
+Completed with return code: 0
+================================================================================
+

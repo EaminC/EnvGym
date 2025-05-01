@@ -1,0 +1,277 @@
+================================================================================
+{
+    "repo": "../../data/insomnia",
+    "start_time": "2025-04-30T22:01:01.847076"
+}
+[../../data/insomnia][STDOUT]: {
+    "role": "user",
+    "content": [
+        {
+            "type": "input_text",
+            "text": "Follow the README carefully in the repo and set up all the dependency requirements to run the code. Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."
+        }
+    ],
+    "type": "message"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129d9f2b648191a0539dd40472232b0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"ls\"],\"timeout\":60000}",
+    "call_id": "call_WCAe7iIte4NgmXFmV6vlOdkj",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129d9f2b648191a0539dd40472232b0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"ls\"],\"timeout\":60000}",
+    "call_id": "call_WCAe7iIte4NgmXFmV6vlOdkj",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_WCAe7iIte4NgmXFmV6vlOdkj",
+    "output": "{\"output\":\"CHANGELOG.md\\nCODE_OF_CONDUCT.md\\nCONTRIBUTING.md\\nDEVELOPMENT.md\\nLICENSE\\nREADME.md\\nSECURITY.md\\nbuild-secure-wrapper.sh\\neslint.config.mjs\\nflake.lock\\nflake.nix\\npackage-lock.json\\npackage.json\\npackages\\npatches\\nscreenshots\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da09c0c8191814a69678a0293ea0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"cat\",\"README.md\"],\"timeout\":60000}",
+    "call_id": "call_hitbmlLOWRGbfzCgpWA3feeh",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da09c0c8191814a69678a0293ea0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"cat\",\"README.md\"],\"timeout\":60000}",
+    "call_id": "call_hitbmlLOWRGbfzCgpWA3feeh",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_hitbmlLOWRGbfzCgpWA3feeh",
+    "output": "{\"output\":\"# Insomnia API Client\\n\\n[![Website](https://img.shields.io/badge/Get%20started%20for%20free-8A2BE2)](https://insomnia.rest)\\n![Stars](https://img.shields.io/github/stars/Kong/insomnia?style=flat-square)\\n![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Kong/insomnia?style=flat-square)\\n[![Slack Channel](https://chat.insomnia.rest/badge.svg)](https://chat.insomnia.rest/)\\n[![license](https://img.shields.io/github/license/Kong/insomnia.svg)](LICENSE)\\n![Twitter Follow](https://img.shields.io/twitter/follow/GetInsomnia?style=social)\\n\\nInsomnia is an open-source, cross-platform API client for GraphQL, REST, WebSockets, Server-sent events (SSE), gRPC and any other HTTP compatible protocol.\\n\\nWith Insomnia you can:\\n\\n- **Debug APIs** using the most popular protocols and formats.\\n- **Design APIs** using the native OpenAPI editor and visual preview.\\n- **Test APIs** using native test suites and collection runner.\\n- **Mock APIs** using a cloud or self-hosted mocking server.\\n- **Build CI/CD pipelines** using the native Insomnia CLI for linting and testing.\\n- **Collaborate with others** using the many collaboration features.\\n- **And more** including the ability to use 3rd party plugins.\\n\\nThe following storage options are supported for your Insomnia projects, collections, design specs and all other resources:\\n\\n- **Local Vault**: for 100% local storage of collections, design specs and every other resource.\\n- **Git Sync**: for Git storage using any 3rd party Git repository, without going through the cloud.\\n- **Cloud Sync**: for cloud collaboration, optionally end-to-end encrypted (E2EE) in the cloud.\\n\\n![Insomnia API Client](https://raw.githubusercontent.com/Kong/insomnia/develop/screenshots/main.png)\\n\\n## Get started for free\\n\\nInsomnia is available for Mac, Windows, and Linux and can be downloaded from the website:\\n\\n**[https://insomnia.rest](https://insomnia.rest)**\\n\\n## Account & Subscriptions\\n\\nYou can use Insomnia without an account with the local **Scratch Pad**, or you can [create an account for free](https://insomnia.rest/pricing) to get access to the full capabilities of the product.\\n\\nEven with an account, Insomnia only stores your projects and files accordingly to the **storage backend** that you have selected, which can be Local Vault, Cloud Sync, Git Sync or any combination of them. As such - for example - you have the freedom to choose to store sensitive projects 100% locally or in a Git repository, while still being able to collaborate on others in the cloud. It's the best of both worlds.\\n\\nFor added security, Insomnia also offers a **Private Environments** feature, where your environments configuration is always stored locally and never in the cloud, independently from the storage option that you have chosen for your project.\\n\\n## Premium features and support\\n\\nInsomnia has a very generous free plan that will be satisfactory for most users, but if you need to get access to premium capabilities like unlimited collaboration, the Git Sync feature, the ability to create organizations for your projects, using a 3rd party IDP for logins (SAML, OIDC) and many other features, then you can explore the other subscription plans.\\n\\nYou can [compare all subscription plans](https://insomnia.rest/pricing) and get started for free.\\n\\n## Why does Insomnia require an account?\\n\\nInsomnia does not require an account if you decide to use the local **Scratch Pad**, but to access most capabilities of the product we require an account. Your account data is securely stored in compliance with ISO27001, SOC 2 Type II, ISO27018, Gold CSA STAR regulations and in accordance to our terms of service and privacy policy.\\n\\nWe require an account to sustainably build and improve the product, and to make sure we can continue to offer the many core capabilities in a free and open-source distribution. While open source software is free to use, it is unfortunately not free to build, and our ability to continue working on Insomnia is dependent on our ability to convert a subset of free users (that need premium features) to become paying customers of our product.\\n\\nIf you are a user that cannot share API data like collections and design specifications to the cloud, this is still possible by selecting \\\"Local Vault\\\" as the storage of your Insomnia projects: having an Insomnia account is not tied to how you wish to store your sensitive API data (which can be stored 100% locally via Local Vault, on a 3rd party Git repository without any cloud storage via Git Sync, or in the cloud for ease of collaboration via Cloud Sync).\\n\\n## Bugs and Feature Requests\\n\\nHave a bug or a feature request? First, read the\\n[issue guidelines](CONTRIBUTING.md#using-the-issue-tracker) and search for existing and closed issues. If your problem or idea is not addressed yet, [please open a new issue](https://github.com/Kong/insomnia/issues).\\n\\nFor more generic product questions and feedback, join the [Slack Team](https://chat.insomnia.rest).\\n\\n## Contributing\\n\\nPlease read through our [contributing guidelines](CONTRIBUTING.md) and [code of conduct](CODE_OF_CONDUCT.md). Included are directions for opening issues, coding standards, and notes on development.\\n\\n## Documentation\\n\\nCheck out our official [Insomnia Documentation](https://docs.insomnia.rest/).\\n\\n## Develop Insomnia\\n\\nDevelopment on Insomnia can be done on Mac, Windows, or Linux as long as you have [Node.js](https://nodejs.org) and [Git](https://git-scm.com/). See the `.nvmrc` file located in the project for the correct Node version.\\n\\n<details>\\n<summary>Initial Dev Setup</summary>\\n\\nThis repository is structured as a monorepo and contains many Node.JS packages. Each package has its own set of commands, but the most common commands are available from the root [`package.json`](package.json) and can be accessed using the `npm run \u2026` command. Here are the only three commands you should need to start developing on the app.\\n\\n```shell\\n# Install and Link Dependencies\\nnpm i\\n\\n# Run Lint\\nnpm run lint\\n\\n# Run type checking\\nnpm run type-check\\n\\n# Run Tests\\nnpm test\\n\\n# Start App with Live Reload\\nnpm run dev\\n```\\n\\n### Linux\\n\\nIf you are on Linux, you may need to install the following supporting packages:\\n\\n<details>\\n<summary>Ubuntu/Debian</summary>\\n\\n```shell\\n# Update library\\nsudo apt-get update\\n\\n# Install font configuration library & support\\nsudo apt-get install libfontconfig-dev\\n```\\n\\n</details>\\n\\n<details>\\n<summary>Fedora</summary>\\n\\n```shell\\n# Install libcurl for node-libcurl\\nsudo dnf install libcurl-devel\\n```\\n\\n</details>\\n\\nAlso on Linux, if Electron is failing during the install process, run the following\\n\\n```shell\\n# Clear Electron install conflicts\\nrm -rf ~/.cache/electron\\n```\\n\\n### Windows\\n\\nIf you are on Windows and have problems, you may need to install [Windows Build Tools](https://github.com/felixrieseberg/windows-build-tools)\\n\\n</details>\\n\\n<details>\\n<summary>Editor Requirements</summary>\\n\\nYou can use any editor you'd like, but make sure to have support/plugins for the following tools:\\n\\n- [ESLint](http://eslint.org/) - For catching syntax problems and common errors\\n- [JSX Syntax](https://facebook.github.io/react/docs/jsx-in-depth.html) - For React components\\n\\n</details>\\n\\n## Develop Inso CLI\\n\\n- `npm i`\\n- Start the compiler in watch mode: `npm run inso-start`\\n- Run: `./packages/insomnia-inso/bin/inso -v`\\n\\n## Plugins\\n\\nSearch for, discover, and install plugins from the Insomnia [Plugin Hub](https://insomnia.rest/plugins/)!\\n\\n## Community Projects\\n\\n- [Insomnia Documenter](https://github.com/jozsefsallai/insomnia-documenter) - Generate beautiful API documentation pages using the [documenter plugin](https://insomnia.rest/plugins/insomnia-plugin-documenter) or your Insomnia export file.\\n- [GitHub API Spec Importer](https://github.com/swinton/github-rest-apis-for-insomnia) - A complete set of GitHub REST API route specifications that can be imported straight into Insomnia.\\n- [Swaggymnia](https://github.com/mlabouardy/swaggymnia) - Generate [Swagger](https://swagger.io/) documentation for your existing API in Insomnia.\\n\\n## License\\n\\n[Apache-2.0](LICENSE) &copy; [Insomnia](https://insomnia.rest)\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da2a6b08191a67cab2dca8b85d60741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"ls\",\"-a\"],\"timeout\":60000}",
+    "call_id": "call_ab7r7umaNyL26ULApq1LunJY",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da2a6b08191a67cab2dca8b85d60741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"ls\",\"-a\"],\"timeout\":60000}",
+    "call_id": "call_ab7r7umaNyL26ULApq1LunJY",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_ab7r7umaNyL26ULApq1LunJY",
+    "output": "{\"output\":\".\\n..\\n.clang-format\\n.dockerignore\\n.git\\n.gitattributes\\n.github\\n.gitignore\\n.markdownlint.yaml\\n.npmrc\\n.nvmrc\\n.prettierignore\\n.prettierrc\\n.vscode\\nCHANGELOG.md\\nCODE_OF_CONDUCT.md\\nCONTRIBUTING.md\\nDEVELOPMENT.md\\nLICENSE\\nREADME.md\\nSECURITY.md\\nbuild-secure-wrapper.sh\\neslint.config.mjs\\nflake.lock\\nflake.nix\\npackage-lock.json\\npackage.json\\npackages\\npatches\\nscreenshots\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da3f3ec81919155b770778770080741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"cat\",\".nvmrc\"],\"timeout\":60000}",
+    "call_id": "call_QmzLEgtwTWtzgULAqPcPRLWh",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da3f3ec81919155b770778770080741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"cat\",\".nvmrc\"],\"timeout\":60000}",
+    "call_id": "call_QmzLEgtwTWtzgULAqPcPRLWh",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_QmzLEgtwTWtzgULAqPcPRLWh",
+    "output": "{\"output\":\"22.14.0\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da543148191a20384d96606ecaa0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"node\",\"--version\"],\"timeout\":60000}",
+    "call_id": "call_whClIT5FelvVsLlyztGGfq84",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da543148191a20384d96606ecaa0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"node\",\"--version\"],\"timeout\":60000}",
+    "call_id": "call_whClIT5FelvVsLlyztGGfq84",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_whClIT5FelvVsLlyztGGfq84",
+    "output": "{\"output\":\"v22.14.0\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da815cc81918b2c8aa15960d86d0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"npm\",\"--version\"],\"timeout\":60000}",
+    "call_id": "call_Hv98wedkE17165GuETQtsMg2",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da815cc81918b2c8aa15960d86d0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"npm\",\"--version\"],\"timeout\":60000}",
+    "call_id": "call_Hv98wedkE17165GuETQtsMg2",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_Hv98wedkE17165GuETQtsMg2",
+    "output": "{\"output\":\"9.2.0\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0.3}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da980cc8191bfe100b3c559d19d0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"uname\",\"-a\"],\"timeout\":60000}",
+    "call_id": "call_uFQuBl6zAbV8nq6kncx1wzJJ",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129da980cc8191bfe100b3c559d19d0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"uname\",\"-a\"],\"timeout\":60000}",
+    "call_id": "call_uFQuBl6zAbV8nq6kncx1wzJJ",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_uFQuBl6zAbV8nq6kncx1wzJJ",
+    "output": "{\"output\":\"Linux ip-172-31-5-180 6.8.0-1027-aws #29-Ubuntu SMP Thu Mar 27 17:28:55 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129daad0bc8191906469ec05a3b71b0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"sudo\",\"apt-get\",\"update\"],\"timeout\":180000}",
+    "call_id": "call_BiUl7k6FqZsfMHR9234ShdnH",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129daad0bc8191906469ec05a3b71b0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"sudo\",\"apt-get\",\"update\"],\"timeout\":180000}",
+    "call_id": "call_BiUl7k6FqZsfMHR9234ShdnH",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_BiUl7k6FqZsfMHR9234ShdnH",
+    "output": "{\"output\":\"Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease\\nHit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease\\nHit:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease\\nHit:4 http://security.ubuntu.com/ubuntu noble-security InRelease\\nReading package lists...\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":2.4}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dae9cc08191b857941c1677191a0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"sudo\",\"apt-get\",\"install\",\"-y\",\"libfontconfig-dev\"],\"timeout\":120000}",
+    "call_id": "call_YwotvIBz6AchbOksolCBYKBL",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dae9cc08191b857941c1677191a0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"sudo\",\"apt-get\",\"install\",\"-y\",\"libfontconfig-dev\"],\"timeout\":120000}",
+    "call_id": "call_YwotvIBz6AchbOksolCBYKBL",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_YwotvIBz6AchbOksolCBYKBL",
+    "output": "{\"output\":\"Reading package lists...\\nBuilding dependency tree...\\nReading state information...\\nThe following additional packages will be installed:\\n  bzip2-doc libbz2-dev libfreetype-dev libpng-dev libpng-tools\\nSuggested packages:\\n  freetype2-doc\\nThe following NEW packages will be installed:\\n  bzip2-doc libbz2-dev libfontconfig-dev libfreetype-dev libpng-dev\\n  libpng-tools\\n0 upgraded, 6 newly installed, 0 to remove and 44 not upgraded.\\nNeed to get 1560 kB of archives.\\nAfter this operation, 4311 kB of additional disk space will be used.\\nGet:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 bzip2-doc all 1.0.8-5.1build0.1 [499 kB]\\nGet:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libbz2-dev amd64 1.0.8-5.1build0.1 [33.6 kB]\\nGet:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libpng-dev amd64 1.6.43-5build1 [264 kB]\\nGet:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libfreetype-dev amd64 2.13.2+dfsg-1build3 [575 kB]\\nGet:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libfontconfig-dev amd64 2.15.0-1.1ubuntu2 [161 kB]\\nGet:6 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libpng-tools amd64 1.6.43-5build1 [28.5 kB]\\nFetched 1560 kB in 0s (21.6 MB/s)\\nSelecting previously unselected package bzip2-doc.\\r\\n(Reading database ... \\r(Reading database ... 5%\\r(Reading database ... 10%\\r(Reading database ... 15%\\r(Reading database ... 20%\\r(Reading database ... 25%\\r(Reading database ... 30%\\r(Reading database ... 35%\\r(Reading database ... 40%\\r(Reading database ... 45%\\r(Reading database ... 50%\\r(Reading database ... 55%\\r(Reading database ... 60%\\r(Reading database ... 65%\\r(Reading database ... 70%\\r(Reading database ... 75%\\r(Reading database ... 80%\\r(Reading database ... 85%\\r(Reading database ... 90%\\r(Reading database ... 95%\\r(Reading database ... 100%\\r(Reading database ... 214153 files and directories currently installed.)\\r\\nPreparing to unpack .../0-bzip2-doc_1.0.8-5.1build0.1_all.deb ...\\r\\nUnpacking bzip2-doc (1.0.8-5.1build0.1) ...\\r\\nSelecting previously unselected package libbz2-dev:amd64.\\r\\nPreparing to unpack .../1-libbz2-dev_1.0.8-5.1build0.1_amd64.deb ...\\r\\nUnpacking libbz2-dev:amd64 (1.0.8-5.1build0.1) ...\\r\\nSelecting previously unselected package libpng-dev:amd64.\\r\\nPreparing to unpack .../2-libpng-dev_1.6.43-5build1_amd64.deb ...\\r\\nUnpacking libpng-dev:amd64 (1.6.43-5build1) ...\\r\\nSelecting previously unselected package libfreetype-dev:amd64.\\r\\nPreparing to unpack .../3-libfreetype-dev_2.13.2+dfsg-1build3_amd64.deb ...\\r\\nUnpacking libfreetype-dev:amd64 (2.13.2+dfsg-1build3) ...\\r\\nSelecting previously unselected package libfontconfig-dev:amd64.\\r\\nPreparing to unpack .../4-libfontconfig-dev_2.15.0-1.1ubuntu2_amd64.deb ...\\r\\nUnpacking libfontconfig-dev:amd64 (2.15.0-1.1ubuntu2) ...\\r\\nSelecting previously unselected package libpng-tools.\\r\\nPreparing to unpack .../5-libpng-tools_1.6.43-5build1_amd64.deb ...\\r\\nUnpacking libpng-tools (1.6.43-5build1) ...\\r\\nSetting up bzip2-doc (1.0.8-5.1build0.1) ...\\r\\nSetting up libpng-tools (1.6.43-5build1) ...\\r\\nSetting up libpng-dev:amd64 (1.6.43-5build1) ...\\r\\nSetting up libbz2-dev:amd64 (1.0.8-5.1build0.1) ...\\r\\nSetting up libfreetype-dev:amd64 (2.13.2+dfsg-1build3) ...\\r\\nSetting up libfontconfig-dev:amd64 (2.15.0-1.1ubuntu2) ...\\r\\nProcessing triggers for install-info (7.1-3build2) ...\\r\\nProcessing triggers for man-db (2.12.0-4build2) ...\\r\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":10.5}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dba8e748191b0bee370e1bef8510741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"npm\",\"install\"],\"timeout\":600000}",
+    "call_id": "call_7KDaZ6paWTTyiLK1cjoSRObV",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dba8e748191b0bee370e1bef8510741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"npm\",\"install\"],\"timeout\":600000}",
+    "call_id": "call_7KDaZ6paWTTyiLK1cjoSRObV",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_7KDaZ6paWTTyiLK1cjoSRObV",
+    "output": "{\"output\":\"npm ERR! code EBADENGINE\\nnpm ERR! engine Unsupported engine\\nnpm ERR! engine Not compatible with your version of node/npm: insomnia@1.0.0\\nnpm ERR! notsup Not compatible with your version of node/npm: insomnia@1.0.0\\nnpm ERR! notsup Required: {\\\"node\\\":\\\">=22.14.0\\\",\\\"npm\\\":\\\">=10\\\"}\\nnpm ERR! notsup Actual:   {\\\"npm\\\":\\\"9.2.0\\\"}\\n\\nnpm ERR! A complete log of this run can be found in:\\nnpm ERR!     /home/ubuntu/.npm/_logs/2025-04-30T22_01_30_998Z-debug-0.log\\n\",\"metadata\":{\"exit_code\":1,\"duration_seconds\":1.8}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dbe09b88191906184918411cca20741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"sudo\",\"npm\",\"install\",\"-g\",\"npm@latest\"],\"timeout\":180000}",
+    "call_id": "call_nf03OabUmlZMVpFezk6cH7tW",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dbe09b88191906184918411cca20741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"sudo\",\"npm\",\"install\",\"-g\",\"npm@latest\"],\"timeout\":180000}",
+    "call_id": "call_nf03OabUmlZMVpFezk6cH7tW",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_nf03OabUmlZMVpFezk6cH7tW",
+    "output": "{\"output\":\"\\nadded 1 package in 2s\\n\\n25 packages are looking for funding\\n  run `npm fund` for details\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":2}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dc292848191b989765d0f9dd8860741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"npm\",\"--version\"],\"timeout\":60000}",
+    "call_id": "call_qItYBcFJiAy3Oi4fy3hAaTsr",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dc292848191b989765d0f9dd8860741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"npm\",\"--version\"],\"timeout\":60000}",
+    "call_id": "call_qItYBcFJiAy3Oi4fy3hAaTsr",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "type": "function_call_output",
+    "call_id": "call_qItYBcFJiAy3Oi4fy3hAaTsr",
+    "output": "{\"output\":\"11.3.0\\n\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0.1}}"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dc40638819189d60af659134a4b0741076454a639e5",
+    "type": "function_call",
+    "status": "completed",
+    "arguments": "{\"command\":[\"npm\",\"install\"],\"timeout\":600000}",
+    "call_id": "call_XUvnLGq0OzW4YW7nU4YTadWH",
+    "name": "shell"
+}
+[../../data/insomnia][STDOUT]: {
+    "id": "fc_68129dc

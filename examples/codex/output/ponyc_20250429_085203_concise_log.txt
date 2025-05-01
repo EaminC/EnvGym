@@ -1,0 +1,187 @@
+================================================================================
+Starting run for ../../data/ponyc at 2025-04-29T08:52:03.462550
+[../../data/ponyc][STDOUT] (shell) $ ls
+[../../data/ponyc][STDOUT] OUTPUT: BUILD.md
+CHANGELOG.md
+CMakeLists.txt
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+EDITORS.md
+INSTALL.md
+INSTALL_DOCKER.md
+LICENSE
+Makefile
+README.md
+RELEASE_PROCESS.md
+STYLE_GUIDE.md
+SUPPORT.md
+SYSTEMATIC_TESTING.md
+VERSION
+benchmark
+examples
+lib
+make.ps1
+m...
+[../../data/ponyc][STDOUT] (shell) $ head -50 README.md
+[../../data/ponyc][STDOUT] OUTPUT: # Pony
+
+Pony is an open-source, object-oriented, actor-model, capabilities-secure, high-performance programming language.
+
+## Status
+
+Pony is still pre-1.0 and as such, semi-regularly introduces breaking changes. These changes are usually fairly e...
+[../../data/ponyc][STDOUT] (shell) $ head -50 INSTALL.md
+[../../data/ponyc][STDOUT] OUTPUT: # Installing Pony
+
+Prebuilt Pony binaries are available on a number of platforms. They are built using a very generic CPU instruction set and as such, will not provide maximum performance. If you need to get the best performance possible from your...
+[../../data/ponyc][STDOUT] (shell) $ head -50 BUILD.md
+[../../data/ponyc][STDOUT] OUTPUT: # Building ponyc from source
+
+First of all, you need a compiler with decent C11 support. We officially support Clang on Unix and MSVC on Windows; the following are known to work:
+
+- Clang >= 3.4
+- XCode Clang >= 6.0
+- MSVC >= 2017
+- GCC >= 4.7
+
+Yo...
+[../../data/ponyc][STDOUT] (shell) $ clang --version
+[../../data/ponyc][STDOUT] OUTPUT: Error: spawn clang ENOENT
+[../../data/ponyc][STDOUT] (shell) $ gcc --version
+[../../data/ponyc][STDOUT] OUTPUT: gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+[../../data/ponyc][STDOUT] (shell) $ g++ --version
+[../../data/ponyc][STDOUT] OUTPUT: g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+[../../data/ponyc][STDOUT] (shell) $ cmake --version
+[../../data/ponyc][STDOUT] OUTPUT: cmake version 3.28.3
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+[../../data/ponyc][STDOUT] (shell) $ python3 --version
+[../../data/ponyc][STDOUT] OUTPUT: Python 3.12.3
+
+[../../data/ponyc][STDOUT] (shell) $ make libs build_flags=-j4
+[../../data/ponyc][STDOUT] OUTPUT: -- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile ...
+[../../data/ponyc][STDOUT] (shell) $ git submodule update --init --recursive
+[../../data/ponyc][STDOUT] OUTPUT: fatal: Unable to find current revision in submodule path 'lib/llvm/src'
+
+[../../data/ponyc][STDOUT] (shell) $ ls -lR lib/llvm
+[../../data/ponyc][STDOUT] OUTPUT: lib/llvm:
+total 8
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:34 patches
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:52 src
+
+lib/llvm/patches:
+total 4
+-rw-rw-r-- 1 ubuntu ubuntu 3490 Apr 29 08:34 llvm15-musl-lseek64.diff
+
+lib/llvm/src:
+total 0
+
+[../../data/ponyc][STDOUT] (shell) $ git status
+[../../data/ponyc][STDOUT] OUTPUT: On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+
+[../../data/ponyc][STDOUT] (shell) $ git submodule status
+[../../data/ponyc][STDOUT] OUTPUT:  e19b7dc36bc047b9eb72078d034596be766da350 lib/llvm/src ()
+
+[../../data/ponyc][STDOUT] (shell) $ git submodule update --init lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: fatal: Unable to find current revision in submodule path 'lib/llvm/src'
+
+[../../data/ponyc][STDOUT] (shell) $ ls -la .git/modules/lib/llvm
+[../../data/ponyc][STDOUT] OUTPUT: total 12
+drwxrwxr-x 3 ubuntu ubuntu 4096 Apr 29 08:52 .
+drwxrwxr-x 3 ubuntu ubuntu 4096 Apr 29 08:52 ..
+drwxrwxr-x 7 ubuntu ubuntu 4096 Apr 29 08:52 src
+
+[../../data/ponyc][STDOUT] (shell) $ ls -la .git/modules/lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: total 44
+drwxrwxr-x 7 ubuntu ubuntu 4096 Apr 29 08:52 .
+drwxrwxr-x 3 ubuntu ubuntu 4096 Apr 29 08:52 ..
+-rw-rw-r-- 1 ubuntu ubuntu   23 Apr 29 08:52 HEAD
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:52 branches
+-rw-rw-r-- 1 ubuntu ubuntu  205 Apr 29 ...
+[../../data/ponyc][STDOUT] (shell) $ cat .gitmodules
+[../../data/ponyc][STDOUT] OUTPUT: [submodule "lib/llvm/src"]
+  path = lib/llvm/src
+  url = https://github.com/llvm/llvm-project
+  ignore = dirty
+
+[../../data/ponyc][STDOUT] (shell) $ ls -la lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: total 12
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:52 .
+drwxrwxr-x 4 ubuntu ubuntu 4096 Apr 29 08:34 ..
+-rw-rw-r-- 1 ubuntu ubuntu   65 Apr 29 08:52 .git
+
+[../../data/ponyc][STDOUT] (shell) $ cat lib/llvm/src/.git
+[../../data/ponyc][STDOUT] OUTPUT: gitdir: /home/ubuntu/EnvGym/data/ponyc/.git/modules/lib/llvm/src
+
+[../../data/ponyc][STDOUT] (shell) $ git clone https://github.com/llvm/llvm-project.git lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: fatal: destination path 'lib/llvm/src' already exists and is not an empty directory.
+
+[../../data/ponyc][STDOUT] (shell) $ rm -rf lib/llvm/src/*
+[../../data/ponyc][STDOUT] OUTPUT: 
+[../../data/ponyc][STDOUT] (shell) $ git clone https://github.com/llvm/llvm-project.git lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: fatal: destination path 'lib/llvm/src' already exists and is not an empty directory.
+
+[../../data/ponyc][STDOUT] (shell) $ rm -rf lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: 
+[../../data/ponyc][STDOUT] (shell) $ git submodule update --init lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: 
+[../../data/ponyc][STDOUT] (shell) $ git clone https://github.com/llvm/llvm-project.git lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: fatal: destination path 'lib/llvm/src' already exists and is not an empty directory.
+
+[../../data/ponyc][STDOUT] (shell) $ ls -lR lib/llvm
+[../../data/ponyc][STDOUT] OUTPUT: lib/llvm:
+total 8
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:34 patches
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:52 src
+
+lib/llvm/patches:
+total 4
+-rw-rw-r-- 1 ubuntu ubuntu 3490 Apr 29 08:34 llvm15-musl-lseek64.diff
+
+lib/llvm/src:
+total 0
+
+[../../data/ponyc][STDOUT] (shell) $ rmdir lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: rmdir: failed to remove 'lib/llvm/src': Directory not empty
+
+[../../data/ponyc][STDOUT] (shell) $ ls -la lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: total 12
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:52 .
+drwxrwxr-x 4 ubuntu ubuntu 4096 Apr 29 08:52 ..
+-rw-rw-r-- 1 ubuntu ubuntu   43 Apr 29 08:52 .git
+
+[../../data/ponyc][STDOUT] (shell) $ rm -rf lib/llvm/src/.git
+[../../data/ponyc][STDOUT] OUTPUT: 
+[../../data/ponyc][STDOUT] (shell) $ rm -rf lib/llvm/src/*
+[../../data/ponyc][STDOUT] OUTPUT: 
+[../../data/ponyc][STDOUT] (shell) $ git clone https://github.com/llvm/llvm-project.git lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: Cloning into 'lib/llvm/src'...
+
+[../../data/ponyc][STDOUT] (shell) $ ls -la lib/llvm/src
+[../../data/ponyc][STDOUT] OUTPUT: total 8
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:53 .
+drwxrwxr-x 4 ubuntu ubuntu 4096 Apr 29 08:52 ..
+
+[../../data/ponyc][STDOUT] MESSAGE: The repository requires the LLVM source code as a submodule in `lib/llvm/src`, but the appropriate commit or actual content is missing and the standard git submodule update commands fail with "Unable to find current revision." Directly cloning the...
+Completed with return code: 0
+================================================================================
+

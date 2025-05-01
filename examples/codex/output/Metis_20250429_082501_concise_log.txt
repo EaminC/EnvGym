@@ -1,0 +1,585 @@
+================================================================================
+Starting run for ../../data/Metis at 2025-04-29T08:25:01.825879
+[../../data/Metis][STDOUT] (shell) $ ls
+[../../data/Metis][STDOUT] OUTPUT: LICENSE
+Makefile
+README-others.md
+README.md
+ae-experiments
+common
+driver-fs-state
+example
+fs-state
+fs_bugs
+include
+kernel
+mcl-demo
+promela-demo
+python-demo
+scripts
+tests
+verifs1
+
+[../../data/Metis][STDOUT] (shell) $ cat README.md
+[../../data/Metis][STDOUT] OUTPUT: 
+
+[Output truncated: too many lines or bytes]
+[../../data/Metis][STDOUT] (shell) $ head -40 README.md
+[../../data/Metis][STDOUT] OUTPUT: # Metis: File System Model Checking via Versatile Input and State Exploration
+
+This is the artifact for the FAST '24 paper **"Metis: File System Model Checking 
+via Versatile Input and State Exploration"**.  Metis is a differential-testing based
+m...
+[../../data/Metis][STDOUT] (shell) $ grep -i dependency README.md
+[../../data/Metis][STDOUT] OUTPUT: 
+[../../data/Metis][STDOUT] (shell) $ grep -i prereq README.md
+[../../data/Metis][STDOUT] OUTPUT:    2. [Prerequisites and Required Artifacts ](#prerequisites-and-required-artifacts)
+### Prerequisites and Required Artifacts 
+
+[../../data/Metis][STDOUT] (shell) $ grep -A 20 Prerequisites and Required Artifacts README.md
+[../../data/Metis][STDOUT] OUTPUT:    2. [Prerequisites and Required Artifacts ](#prerequisites-and-required-artifacts)
+2. [FAST24 Artifact Evaluation](#fast24-artifact-evaluation)
+   1. [Machines](#machines)
+   2. [Kick-the-Tires - System Configuration and Test Run](#kick-the-tire...
+[../../data/Metis][STDOUT] (shell) $ head -60 README.md
+[../../data/Metis][STDOUT] OUTPUT: # Metis: File System Model Checking via Versatile Input and State Exploration
+
+This is the artifact for the FAST '24 paper **"Metis: File System Model Checking 
+via Versatile Input and State Exploration"**.  Metis is a differential-testing based
+m...
+[../../data/Metis][STDOUT] (shell) $ head -100 README.md
+[../../data/Metis][STDOUT] OUTPUT: # Metis: File System Model Checking via Versatile Input and State Exploration
+
+This is the artifact for the FAST '24 paper **"Metis: File System Model Checking 
+via Versatile Input and State Exploration"**.  Metis is a differential-testing based
+m...
+[../../data/Metis][STDOUT] (shell) $ ls scripts
+[../../data/Metis][STDOUT] OUTPUT: color.py
+gcov
+mcfs_helper_daemon.sh
+multi_machines_analysis
+setup-deps.sh
+setup-kernel-nfs.sh
+setup-nfs-ganesha.sh
+swarm
+
+[../../data/Metis][STDOUT] (shell) $ file scripts/setup-deps.sh
+[../../data/Metis][STDOUT] OUTPUT: scripts/setup-deps.sh: Bourne-Again shell script, ASCII text executable, with very long lines (364)
+
+[../../data/Metis][STDOUT] (shell) $ head -40 scripts/setup-deps.sh
+[../../data/Metis][STDOUT] OUTPUT: #!/bin/bash
+
+#
+# Copyright (c) 2020-2024 Yifei Liu
+# Copyright (c) 2020-2024 Wei Su
+# Copyright (c) 2020-2024 Erez Zadok
+# Copyright (c) 2020-2024 Stony Brook University
+# Copyright (c) 2020-2024 The Research Foundation of SUNY
+#
+# You can redistr...
+[../../data/Metis][STDOUT] (shell) $ bash scripts/setup-deps.sh
+[../../data/Metis][STDOUT] OUTPUT: Basedir = /home/ubuntu
+Build type = Debug
+Overrided items:
+Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://us-east-2.ec2.archive.ubuntu....
+[../../data/Metis][STDOUT] (shell) $ pip3 install numpy scipy matplotlib
+[../../data/Metis][STDOUT] OUTPUT: error: externally-managed-environment
+
+× This environment is externally managed
+╰─> To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to
+    install.
+    
+    If you wish to install a ...
+[../../data/Metis][STDOUT] (shell) $ sudo pip3 install numpy scipy matplotlib --break-system-packages
+[../../data/Metis][STDOUT] OUTPUT: Requirement already satisfied: numpy in /usr/lib/python3/dist-packages (1.26.4)
+Requirement already satisfied: scipy in /usr/lib/python3/dist-packages (1.11.4)
+Requirement already satisfied: matplotlib in /usr/lib/python3/dist-packages (3.6.3)
+
+[../../data/Metis][STDOUT] (shell) $ ls
+[../../data/Metis][STDOUT] OUTPUT: LICENSE
+Makefile
+README-others.md
+README.md
+ae-experiments
+common
+driver-fs-state
+example
+fs-state
+fs_bugs
+include
+kernel
+mcl-demo
+promela-demo
+python-demo
+scripts
+tests
+verifs1
+
+[../../data/Metis][STDOUT] (shell) $ ls ../
+[../../data/Metis][STDOUT] OUTPUT: Metis
+download.sh
+repolist.txt
+
+[../../data/Metis][STDOUT] (shell) $ ls .
+[../../data/Metis][STDOUT] OUTPUT: LICENSE
+Makefile
+README-others.md
+README.md
+ae-experiments
+common
+driver-fs-state
+example
+fs-state
+fs_bugs
+include
+kernel
+mcl-demo
+promela-demo
+python-demo
+scripts
+tests
+verifs1
+
+[../../data/Metis][STDOUT] (shell) $ ls driver-fs-state
+[../../data/Metis][STDOUT] OUTPUT: Makefile
+config.h
+driver_scripts
+fileutil.c
+fileutil.h
+init_globals.c
+init_globals.h
+inverse-prob-weights.py
+loadlargebrds.sh
+loadmods.sh
+mcfs-main.pml
+mount.c
+parameter_util.py
+parameters.py
+perf.c
+set.cpp
+set.h
+setup.c
+setup.h
+setup.sh
+setup_swa...
+[../../data/Metis][STDOUT] (shell) $ ls fs-state
+[../../data/Metis][STDOUT] OUTPUT: Makefile
+README-swarm.md
+README.md
+UNSUPPORT_FSOPS.md
+autoreplay.sh
+config.h
+fileutil.c
+fileutil.h
+ganesha.conf
+ganesha.conf.example
+init_globals.c
+init_globals.h
+loadlargebrds.sh
+loadmods.sh
+loop_replay.sh
+mcfs-main.pml
+mcfs_scripts
+min_repro.c
+m...
+[../../data/Metis][STDOUT] (shell) $ ls scripts
+[../../data/Metis][STDOUT] OUTPUT: color.py
+gcov
+mcfs_helper_daemon.sh
+multi_machines_analysis
+setup-deps.sh
+setup-kernel-nfs.sh
+setup-nfs-ganesha.sh
+swarm
+
+[../../data/Metis][STDOUT] (shell) $ ls RefFS
+[../../data/Metis][STDOUT] OUTPUT: ls: cannot access 'RefFS': No such file or directory
+
+[../../data/Metis][STDOUT] (shell) $ git clone https://github.com/sbu-fsl/RefFS.git
+[../../data/Metis][STDOUT] OUTPUT: Cloning into 'RefFS'...
+
+[../../data/Metis][STDOUT] (shell) $ git clone https://github.com/sbu-fsl/IOCov.git
+[../../data/Metis][STDOUT] OUTPUT: Cloning into 'IOCov'...
+
+[../../data/Metis][STDOUT] (shell) $ git clone https://github.com/sbu-fsl/fsl-spin.git
+[../../data/Metis][STDOUT] OUTPUT: Cloning into 'fsl-spin'...
+
+[../../data/Metis][STDOUT] (shell) $ git clone https://github.com/sbu-fsl/swarm-mcfs.git
+[../../data/Metis][STDOUT] OUTPUT: Cloning into 'swarm-mcfs'...
+
+[../../data/Metis][STDOUT] (shell) $ ls RefFS
+[../../data/Metis][STDOUT] OUTPUT: CHANGES
+CMakeLists.txt
+COPYING
+README.md
+doc
+setup_verifs2.sh
+src
+tests
+util
+
+[../../data/Metis][STDOUT] (shell) $ ls fsl-spin
+[../../data/Metis][STDOUT] OUTPUT: Bin
+Doc
+Examples
+LICENSE
+Man
+README.md
+Src
+makefile
+optional_gui
+
+[../../data/Metis][STDOUT] (shell) $ ls swarm-mcfs
+[../../data/Metis][STDOUT] OUTPUT: Doc
+README.md
+Src
+makefile
+
+[../../data/Metis][STDOUT] (shell) $ ls IOCov
+[../../data/Metis][STDOUT] OUTPUT: FAST2024
+LICENSE
+MCFS
+README.md
+Syzkaller
+__init__.py
+hotstorage23
+kernel-analysis
+src
+
+[../../data/Metis][STDOUT] (shell) $ sudo apt-get update
+[../../data/Metis][STDOUT] OUTPUT: Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:4 http://security....
+[../../data/Metis][STDOUT] (shell) $ sudo apt-get install build-essential cmake gcc g++ make python3-pip libjansson-dev libfuse-dev libattr1-dev libcap-ng-dev libacl1-dev libsqlite3-dev python3 python3-numpy python3-scipy python3-matplotlib libboost-all-dev swig libgflags-dev
+[../../data/Metis][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+build-essential is already the newest version (12.10ubuntu1).
+cmake is already the newest version (3.28.3-1build7).
+gcc is already the newest version (4:13.2.0-7ubun...
+[../../data/Metis][STDOUT] (shell) $ sudo apt-get install build-essential cmake gcc g++ make python3-pip libjansson-dev libfuse-dev libattr1-dev libcap-ng-dev libacl1-dev libsqlite3-dev python3 python3-numpy python3-scipy python3-matplotlib libboost-all-dev swig libgflags-dev -y
+[../../data/Metis][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+build-essential is already the newest version (12.10ubuntu1).
+cmake is already the newest version (3.28.3-1build7).
+gcc is already the newest version (4:13.2.0-7ubun...
+[../../data/Metis][STDOUT] (shell) $ ls RefFS
+[../../data/Metis][STDOUT] OUTPUT: CHANGES
+CMakeLists.txt
+COPYING
+README.md
+doc
+setup_verifs2.sh
+src
+tests
+util
+
+[../../data/Metis][STDOUT] (shell) $ cat RefFS/README.md
+[../../data/Metis][STDOUT] OUTPUT: # RefFS: a small, fast file system for Metis as a reference with efficient ioctl API to save/restore entire FS state
+
+## Introducation
+
+RefFS, or formerly known as VeriFS2, is a FUSE-based in-memory file system used as 
+a reference file system for...
+[../../data/Metis][STDOUT] (shell) $ sudo bash RefFS/setup_verifs2.sh
+[../../data/Metis][STDOUT] OUTPUT: nohup: failed to run command '/root/RefFS/build/mnts/verifs2': No such file or directory
+Mount failed.
+
+[../../data/Metis][STDOUT] (shell) $ ls RefFS/build
+[../../data/Metis][STDOUT] OUTPUT: ls: cannot access 'RefFS/build': No such file or directory
+
+[../../data/Metis][STDOUT] (shell) $ mkdir RefFS/build
+[../../data/Metis][STDOUT] OUTPUT: 
+[../../data/Metis][STDOUT] (shell) $ cmake ../src
+[../../data/Metis][STDOUT] OUTPUT: -- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile ...
+[../../data/Metis][STDOUT] (shell) $ make -j8
+[../../data/Metis][STDOUT] OUTPUT: [  4%] Building CXX object CMakeFiles/ckpt.dir/ckpt.cpp.o
+[  9%] Building CXX object CMakeFiles/load.dir/load.cpp.o
+[ 18%] Building CXX object CMakeFiles/pkl.dir/pkl.cpp.o
+[ 18%] Building CXX object CMakeFiles/restore.dir/restore.cpp.o
+[ 22%] Buil...
+[../../data/Metis][STDOUT] (shell) $ sudo make install
+[../../data/Metis][STDOUT] OUTPUT: [ 50%] Built target fuse-cpp-ramfs
+[ 63%] Built target ckpt
+[ 77%] Built target restore
+[ 86%] Built target pkl
+[ 95%] Built target load
+[100%] Built target mount-helper
+Install the project...
+-- Install configuration: "Debug"
+-- Installing: /usr/...
+[../../data/Metis][STDOUT] (shell) $ sudo mkdir -p /mnt/test-verifs2
+[../../data/Metis][STDOUT] OUTPUT: 
+[../../data/Metis][STDOUT] (shell) $ sudo mount -t fuse.fuse-cpp-ramfs verifs2 /mnt/test-verifs2
+[../../data/Metis][STDOUT] OUTPUT: 
+[../../data/Metis][STDOUT] (shell) $ mount
+[../../data/Metis][STDOUT] OUTPUT: /dev/xvda1 on / type ext4 (rw,relatime,discard,errors=remount-ro,commit=30)
+devtmpfs on /dev type devtmpfs (rw,nosuid,noexec,relatime,size=1994620k,nr_inodes=498655,mode=755,inode64)
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+sysfs ...
+[../../data/Metis][STDOUT] (shell) $ ls swarm-mcfs/Src
+[../../data/Metis][STDOUT] OUTPUT: makefile
+swarm.c
+swarm_seeds.h
+
+[../../data/Metis][STDOUT] (shell) $ make
+[../../data/Metis][STDOUT] OUTPUT: cc -std=c99 -Wall -pedantic -o swarm-mcfs swarm.c -lm
+
+[../../data/Metis][STDOUT] (shell) $ ls fsl-spin/Src
+[../../data/Metis][STDOUT] OUTPUT: LICENSE
+dstep.c
+flow.c
+guided.c
+main.c
+makefile
+mesg.c
+msc_tcl.c
+pangen1.c
+pangen1.h
+pangen2.c
+pangen2.h
+pangen3.c
+pangen3.h
+pangen4.c
+pangen4.h
+pangen5.c
+pangen5.h
+pangen6.c
+pangen6.h
+pangen7.c
+pangen7.h
+reprosrc.c
+run.c
+sched.c
+spin.h
+spin.y
+spi...
+[../../data/Metis][STDOUT] (shell) $ make
+[../../data/Metis][STDOUT] OUTPUT: yacc -v -d 		 spin.y
+cc -O2 -DNXT -Wall -pedantic  -c y?tab.c
+rm -f y?tab.c
+mv y?tab.o spin.o
+cc -O2 -DNXT -Wall -pedantic   -c -o spinlex.o spinlex.c
+cc -O2 -DNXT -Wall -pedantic   -c -o sym.o sym.c
+cc -O2 -DNXT -Wall -pedantic   -c -o vars.o var...
+[../../data/Metis][STDOUT] (shell) $ ls IOCov/src
+[../../data/Metis][STDOUT] OUTPUT: Assets
+README.md
+__init__.py
+analyzer-open-ret-fd.py
+analyzerutils.py
+checker-interleaving-examples.py
+checker-intervening-cpu-id.py
+checker-multi-cpu-id.py
+checker-write-openexit.py
+constants.py
+download-syscall-htmls.sh
+fig-analyzer-filter-ratio...
+[../../data/Metis][STDOUT] (shell) $ ls python-demo
+[../../data/Metis][STDOUT] OUTPUT: auto_ambiguity_detector
+
+[../../data/Metis][STDOUT] (shell) $ ls python-demo/auto_ambiguity_detector
+[../../data/Metis][STDOUT] OUTPUT: LP_demo
+README.md
+ambiguity_checker_LP.py
+ambiguity_checker_simulator.py
+examples
+ply.py
+promela_parser.py
+
+[../../data/Metis][STDOUT] (shell) $ cat README.md
+[../../data/Metis][STDOUT] OUTPUT: ### Dependency
+
+---
+
+All codes should run under python3. 
+
+Packages used
+
+1. PuLP: a linear programming solver
+2. Scipy: a library used for scientific computing
+3. Numpy: a library for mathematical computing
+4. PLY: a parsing tool for semantic ana...
+[../../data/Metis][STDOUT] (shell) $ pip3 install pulp --break-system-packages
+[../../data/Metis][STDOUT] OUTPUT: Defaulting to user installation because normal site-packages is not writeable
+Collecting pulp
+  Downloading pulp-3.1.1-py3-none-any.whl.metadata (1.3 kB)
+Downloading pulp-3.1.1-py3-none-any.whl (16.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━...
+[../../data/Metis][STDOUT] (shell) $ python3 ambiguity_checker_LP.py examples/examples.pml
+[../../data/Metis][STDOUT] OUTPUT: File not found.
+Exit...
+
+[../../data/Metis][STDOUT] (shell) $ ls python-demo/auto_ambiguity_detector/examples
+[../../data/Metis][STDOUT] OUTPUT: example.pml
+example2.pml
+example3.pml
+example4.pml
+example5.pml
+example6.pml
+
+[../../data/Metis][STDOUT] (shell) $ python3 ambiguity_checker_LP.py examples/example2.pml
+[../../data/Metis][STDOUT] OUTPUT: Welcome to the CBC MILP Solver 
+Version: 2.10.3 
+Build Date: Dec 15 2019 
+
+command line - /home/ubuntu/.local/lib/python3.12/site-packages/pulp/apis/../solverdir/cbc/linux/i64/cbc /tmp/b9900d9916f4403aa3293af41d79943a-pulp.mps -timeMode elapsed -b...
+[../../data/Metis][STDOUT] (shell) $ ls tests
+[../../data/Metis][STDOUT] OUTPUT: arena_allocator
+ltp
+malloc_hook
+sharedmemory
+xfstests
+
+[../../data/Metis][STDOUT] (shell) $ ls driver-fs-state
+[../../data/Metis][STDOUT] OUTPUT: Makefile
+config.h
+driver_scripts
+fileutil.c
+fileutil.h
+init_globals.c
+init_globals.h
+inverse-prob-weights.py
+loadlargebrds.sh
+loadmods.sh
+mcfs-main.pml
+mount.c
+parameter_util.py
+parameters.py
+perf.c
+set.cpp
+set.h
+setup.c
+setup.h
+setup.sh
+setup_swa...
+[../../data/Metis][STDOUT] (shell) $ make
+[../../data/Metis][STDOUT] OUTPUT: python3 parameters.py
+gcc -Wall -Werror -o circular_buf.c.o -fPIC -c ../common/circular_buf.c -g -I../include -D PRINTF -fcommon -DCBUF_IMAGE -DFILEDIR_POOL -DCOMPLEX_FSOPS -DOPEN_FLAG_PATTERN=0 -DWRITE_SIZE_PATTERN=0  -lm -lssl -lcrypto -lrt -lst...
+[../../data/Metis][STDOUT] (shell) $ ls fs-state
+[../../data/Metis][STDOUT] OUTPUT: Makefile
+README-swarm.md
+README.md
+UNSUPPORT_FSOPS.md
+autoreplay.sh
+config.h
+fileutil.c
+fileutil.h
+ganesha.conf
+ganesha.conf.example
+init_globals.c
+init_globals.h
+loadlargebrds.sh
+loadmods.sh
+loop_replay.sh
+mcfs-main.pml
+mcfs_scripts
+min_repro.c
+m...
+[../../data/Metis][STDOUT] (shell) $ make
+[../../data/Metis][STDOUT] OUTPUT: python3 parameters.py
+gcc -Wall -Werror -o circular_buf.c.o -fPIC -c ../common/circular_buf.c -g -I../include -D PRINTF -fcommon -DCBUF_IMAGE -DFILEDIR_POOL -DCOMPLEX_FSOPS  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz...
+[../../data/Metis][STDOUT] (shell) $ ls fs-state
+[../../data/Metis][STDOUT] OUTPUT: Makefile
+README-swarm.md
+README.md
+UNSUPPORT_FSOPS.md
+__pycache__
+abstract_fs.cpp.o
+autoreplay.sh
+circular_buf.c.o
+common-libs.a
+config.h
+custom_heap.c.o
+errnoname.c.o
+fileutil.c
+fileutil.h
+ganesha.conf
+ganesha.conf.example
+init_globals.c
+init_glo...
+[../../data/Metis][STDOUT] (shell) $ ./pan
+[../../data/Metis][STDOUT] OUTPUT: Too few arguments.  Usage: ./pan -K args
+Cannot decide cli or env for globals.
+pan: ../common/log.c:88: do_write_log: Assertion `my_queue.data' failed.
+
+[../../data/Metis][STDOUT] (shell) $ ls example
+[../../data/Metis][STDOUT] OUTPUT: Makefile
+README.md
+test.c
+
+[../../data/Metis][STDOUT] (shell) $ cat example/README.md
+[../../data/Metis][STDOUT] OUTPUT: # example - an example to execute sequence of filesystem syscalls with multi-threading
+
+This directory includes test.c and Makefile that runs sequence of filesystem syscalls and outputs the results to text and json files.
+
+## Usage
+
+To run this ex...
+[../../data/Metis][STDOUT] (shell) $ make
+[../../data/Metis][STDOUT] OUTPUT: gcc -g -o test test.c ../common/*.c -I../include -lpthread
+
+[../../data/Metis][STDOUT] (shell) $ ./test
+[../../data/Metis][STDOUT] OUTPUT: Error: spawn ./test ENOENT
+[../../data/Metis][STDOUT] (shell) $ ls example
+[../../data/Metis][STDOUT] OUTPUT: Makefile
+README.md
+test.c
+
+[../../data/Metis][STDOUT] (shell) $ ls common
+[../../data/Metis][STDOUT] OUTPUT: README.md
+abstract_fs.cpp
+circular_buf.c
+custom_heap.c
+errnoname.c
+log.c
+nanotiming.c
+operations.c
+path_utils.cpp
+swapperf.c
+
+[../../data/Metis][STDOUT] (shell) $ ls include
+[../../data/Metis][STDOUT] OUTPUT: abstract_fs.h
+circular_buf.h
+common_headers.h
+common_types.h
+cr.h
+custom_heap.h
+errnoname.h
+log.h
+nanotiming.h
+operations.h
+path_utils.h
+slice.h
+swapperf.h
+vector.h
+
+[../../data/Metis][STDOUT] (shell) $ gcc -g -o test test.c ../common/circular_buf.c ../common/custom_heap.c ../common/errnoname.c ../common/log.c ../common/nanotiming.c ../common/operations.c ../common/path_utils.cpp ../common/swapperf.c -I../include -lpthread
+[../../data/Metis][STDOUT] OUTPUT: /usr/bin/ld: /tmp/cc8W9W1o.o: in function `populate_writesz_parts':
+/home/ubuntu/EnvGym/data/Metis/example/../common/operations.c:155:(.text+0x2e7): undefined reference to `pow'
+/usr/bin/ld: /home/ubuntu/EnvGym/data/Metis/example/../common/operati...
+[../../data/Metis][STDOUT] (shell) $ g++ -g -o test test.c ../common/circular_buf.c ../common/custom_heap.c ../common/errnoname.c ../common/log.c ../common/nanotiming.c ../common/operations.c ../common/path_utils.cpp ../common/swapperf.c -I../include -lpthread -lm
+[../../data/Metis][STDOUT] OUTPUT: test.c: In function ‘void init_event_vec()’:
+test.c:94:34: error: invalid conversion from ‘void*’ to ‘test_event*’ [-fpermissive]
+   94 |         event_vec.events = calloc(event_vec.cap, sizeof(struct test_event));
+      |                         ...
+[../../data/Metis][STDOUT] (shell) $ make
+[../../data/Metis][STDOUT] OUTPUT: gcc -g -o test test.c ../common/*.c -I../include -lpthread
+
+[../../data/Metis][STDOUT] MESSAGE: **Environment setup, build, and partial verification summary:**
+
+### Actions performed
+- Followed the README for dependencies: installed all system and Python requirements, built required referenced repos (`RefFS`, `fsl-spin`, `swarm-mcfs`, `IOCov...
+Completed with return code: 0
+================================================================================
+

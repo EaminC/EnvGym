@@ -1,0 +1,200 @@
+================================================================================
+Starting run for ../../data/express at 2025-04-30T21:49:22.133417
+[../../data/express][STDOUT] (shell) $ ls
+[../../data/express][STDOUT] OUTPUT: Charter.md
+Code-Of-Conduct.md
+Collaborator-Guide.md
+Contributing.md
+History.md
+LICENSE
+Readme-Guide.md
+Readme.md
+Release-Process.md
+Security.md
+Triager-Guide.md
+benchmarks
+examples
+index.js
+lib
+package.json
+test
+
+[../../data/express][STDOUT] (shell) $ head -40 Readme.md
+[../../data/express][STDOUT] OUTPUT: [![Express Logo](https://i.cloudup.com/zfY6lL7eFa-3000x3000.png)](https://expressjs.com/)
+
+**Fast, unopinionated, minimalist web framework for [Node.js](https://nodejs.org).**
+
+**This project has a [Code of Conduct][].**
+
+## Table of contents
+
+* [...
+[../../data/express][STDOUT] (shell) $ head -80 Readme.md
+[../../data/express][STDOUT] OUTPUT: [![Express Logo](https://i.cloudup.com/zfY6lL7eFa-3000x3000.png)](https://expressjs.com/)
+
+**Fast, unopinionated, minimalist web framework for [Node.js](https://nodejs.org).**
+
+**This project has a [Code of Conduct][].**
+
+## Table of contents
+
+* [...
+[../../data/express][STDOUT] (shell) $ head -120 Readme.md
+[../../data/express][STDOUT] OUTPUT: [![Express Logo](https://i.cloudup.com/zfY6lL7eFa-3000x3000.png)](https://expressjs.com/)
+
+**Fast, unopinionated, minimalist web framework for [Node.js](https://nodejs.org).**
+
+**This project has a [Code of Conduct][].**
+
+## Table of contents
+
+* [...
+[../../data/express][STDOUT] (shell) $ head -160 Readme.md
+[../../data/express][STDOUT] OUTPUT: [![Express Logo](https://i.cloudup.com/zfY6lL7eFa-3000x3000.png)](https://expressjs.com/)
+
+**Fast, unopinionated, minimalist web framework for [Node.js](https://nodejs.org).**
+
+**This project has a [Code of Conduct][].**
+
+## Table of contents
+
+* [...
+[../../data/express][STDOUT] (shell) $ node --version
+[../../data/express][STDOUT] OUTPUT: v22.14.0
+
+[../../data/express][STDOUT] (shell) $ npm --version
+[../../data/express][STDOUT] OUTPUT: 9.2.0
+
+[../../data/express][STDOUT] (shell) $ npm install
+[../../data/express][STDOUT] OUTPUT: 
+added 385 packages, and audited 386 packages in 9s
+
+66 packages are looking for funding
+  run `npm fund` for details
+
+3 low severity vulnerabilities
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[../../data/express][STDOUT] (shell) $ ls examples
+[../../data/express][STDOUT] OUTPUT: README.md
+auth
+content-negotiation
+cookie-sessions
+cookies
+downloads
+ejs
+error
+error-pages
+hello-world
+markdown
+multi-router
+mvc
+online
+params
+resource
+route-map
+route-middleware
+route-separation
+search
+session
+static-files
+vhost
+view-constructor
+...
+[../../data/express][STDOUT] (shell) $ node examples/hello-world
+[../../data/express][STDOUT] OUTPUT: Express started on port 3000
+
+[../../data/express][STDOUT] (shell) $ curl -i http://localhost:3000/
+[../../data/express][STDOUT] OUTPUT:   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0...
+[../../data/express][STDOUT] (shell) $ timeout 120 node examples/hello-world
+[../../data/express][STDOUT] OUTPUT: Express started on port 3000
+
+[../../data/express][STDOUT] (shell) $ lsof -i:3000
+[../../data/express][STDOUT] OUTPUT: 
+[../../data/express][STDOUT] (shell) $ head -20 examples/hello-world
+[../../data/express][STDOUT] OUTPUT: head: error reading 'examples/hello-world': Is a directory
+
+[../../data/express][STDOUT] (shell) $ ls -l examples/hello-world
+[../../data/express][STDOUT] OUTPUT: total 4
+-rw-rw-r-- 1 ubuntu ubuntu 269 Apr 30 20:25 index.js
+
+[../../data/express][STDOUT] (shell) $ head -20 examples/hello-world/index.js
+[../../data/express][STDOUT] OUTPUT: 'use strict'
+
+var express = require('../../');
+
+var app = module.exports = express()
+
+app.get('/', function(req, res){
+  res.send('Hello World');
+});
+
+/* istanbul ignore next */
+if (!module.parent) {
+  app.listen(3000);
+  console.log('Express star...
+[../../data/express][STDOUT] (shell) $ node examples/hello-world/index.js
+[../../data/express][STDOUT] OUTPUT: Express started on port 3000
+
+[../../data/express][STDOUT] (shell) $ curl -i http://localhost:3000/
+[../../data/express][STDOUT] OUTPUT:   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0...
+[../../data/express][STDOUT] (shell) $ timeout 120 node examples/hello-world/index.js
+[../../data/express][STDOUT] OUTPUT: Express started on port 3000
+
+[../../data/express][STDOUT] (shell) $ nohup node examples/hello-world/index.js &
+[../../data/express][STDOUT] OUTPUT: Express started on port 3000
+
+[../../data/express][STDOUT] (shell) $ ps aux
+[../../data/express][STDOUT] OUTPUT: USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.2  22640 11060 ?        Ss   Apr27   0:07 /sbin/init
+root           2  0.0  0.0      0     0 ?        S    Apr27   0:00 [kthreadd]
+root           3...
+[../../data/express][STDOUT] (shell) $ lsof -i:3000
+[../../data/express][STDOUT] OUTPUT: 
+[../../data/express][STDOUT] (shell) $ node examples/hello-world/index.js
+[../../data/express][STDOUT] OUTPUT: Express started on port 3000
+
+[../../data/express][STDOUT] (shell) $ npm test
+[../../data/express][STDOUT] OUTPUT: 
+> express@5.1.0 test
+> mocha --require test/support/env --reporter spec --check-leaks test/ test/acceptance/
+
+
+
+  Route
+    ✔ should work without handlers
+    ✔ should not stack overflow with a large sync stack (138ms)
+    .all
+      ✔ should add...
+[../../data/express][STDOUT] (shell) $ head -40 examples/content-negotiation/index.js
+[../../data/express][STDOUT] OUTPUT: 'use strict'
+
+var express = require('../../');
+var app = module.exports = express();
+var users = require('./db');
+
+// so either you can deal with different types of formatting
+// for expected response in index.js
+app.get('/', function(req, res){
+ ...
+[../../data/express][STDOUT] (shell) $ node examples/content-negotiation/index.js
+[../../data/express][STDOUT] OUTPUT: Express started on port 3000
+
+[../../data/express][STDOUT] MESSAGE: **Setup & Verification Summary:**
+
+- I followed the README instructions:
+  - Confirmed Node.js version is >=18 (22.14.0 used).
+  - Ran `npm install` for all dependencies.
+- Verified code runs by:
+  - Running the included example app (`examples/hel...
+Completed with return code: 0
+================================================================================
+

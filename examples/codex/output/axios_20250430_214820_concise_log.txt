@@ -1,0 +1,163 @@
+================================================================================
+Starting run for ../../data/axios at 2025-04-30T21:48:20.879353
+[../../data/axios][STDOUT] (shell) $ ls
+[../../data/axios][STDOUT] OUTPUT: CHANGELOG.md
+CODE_OF_CONDUCT.md
+COLLABORATOR_GUIDE.md
+CONTRIBUTING.md
+ECOSYSTEM.md
+LICENSE
+MIGRATION_GUIDE.md
+README.md
+SECURITY.md
+bin
+bower.json
+dist
+examples
+gulpfile.js
+index.d.cts
+index.d.ts
+index.js
+karma.conf.cjs
+lib
+package-lock.json
+packa...
+[../../data/axios][STDOUT] (shell) $ head -40 README.md
+[../../data/axios][STDOUT] OUTPUT: 
+<h3 align="center"> 🥇 Gold sponsors <br> </h3> <table align="center" width="100%"><tr width="33.333333333333336%"><td align="center" width="33.333333333333336%"> <a href="https://stytch.com/?utm_source&#x3D;oss-sponsorship&amp;utm_medium&#x3D;pai...
+[../../data/axios][STDOUT] (shell) $ grep -i install README.md
+[../../data/axios][STDOUT] OUTPUT: [![install size](https://img.shields.io/badge/dynamic/json?url=https://packagephobia.com/v2/api.json?p=axios&query=$.install.pretty&label=install%20size&style=flat-square)](https://packagephobia.now.sh/result?p=axios)
+  - [Installing](#installing)...
+[../../data/axios][STDOUT] (shell) $ grep -i requirement README.md
+[../../data/axios][STDOUT] OUTPUT: 
+[../../data/axios][STDOUT] (shell) $ grep -i dependency README.md
+[../../data/axios][STDOUT] OUTPUT: 
+[../../data/axios][STDOUT] (shell) $ grep -i prerequisite README.md
+[../../data/axios][STDOUT] OUTPUT: 
+[../../data/axios][STDOUT] (shell) $ grep -i usage README.md
+[../../data/axios][STDOUT] OUTPUT: > **Note**: CommonJS usage  
+The old approach of directly manipulating headers object is still available, but deprecated and not recommended for future usage.
+
+[../../data/axios][STDOUT] (shell) $ grep -i node README.md
+[../../data/axios][STDOUT] OUTPUT: <h3 align="center"> 🥇 Gold sponsors <br> </h3> <table align="center" width="100%"><tr width="33.333333333333336%"><td align="center" width="33.333333333333336%"> <a href="https://stytch.com/?utm_source&#x3D;oss-sponsorship&amp;utm_medium&#x3D;paid...
+[../../data/axios][STDOUT] (shell) $ head -60 README.md
+[../../data/axios][STDOUT] OUTPUT: 
+<h3 align="center"> 🥇 Gold sponsors <br> </h3> <table align="center" width="100%"><tr width="33.333333333333336%"><td align="center" width="33.333333333333336%"> <a href="https://stytch.com/?utm_source&#x3D;oss-sponsorship&amp;utm_medium&#x3D;pai...
+[../../data/axios][STDOUT] (shell) $ awk /## Installing/,/##/ {print NR,$0} README.md
+[../../data/axios][STDOUT] OUTPUT: 113 ## Installing
+
+[../../data/axios][STDOUT] (shell) $ awk NR>=113&&NR<123 {print NR,$0} README.md
+[../../data/axios][STDOUT] OUTPUT: 113 ## Installing
+114 
+115 ### Package manager
+116 
+117 Using npm:
+118 
+119 ```bash
+120 $ npm install axios
+121 ```
+122 
+
+[../../data/axios][STDOUT] (shell) $ awk NR>=123&&NR<143 {print NR,$0} README.md
+[../../data/axios][STDOUT] OUTPUT: 123 Using bower:
+124 
+125 ```bash
+126 $ bower install axios
+127 ```
+128 
+129 Using yarn:
+130 
+131 ```bash
+132 $ yarn add axios
+133 ```
+134 
+135 Using pnpm:
+136 
+137 ```bash
+138 $ pnpm add axios
+139 ```
+140 
+141 Using bun:
+142 
+
+[../../data/axios][STDOUT] (shell) $ awk NR>=143&&NR<163 {print NR,$0} README.md
+[../../data/axios][STDOUT] OUTPUT: 143 ```bash
+144 $ bun add axios
+145 ```
+146 
+147 Once the package is installed, you can import the library using `import` or `require` approach:
+148 
+149 ```js
+150 import axios, {isCancel, AxiosError} from 'axios';
+151 ```
+152 
+153 You can also us...
+[../../data/axios][STDOUT] (shell) $ npm install
+[../../data/axios][STDOUT] OUTPUT: 
+[../../data/axios][STDOUT] (shell) $ cat package.json
+[../../data/axios][STDOUT] OUTPUT: {
+  "name": "axios",
+  "version": "1.9.0",
+  "description": "Promise based HTTP client for the browser and node.js",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "types": {
+        "require": "./index.d.cts",
+        "default": "./index.d...
+[../../data/axios][STDOUT] (shell) $ npm ci
+[../../data/axios][STDOUT] OUTPUT: 
+[../../data/axios][STDOUT] (shell) $ lsb_release -a
+[../../data/axios][STDOUT] OUTPUT: Distributor ID:	Ubuntu
+Description:	Ubuntu 24.04.2 LTS
+Release:	24.04
+Codename:	noble
+
+[../../data/axios][STDOUT] (shell) $ node -v
+[../../data/axios][STDOUT] OUTPUT: v22.14.0
+
+[../../data/axios][STDOUT] (shell) $ npm -v
+[../../data/axios][STDOUT] OUTPUT: 9.2.0
+
+[../../data/axios][STDOUT] (shell) $ npm install -g bower
+[../../data/axios][STDOUT] OUTPUT: 
+[../../data/axios][STDOUT] (shell) $ yarn -v
+[../../data/axios][STDOUT] OUTPUT: 1.22.22
+
+[../../data/axios][STDOUT] (shell) $ pnpm -v
+[../../data/axios][STDOUT] OUTPUT: This project is configured to use yarn because /home/ubuntu/EnvGym/data/axios/package.json has a "packageManager" field
+
+[../../data/axios][STDOUT] (shell) $ bun -v
+[../../data/axios][STDOUT] OUTPUT: Error: spawn bun ENOENT
+[../../data/axios][STDOUT] (shell) $ yarn install
+[../../data/axios][STDOUT] OUTPUT: yarn install v1.22.22
+info No lockfile found.
+[1/4] Resolving packages...
+
+[../../data/axios][STDOUT] (shell) $ ls -l
+[../../data/axios][STDOUT] OUTPUT: total 1932
+-rw-rw-r-- 1 ubuntu ubuntu   80030 Apr 30 20:25 CHANGELOG.md
+-rw-rw-r-- 1 ubuntu ubuntu    5473 Apr 30 20:25 CODE_OF_CONDUCT.md
+-rw-rw-r-- 1 ubuntu ubuntu    2941 Apr 30 20:25 COLLABORATOR_GUIDE.md
+-rw-rw-r-- 1 ubuntu ubuntu    1299 Apr...
+[../../data/axios][STDOUT] (shell) $ ps aux
+[../../data/axios][STDOUT] OUTPUT: USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.2  22640 11060 ?        Ss   Apr27   0:07 /sbin/init
+root           2  0.0  0.0      0     0 ?        S    Apr27   0:00 [kthreadd]
+root           3...
+[../../data/axios][STDOUT] (shell) $ yarn install --verbose
+[../../data/axios][STDOUT] OUTPUT: yarn install v1.22.22
+verbose 0.241792222 Checking for configuration file "/home/ubuntu/EnvGym/data/axios/.npmrc".
+verbose 0.242008886 Checking for configuration file "/home/ubuntu/.npmrc".
+verbose 0.242125971 Checking for configuration file "/usr...
+[../../data/axios][STDOUT] (shell) $ df -h
+[../../data/axios][STDOUT] OUTPUT: Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        23G   21G  1.5G  94% /
+tmpfs           2.0G     0  2.0G   0% /dev/shm
+tmpfs           783M  916K  782M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/xvda16     881M...
+[../../data/axios][STDOUT] MESSAGE: The setup is failing because there is not enough disk space available (only 1.5GB free on `/` and the repo is quite large with a lot of dependencies). The npm/yarn install is being killed (code 143) due to running out of resources or disk space as...
+Completed with return code: 0
+================================================================================
+

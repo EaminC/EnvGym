@@ -6,9 +6,32 @@ import sys
 import json
 
 # List of interesting repos as local directory paths (edit as needed)
-interesting_repos = [
-    "../../data/Metis"
+DATA_DIR = "../../data"
+'''
+repo_names = [
+    "zstd",
+    "jq",
+    "ponyc",
+    "Catch2",
+    "fmt",
+    "json",
+    "simdjson",
+    "cpp-httplib"
 ]
+'''
+repo_names = [
+    #"fastjson2",
+    "logstash",
+    "mockito",
+    "github-readme-stats",
+    "axios",
+    "express",
+    "dayjs",
+    "insomnia",
+    "svelte"
+]
+# Join DATA_DIR with each repo name to get the full paths
+interesting_repos = [os.path.join(DATA_DIR, repo) for repo in repo_names]
 
 # Instruction prompt for Codex CLI
 CODEX_INSTRUCTION = "Follow the README carefully in the repo and set up all the dependency requirements to run the code. Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."

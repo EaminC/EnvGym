@@ -1,0 +1,321 @@
+================================================================================
+Starting run for ../../data/cpp-httplib at 2025-04-29T09:20:50.842245
+[../../data/cpp-httplib][STDOUT] (shell) $ ls
+[../../data/cpp-httplib][STDOUT] OUTPUT: CMakeLists.txt
+Dockerfile
+LICENSE
+README.md
+benchmark
+cmake
+docker
+docker-compose.yml
+example
+httplib.h
+meson.build
+meson_options.txt
+split.py
+test
+
+[../../data/cpp-httplib][STDOUT] (shell) $ head -40 README.md
+[../../data/cpp-httplib][STDOUT] OUTPUT: cpp-httplib
+===========
+
+[![](https://github.com/yhirose/cpp-httplib/workflows/test/badge.svg)](https://github.com/yhirose/cpp-httplib/actions)
+
+A C++11 single-file header-only cross platform HTTP/HTTPS library.
+
+It's extremely easy to setup. Just...
+[../../data/cpp-httplib][STDOUT] (shell) $ head -100 README.md
+[../../data/cpp-httplib][STDOUT] OUTPUT: cpp-httplib
+===========
+
+[![](https://github.com/yhirose/cpp-httplib/workflows/test/badge.svg)](https://github.com/yhirose/cpp-httplib/actions)
+
+A C++11 single-file header-only cross platform HTTP/HTTPS library.
+
+It's extremely easy to setup. Just...
+[../../data/cpp-httplib][STDOUT] (shell) $ grep -i depend README.md
+[../../data/cpp-httplib][STDOUT] OUTPUT: 
+[../../data/cpp-httplib][STDOUT] (shell) $ grep -i require README.md
+[../../data/cpp-httplib][STDOUT] OUTPUT: > OpenSSL is required for Digest Authentication.
+> OpenSSL is required for Digest Authentication.
+
+[../../data/cpp-httplib][STDOUT] (shell) $ grep -i install README.md
+[../../data/cpp-httplib][STDOUT] OUTPUT: 
+[../../data/cpp-httplib][STDOUT] (shell) $ ls -l test
+[../../data/cpp-httplib][STDOUT] OUTPUT: total 608
+-rw-rw-r-- 1 ubuntu ubuntu   4519 Apr 29 08:35 CMakeLists.txt
+-rw-rw-r-- 1 ubuntu ubuntu   3941 Apr 29 08:35 Makefile
+-rw-rw-r-- 1 ubuntu ubuntu 219596 Apr 29 08:35 ca-bundle.crt
+drwxrwxr-x 3 ubuntu ubuntu   4096 Apr 29 08:35 fuzzing
+-rw...
+[../../data/cpp-httplib][STDOUT] (shell) $ ls -l
+[../../data/cpp-httplib][STDOUT] OUTPUT: total 436
+-rw-rw-r-- 1 ubuntu ubuntu  14748 Apr 29 08:35 CMakeLists.txt
+-rw-rw-r-- 1 ubuntu ubuntu    299 Apr 29 08:35 Dockerfile
+-rw-rw-r-- 1 ubuntu ubuntu   1075 Apr 29 08:35 LICENSE
+-rw-rw-r-- 1 ubuntu ubuntu  25849 Apr 29 08:35 README.md
+drwxr...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat Dockerfile
+[../../data/cpp-httplib][STDOUT] OUTPUT: FROM yhirose4dockerhub/ubuntu-builder AS builder
+WORKDIR /build
+COPY httplib.h .
+COPY docker/main.cc .
+RUN g++ -std=c++23 -static -o server -O2 -I. main.cc && strip server
+
+FROM scratch
+COPY --from=builder /build/server /server
+COPY docker/html/in...
+[../../data/cpp-httplib][STDOUT] (shell) $ ls -l docker
+[../../data/cpp-httplib][STDOUT] OUTPUT: total 8
+drwxrwxr-x 2 ubuntu ubuntu 4096 Apr 29 08:35 html
+-rw-rw-r-- 1 ubuntu ubuntu 2182 Apr 29 08:35 main.cc
+
+[../../data/cpp-httplib][STDOUT] (shell) $ ls -l docker/html
+[../../data/cpp-httplib][STDOUT] OUTPUT: total 4
+-rw-rw-r-- 1 ubuntu ubuntu 599 Apr 29 08:35 index.html
+
+[../../data/cpp-httplib][STDOUT] (shell) $ cat test/Makefile
+[../../data/cpp-httplib][STDOUT] OUTPUT: CXX = clang++
+CXXFLAGS = -g -std=c++11 -I. -Wall -Wextra -Wtype-limits -Wconversion -Wshadow $(EXTRA_CXXFLAGS) # -fno-exceptions -DCPPHTTPLIB_NO_EXCEPTIONS -fsanitize=address
+
+PREFIX ?= $(shell brew --prefix)
+
+OPENSSL_DIR = $(PREFIX)/opt/openssl@3...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat test/gen-certs.sh
+[../../data/cpp-httplib][STDOUT] OUTPUT: #!/usr/bin/env bash
+if [[ $(openssl version) =~ 3\.[2-9]\.[0-9]+ ]]; then
+	OPENSSL_X509_FLAG='-x509v1'
+else
+	OPENSSL_X509_FLAG='-x509'
+fi
+
+openssl genrsa 2048 > key.pem
+openssl req -new -batch -config test.conf -key key.pem | openssl x509 -days 36...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat meson.build
+[../../data/cpp-httplib][STDOUT] OUTPUT: # SPDX-FileCopyrightText: 2021 Andrea Pappacoda
+#
+# SPDX-License-Identifier: MIT
+
+project(
+  'cpp-httplib',
+  'cpp',
+  license: 'MIT',
+  default_options: [
+    'cpp_std=c++11',
+    'buildtype=release',
+    'b_ndebug=if-release',
+    'b_lto=true',
+...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat meson_options.txt
+[../../data/cpp-httplib][STDOUT] OUTPUT: # SPDX-FileCopyrightText: 2021 Andrea Pappacoda
+#
+# SPDX-License-Identifier: MIT
+
+option('cpp-httplib_openssl', type: 'feature', value: 'auto', description: 'Enable OpenSSL support')
+option('cpp-httplib_zlib',    type: 'feature', value: 'auto', de...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat test/meson.build
+[../../data/cpp-httplib][STDOUT] OUTPUT: # SPDX-FileCopyrightText: 2021 Andrea Pappacoda
+#
+# SPDX-License-Identifier: MIT
+
+gtest_dep = dependency('gtest', main: true)
+libcurl_dep = dependency('libcurl')
+openssl = find_program('openssl')
+test_conf = files('test.conf')
+req_x509_flag = open...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat CMakeLists.txt
+[../../data/cpp-httplib][STDOUT] OUTPUT: 
+
+[Output truncated: too many lines or bytes]
+[../../data/cpp-httplib][STDOUT] (shell) $ head -40 CMakeLists.txt
+[../../data/cpp-httplib][STDOUT] OUTPUT: #[[
+	Build options:
+	* BUILD_SHARED_LIBS (default off) builds as a shared library (if HTTPLIB_COMPILE is ON)
+	* HTTPLIB_USE_OPENSSL_IF_AVAILABLE (default on)
+	* HTTPLIB_USE_ZLIB_IF_AVAILABLE (default on)
+	* HTTPLIB_USE_BROTLI_IF_AVAILABLE (default...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat example/README.md
+[../../data/cpp-httplib][STDOUT] OUTPUT: cat: example/README.md: No such file or directory
+
+[../../data/cpp-httplib][STDOUT] (shell) $ cat example/Makefile
+[../../data/cpp-httplib][STDOUT] OUTPUT: #CXX = clang++
+CXXFLAGS = -O2 -std=c++11 -I.. -Wall -Wextra -pthread
+
+PREFIX ?= $(shell brew --prefix)
+
+OPENSSL_DIR = $(PREFIX)/opt/openssl@3
+OPENSSL_SUPPORT = -DCPPHTTPLIB_OPENSSL_SUPPORT -I$(OPENSSL_DIR)/include -L$(OPENSSL_DIR)/lib -lssl -lcryp...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat benchmark/Makefile
+[../../data/cpp-httplib][STDOUT] OUTPUT: CXXFLAGS = -std=c++11 -O2 -I..
+
+CPPHTTPLIB_FLAGS = -DCPPHTTPLIB_THREAD_POOL_COUNT=16
+
+BENCH = bombardier -c 10 -d 5s localhost:8080
+MONITOR = ali http://localhost:8080
+
+# cpp-httplib
+bench: server
+	@echo "--------------------\n cpp-httplib latest\...
+[../../data/cpp-httplib][STDOUT] (shell) $ cat example/simplecli.cc
+[../../data/cpp-httplib][STDOUT] OUTPUT: //
+//  simplecli.cc
+//
+//  Copyright (c) 2019 Yuji Hirose. All rights reserved.
+//  MIT License
+//
+
+#include <httplib.h>
+#include <iostream>
+
+using namespace std;
+
+int main(void) {
+#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+  auto scheme_host_port = "https...
+[../../data/cpp-httplib][STDOUT] (shell) $ g++ --version
+[../../data/cpp-httplib][STDOUT] OUTPUT: g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+[../../data/cpp-httplib][STDOUT] (shell) $ clang++ --version
+[../../data/cpp-httplib][STDOUT] OUTPUT: Error: spawn clang++ ENOENT
+[../../data/cpp-httplib][STDOUT] (shell) $ which g++
+[../../data/cpp-httplib][STDOUT] OUTPUT: /usr/bin/g++
+
+[../../data/cpp-httplib][STDOUT] (shell) $ which clang++
+[../../data/cpp-httplib][STDOUT] OUTPUT: 
+[../../data/cpp-httplib][STDOUT] (shell) $ sudo apt-get update
+[../../data/cpp-httplib][STDOUT] OUTPUT: Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:4 http://security....
+[../../data/cpp-httplib][STDOUT] (shell) $ sudo apt-get install -y clang clang-tools cmake pkg-config meson ninja-build libgtest-dev libcurl4-openssl-dev libssl-dev zlib1g-dev libbrotli-dev
+[../../data/cpp-httplib][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+cmake is already the newest version (3.28.3-1build7).
+pkg-config is already the newest version (1.8.1-2build1).
+ninja-build is already the newest version (1.11.1-2)....
+[../../data/cpp-httplib][STDOUT] (shell) $ which clang++
+[../../data/cpp-httplib][STDOUT] OUTPUT: /usr/bin/clang++
+
+[../../data/cpp-httplib][STDOUT] (shell) $ clang++ --version
+[../../data/cpp-httplib][STDOUT] OUTPUT: Ubuntu clang version 18.1.3 (1ubuntu1)
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+
+[../../data/cpp-httplib][STDOUT] (shell) $ meson setup build --buildtype release -Dcpp-httplib_test=true
+[../../data/cpp-httplib][STDOUT] OUTPUT: The Meson build system
+Version: 1.3.2
+Source dir: /home/ubuntu/EnvGym/data/cpp-httplib
+Build dir: /home/ubuntu/EnvGym/data/cpp-httplib/build
+Build type: native build
+Project name: cpp-httplib
+Project version: undefined
+C++ compiler for the host ma...
+[../../data/cpp-httplib][STDOUT] (shell) $ ninja -C build
+[../../data/cpp-httplib][STDOUT] OUTPUT: ninja: Entering directory `build'
+[1/16] Generating test/key_pem with a custom command
+[2/16] Generating test/temp_req with a custom command
+[3/16] Generating test/rootca_key_pem with a custom command
+[4/16] Generating test/cert2_pem with a custom...
+[../../data/cpp-httplib][STDOUT] (shell) $ ./build/test/main
+[../../data/cpp-httplib][STDOUT] OUTPUT: Running main() from ./googletest/src/gtest_main.cc
+[==========] Running 350 tests from 86 test suites.
+[----------] Global test environment set-up.
+[----------] 3 tests from UnixSocketTest
+[ RUN      ] UnixSocketTest.pathname
+[       OK ] UnixSock...
+[../../data/cpp-httplib][STDOUT] (shell) $ ninja -C build test
+[../../data/cpp-httplib][STDOUT] OUTPUT: ninja: Entering directory `build'
+[0/1] Running all tests.
+1/1 main OK             217.96s
+
+Ok:                 1   
+Expected Fail:      0   
+Fail:               0   
+Unexpected Pass:    0   
+Skipped:            0   
+Timeout:            0   
+
+Full...
+[../../data/cpp-httplib][STDOUT] (shell) $ ls build/test
+[../../data/cpp-httplib][STDOUT] OUTPUT: ca-bundle.crt
+cert.pem
+cert2.pem
+cert_encrypted.pem
+client.cert.pem
+client.key.pem
+client_encrypted.cert.pem
+client_encrypted.key.pem
+client_encrypted_temp_req
+client_temp_req
+image.jpg
+key.pem
+key_encrypted.pem
+main
+main.p
+rootCA.cert.pem
+rootCA....
+[../../data/cpp-httplib][STDOUT] (shell) $ ls example
+[../../data/cpp-httplib][STDOUT] OUTPUT: Dockerfile.hello
+Makefile
+benchmark.cc
+ca-bundle.crt
+client.cc
+client.vcxproj
+example.sln
+hello.cc
+one_time_request.cc
+redirect.cc
+server.cc
+server.vcxproj
+server_and_client.cc
+simplecli.cc
+simplesvr.cc
+ssecli.cc
+ssesvr.cc
+upload.cc
+uploader.sh
+
+[../../data/cpp-httplib][STDOUT] (shell) $ make -C example simplecli
+[../../data/cpp-httplib][STDOUT] OUTPUT: make: Entering directory '/home/ubuntu/EnvGym/data/cpp-httplib/example'
+g++ -o simplecli -O2 -std=c++11 -I.. -Wall -Wextra -pthread simplecli.cc -DCPPHTTPLIB_OPENSSL_SUPPORT -I/opt/openssl@3/include -L/opt/openssl@3/lib -lssl -lcrypto -DCPPHTTPLIB...
+[../../data/cpp-httplib][STDOUT] (shell) $ ls example
+[../../data/cpp-httplib][STDOUT] OUTPUT: Dockerfile.hello
+Makefile
+benchmark.cc
+ca-bundle.crt
+client.cc
+client.vcxproj
+example.sln
+hello.cc
+one_time_request.cc
+redirect.cc
+server.cc
+server.vcxproj
+server_and_client.cc
+simplecli.cc
+simplesvr.cc
+ssecli.cc
+ssesvr.cc
+upload.cc
+uploader.sh
+
+[../../data/cpp-httplib][STDOUT] (shell) $ ls -lh example/simplecli
+[../../data/cpp-httplib][STDOUT] OUTPUT: ls: cannot access 'example/simplecli': No such file or directory
+
+[../../data/cpp-httplib][STDOUT] (shell) $ g++ -o example/simplecli -O2 -std=c++11 -I.. -Wall -Wextra -pthread example/simplecli.cc -DCPPHTTPLIB_OPENSSL_SUPPORT -lssl -lcrypto -DCPPHTTPLIB_ZLIB_SUPPORT -lz -DCPPHTTPLIB_BROTLI_SUPPORT -lbrotlicommon -lbrotlienc -lbrotlidec
+[../../data/cpp-httplib][STDOUT] OUTPUT: example/simplecli.cc:8:10: fatal error: httplib.h: No such file or directory
+    8 | #include <httplib.h>
+      |          ^~~~~~~~~~~
+compilation terminated.
+
+[../../data/cpp-httplib][STDOUT] (shell) $ g++ -o example/simplecli -O2 -std=c++11 -I.. -Wall -Wextra -pthread example/simplecli.cc -DCPPHTTPLIB_OPENSSL_SUPPORT -lssl -lcrypto -DCPPHTTPLIB_ZLIB_SUPPORT -lz -DCPPHTTPLIB_BROTLI_SUPPORT -lbrotlicommon -lbrotlienc -lbrotlidec
+[../../data/cpp-httplib][STDOUT] OUTPUT: cc1plus: fatal error: example/simplecli.cc: No such file or directory
+compilation terminated.
+

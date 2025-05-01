@@ -1,0 +1,194 @@
+================================================================================
+Starting run for ../../data/Catch2 at 2025-04-29T08:53:16.147295
+[../../data/Catch2][STDOUT] (shell) $ ls
+[../../data/Catch2][STDOUT] OUTPUT: BUILD.bazel
+CMake
+CMakeLists.txt
+CMakePresets.json
+CODE_OF_CONDUCT.md
+Doxyfile
+LICENSE.txt
+MAINTAINERS.md
+MODULE.bazel
+README.md
+SECURITY.md
+appveyor.yml
+codecov.yml
+conanfile.py
+data
+docs
+examples
+extras
+fuzzing
+mdsnippets.json
+meson.build
+meson_...
+[../../data/Catch2][STDOUT] (shell) $ head -40 README.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+![Catch2 logo](data/artwork/catch2-logo-small-with-background.png)
+
+[![Github Releases](https://img.shields.io/github/release/catchorg/catch2.svg)](https://github.com/catchorg/catch2/releases)
+[![Linux build status](https://github...
+[../../data/Catch2][STDOUT] (shell) $ head -80 README.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+![Catch2 logo](data/artwork/catch2-logo-small-with-background.png)
+
+[![Github Releases](https://img.shields.io/github/release/catchorg/catch2.svg)](https://github.com/catchorg/catch2/releases)
+[![Linux build status](https://github...
+[../../data/Catch2][STDOUT] (shell) $ head -140 README.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+![Catch2 logo](data/artwork/catch2-logo-small-with-background.png)
+
+[![Github Releases](https://img.shields.io/github/release/catchorg/catch2.svg)](https://github.com/catchorg/catch2/releases)
+[![Linux build status](https://github...
+[../../data/Catch2][STDOUT] (shell) $ grep -iA25 requirements README.md
+[../../data/Catch2][STDOUT] OUTPUT: 
+[../../data/Catch2][STDOUT] (shell) $ grep -iA25 install README.md
+[../../data/Catch2][STDOUT] OUTPUT: 
+[../../data/Catch2][STDOUT] (shell) $ grep -iA25 setup README.md
+[../../data/Catch2][STDOUT] OUTPUT: 
+[../../data/Catch2][STDOUT] (shell) $ ls -lA
+[../../data/Catch2][STDOUT] OUTPUT: total 264
+-rw-rw-r-- 1 ubuntu ubuntu    358 Apr 29 08:34 .bazelrc
+-rw-rw-r-- 1 ubuntu ubuntu   1220 Apr 29 08:34 .clang-format
+-rw-rw-r-- 1 ubuntu ubuntu   2832 Apr 29 08:34 .clang-tidy
+drwxrwxr-x 3 ubuntu ubuntu   4096 Apr 29 08:34 .conan
+drwxrwx...
+[../../data/Catch2][STDOUT] (shell) $ head -40 conanfile.py
+[../../data/Catch2][STDOUT] OUTPUT: #!/usr/bin/env python
+from conan import ConanFile
+from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
+from conan.tools.files import copy, rmdir
+from conan.tools.build import check_min_cppstd
+from conan.tools.scm import Ver...
+[../../data/Catch2][STDOUT] (shell) $ head -40 CMakeLists.txt
+[../../data/Catch2][STDOUT] OUTPUT: cmake_minimum_required(VERSION 3.16)
+
+# detect if Catch is being bundled,
+# disable testsuite in that case
+if(NOT DEFINED PROJECT_NAME)
+  set(NOT_SUBPROJECT ON)
+else()
+  set(NOT_SUBPROJECT OFF)
+endif()
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)...
+[../../data/Catch2][STDOUT] (shell) $ head -40 BUILD.bazel
+[../../data/Catch2][STDOUT] OUTPUT: load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
+
+expand_template(
+    name = "catch_user_config",
+    out = "catch2/catch_user_config.hpp",
+    substitutions = {
+        "@CATCH_CONFIG_CONSOLE_WIDTH@": "80",
+        "@CATCH_CON...
+[../../data/Catch2][STDOUT] (shell) $ ls -lA docs
+[../../data/Catch2][STDOUT] OUTPUT: total 400
+-rw-rw-r-- 1 ubuntu ubuntu  1704 Apr 29 08:34 Readme.md
+-rw-rw-r-- 1 ubuntu ubuntu  6852 Apr 29 08:34 assertions.md
+-rw-rw-r-- 1 ubuntu ubuntu 11329 Apr 29 08:34 benchmarks.md
+-rw-rw-r-- 1 ubuntu ubuntu  5261 Apr 29 08:34 ci-and-misc.md
+...
+[../../data/Catch2][STDOUT] (shell) $ head -40 docs/Readme.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+# Reference
+
+To get the most out of Catch2, start with the [tutorial](tutorial.md#top).
+Once you're up and running consider the following reference material.
+
+**Writing tests:**
+* [Assertion macros](assertions.md#top)
+* [Matchers ...
+[../../data/Catch2][STDOUT] (shell) $ head -80 docs/tutorial.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+# Tutorial
+
+**Contents**<br>
+[Getting Catch2](#getting-catch2)<br>
+[Writing tests](#writing-tests)<br>
+[Test cases and sections](#test-cases-and-sections)<br>
+[BDD style testing](#bdd-style-testing)<br>
+[Data and Type driven tests...
+[../../data/Catch2][STDOUT] (shell) $ head -80 docs/cmake-integration.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+# CMake integration
+
+**Contents**<br>
+[CMake targets](#cmake-targets)<br>
+[Automatic test registration](#automatic-test-registration)<br>
+[CMake project options](#cmake-project-options)<br>
+[`CATCH_CONFIG_*` customization options ...
+[../../data/Catch2][STDOUT] (shell) $ head -80 docs/cmake-integration.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+# CMake integration
+
+**Contents**<br>
+[CMake targets](#cmake-targets)<br>
+[Automatic test registration](#automatic-test-registration)<br>
+[CMake project options](#cmake-project-options)<br>
+[`CATCH_CONFIG_*` customization options ...
+[../../data/Catch2][STDOUT] (shell) $ head -120 docs/cmake-integration.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+# CMake integration
+
+**Contents**<br>
+[CMake targets](#cmake-targets)<br>
+[Automatic test registration](#automatic-test-registration)<br>
+[CMake project options](#cmake-project-options)<br>
+[`CATCH_CONFIG_*` customization options ...
+[../../data/Catch2][STDOUT] (shell) $ head -40 README.md
+[../../data/Catch2][STDOUT] OUTPUT: <a id="top"></a>
+![Catch2 logo](data/artwork/catch2-logo-small-with-background.png)
+
+[![Github Releases](https://img.shields.io/github/release/catchorg/catch2.svg)](https://github.com/catchorg/catch2/releases)
+[![Linux build status](https://github...
+[../../data/Catch2][STDOUT] (shell) $ ls -lA /usr/local/bin
+[../../data/Catch2][STDOUT] OUTPUT: total 120632
+lrwxrwxrwx 1 root root        46 Apr 21 23:38 codex -> ../lib/node_modules/@openai/codex/bin/codex.js
+lrwxrwxrwx 1 root root        45 Apr 21 23:36 corepack -> ../lib/node_modules/corepack/dist/corepack.js
+-rwxr-xr-x 1 root root   184...
+[../../data/Catch2][STDOUT] (shell) $ ls -lA /usr/bin
+[../../data/Catch2][STDOUT] OUTPUT: 
+
+[Output truncated: too many lines or bytes]
+[../../data/Catch2][STDOUT] (shell) $ which cmake
+[../../data/Catch2][STDOUT] OUTPUT: /usr/bin/cmake
+
+[../../data/Catch2][STDOUT] (shell) $ which conan
+[../../data/Catch2][STDOUT] OUTPUT: 
+[../../data/Catch2][STDOUT] (shell) $ python3 -m pip install --upgrade pip
+[../../data/Catch2][STDOUT] OUTPUT: 
+[../../data/Catch2][STDOUT] (shell) $ sudo python3 -m pip install --upgrade pip
+[../../data/Catch2][STDOUT] OUTPUT: 
+[../../data/Catch2][STDOUT] (shell) $ apt-get update
+[../../data/Catch2][STDOUT] OUTPUT: Reading package lists...
+
+[../../data/Catch2][STDOUT] (shell) $ sudo apt-get update
+[../../data/Catch2][STDOUT] OUTPUT: Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:4 http://security....
+[../../data/Catch2][STDOUT] (shell) $ sudo apt-get install -y python3-pip
+[../../data/Catch2][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+
+[../../data/Catch2][STDOUT] (shell) $ sudo apt install -y python3-pip
+[../../data/Catch2][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+
+[../../data/Catch2][STDOUT] (shell) $ sudo apt install -y python3-pip python3-setuptools
+[../../data/Catch2][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+
+[../../data/Catch2][STDOUT] (shell) $ sudo apt install -y gcc g++ cmake make git
+[../../data/Catch2][STDOUT] OUTPUT: Reading package lists...
+Building dependency tree...
+Reading state information...
+
+[../../data/Catch2][STDOUT] MESSAGE: It appears every sudo installation/apt/pip command is being forcibly killed or restricted after about 0.6 seconds (exit code 143). This means that required packages cannot be installed at this time, which blocks the normal dependency setup process...
+Completed with return code: 0
+================================================================================
+
