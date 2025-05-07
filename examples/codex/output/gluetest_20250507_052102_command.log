@@ -1,0 +1,9 @@
+================================================================================
+Starting run for ../../data/gluetest at 2025-05-07T05:21:02.186044
+[../../data/gluetest][STDOUT] $ bash -lc ls -R .
+[../../data/gluetest][STDOUT] $ bash -lc sed -n '1,200p' README.md
+[../../data/gluetest][STDOUT] $ bash -lc sed -n '1,200p' run.sh
+[../../data/gluetest][STDOUT] $ bash -lc sed -n '1,200p' commons-cli-graal/pom.xml
+[../../data/gluetest][STDOUT] $ bash -lc grep -R "<properties>" -n commons-cli-graal/pom.xml
+[../../data/gluetest][STDOUT] $ bash -lc sed -n '180,260p' commons-cli-graal/pom.xml
+[../../data/gluetest][STDOUT] $ bash -lc grep -R "polyglot" -n commons-cli-graal/src/main/java

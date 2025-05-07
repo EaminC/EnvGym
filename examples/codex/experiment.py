@@ -19,6 +19,7 @@ repo_names = [
     "cpp-httplib"
 ]
 '''
+'''
 repo_names = [
     #"fastjson2",
     "logstash",
@@ -30,11 +31,22 @@ repo_names = [
     "insomnia",
     "svelte"
 ]
+'''
+repo_names = [
+    "Metis",
+    "gluetest",
+    "acto",
+    #"Silhouette",
+    "anvil",
+    "enoki"
+]
+
 # Join DATA_DIR with each repo name to get the full paths
 interesting_repos = [os.path.join(DATA_DIR, repo) for repo in repo_names]
 
 # Instruction prompt for Codex CLI
-CODEX_INSTRUCTION = "Follow the README carefully in the repo and set up all the dependency requirements to run the code. Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."
+#CODEX_INSTRUCTION = "Your task is to follow the README file carefully in your current repo and set up all the dependency requirements to run the code. You should also create custom scripts (.sh or .py) that can be used during setup, if you believe the script can be reused when setting up other repos. Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."
+CODEX_INSTRUCTION = "Your task is to follow the README file carefully in your current repo and set up all the dependency requirements to run the code. Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."
 
 # Create output directory if it doesn't exist
 os.makedirs("output", exist_ok=True)
@@ -44,16 +56,19 @@ def get_log_paths(repo_name):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     base_filename = f"{repo_name}_{timestamp}"
     return (
-        f"output/{base_filename}_log.txt",
-        f"output/{base_filename}_concise_log.txt"
+        f"output/{base_filename}.log",
+        f"output/{base_filename}_concise.log",
+        f"output/{base_filename}_command.log"
     )
 
 # Log truncation length
 LOG_TRUNCATE_LENGTH = 250
 
-def log_output(pipe, logfile, concise_logfile, prefix):
+def log_output(pipe, logfile, concise_logfile, command_logfile, prefix):
     """Log output from a pipe in real-time, parsing each line as JSON"""
-    with open(logfile, 'a', encoding='utf-8') as log, open(concise_logfile, 'a', encoding='utf-8') as concise_log:
+    with open(logfile, 'a', encoding='utf-8') as log,\
+         open(concise_logfile, 'a', encoding='utf-8') as concise_log,\
+         open(command_logfile, 'a', encoding='utf-8') as cmd_log:
         for line in iter(pipe.readline, ''):
             try:
                 # Maintain a set of seen message IDs to avoid duplicates in concise log
@@ -89,6 +104,8 @@ def log_output(pipe, logfile, concise_logfile, prefix):
                             args = json.loads(parsed_json["arguments"])
                             if "command" in args:
                                 concise_log.write(f"{prefix} ({parsed_json['name']}) $ {' '.join(args['command'])}\n")
+                                # Also log command to the command log
+                                cmd_log.write(f"{prefix} $ {' '.join(args['command'])}\n")
                             else:
                                 concise_log.write(f"{prefix} ({parsed_json['name']}) $ {parsed_json['arguments']}\n")
                         except:
@@ -122,6 +139,7 @@ def log_output(pipe, logfile, concise_logfile, prefix):
                     concise_log.write(f"{prefix} event: {str(parsed_json)[:LOG_TRUNCATE_LENGTH]}\n")
                 
                 concise_log.flush()
+                cmd_log.flush()
                 print(f"{prefix}: {line}", end='')
             except json.JSONDecodeError:
                 # If not valid JSON, log as is
@@ -143,10 +161,12 @@ def run_codex_in_repo(repo_path):
     
     # Get repo name from path
     repo_name = os.path.basename(repo_path)
-    log_file, concise_log_file = get_log_paths(repo_name)
+    log_file, concise_log_file, command_log_file = get_log_paths(repo_name)
 
     # Log the start of the run
-    with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
+    with open(log_file, 'a', encoding='utf-8') as f,\
+         open(concise_log_file, 'a', encoding='utf-8') as cf,\
+         open(command_log_file, 'a', encoding='utf-8') as cmd_log:
         f.write("="*80 + "\n")
         start_info = {
             "repo": result['repo'],
@@ -155,6 +175,8 @@ def run_codex_in_repo(repo_path):
         f.write(json.dumps(start_info, indent=4) + "\n")
         cf.write("="*80 + "\n")
         cf.write(f"Starting run for {result['repo']} at {result['start_time']}\n")
+        cmd_log.write("="*80 + "\n")
+        cmd_log.write(f"Starting run for {result['repo']} at {result['start_time']}\n")
     
     # Call codex CLI in the repo directory
     try:
@@ -175,11 +197,11 @@ def run_codex_in_repo(repo_path):
         # Start threads to log stdout and stderr in real-time
         stdout_thread = threading.Thread(
             target=log_output, 
-            args=(proc.stdout, log_file, concise_log_file, f"[{repo_path}][STDOUT]")
+            args=(proc.stdout, log_file, concise_log_file, command_log_file, f"[{repo_path}][STDOUT]")
         )
         stderr_thread = threading.Thread(
             target=log_output, 
-            args=(proc.stderr, log_file, concise_log_file, f"[{repo_path}][STDERR]")
+            args=(proc.stderr, log_file, concise_log_file, command_log_file, f"[{repo_path}][STDERR]")
         )
         
         stdout_thread.daemon = True

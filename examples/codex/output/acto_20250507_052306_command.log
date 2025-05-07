@@ -1,0 +1,10 @@
+================================================================================
+Starting run for ../../data/acto at 2025-05-07T05:23:06.694059
+[../../data/acto][STDOUT] $ bash -lc sed -n '1,200p' README.md
+[../../data/acto][STDOUT] $ bash -lc ls -R .
+[../../data/acto][STDOUT] $ bash -lc sed -n '1,200p' Makefile
+[../../data/acto][STDOUT] $ bash -lc sed -n '1,200p' requirements.txt
+[../../data/acto][STDOUT] $ bash -lc ls ssa
+[../../data/acto][STDOUT] $ bash -lc sed -n '1,200p' ssa/Makefile
+[../../data/acto][STDOUT] $ bash -lc sed -n '1,200p' reproduce_bugs.py
+[../../data/acto][STDOUT] $ bash -lc sed -n '1,200p' acto/k8s_util/lib/Makefile

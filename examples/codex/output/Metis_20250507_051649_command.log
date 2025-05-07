@@ -1,0 +1,17 @@
+================================================================================
+Starting run for ../../data/Metis at 2025-05-07T05:16:49.301185
+[../../data/Metis][STDOUT] $ bash -lc ls -R .
+[../../data/Metis][STDOUT] $ bash -lc sed -n '1,200p' README.md
+[../../data/Metis][STDOUT] $ bash -lc ls scripts
+[../../data/Metis][STDOUT] $ bash -lc sed -n '1,200p' scripts/setup-deps.sh
+[../../data/Metis][STDOUT] $ bash -lc sed -n '200,400p' scripts/setup-deps.sh
+[../../data/Metis][STDOUT] $ bash -lc sed -n '400,600p' scripts/setup-deps.sh
+[../../data/Metis][STDOUT] $ bash -lc echo $HOME && pwd
+[../../data/Metis][STDOUT] $ bash -lc sed -n '1,200p' Makefile
+[../../data/Metis][STDOUT] $ bash -lc sed -n '1,200p' example/README.md
+[../../data/Metis][STDOUT] $ bash -lc sed -n '1,200p' example/Makefile
+[../../data/Metis][STDOUT] $ bash -lc ls python-demo
+[../../data/Metis][STDOUT] $ bash -lc ls python-demo/auto_ambiguity_detector
+[../../data/Metis][STDOUT] $ bash -lc sed -n '1,200p' python-demo/auto_ambiguity_detector/README.md
+[../../data/Metis][STDOUT] $ bash -lc ls tests
+[../../data/Metis][STDOUT] $ bash -lc sed -n '1,200p' example/test.c

@@ -1,0 +1,17 @@
+================================================================================
+Starting run for ../../data/anvil at 2025-05-07T05:24:53.927294
+[../../data/anvil][STDOUT] $ bash -lc ls -R .
+[../../data/anvil][STDOUT] $ bash -lc sed -n '1,200p' README.md
+[../../data/anvil][STDOUT] $ bash -lc sed -n '200,350p' README.md
+[../../data/anvil][STDOUT] $ bash -lc sed -n '1,30p' Cargo.toml
+[../../data/anvil][STDOUT] $ bash -lc sed -n '1,200p' build.sh
+[../../data/anvil][STDOUT] $ bash -lc ls -a
+[../../data/anvil][STDOUT] $ bash -lc sed -n '1,200p' rust-toolchain.toml
+[../../data/anvil][STDOUT] $ bash -lc grep -R "requirements" -n .
+[../../data/anvil][STDOUT] $ bash -lc find . -maxdepth 2 -type f | grep -E 'requirements|setup.py|env|environment'
+[../../data/anvil][STDOUT] $ bash -lc find . -type f | grep '\.py$'
+[../../data/anvil][STDOUT] $ bash -lc sed -n '1,200p' tools/count-time-percentage.py
+[../../data/anvil][STDOUT] $ bash -lc sed -n '1,50p' tools/gen-t1.py
+[../../data/anvil][STDOUT] $ bash -lc grep -R "import " -n tools
+[../../data/anvil][STDOUT] $ bash -lc sed -n '1,200p' local-test.sh
+[../../data/anvil][STDOUT] $ bash -lc sed -n '1,200p' deploy.sh

@@ -1,0 +1,6 @@
+================================================================================
+Starting run for ../../data/enoki at 2025-05-07T05:27:01.444166
+[../../data/enoki][STDOUT] $ bash -lc ls -a
+[../../data/enoki][STDOUT] $ bash -lc sed -n '1,200p' README.md
+[../../data/enoki][STDOUT] $ bash -lc sed -n '200,400p' README.md
+[../../data/enoki][STDOUT] $ bash -lc ls enoki-kernel
