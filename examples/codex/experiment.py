@@ -38,16 +38,19 @@ def get_log_paths(repo_name):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     base_filename = f"{repo_name}_{timestamp}"
     return (
-        f"output/{base_filename}_log.txt",
-        f"output/{base_filename}_concise_log.txt"
+        f"output/{base_filename}.log",
+        f"output/{base_filename}_concise.log",
+        f"output/{base_filename}.json"
     )
 
 # Log truncation length
 LOG_TRUNCATE_LENGTH = 250
 
-def log_output(pipe, logfile, concise_logfile, prefix):
+def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
     """Log output from a pipe in real-time, parsing each line as JSON"""
-    with open(logfile, 'a', encoding='utf-8') as log, open(concise_logfile, 'a', encoding='utf-8') as concise_log:
+    with open(logfile, 'a', encoding='utf-8') as log,\
+         open(concise_logfile, 'a', encoding='utf-8') as concise_log,\
+         open(json_logfile, 'a', encoding='utf-8') as json_log:
         for line in iter(pipe.readline, ''):
             try:
                 # Maintain a set of seen message IDs to avoid duplicates in concise log
@@ -82,11 +85,34 @@ def log_output(pipe, logfile, concise_logfile, prefix):
                         try:
                             args = json.loads(parsed_json["arguments"])
                             if "command" in args:
-                                concise_log.write(f"{prefix} ({parsed_json['name']}) $ {' '.join(args['command'])}\n")
+                                command = ' '.join(args['command'])
+                                concise_log.write(f"{prefix} ({parsed_json['name']}) $ {command}\n")
+                                # Also log command to the json
+                                entry = {
+                                    "id": parsed_json["id"],
+                                    "type": "function_call",
+                                    "content": command
+                                }
+                                json_log.write(json.dumps(entry) + ",\n")
                             else:
                                 concise_log.write(f"{prefix} ({parsed_json['name']}) $ {parsed_json['arguments']}\n")
                         except:
                             concise_log.write(f"{prefix} ({parsed_json['name']}) $ {parsed_json['arguments']}\n")
+                    elif parsed_json["type"] == "reasoning" and "summary" in parsed_json:
+                        cat_reasoning = ""
+                        for i, summary_item in enumerate(parsed_json["summary"]):
+                            if summary_item["type"] == "summary_text" and "text" in summary_item:
+                                reason_text = str(summary_item["text"])
+                                concise_log.write(f"{prefix} REASONING: {reason_text}\n")
+                                # Also log reasoning to the json
+                                cat_reasoning += f"Reasoning {i+1}: {reason_text}\n\n"
+                        if cat_reasoning != "":
+                            entry = {
+                                "id": parsed_json["id"],
+                                "type": "reasoning",
+                                "content": cat_reasoning
+                            }
+                            json_log.write(json.dumps(entry) + ",\n")
                     elif parsed_json["type"] == "function_call_output" and "output" in parsed_json:
                         try:
                             output_data = json.loads(parsed_json["output"])
@@ -96,6 +122,13 @@ def log_output(pipe, logfile, concise_logfile, prefix):
                                 if len(output_text) > LOG_TRUNCATE_LENGTH:
                                     output_text = output_text[:LOG_TRUNCATE_LENGTH-3] + "..."
                                 concise_log.write(f"{prefix} OUTPUT: {output_text}\n")
+                                # Also log shell output to the json
+                                entry = {
+                                    "id": parsed_json["call_id"],
+                                    "type": "function_call_output",
+                                    "content": output_data["output"]
+                                }
+                                json_log.write(json.dumps(entry) + ",\n")
                             else:
                                 concise_log.write(f"{prefix} OUTPUT: {str(output_data)[:LOG_TRUNCATE_LENGTH]}\n")
                         except:
@@ -104,11 +137,15 @@ def log_output(pipe, logfile, concise_logfile, prefix):
                         # Handle message type with content field
                         for content_item in parsed_json["content"]:
                             if content_item["type"] == "output_text" and "text" in content_item:
-                                # Truncate long message text
                                 message_text = content_item["text"]
-                                if len(message_text) > LOG_TRUNCATE_LENGTH:
-                                    message_text = message_text[:LOG_TRUNCATE_LENGTH-3] + "..."
-                                concise_log.write(f"{prefix} MESSAGE: {message_text}\n")
+                                concise_log.write(f"{prefix} MESSAGE: {message_text}\n")                                
+                                # Also log message to the json
+                                entry = {
+                                    "id": parsed_json["id"],
+                                    "type": "message",
+                                    "content": message_text
+                                }
+                                json_log.write(json.dumps(entry) + ",\n")
                     else:
                         concise_log.write(f"{prefix} {parsed_json['type']}: {str(parsed_json)[:LOG_TRUNCATE_LENGTH]}\n")
                 else:
@@ -116,6 +153,7 @@ def log_output(pipe, logfile, concise_logfile, prefix):
                     concise_log.write(f"{prefix} event: {str(parsed_json)[:LOG_TRUNCATE_LENGTH]}\n")
                 
                 concise_log.flush()
+                json_log.flush()
                 print(f"{prefix}: {line}", end='')
             except json.JSONDecodeError:
                 # If not valid JSON, log as is
@@ -137,10 +175,12 @@ def run_codex_in_repo(repo_path):
     
     # Get repo name from path
     repo_name = os.path.basename(repo_path)
-    log_file, concise_log_file = get_log_paths(repo_name)
+    log_file, concise_log_file, json_log_file = get_log_paths(repo_name)
 
     # Log the start of the run
-    with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
+    with open(log_file, 'a', encoding='utf-8') as f,\
+         open(concise_log_file, 'a', encoding='utf-8') as cf,\
+         open(json_log_file, 'a', encoding='utf-8') as json_log:
         f.write("="*80 + "\n")
         start_info = {
             "repo": result['repo'],
@@ -149,6 +189,8 @@ def run_codex_in_repo(repo_path):
         f.write(json.dumps(start_info, indent=4) + "\n")
         cf.write("="*80 + "\n")
         cf.write(f"Starting run for {result['repo']} at {result['start_time']}\n")
+        json_log.write("[\n")
+    
     
     
     instruction = f"The name of the repo you are processing is: {repo_name}\n{CODEX_INSTRUCTION}"
@@ -172,11 +214,11 @@ def run_codex_in_repo(repo_path):
         # Start threads to log stdout and stderr in real-time
         stdout_thread = threading.Thread(
             target=log_output, 
-            args=(proc.stdout, log_file, concise_log_file, f"[{repo_path}][STDOUT]")
+            args=(proc.stdout, log_file, concise_log_file, json_log_file, f"[{repo_path}][STDOUT]")
         )
         stderr_thread = threading.Thread(
             target=log_output, 
-            args=(proc.stderr, log_file, concise_log_file, f"[{repo_path}][STDERR]")
+            args=(proc.stderr, log_file, concise_log_file, json_log_file, f"[{repo_path}][STDERR]")
         )
         
         stdout_thread.daemon = True
@@ -200,12 +242,15 @@ def run_codex_in_repo(repo_path):
             cf.write(f"Exception: {result['exception']}\n")
     
     # Log completion
-    with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
+    with open(log_file, 'a', encoding='utf-8') as f,\
+         open(concise_log_file, 'a', encoding='utf-8') as cf,\
+         open(json_log_file, 'a', encoding='utf-8') as json_log:
         completion_info = {"completed_with_return_code": result['returncode']}
         f.write(json.dumps(completion_info, indent=4) + "\n")
         f.write("="*80 + "\n\n")
         cf.write(f"Completed with return code: {result['returncode']}\n")
         cf.write("="*80 + "\n\n")
+        json_log.write("\n]")
         
     return result
 
