@@ -33,10 +33,10 @@ repo_names = [
 ]
 '''
 repo_names = [
-    #"Metis",
-    "gluetest",
+    "Metis",
+    #"gluetest",
     #"acto",
-    ##"Silhouette",
+    ###"Silhouette",
     #"anvil",
     #"enoki"
 ]
@@ -51,6 +51,7 @@ def get_codex_prompt(repo_name):
     prompt = f"""
         Your task is to follow the README file carefully in your current repo \"{repo_name}\" and set up all the dependency requirements to run the code.
         Verify that you have successfully set up the environment by running the code.
+        You should also create custom tooling scripts (.sh or .py) that can be used during setup, but only if you believe the script can be reused when setting up OTHER repos. Save these scripts in ../custom_scripts, a directory in the parent directory of your current repo.
         You have sudo privileges.
         Remember you can set the timeout of your own commands, so make it longer for long-running commands.
         You must complete the task without asking for my feedback. Only report to me when you are done or if you have exhausted all other options.
