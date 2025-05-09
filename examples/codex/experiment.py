@@ -4,26 +4,12 @@ from datetime import datetime
 import threading
 import sys
 import json
+import argparse
+import time
 
 # List of interesting repos as local directory paths (edit as needed)
 interesting_repos = [
-    "../../data/cli",
-    "../../data/Metis",
-    "../../data/grpc-go",
-    "../../data/go-zero",
-    "../../data/ripgrep",
-    "../../data/clap",
-    "../../data/nushell",
-    "../../data/serde",
     "../../data/bat",
-    "../../data/fd",
-    "../../data/rayon",
-    "../../data/bytes",
-    "../../data/tokio",
-    "../../data/tracing",
-    "../../data/darkreader",
-    "../../data/material-ui",
-    "../../data/core", 
 ]
 
 # Instruction prompt for Codex CLI
@@ -38,19 +24,16 @@ def get_log_paths(repo_name):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     base_filename = f"{repo_name}_{timestamp}"
     return (
-        f"output/{base_filename}.log",
-        f"output/{base_filename}_concise.log",
-        f"output/{base_filename}.json"
+        f"output/{base_filename}_log.txt",
+        f"output/{base_filename}_concise_log.txt"
     )
 
 # Log truncation length
 LOG_TRUNCATE_LENGTH = 250
 
-def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
+def log_output(pipe, logfile, concise_logfile, prefix):
     """Log output from a pipe in real-time, parsing each line as JSON"""
-    with open(logfile, 'a', encoding='utf-8') as log,\
-         open(concise_logfile, 'a', encoding='utf-8') as concise_log,\
-         open(json_logfile, 'a', encoding='utf-8') as json_log:
+    with open(logfile, 'a', encoding='utf-8') as log, open(concise_logfile, 'a', encoding='utf-8') as concise_log:
         for line in iter(pipe.readline, ''):
             try:
                 # Maintain a set of seen message IDs to avoid duplicates in concise log
@@ -85,34 +68,11 @@ def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
                         try:
                             args = json.loads(parsed_json["arguments"])
                             if "command" in args:
-                                command = ' '.join(args['command'])
-                                concise_log.write(f"{prefix} ({parsed_json['name']}) $ {command}\n")
-                                # Also log command to the json
-                                entry = {
-                                    "id": parsed_json["id"],
-                                    "type": "function_call",
-                                    "content": command
-                                }
-                                json_log.write(json.dumps(entry) + ",\n")
+                                concise_log.write(f"{prefix} ({parsed_json['name']}) $ {' '.join(args['command'])}\n")
                             else:
                                 concise_log.write(f"{prefix} ({parsed_json['name']}) $ {parsed_json['arguments']}\n")
                         except:
                             concise_log.write(f"{prefix} ({parsed_json['name']}) $ {parsed_json['arguments']}\n")
-                    elif parsed_json["type"] == "reasoning" and "summary" in parsed_json:
-                        cat_reasoning = ""
-                        for i, summary_item in enumerate(parsed_json["summary"]):
-                            if summary_item["type"] == "summary_text" and "text" in summary_item:
-                                reason_text = str(summary_item["text"])
-                                concise_log.write(f"{prefix} REASONING: {reason_text}\n")
-                                # Also log reasoning to the json
-                                cat_reasoning += f"Reasoning {i+1}: {reason_text}\n\n"
-                        if cat_reasoning != "":
-                            entry = {
-                                "id": parsed_json["id"],
-                                "type": "reasoning",
-                                "content": cat_reasoning
-                            }
-                            json_log.write(json.dumps(entry) + ",\n")
                     elif parsed_json["type"] == "function_call_output" and "output" in parsed_json:
                         try:
                             output_data = json.loads(parsed_json["output"])
@@ -122,13 +82,6 @@ def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
                                 if len(output_text) > LOG_TRUNCATE_LENGTH:
                                     output_text = output_text[:LOG_TRUNCATE_LENGTH-3] + "..."
                                 concise_log.write(f"{prefix} OUTPUT: {output_text}\n")
-                                # Also log shell output to the json
-                                entry = {
-                                    "id": parsed_json["call_id"],
-                                    "type": "function_call_output",
-                                    "content": output_data["output"]
-                                }
-                                json_log.write(json.dumps(entry) + ",\n")
                             else:
                                 concise_log.write(f"{prefix} OUTPUT: {str(output_data)[:LOG_TRUNCATE_LENGTH]}\n")
                         except:
@@ -137,15 +90,11 @@ def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
                         # Handle message type with content field
                         for content_item in parsed_json["content"]:
                             if content_item["type"] == "output_text" and "text" in content_item:
+                                # Truncate long message text
                                 message_text = content_item["text"]
-                                concise_log.write(f"{prefix} MESSAGE: {message_text}\n")                                
-                                # Also log message to the json
-                                entry = {
-                                    "id": parsed_json["id"],
-                                    "type": "message",
-                                    "content": message_text
-                                }
-                                json_log.write(json.dumps(entry) + ",\n")
+                                if len(message_text) > LOG_TRUNCATE_LENGTH:
+                                    message_text = message_text[:LOG_TRUNCATE_LENGTH-3] + "..."
+                                concise_log.write(f"{prefix} MESSAGE: {message_text}\n")
                     else:
                         concise_log.write(f"{prefix} {parsed_json['type']}: {str(parsed_json)[:LOG_TRUNCATE_LENGTH]}\n")
                 else:
@@ -153,7 +102,6 @@ def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
                     concise_log.write(f"{prefix} event: {str(parsed_json)[:LOG_TRUNCATE_LENGTH]}\n")
                 
                 concise_log.flush()
-                json_log.flush()
                 print(f"{prefix}: {line}", end='')
             except json.JSONDecodeError:
                 # If not valid JSON, log as is
@@ -164,7 +112,7 @@ def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
                 print(f"{prefix}: {line}", end='')
             sys.stdout.flush()
 
-def run_codex_in_repo(repo_path):
+def run_codex_in_repo(repo_path, thread_number=None, exp_lock=None, comm_mode=None):
     result = {
         "repo": repo_path,
         "start_time": datetime.utcnow().isoformat(),
@@ -175,12 +123,10 @@ def run_codex_in_repo(repo_path):
     
     # Get repo name from path
     repo_name = os.path.basename(repo_path)
-    log_file, concise_log_file, json_log_file = get_log_paths(repo_name)
+    log_file, concise_log_file = get_log_paths(repo_name)
 
     # Log the start of the run
-    with open(log_file, 'a', encoding='utf-8') as f,\
-         open(concise_log_file, 'a', encoding='utf-8') as cf,\
-         open(json_log_file, 'a', encoding='utf-8') as json_log:
+    with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
         f.write("="*80 + "\n")
         start_info = {
             "repo": result['repo'],
@@ -189,17 +135,48 @@ def run_codex_in_repo(repo_path):
         f.write(json.dumps(start_info, indent=4) + "\n")
         cf.write("="*80 + "\n")
         cf.write(f"Starting run for {result['repo']} at {result['start_time']}\n")
-        json_log.write("[\n")
     
-    
-    
-    instruction = f"The name of the repo you are processing is: {repo_name}\n{CODEX_INSTRUCTION}"
+    # Construct instruction prompt
+    if thread_number is not None and exp_lock is not None and comm_mode == 'simultaneous':
+        instruction = (
+            f"The name of the repo you are processing is: {repo_name}\n"
+            f"You are thread number {thread_number}. "
+            f"Please create a Dockerfile named with repo, date, and thread number, e.g. repo0430_thread{thread_number}.dockerfile. "
+            f"You can write your incremental trial-and-error experience to a file named exp.txt in the repo folder, and you can also read other threads' experience from this file. "
+            f"When writing to exp.txt, please make sure to append your experience in a way that does not overwrite others' content. "
+            f"Follow the README carefully in the repo and set up all the dependency requirements to run the code. "
+            f"Verify that you have successfully set up the environment by running the code. You have sudo privileges. "
+            f"Remember you can set the timeout of your own commands, so make it longer for long-running commands."
+        )
+    elif thread_number is not None and exp_lock is not None and comm_mode == 'staggered':
+        instruction = (
+            f"The name of the repo you are processing is: {repo_name}\n"
+            f"You are thread number {thread_number}. "
+            f"Please create a Dockerfile named with repo, date, and thread number, e.g. repo0430_thread{thread_number}.dockerfile. "
+            f"You can write your incremental trial-and-error experience to a file named exp.txt in the repo folder. "
+            f"You are allowed to read only the experience that was already written to exp.txt before you started. Do not expect to read experience from threads that start after you. "
+            f"When writing to exp.txt, please make sure to append your experience in a way that does not overwrite others' content. "
+            f"Follow the README carefully in the repo and set up all the dependency requirements to run the code. "
+            f"Verify that you have successfully set up the environment by running the code. You have sudo privileges. "
+            f"Remember you can set the timeout of your own commands, so make it longer for long-running commands."
+        )
+    elif thread_number is not None:
+        instruction = (
+            f"The name of the repo you are processing is: {repo_name}\n"
+            f"You are thread number {thread_number}. "
+            f"Please create a Dockerfile named with repo, date, and thread number, e.g. repo0430_thread{thread_number}.dockerfile. "
+            f"Follow the README carefully in the repo and set up all the dependency requirements to run the code. "
+            f"Verify that you have successfully set up the environment by running the code. You have sudo privileges. "
+            f"Remember you can set the timeout of your own commands, so make it longer for long-running commands."
+        )
+    else:
+        instruction = f"The name of the repo you are processing is: {repo_name}\n{CODEX_INSTRUCTION}"
 
     # Call codex CLI in the repo directory
     try:
         proc = subprocess.Popen(
             [
-                "codex",
+                "node", "../../examples/codex/codex/codex-cli/dist/cli.js",
                 "--approval-mode", "full-auto",
                 "--quiet",
                 instruction,
@@ -214,11 +191,11 @@ def run_codex_in_repo(repo_path):
         # Start threads to log stdout and stderr in real-time
         stdout_thread = threading.Thread(
             target=log_output, 
-            args=(proc.stdout, log_file, concise_log_file, json_log_file, f"[{repo_path}][STDOUT]")
+            args=(proc.stdout, log_file, concise_log_file, f"[{repo_path}][STDOUT]")
         )
         stderr_thread = threading.Thread(
             target=log_output, 
-            args=(proc.stderr, log_file, concise_log_file, json_log_file, f"[{repo_path}][STDERR]")
+            args=(proc.stderr, log_file, concise_log_file, f"[{repo_path}][STDERR]")
         )
         
         stdout_thread.daemon = True
@@ -242,31 +219,68 @@ def run_codex_in_repo(repo_path):
             cf.write(f"Exception: {result['exception']}\n")
     
     # Log completion
-    with open(log_file, 'a', encoding='utf-8') as f,\
-         open(concise_log_file, 'a', encoding='utf-8') as cf,\
-         open(json_log_file, 'a', encoding='utf-8') as json_log:
+    with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
         completion_info = {"completed_with_return_code": result['returncode']}
         f.write(json.dumps(completion_info, indent=4) + "\n")
         f.write("="*80 + "\n\n")
         cf.write(f"Completed with return code: {result['returncode']}\n")
         cf.write("="*80 + "\n\n")
-        json_log.write("\n]")
         
     return result
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run Codex CLI in different concurrency modes.")
+    parser.add_argument('--mode', type=str, default='vanilla', choices=['vanilla', 'multi-thread-simultaneous', 'multi-thread-staggered'],
+                        help='Execution mode: vanilla, multi-thread-simultaneous, or multi-thread-staggered')
+    parser.add_argument('--num_threads', type=int, default=2, help='Number of threads for multi-thread modes')
+    parser.add_argument('--stagger_time', type=float, default=2.0, help='Stagger time (seconds) between thread starts in staggered mode')
+    return parser.parse_args()
+
 def main():
+    args = parse_args()
     for repo in interesting_repos:
         print(f"Running Codex CLI in repo: {repo} ...")
-        result = run_codex_in_repo(repo)
-        
-        # Output parsable JSON for the result
-        result_json = {
-            "repo": repo,
-            "status": "success" if result["returncode"] == 0 else "fail",
-            "return_code": result["returncode"],
-            "exception": result["exception"]
-        }
-        print(json.dumps(result_json))
+        results = []
+        threads = []
+        if args.mode == 'vanilla':
+            # Vanilla mode: run once per repo
+            result = run_codex_in_repo(repo, thread_number=None)
+            results.append(result)
+        elif args.mode == 'multi-thread-simultaneous':
+            # Simultaneous multi-thread mode
+            exp_lock = threading.Lock()
+            def thread_target(thread_number):
+                res = run_codex_in_repo(repo, thread_number=thread_number, exp_lock=exp_lock, comm_mode='simultaneous')
+                results.append(res)
+            for i in range(args.num_threads):
+                t = threading.Thread(target=thread_target, args=(i,))
+                t.start()
+                threads.append(t)
+            for t in threads:
+                t.join()
+        elif args.mode == 'multi-thread-staggered':
+            # Staggered multi-thread mode
+            exp_lock = threading.Lock()
+            def thread_target(thread_number):
+                res = run_codex_in_repo(repo, thread_number=thread_number, exp_lock=exp_lock, comm_mode='staggered')
+                results.append(res)
+            for i in range(args.num_threads):
+                t = threading.Thread(target=thread_target, args=(i,))
+                t.start()
+                threads.append(t)
+                if i < args.num_threads - 1:
+                    time.sleep(args.stagger_time)
+            for t in threads:
+                t.join()
+        # Output parsable JSON for all results
+        for result in results:
+            result_json = {
+                "repo": repo,
+                "status": "success" if result["returncode"] == 0 else "fail",
+                "return_code": result["returncode"],
+                "exception": result["exception"]
+            }
+            print(json.dumps(result_json))
 
 if __name__ == "__main__":
 
