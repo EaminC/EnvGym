@@ -1,0 +1,8 @@
+[
+  {
+    "install_ponyc_deps": {
+      "description": "Installs system dependencies required to build Pony compiler from source",
+      "args": {}
+    }
+  }
+]

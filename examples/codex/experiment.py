@@ -4,6 +4,7 @@ from datetime import datetime
 import threading
 import sys
 import json
+import random
 
 # List of interesting repos as local directory paths (edit as needed)
 DATA_DIR = "../../data"
@@ -32,6 +33,7 @@ repo_names = [
     "svelte"
 ]
 '''
+'''
 repo_names = [
     "Metis",
     #"gluetest",
@@ -39,6 +41,17 @@ repo_names = [
     ###"Silhouette",
     #"anvil",
     #"enoki"
+]'''
+repo_names = [
+    #"Metis",
+    #"cpp-httplib",
+    #"zstd",
+    #"ponyc",
+    #"jq",
+    "Catch2",
+    "fmt",
+    "json",
+    "simdjson",
 ]
 
 # Join DATA_DIR with each repo name to get the full paths
@@ -51,10 +64,88 @@ def get_codex_prompt(repo_name):
     prompt = f"""
         Your task is to follow the README file carefully in your current repo \"{repo_name}\" and set up all the dependency requirements to run the code.
         Verify that you have successfully set up the environment by running the code.
-        You should also create custom tooling scripts (.sh or .py) that can be used during setup, but only if you believe the script can be reused when setting up OTHER repos. Save these scripts in ../custom_scripts, a directory in the parent directory of your current repo.
         You have sudo privileges.
         Remember you can set the timeout of your own commands, so make it longer for long-running commands.
         You must complete the task without asking for my feedback. Only report to me when you are done or if you have exhausted all other options.
+    """
+    return prompt
+
+def get_toolbox_description():
+    """Read the toolbox descriptions from JSON and format them for display."""
+    try:
+        toolbox_path = "../../data/toolbox/tool_descriptions.json"
+        with open(toolbox_path, 'r') as f:
+            tools = json.load(f)
+        
+        # Format the tools descriptions
+        formatted_tools = []
+        for item in tools:
+            for tool_name, tool_info in item.items():
+                tool_str = f"### {tool_name}\n{tool_info['description']}\n\n"
+                
+                if 'args' in tool_info and tool_info['args']:
+                    tool_str += "Arguments:\n"
+                    for arg_name, arg_desc in tool_info['args'].items():
+                        tool_str += f"- {arg_name}: {arg_desc}\n"
+                
+                formatted_tools.append(tool_str)
+        
+        return "\n".join(formatted_tools)
+    except Exception as e:
+        return f"Error loading toolbox: {e}"
+
+def get_trove_prompt_instance(repo_name):
+    prompt = f"""
+        ## Instruction
+        Your task is to write the solution with high-level tools, i.e., Python or shell scripts, to set up all the dependency requirements to run the code in the current repo.
+        Follow README to check instructions for setup, you can create high-level scripts, that could be used to set up this repo.
+        For example, if the setup involves multiple actions that are always used together, it is more efficient to create and use the tool.
+        Your current repo is \"{repo_name}\".
+        Verify that you have successfully set up the environment by running tests.
+        You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands.
+        You must complete the task without asking for my feedback. Only report to me when you are done or if you have exhausted all other options.
+    """
+    return prompt
+
+def get_trove_prompt_create(repo_name):
+    prompt = f"""
+        ## Instruction
+        Your task is to follow the README file carefully in your current repo \"{repo_name}\" and set up all the dependency requirements to run the code.
+        Verify that you have successfully set up the environment by running the code.
+
+        You should also create custom tools (.sh or .py scripts) that can be used for your setup, but only if you believe the tool can also be reused to set up other repos.
+        Save these scripts in ../toolbox, a directory in the parent directory of your current repo.
+        Write a description for each tool you create, and append it to tool_descriptions.json in the toolbox directory, with the following format:
+        [
+            ... pervious tools ...
+            "tool_name": {{
+                "description": "short description of the tool",
+                "args": {{
+                    "arg1": "description of arg1",
+                    ...
+                }}
+            }}
+        ]
+        Verify that any changes you made are actually reflected in the files system.
+        You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands.
+        You must complete the task without asking for my feedback. Only report to me when you are done or if you have exhausted all other options.
+    """
+    return prompt
+
+def get_trove_prompt_import(repo_name):
+    tool_descriptions = get_toolbox_description()
+    prompt = f"""
+        ## Instruction
+        Your task is to follow the README file carefully in your current repo \"{repo_name}\" and set up all the dependency requirements to run the code.
+        Verify that you have successfully set up the environment by running the code.
+        You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands.
+        You must complete the task without asking for my feedback. Only report to me when you are done or if you have exhausted all other options.
+
+        The toolbox section lists all the available tools that can be used to help you set up.
+
+        ## Toolbox
+        The tools below are located in the ../toolbox directory, which is in the parent directory of your current repo. You can run them to help you.
+        {tool_descriptions}
     """
     return prompt
 
@@ -164,12 +255,17 @@ def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
                     elif parsed_json["type"] == "message" and "content" in parsed_json:
                         # Handle message type with content field
                         for content_item in parsed_json["content"]:
-                            if content_item["type"] == "output_text" and "text" in content_item:
+                            if content_item["type"] in ("output_text", "input_text") and "text" in content_item:
+                                # Input text has no id, so set it to 0
+                                if content_item["type"] == "input_text" and not "id" in parsed_json:
+                                    id = "user_input"
+                                else:
+                                    id = parsed_json["id"]
                                 message_text = content_item["text"]
                                 concise_log.write(f"{prefix} MESSAGE: {message_text}\n")                                
                                 # Also log message to the json
                                 entry = {
-                                    "id": parsed_json["id"],
+                                    "id": id,
                                     "type": "message",
                                     "content": message_text
                                 }
@@ -182,17 +278,17 @@ def log_output(pipe, logfile, concise_logfile, json_logfile, prefix):
                 
                 concise_log.flush()
                 json_log.flush()
-                print(f"{prefix}: {line}", end='')
+                #print(f"{prefix}: {line}", end='')
             except json.JSONDecodeError:
                 # If not valid JSON, log as is
                 log.write(f"{prefix}: {line}")
                 log.flush()
                 concise_log.write(f"{prefix} text: {line[:LOG_TRUNCATE_LENGTH]}\n")
                 concise_log.flush()
-                print(f"{prefix}: {line}", end='')
+                #print(f"{prefix}: {line}", end='')
             sys.stdout.flush()
 
-def run_codex_in_repo(repo_path):
+def run_codex_in_repo(repo_path, trove_mode=None):
     result = {
         "repo": repo_path,
         "start_time": datetime.utcnow().isoformat(),
@@ -219,6 +315,19 @@ def run_codex_in_repo(repo_path):
         cf.write(f"Starting run for {result['repo']} at {result['start_time']}\n")
         json_log.write("[\n")
     
+
+    # Get Codex prompt based on TroVe mode
+    if trove_mode is None:
+        prompt = get_codex_prompt(repo_name)
+    elif trove_mode == "instance":
+        prompt = get_trove_prompt_instance(repo_name)
+    elif trove_mode == "create":
+        prompt = get_trove_prompt_create(repo_name)
+    elif trove_mode == "import":
+        prompt = get_trove_prompt_import(repo_name)
+    else:
+        raise ValueError(f"Invalid TroVe mode: {trove_mode}")
+
     # Call codex CLI in the repo directory
     try:
         proc = subprocess.Popen(
@@ -226,7 +335,7 @@ def run_codex_in_repo(repo_path):
                 "codex",
                 "--approval-mode", "full-auto",
                 "--quiet",
-                get_codex_prompt(repo_name),
+                prompt,
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -279,9 +388,22 @@ def run_codex_in_repo(repo_path):
     return result
 
 def main():
-    for repo in interesting_repos:
+    # Randomly shuffle the repos for testing
+    #random.shuffle(interesting_repos)
+    # Split into two halves for create vs import mode: first half for create, second half for import
+    half_index = len(interesting_repos) // 2
+    create_repos = interesting_repos[:half_index]
+    import_repos = interesting_repos[half_index:]
+    for i, repo in enumerate(interesting_repos):
         print(f"Running Codex CLI in repo: {repo} ...")
-        result = run_codex_in_repo(repo)
+        if i < half_index:
+            # Run in create mode for the first half
+            print(f"Running in create mode for {repo}...")
+            result = run_codex_in_repo(repo, trove_mode="create")
+        else:
+            # Run in import mode for the second half
+            print(f"Running in import mode for {repo}...")
+            result = run_codex_in_repo(repo, trove_mode="import")
         
         # Output parsable JSON for the result
         result_json = {

@@ -1,0 +1,14 @@
+[{
+    "install_cpp_deps.sh": {
+        "description": "Installs common C++ build dependencies (CMake, compilers, OpenSSL, zlib, Brotli, curl, pkg-config, zstd) on various systems (apt, yum, brew).",
+        "args": {}
+    },
+    "install_common_dev_deps.sh": {
+        "description": "Installs common development dependencies (git, python3, pip) across various systems (apt, yum, brew).",
+        "args": {}
+    },
+    "install_autotools_deps.sh": {
+        "description": "Installs dependencies for building autotools-based projects (autoconf, automake, libtool, build-essential) on various systems (apt, yum, brew).",
+        "args": {}
+    }
+}]
