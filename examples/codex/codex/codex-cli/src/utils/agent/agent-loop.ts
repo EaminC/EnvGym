@@ -19,7 +19,10 @@ import {
   getBaseUrl,
 } from "../config.js";
 import { log } from "../logger/log.js";
-import { parseToolCallArguments } from "../parsers.js";
+import {
+  parseToolCallArguments,
+  parseCustomToolCallArguments
+} from "../parsers.js";
 import { responsesCreateViaChatCompletions } from "../responses.js";
 import {
   ORIGIN,
@@ -33,8 +36,11 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import { randomUUID } from "node:crypto";
 import OpenAI, { APIConnectionTimeoutError } from "openai";
 
+import type { ExecInput } from "./sandbox/interface.js";
+import {handleSearchTool} from "./handle-custom-tool.js";
+
 // Default temperature setting for all OpenAI API calls
-const DEFAULT_TEMPERATURE = 0.7;
+const DEFAULT_TEMPERATURE = 1.0;//0.7;
 
 // Wait time before retrying after rate limit errors (ms).
 const RATE_LIMIT_RETRY_WAIT_MS = parseInt(
@@ -103,6 +109,21 @@ const shellTool: FunctionTool = {
       },
     },
     required: ["command"],
+    additionalProperties: false,
+  },
+};
+
+const searchTool: FunctionTool = {
+  type: "function",
+  name: "search",
+  description: "Searches for a problem on StackOverflow.",
+  strict: false,
+  parameters: {
+    type: "object",
+    properties: {
+      query: { type: "string" },
+    },
+    required: ["query"],
     additionalProperties: false,
   },
 };
@@ -379,14 +400,48 @@ export class AgentLoop {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const callId: string = (item as any).call_id ?? (item as any).id;
 
-    const args = parseToolCallArguments(rawArguments ?? "{}");
-    log(
-      `handleFunctionCall(): name=${
-        name ?? "undefined"
-      } callId=${callId} args=${rawArguments}`,
-    );
+    // Parsing logic is separate for default tool (shell) and custom tools.
+    var parseSuccess: boolean = false;
+    var shellArgs: ExecInput | undefined;
+    var customArgs: Record<string, any> | undefined;
 
-    if (args == null) {
+    if (name === "container.exec" || name === "shell") {
+      shellArgs = parseToolCallArguments(rawArguments ?? "{}");
+      parseSuccess = shellArgs !== undefined;
+      log(
+        `handleFunctionCall(): name=${
+          name ?? "undefined"
+        } callId=${callId} args=${rawArguments}`,
+      );
+    } else if (name === "search") {
+      customArgs = parseCustomToolCallArguments(rawArguments ?? "{}");
+      // The search tool only accepts a single string argument called `query`.
+      const { query } = customArgs as Record<string, any>;
+      if (!query || typeof query !== 'string') {
+        customArgs = undefined;
+      }
+      parseSuccess = customArgs !== undefined;
+      log(
+        `handleFunctionCall(): name=${
+          name ?? "undefined"
+        } callId=${callId} args=${rawArguments}`,
+      );
+    } else {
+      // We don't know how to handle this function call.  We need to
+      // return a synthetic `function_call_output` so the API no longer
+      // expects a response for this call.
+      log(
+        `handleFunctionCall(): unknown function call name=${name} callId=${callId}`,
+      );
+      const outputItem: ResponseInputItem.FunctionCallOutput = {
+        type: "function_call_output",
+        call_id: item.call_id,
+        output: `invalid function name: ${rawArguments}`,
+      };
+      return [outputItem];
+    }
+
+    if (!parseSuccess) {
       const outputItem: ResponseInputItem.FunctionCallOutput = {
         type: "function_call_output",
         call_id: item.call_id,
@@ -418,13 +473,13 @@ export class AgentLoop {
     const additionalItems: Array<ResponseInputItem> = [];
 
     // TODO: allow arbitrary function calls (beyond shell/container.exec)
-    if (name === "container.exec" || name === "shell") {
+    if (shellArgs !== undefined && (name === "container.exec" || name === "shell")) {
       const {
         outputText,
         metadata,
         additionalItems: additionalItemsFromExec,
       } = await handleExecCommand(
-        args,
+        shellArgs,
         this.config,
         this.approvalPolicy,
         this.additionalWritableRoots,
@@ -436,6 +491,14 @@ export class AgentLoop {
       if (additionalItemsFromExec) {
         additionalItems.push(...additionalItemsFromExec);
       }
+    } else if (name === "search") {
+      const { query } = customArgs as Record<string, any>;
+      const outputText = await handleSearchTool(query);
+      const metadata = {
+        exit_code: 0,
+        duration_seconds: 0,
+      };
+      outputItem.output = JSON.stringify({ output: outputText, metadata });
     }
 
     return [outputItem, ...additionalItems];
@@ -723,7 +786,7 @@ export class AgentLoop {
                     store: true,
                     previous_response_id: lastResponseId || undefined,
                   }),
-              tools: [shellTool],
+              tools: [shellTool, searchTool],
               // Explicitly tell the model it is allowed to pick whatever
               // tool it deems appropriate.  Omitting this sometimes leads to
               // the model ignoring the available tools and responding with
@@ -1100,7 +1163,7 @@ export class AgentLoop {
                       store: true,
                       previous_response_id: lastResponseId || undefined,
                     }),
-                tools: [shellTool],
+                tools: [shellTool, searchTool],
                 tool_choice: "auto",
               });
 

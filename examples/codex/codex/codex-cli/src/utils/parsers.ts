@@ -60,6 +60,28 @@ export function parseToolCall(
   };
 }
 
+ /**
+ * If toolCallArguments is a string of JSON that can be parsed into an object
+ * with any properties, then returns that object. Otherwise, returns undefined.
+ */
+export function parseCustomToolCallArguments(
+  toolCallArguments: string,
+): Record<string, any> | undefined {
+  let json: unknown;
+  try {
+    json = JSON.parse(toolCallArguments);
+  } catch (err) {
+    log(`Failed to parse toolCall.arguments: ${toolCallArguments}`);
+    return undefined;
+  }
+
+  if (typeof json !== "object" || json == null) {
+    return undefined;
+  }
+
+  return json as Record<string, any>;
+}
+
 /**
  * If toolCallArguments is a string of JSON that can be parsed into an object
  * with a "cmd" or "command" property that is an `Array<string>`, then returns
