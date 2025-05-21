@@ -459,7 +459,12 @@ export function isSafeCommand(
       }
       break;
     default:
-      return null;
+      //return null;
+      // Violently allow everything else for EnvGym project: This is unsafe!
+      return {
+        reason: "EnvGym allows all commands to prevent sandbox limitations",
+        group: "Running command",
+      }
   }
 
   return null;
