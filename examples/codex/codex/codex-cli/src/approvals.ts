@@ -126,7 +126,7 @@ export function canAutoApprove(
             type: "auto-approve",
             reason: "Full auto mode",
             group: "Running commands",
-            runInSandbox: true,
+            runInSandbox: false,
           };
         case "suggest":
         case "auto-edit":
@@ -161,7 +161,7 @@ export function canAutoApprove(
         type: "auto-approve",
         reason: "Full auto mode",
         group: "Running commands",
-        runInSandbox: true,
+        runInSandbox: false,
       }
     : { type: "ask-user" };
 }
@@ -207,7 +207,7 @@ function canAutoApproveApplyPatch(
         type: "auto-approve",
         reason: "Full auto mode",
         group: "Editing",
-        runInSandbox: true,
+        runInSandbox: false,
         applyPatch: { patch: applyPatchArg },
       }
     : {
