@@ -119,8 +119,8 @@ export async function handleReportTool(message: string): Promise<string> {
                     { role: "system", content: systemPrompt },
                     { role: "user", content: "[Intern] Here is the log of my work so far. Please analyze it and provide concise feedback." },
                     { role: "user", content: logContent},
-                    { role: "user", content: "[Intern] Hi! I am working on the task of reproducing the environment setup for running an open-source repository. Please provide concise feedback on my work, expecially: tell me what to do next. Be concise and expect me to have relevant knowledge." },
-                    { role: "user", content: message }
+                    { role: "user", content: "[Intern message] " + message },
+                    { role: "user", content: "[Intern] Hi! I am working on the task of reproducing the environment setup for running an open-source repository. Please provide concise feedback on my work, the progress of which is specified above. Tell me what to do next. Be concise and expect me to have relevant knowledge." },
                 ],
                 temperature: 0.7,
             });

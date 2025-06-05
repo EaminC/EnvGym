@@ -704,7 +704,6 @@ export class AgentLoop {
             !this.hardAbort.signal.aborted
           ) {
             
-
             this.onItem(item);
             // Mark as delivered so flush won't re-emit it
             staged[idx] = undefined;
@@ -1038,6 +1037,38 @@ export class AgentLoop {
               // process and surface each item (no-op until we can depend on streaming events)
               if (event.type === "response.output_item.done") {
                 const item = event.item;
+                // 0) modify agent-to-user messages to use the report tool
+                // If this is a message from the assistant to the user, convert it to a report tool call
+                if (item.type === "message" && 
+                  (item as any).role === "assistant" && 
+                  Array.isArray((item as any).content) && 
+                  (item as any).content.length > 0) {
+                  
+                  // Extract the text content from the message
+                  const content = (item as any).content;
+                  let messageText = "";
+                  
+                  for (const part of content) {
+                  if (part.type === "text" || part.type === "input_text") {
+                    messageText += part.text;
+                  }
+                  }
+                  
+                  if (messageText) {
+                  // Create a function call for the report tool instead of sending a direct message
+                    const reportItem: ResponseFunctionToolCall = {
+                    id: `report-${Date.now()}`,
+                    type: "function_call" as const,
+                    call_id: `report-call-${Date.now()}`,
+                    name: "report",
+                    arguments: JSON.stringify({ message: messageText })
+                    };
+                  
+                  // Replace the message with the function call
+                  return reportItem as any;
+                  }
+                }
+
                 // 1) if it's a reasoning item, annotate it
                 type ReasoningItem = { type?: string; duration_ms?: number };
                 const maybeReasoning = item as ReasoningItem;
@@ -1561,6 +1592,7 @@ export class AgentLoop {
     }
     const turnInput: Array<ResponseInputItem> = [];
     for (const item of output) {
+
       if (item.type === "function_call") {
         if (alreadyProcessedResponses.has(item.id)) {
           continue;
