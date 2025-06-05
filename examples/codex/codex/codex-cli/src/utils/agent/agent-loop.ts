@@ -1238,8 +1238,8 @@ export class AgentLoop {
                       store: true,
                       previous_response_id: lastResponseId || undefined,
                     }),
-                tools: [shellTool, searchTool, reportTool],
-                tool_choice: "required",
+                tools: [shellTool, searchTool],
+                tool_choice: "auto",
               });
 
               this.currentStream = stream;
@@ -1617,7 +1617,6 @@ You can:
 - Work inside a sandboxed, git-backed workspace with rollback support.
 - Log telemetry so sessions can be replayed or inspected later.
 - More details on your functionality are available at \`codex --help\`
-- Contact the user via the \`report\` tool to ask for clarifications or provide updates.
 
 The Codex CLI is open-sourced. Don't confuse yourself with the old Codex language model built by OpenAI many moons ago (this is understandably top of mind for you!). Within this context, Codex refers to the open-source agentic coding interface.
 
@@ -1654,9 +1653,7 @@ You MUST adhere to the following criteria when executing the task:
     - Respond in a friendly tone as a remote teammate, who is knowledgeable, capable and eager to help with coding.
 - When your task involves writing or modifying files:
     - Do NOT tell the user to "save the file" or "copy the code into a file" if you already created or modified the file using \`apply_patch\`. Instead, reference the file as already saved.
-    - Do NOT show the full contents of large files you have already written, unless the user explicitly asks for them.
-    
-IMPORTANT: NEVER reply directly to the user. Instead, when you are done, or if you encounter a difficult problem that you cannot solve yourself, use the \`report\` tool to send a message to the user, as the user is away-from-keyboard. You will communicate with the user only via the report tool. You must listen to the user.`;
+    - Do NOT show the full contents of large files you have already written, unless the user explicitly asks for them.`;
 
 function filterToApiMessages(
   items: Array<ResponseInputItem>,
