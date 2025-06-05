@@ -37,7 +37,10 @@ import { randomUUID } from "node:crypto";
 import OpenAI, { APIConnectionTimeoutError } from "openai";
 
 import type { ExecInput } from "./sandbox/interface.js";
-import {handleSearchTool} from "./handle-custom-tool.js";
+import {
+  handleSearchTool,
+  handleReportTool,
+} from "./handle-custom-tool.js";
 
 // Default temperature setting for all OpenAI API calls
 const DEFAULT_TEMPERATURE = 1.0;//0.7;
@@ -124,6 +127,24 @@ const searchTool: FunctionTool = {
       query: { type: "string" },
     },
     required: ["query"],
+    additionalProperties: false,
+  },
+};
+
+const reportTool: FunctionTool = {
+  type: "function",
+  name: "report",
+  description: "Sends a message to the user to report your results.",
+  strict: false,
+  parameters: {
+    type: "object",
+    properties: {
+      message: {
+        type: "string",
+        description: "The message to send to the user.",
+      },
+    },
+    required: ["message"],
     additionalProperties: false,
   },
 };
@@ -426,6 +447,19 @@ export class AgentLoop {
           name ?? "undefined"
         } callId=${callId} args=${rawArguments}`,
       );
+    } else if (name === "report") {
+      customArgs = parseCustomToolCallArguments(rawArguments ?? "{}");
+      // The report tool only accepts a single string argument called `message`.
+      const { message } = customArgs as Record<string, any>;
+      if (!message || typeof message !== 'string') {
+        customArgs = undefined;
+      }
+      parseSuccess = customArgs !== undefined;
+      log(
+        `handleFunctionCall(): name=${
+          name ?? "undefined"
+        } callId=${callId} args=${rawArguments}`,
+      );
     } else {
       // We don't know how to handle this function call.  We need to
       // return a synthetic `function_call_output` so the API no longer
@@ -494,6 +528,14 @@ export class AgentLoop {
     } else if (name === "search") {
       const { query } = customArgs as Record<string, any>;
       const outputText = await handleSearchTool(query);
+      const metadata = {
+        exit_code: 0,
+        duration_seconds: 0,
+      };
+      outputItem.output = JSON.stringify({ output: outputText, metadata });
+    } else if (name === "report") {
+      const { message } = customArgs as Record<string, any>;
+      const outputText = await handleReportTool(message);
       const metadata = {
         exit_code: 0,
         duration_seconds: 0,
@@ -661,6 +703,8 @@ export class AgentLoop {
             !this.canceled &&
             !this.hardAbort.signal.aborted
           ) {
+            
+
             this.onItem(item);
             // Mark as delivered so flush won't re-emit it
             staged[idx] = undefined;
@@ -786,12 +830,12 @@ export class AgentLoop {
                     store: true,
                     previous_response_id: lastResponseId || undefined,
                   }),
-              tools: [shellTool, searchTool],
+              tools: [shellTool, searchTool, reportTool],
               // Explicitly tell the model it is allowed to pick whatever
               // tool it deems appropriate.  Omitting this sometimes leads to
               // the model ignoring the available tools and responding with
               // plain text instead (resulting in a missing tool‑call).
-              tool_choice: "auto",
+              tool_choice: "required",
             });
             break;
           } catch (error) {
@@ -1163,8 +1207,8 @@ export class AgentLoop {
                       store: true,
                       previous_response_id: lastResponseId || undefined,
                     }),
-                tools: [shellTool, searchTool],
-                tool_choice: "auto",
+                tools: [shellTool, searchTool, reportTool],
+                tool_choice: "required",
               });
 
               this.currentStream = stream;
@@ -1541,6 +1585,7 @@ You can:
 - Work inside a sandboxed, git-backed workspace with rollback support.
 - Log telemetry so sessions can be replayed or inspected later.
 - More details on your functionality are available at \`codex --help\`
+- Contact the user via the \`report\` tool to ask for clarifications or provide updates.
 
 The Codex CLI is open-sourced. Don't confuse yourself with the old Codex language model built by OpenAI many moons ago (this is understandably top of mind for you!). Within this context, Codex refers to the open-source agentic coding interface.
 
@@ -1577,7 +1622,9 @@ You MUST adhere to the following criteria when executing the task:
     - Respond in a friendly tone as a remote teammate, who is knowledgeable, capable and eager to help with coding.
 - When your task involves writing or modifying files:
     - Do NOT tell the user to "save the file" or "copy the code into a file" if you already created or modified the file using \`apply_patch\`. Instead, reference the file as already saved.
-    - Do NOT show the full contents of large files you have already written, unless the user explicitly asks for them.`;
+    - Do NOT show the full contents of large files you have already written, unless the user explicitly asks for them.
+    
+IMPORTANT: NEVER reply directly to the user. Instead, when you are done, or if you encounter a difficult problem that you cannot solve yourself, use the \`report\` tool to send a message to the user, as the user is away-from-keyboard. You will communicate with the user only via the report tool. You must listen to the user.`;
 
 function filterToApiMessages(
   items: Array<ResponseInputItem>,

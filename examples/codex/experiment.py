@@ -7,14 +7,24 @@ import json
 import argparse
 import time
 
-# List of interesting repos as local directory paths (edit as needed)
-interesting_repos = [
-    "../../data/bat",
+LOG_PATH_FILE = "output/current_log.txt"
+# Repos to run on
+DATA_DIR = "../../data"
+repo_names = [
+    #"acto",
+    #"anvil",
+    "enoki",
+    #"gluetest",
 ]
+interesting_repos = [os.path.join(DATA_DIR, repo_name) for repo_name in repo_names]
 
 # Instruction prompt for Codex CLI
-CODEX_INSTRUCTION = "Please create a Dockerfile named with repo and date,e.g.repo0430.dockerfile. Follow the README carefully in the repo and set up all the dependency requirements to run the code.Verify that you have successfully set up the environment by running the code. You have sudo privileges. Remember you can set the timeout of your own commands, so make it longer for long-running commands."
-
+CODEX_INSTRUCTION = """
+Follow the README carefully in the repo and set up all the dependency requirements to run the code.
+The final deliverable should be a Dockerfile named with repo and date, e.g.repo0430.dockerfile, so that we can run the code in a container.
+Verify that you have successfully set up the environment by running the code. You have sudo privileges.
+Remember you can set the timeout of your own commands, so make it longer for long-running commands.
+"""
 
 # Create output directory if it doesn't exist
 os.makedirs("output", exist_ok=True)
@@ -124,6 +134,9 @@ def run_codex_in_repo(repo_path, thread_number=None, exp_lock=None, comm_mode=No
     # Get repo name from path
     repo_name = os.path.basename(repo_path)
     log_file, concise_log_file = get_log_paths(repo_name)
+    # Save current log file path to LOG_PATH_FILE
+    with open(LOG_PATH_FILE, 'w', encoding='utf-8') as f:
+        f.write(os.path.abspath(log_file))
 
     # Log the start of the run
     with open(log_file, 'a', encoding='utf-8') as f, open(concise_log_file, 'a', encoding='utf-8') as cf:
@@ -176,7 +189,8 @@ def run_codex_in_repo(repo_path, thread_number=None, exp_lock=None, comm_mode=No
     try:
         proc = subprocess.Popen(
             [
-                "node", "../../examples/codex/codex/codex-cli/dist/cli.js",
+                #"node", "../../examples/codex/codex/codex-cli/dist/cli.js",
+                "node", "../../examples/codex/codex/codex-cli/bin/codex.js",
                 "--approval-mode", "full-auto",
                 "--quiet",
                 instruction,
