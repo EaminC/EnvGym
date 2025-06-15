@@ -30,6 +30,12 @@ try:
 except ImportError:
     _OPENAI_AVAILABLE = False
 
+try:
+    from .hybrid_agent import HybridAgent, HybridAgentOptions
+    _HYBRID_AVAILABLE = True
+except ImportError:
+    _HYBRID_AVAILABLE = False
+
 from .supervisor_agent import SupervisorAgent, SupervisorAgentOptions
 
 __all__ = [
@@ -78,4 +84,10 @@ if _OPENAI_AVAILABLE:
     __all__.extend([
             'OpenAIAgent',
             'OpenAIAgentOptions'
+        ])
+
+if _HYBRID_AVAILABLE:
+    __all__.extend([
+            'HybridAgent',
+            'HybridAgentOptions'
         ])

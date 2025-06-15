@@ -1,4 +1,3 @@
-
 !typescript/jest.config.js
 typescript/*.d.ts
 node_modules
@@ -30,6 +29,8 @@ typescript/coverage/**/*
 examples/chat-chainlit-app/venv
 
 *.env
+*.env.*
+.env*
 *__pycache__
 
 git-release-notes.genai.mjs

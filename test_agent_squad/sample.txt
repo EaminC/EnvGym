@@ -1,0 +1,5 @@
+python quickstart.py go github.com/gin-gonic/gin@v1.8.0 github.com/gin-gonic/gin@v1.9.1
+python quickstart.py python numpy==1.1.1 pandas==2.0.1      
+python quickstart.py rust serde==1.0.188 tokio==1.36.0
+python quickstart.py java org.apache.commons:commons-lang3:3.12.0 com.google.guava:guava:32.1.2-jre
+python quickstart.py cpp boost-algorithm fmt
