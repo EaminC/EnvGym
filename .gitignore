@@ -35,3 +35,70 @@ examples/chat-chainlit-app/venv
 
 git-release-notes.genai.mjs
 
+# Nested git repositories (converted to regular folders)
+Agent0613/tool/aider/
+Agent0613/tool/codex/
+
+# API Keys and sensitive information
+*.key
+*.pem
+*.p12
+*.pfx
+**/secrets/
+**/secret.*
+**/*secret*
+**/*key*
+**/*password*
+**/*token*
+auth.json
+credentials.json
+config.json
+
+# Environment variables and configuration
+.env
+.env.*
+.envrc
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+
+# API key related files
+*api_key*
+*apikey*
+*API_KEY*
+*OPENAI_API_KEY*
+*ANTHROPIC_API_KEY*
+*AWS_ACCESS_KEY*
+*AWS_SECRET_KEY*
+
+# Cache and temporary files
+.cache/
+.aider.tags.cache.v4/
+*.cache
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
