@@ -829,12 +829,12 @@ export class AgentLoop {
                     store: true,
                     previous_response_id: lastResponseId || undefined,
                   }),
-              tools: [shellTool, searchTool, reportTool],
+              tools: [shellTool],
               // Explicitly tell the model it is allowed to pick whatever
               // tool it deems appropriate.  Omitting this sometimes leads to
               // the model ignoring the available tools and responding with
               // plain text instead (resulting in a missing tool‑call).
-              tool_choice: "required",
+              tool_choice: "auto",
             });
             break;
           } catch (error) {
@@ -1238,7 +1238,7 @@ export class AgentLoop {
                       store: true,
                       previous_response_id: lastResponseId || undefined,
                     }),
-                tools: [shellTool, searchTool],
+                tools: [shellTool],
                 tool_choice: "auto",
               });
 

@@ -13,8 +13,8 @@ DATA_DIR = "../../data"
 repo_names = [
     #"acto",
     #"anvil",
-    "enoki",
-    #"gluetest",
+    #"enoki",
+    "gluetest",
 ]
 interesting_repos = [os.path.join(DATA_DIR, repo_name) for repo_name in repo_names]
 
@@ -22,7 +22,7 @@ interesting_repos = [os.path.join(DATA_DIR, repo_name) for repo_name in repo_nam
 CODEX_INSTRUCTION = """
 Follow the README carefully in the repo and set up all the dependency requirements to run the code.
 The final deliverable should be a Dockerfile named with repo and date, e.g.repo0430.dockerfile, so that we can run the code in a container.
-Verify that you have successfully set up the environment by running the code. You have sudo privileges.
+Verify that you have successfully set up the environment by running tests. You have sudo privileges.
 Remember you can set the timeout of your own commands, so make it longer for long-running commands.
 """
 
@@ -150,40 +150,7 @@ def run_codex_in_repo(repo_path, thread_number=None, exp_lock=None, comm_mode=No
         cf.write(f"Starting run for {result['repo']} at {result['start_time']}\n")
     
     # Construct instruction prompt
-    if thread_number is not None and exp_lock is not None and comm_mode == 'simultaneous':
-        instruction = (
-            f"The name of the repo you are processing is: {repo_name}\n"
-            f"You are thread number {thread_number}. "
-            f"Please create a Dockerfile named with repo, date, and thread number, e.g. repo0430_thread{thread_number}.dockerfile. "
-            f"You can write your incremental trial-and-error experience to a file named exp.txt in the repo folder, and you can also read other threads' experience from this file. "
-            f"When writing to exp.txt, please make sure to append your experience in a way that does not overwrite others' content. "
-            f"Follow the README carefully in the repo and set up all the dependency requirements to run the code. "
-            f"Verify that you have successfully set up the environment by running the code. You have sudo privileges. "
-            f"Remember you can set the timeout of your own commands, so make it longer for long-running commands."
-        )
-    elif thread_number is not None and exp_lock is not None and comm_mode == 'staggered':
-        instruction = (
-            f"The name of the repo you are processing is: {repo_name}\n"
-            f"You are thread number {thread_number}. "
-            f"Please create a Dockerfile named with repo, date, and thread number, e.g. repo0430_thread{thread_number}.dockerfile. "
-            f"You can write your incremental trial-and-error experience to a file named exp.txt in the repo folder. "
-            f"You are allowed to read only the experience that was already written to exp.txt before you started. Do not expect to read experience from threads that start after you. "
-            f"When writing to exp.txt, please make sure to append your experience in a way that does not overwrite others' content. "
-            f"Follow the README carefully in the repo and set up all the dependency requirements to run the code. "
-            f"Verify that you have successfully set up the environment by running the code. You have sudo privileges. "
-            f"Remember you can set the timeout of your own commands, so make it longer for long-running commands."
-        )
-    elif thread_number is not None:
-        instruction = (
-            f"The name of the repo you are processing is: {repo_name}\n"
-            f"You are thread number {thread_number}. "
-            f"Please create a Dockerfile named with repo, date, and thread number, e.g. repo0430_thread{thread_number}.dockerfile. "
-            f"Follow the README carefully in the repo and set up all the dependency requirements to run the code. "
-            f"Verify that you have successfully set up the environment by running the code. You have sudo privileges. "
-            f"Remember you can set the timeout of your own commands, so make it longer for long-running commands."
-        )
-    else:
-        instruction = f"The name of the repo you are processing is: {repo_name}\n{CODEX_INSTRUCTION}"
+    instruction = f"The name of the repo you are processing is: {repo_name}\n{CODEX_INSTRUCTION}"
 
     # Call codex CLI in the repo directory
     try:
@@ -193,6 +160,7 @@ def run_codex_in_repo(repo_path, thread_number=None, exp_lock=None, comm_mode=No
                 "node", "../../examples/codex/codex/codex-cli/bin/codex.js",
                 "--approval-mode", "full-auto",
                 "--quiet",
+                "--model", "gpt-4.1-mini",
                 instruction,
             ],
             stdout=subprocess.PIPE,
