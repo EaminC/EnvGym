@@ -1,4 +1,12 @@
 import os
+import sys
+from pathlib import Path
+
+# Add local agent_squad module path
+current_dir = Path(__file__).resolve().parent
+agent_squad_path = current_dir.parent / "python" / "src"
+sys.path.insert(0, str(agent_squad_path))
+
 from dotenv import load_dotenv
 from agent_squad.classifiers import OpenAIClassifier, OpenAIClassifierOptions
 from agent_squad.orchestrator import AgentSquad
@@ -7,15 +15,14 @@ from agent_squad.utils import AgentTools, AgentTool
 from agent_squad.agents import AgentResponse, SupervisorAgent, SupervisorAgentOptions, HybridAgent, HybridAgentOptions
 import uuid
 import asyncio
-import sys
 import json
-from pathlib import Path
 import time
 
-#tools
+# Tools
 from tool.compat.package_version import analyze_package_formatted
 from tool.aider.entry import get_repo_map
-from tool.codex.entry import execute_codex_query
+from tool.codex.entry import simple_codex_agent
+from tool.dockerrun.entry import run_dockerfile_with_logs
 
 
 dotenv_path = Path(__file__).resolve().parent.parent / ".env"
@@ -54,10 +61,10 @@ orchestrator.classifier.set_system_prompt(
     }
 )
 
-# 使用新的HybridAgent替代OpenAIAgent
+# Use new HybridAgent instead of OpenAIAgent
 
 
-# 创建AgentTools实例
+# Create AgentTools instance
 package_tools = AgentTools([
     AgentTool(
         name="package_dependency",
@@ -228,121 +235,256 @@ Key capabilities: {{CAPABILITIES}}""",
 # Add functional agents directly to orchestrator
 tool_codex = AgentTools([
     AgentTool(
-        name="execute_codex_query",
-        description="Execute natural language commands using Codex CLI to perform file operations and system commands",
+        name="simple_codex_agent",
+        description="Simplified Codex agent interface for executing natural language task descriptions using Codex CLI",
         properties={
-            "query": {
+            "task_description": {
                 "type": "string",
-                "description": "The natural language query describing the command to execute"
-            },
-            "approval_mode": {
-                "type": "string",
-                "description": """
-                The approval mode for command execution:
-    - 'full-auto': Execute commands without user approval
-    - 'semi-auto': Ask for user approval before executing commands
-    - 'manual': Require manual user approval for each command
-    Default is 'full-auto'.
-                """
-            },
-            "verbose": {
-                "type": "boolean",
-                "description": "Enable verbose output to show detailed command execution information (default: false)"
+                "description": "A natural language description of the task to perform, such as 'create a test.txt file', 'list files in current directory', or 'show directory structure'"
             }
         },
-        func=execute_codex_query,
-        enum_values={"approval_mode": ["full-auto"]}
+        func=simple_codex_agent,
+        enum_values={}
     )
 ])
 
-agent_codex = HybridAgent(HybridAgentOptions(
-    # Required fields
-    name='codex_agent',
-    description='An advanced agent that executes natural language commands using Codex CLI for file operations and system tasks',
+# Initialization agent - creates envgym folder and related files
+agent_initialization = HybridAgent(HybridAgentOptions(
+    name='initialization_agent',
+    description='Creates envgym directory with plan.txt, next.txt, status.txt, log.txt ,history.txt, envgym.dockerfile files',
     api_key=my_api_key,
     model='gpt-4o',
     streaming=True,
+    inference_config={'maxTokens': 800, 'temperature': 0.2},
+    custom_system_prompt={
+        'template': """You create envgym directory structure. Use this single command:
+"create envgym directory with empty files plan.txt next.txt status.txt log.txt ,history.txt, envgym.dockerfile inside it"
+Then verify with: "list envgym directory contents".""",
+        'variables': {}
+    },
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': 3}
+))
 
+# Auto-save agent - records execution status to history.txt
+agent_auto_save = HybridAgent(HybridAgentOptions(
+    name='auto_save_agent',
+    description='Automatically saves execution status and file contents to history.txt for each iteration',
+    api_key=my_api_key,
+    model='gpt-4o',
+    streaming=True,
+    inference_config={'maxTokens': 1000, 'temperature': 0.1},
+    custom_system_prompt={
+        'template': """You save execution status to history.txt. For iteration {i}, execute these commands:
+1. "append to envgym/history.txt: === Iteration {i} - [current timestamp] ==="
+2. "If any file in step 3,4,5,6 is empty, just skip it"
+3. "read envgym/plan.txt and append its content to envgym/history.txt with prefix 'PLAN: '"
+4. "read envgym/next.txt and append its content to envgym/history.txt with prefix 'NEXT: '"
+5. "read envgym/status.txt and append its content to envgym/history.txt with prefix 'STATUS: '"
+6. "read envgym/log.txt and append its content to envgym/history.txt with prefix 'LOG: '"
+7. "append to envgym/history.txt: '--- End of Iteration {i} ---'"
+Always append, never overwrite history.txt.""",
+        'variables': {}
+    },
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': 6}
+))
+
+# Planning agent - analyzes project and generates environment configuration plan
+agent_planner = HybridAgent(HybridAgentOptions(
+    name='planner_agent',
+    description='This is an agent for making comprehensive plans before environment configuration and write it in envgym/plan.txt',
+    api_key=my_api_key,
+    model='gpt-4o',
+    streaming=True,
+    inference_config={'maxTokens': 3000, 'temperature': 0.2},
+    custom_system_prompt={
+        'template': """You need to make a comprehensive plan of how to build up a complete docker image to run the project and please remember to write it in envgym/plan.txt.
+First ,make sure you can access the envgym directory and there is a plan.txt file in it.
+
+Analysis priority:
+1. First check existing README files (README.md, README.txt, readme.md etc.)
+2. Then check existing environment files (Dockerfile, requirements.txt, package.json, setup.py, pyproject.toml etc.)
+3. If above info insufficient, analyze repository structure
+4. If you find any new information, update the plan.txt with the new information.
+
+Output format to envgym/plan.txt:
+=== ENVIRONMENT SETUP PLAN ===
+1. DOWNLOADS NEEDED: [specific list]
+2. FILES TO CREATE: [specific list]  
+3. COMPLETE TODO LIST: [specific steps]
+Make sure you have make a complete plan, and the plan is updated to envgym/plan.txt.Tell me if there is something wrong saving it to envgym/plan.txt""",
+        'variables': {}
+    },
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': 10}
+))
+
+# Write Docker agent - writes and prepares Dockerfile
+write_docker_agent = HybridAgent(HybridAgentOptions(
+    name='write_docker_agent',
+    description='Writes Dockerfile: analyzes status, creates virtual environment, generates/updates Dockerfile',
+    api_key=my_api_key,
+    model='gpt-4o',
+    streaming=True,
+    inference_config={'maxTokens': 2000, 'temperature': 0.2},
+    custom_system_prompt={
+        'template': """IMPORTANT: You write Dockerfile to envgym/envgym.dockerfile - this is the ONLY target file for Dockerfile generation.
+
+You write Dockerfile. Execute these steps:
+
+1. "create virtual environment for the project if needed"
+2. Check envgym/status.txt and envgym/next.txt - if empty, this is first execution (only read plan.txt), otherwise read all files to understand current situation
+3. "create or modify Dockerfile in envgym/envgym.dockerfile based on plan.txt requirements and current status/next steps"
+4. "write 'Ready for Docker execution' to envgym/next.txt"
+5. "write current Dockerfile preparation status to envgym/status.txt"
+
+CRITICAL: 
+- ALL Dockerfile content MUST be written to envgym/envgym.dockerfile
+- You only write Dockerfile, do NOT run Docker commands
+- The run docker agent will automatically use envgym/envgym.dockerfile""",
+        'variables': {}
+    },
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': 8}
+))
+
+# Update log file agent - updates log files and status
+update_log_file_agent = HybridAgent(HybridAgentOptions(
+    name='update_log_file_agent',
+    description='Updates log files: analyzes Docker execution results from log.txt and updates status.txt and next.txt',
+    api_key=my_api_key,
+    model='gpt-4o',
+    streaming=True,
+    inference_config={'maxTokens': 2000, 'temperature': 0.2},
+    custom_system_prompt={
+        'template': """You update log files and status. Execute these steps:
+
+1. "read envgym/log.txt to understand Docker execution results"
+2. Analyze execution results:
+   - Identify successful steps and failed steps
+   - Determine root causes of any failures
+   - Assess overall progress toward environment setup goals
+3. "write detailed analysis of successful and failed steps to envgym/status.txt"
+4. "write specific next steps needed based on results to envgym/next.txt"
+5. If major issues found, suggest Dockerfile improvements for next iteration
+
+Always provide actionable analysis and clear next steps for continuous improvement.""",
+        'variables': {}
+    },
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': 6}
+))
+
+
+# Docker runner tool
+tool_docker_runner = AgentTools([
+    AgentTool(
+        name="run_dockerfile",
+        description="Execute Dockerfile using defaults: envgym/envgym.dockerfile and capture logs to envgym/log.txt",
+        properties={
+            "cleanup": {
+                "type": "boolean",
+                "description": "Whether to cleanup Docker images after execution (default: true)"
+            },
+            "verbose": {
+                "type": "boolean", 
+                "description": "Enable verbose output during Docker operations (default: true)"
+            }
+        },
+        func=run_dockerfile_with_logs,
+        enum_values={}
+    )
+])
+
+# Run Docker agent - runs Docker and captures logs
+run_docker_agent = HybridAgent(HybridAgentOptions(
+    name='run_docker_agent',
+    description='Runs Docker: executes envgym/envgym.dockerfile and captures all logs to envgym/log.txt',
+    api_key=my_api_key,
+    model='gpt-4o',
+    streaming=True,
+    
     # Inference configuration
     inference_config={
-        'maxTokens': 1500,     # 增加token以处理更复杂的命令
-        'temperature': 0.3,    # 降低温度以获得更确定的输出
+        'maxTokens': 2000,
+        'temperature': 0.2,    # Lower temperature for stable execution
         'topP': 0.9,
         'stopSequences': None
     },
 
-    # Custom system prompt with variables
+    # Custom system prompt
     custom_system_prompt={
         'template': """You are an AI assistant specialized in {{DOMAIN}}.
-You have access to the Codex CLI tool that can execute natural language commands for various system operations.
 
-IMPORTANT GUIDELINES:
-1. SAFETY FIRST: Always analyze commands for potential risks before execution
-2. CLARITY: Ensure commands are clear and unambiguous
-3. VERIFICATION: When possible, verify the results of executed commands
-4. ERROR HANDLING: Gracefully handle and report any errors
-5. PERMISSIONS: Be mindful of file and system permissions
+IMPORTANT: The tool automatically uses default paths:
+- Dockerfile: "envgym/envgym.dockerfile" (relative to current working directory)
+- Log output: "envgym/log.txt" (will be overwritten)
 
-Command Execution Modes:
-{{MODES}}
+Your workflow:
+1. Use the run_dockerfile tool with minimal parameters (it has smart defaults)
+2. The tool automatically captures ALL build and run logs to "envgym/log.txt"
+3. Display the complete execution results
+4. Report success/failure status clearly
+5. If there are errors, provide detailed diagnostics
 
-Best Practices:
-1. Use 'verbose' mode when detailed output is needed
-2. Start with safer operations before destructive ones
-3. Backup important files before modification
-4. Use appropriate approval modes based on command risk level
-5. Provide clear feedback about command execution results
+Key capabilities:
+{{CAPABILITIES}}
 
-Current supported operations: {{OPERATIONS}}""",
+Always provide detailed feedback about:
+- Docker build success/failure
+- Container run results
+- Any error messages or warnings
+- Performance information
+- Next steps or recommendations""",
         'variables': {
-            'DOMAIN': 'System Operations and File Management',
-            'MODES': '''- full-auto: Non-interactive, immediate execution
-- semi-auto: Request approval before critical operations
-- manual: Full user control over command execution''',
-            'OPERATIONS': '''- File operations (create, read, modify, delete)
-- Directory management
-- System information queries
-- Basic system commands
-- Environment configuration'''
+            'DOMAIN': 'Docker Environment Execution and Log Management',
+            'CAPABILITIES': '''- Automatically find and execute envgym/envgym.dockerfile
+- Use smart defaults for paths (no manual configuration needed)
+- Capture comprehensive build and run logs
+- Overwrite envgym/log.txt with fresh results
+- Handle Docker errors gracefully
+- Provide detailed execution reports
+- Cleanup Docker resources after execution'''
         }
     },
     
     # Tool configuration
     tool_config={
-        'tool': tool_codex,
-        'toolMaxRecursions': 5,  # 增加递归限制以处理复杂操作
+        'tool': tool_docker_runner,
+        'toolMaxRecursions': 3,
     }
 ))
 
-# Create dummy agents for supervisor team
-dummy_agent2 = HybridAgent(HybridAgentOptions(
-    name='dummy_agent that cant do anything',
-    description='do not call me, i will not do anything',
-    api_key=my_api_key,
-))
+# # Create dummy agents for supervisor team
+# dummy_agent2 = HybridAgent(HybridAgentOptions(
+#     name='dummy_agent that cant do anything',
+#     description='do not call me, i will not do anything',
+#     api_key=my_api_key,
+# ))
 
-dummy_agent = HybridAgent(HybridAgentOptions(
-    name='dummy_agent2 that cant do anything',
-    description='This agent is a dummy agent that can only respond to the user\'s request',
-    api_key=my_api_key,
-))
+# dummy_agent = HybridAgent(HybridAgentOptions(
+#     name='dummy_agent2 that cant do anything',
+#     description='This agent is a dummy agent that can only respond to the user\'s request',
+#     api_key=my_api_key,
+# ))
 
-Dummy_leader=SupervisorAgent(SupervisorAgentOptions(
-    name="SupervisorAgent",
-    description="You are a supervisor agent that manages dummy/testing agents and handles general coordination tasks",
-    lead_agent=HybridAgent(HybridAgentOptions(
-        name="Dummy Support Team",
-        description="Coordinates dummy agents for testing and fallback purposes",
-        api_key=my_api_key,
-    )),
-    team=[dummy_agent, dummy_agent2]  # Only dummy agents under supervisor
-))
+# Dummy_leader=SupervisorAgent(SupervisorAgentOptions(
+#     name="SupervisorAgent",
+#     description="You are a supervisor agent that manages dummy/testing agents and handles general coordination tasks",
+#     lead_agent=HybridAgent(HybridAgentOptions(
+#         name="Dummy Support Team",
+#         description="Coordinates dummy agents for testing and fallback purposes",
+#         api_key=my_api_key,
+#     )),
+#     team=[dummy_agent, dummy_agent2]  # Only dummy agents under supervisor
+# ))
 
 
-orchestrator.add_agent(agent_package_compatibility)
-orchestrator.add_agent(agent_repo_map)
-orchestrator.add_agent(Dummy_leader)
-orchestrator.add_agent(agent_codex)
+# orchestrator.add_agent(agent_package_compatibility)
+# orchestrator.add_agent(agent_repo_map)
+# orchestrator.add_agent(Dummy_leader)
+orchestrator.add_agent(agent_initialization)  # Add initialization agent
+orchestrator.add_agent(agent_auto_save)  # Add auto-save agent
+orchestrator.add_agent(agent_planner)  # Add planning agent
+orchestrator.add_agent(write_docker_agent)  # Add write docker agent
+orchestrator.add_agent(run_docker_agent)  # Add run docker agent
+orchestrator.add_agent(update_log_file_agent)  # Add update log file agent
 
 
 
@@ -358,14 +500,14 @@ async def handle_request(_orchestrator: AgentSquad, _user_input: str, _user_id: 
 if __name__ == "__main__":
     USER_ID = "user1231"
     SESSION_ID = str(uuid.uuid4())
-    user_input = """
-Hi, I am a user, I want to create a new repository, please help me to create an empty Readme.md file in the current directory
-"""
+    
+    user_input = """Please build and run the dockerfile in envgym/envgym.dockerfile and output the log in envgym/log.txt
+    """
     await_response = asyncio.run(handle_request(orchestrator, user_input, USER_ID, SESSION_ID))
-    print(await_response)
+   
+   
 
-    user_input = """
-What did I ask you to do just now?
-"""
-    await_response = asyncio.run(handle_request(orchestrator, user_input, USER_ID, SESSION_ID))
-    print(await_response)
+
+
+
+ 

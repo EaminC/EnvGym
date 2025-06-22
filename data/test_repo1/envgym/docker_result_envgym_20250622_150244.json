@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250622_150244",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1750622532",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"desktop-linux\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile:\n#1 transferring dockerfile: 1.03kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/python:3.9-slim\n#2 DONE 0.3s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/7] FROM docker.io/library/python:3.9-slim@sha256:a40cf9eba2c3ed9226afa9ace504f07ad30fe831343bb1c69f7a6707aadb7c21\n#4 resolve docker.io/library/python:3.9-slim@sha256:a40cf9eba2c3ed9226afa9ace504f07ad30fe831343bb1c69f7a6707aadb7c21 done\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 74B done\n#5 DONE 0.0s\n\n#6 [5/7] COPY ../requirements.txt /app/requirements.txt\n#6 CACHED\n\n#7 [2/7] WORKDIR /app\n#7 CACHED\n\n#8 [6/7] RUN pip install --no-cache-dir -r requirements.txt\n#8 CACHED\n\n#9 [3/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         git         curl         wget         vim         nano         tree         htop         unzip         zip         ca-certificates &&     rm -rf /var/lib/apt/lists/*\n#9 CACHED\n\n#10 [4/7] RUN pip install --no-cache-dir --upgrade pip\n#10 CACHED\n\n#11 [7/7] RUN echo \"Hello from Docker!\" > /app/hello.txt\n#11 CACHED\n\n#12 exporting to image\n#12 exporting layers done\n#12 exporting manifest sha256:baed61ddb06e8939685b5fe1f1d56d30fdd1643a0c45567e9dd40e49f365f3f7 done\n#12 exporting config sha256:8a50c6a8aff79636966f7fa850d2734a4d5719faf24c47151a5916e8797a37cf done\n#12 exporting attestation manifest sha256:0cfff4906711b80ad62e21f39c1565096634ce3519edf4158fcb42b9265878b8 0.0s done\n#12 exporting manifest list sha256:2db338d6ba0e701f7868a87fe29d208d7601501fb0137a90bd33f3a39bc4995b done\n#12 naming to docker.io/library/envgym_test_1750622532:latest done\n#12 unpacking to docker.io/library/envgym_test_1750622532:latest 0.1s done\n#12 DONE 0.1s\n\nView build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/snezq8b15j1aad0pp8kuvhnt6\n"
+  },
+  "run": {
+    "success": true,
+    "stdout": "Docker container is running!\nContainer finished\n",
+    "stderr": ""
+  }
+}

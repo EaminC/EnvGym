@@ -1,0 +1,96 @@
++PLAN: Plan for Building a Docker Image for Lottery-Ticket-Hypothesis-in-Pytorch
++PLAN: ========================================================================
++PLAN: 
++PLAN: This plan outlines the steps required to create, test, and publish a self-contained
++PLAN: Docker image that can run the Lottery-Ticket-Hypothesis-in-Pytorch project with minimal
++PLAN: setup. It covers base image selection, dependency installation, GPU support, volume
++PLAN: mounting, testing, and documentation updates.
++PLAN: 
++PLAN: 1. Gather Requirements
++PLAN: ----------------------
++PLAN: - Target Python version (3.7.x as per README)
++PLAN: - System libraries (CUDA/cuDNN for GPU, build-essential, git, etc.)
++PLAN: - Python dependencies from requirements.txt
++PLAN: - Dataset download and storage paths
++PLAN: - Entry points (CLI flags, scripts)
++PLAN: 
++PLAN: 2. Choose Base Image
++PLAN: --------------------
++PLAN: CPU-only option:
++PLAN: - Use official slim Debian-based Python image (e.g., python:3.7-slim)
++PLAN: 
++PLAN: GPU-accelerated option:
++PLAN: - Use NVIDIA CUDA runtime image matching target CUDA/cuDNN versions
++PLAN:   (e.g., nvidia/cuda:11.1-cudnn8-runtime-ubuntu20.04)
++PLAN: 
++PLAN: 3. Define Docker Context and Working Directory
++PLAN: ----------------------------------------------
++PLAN: - Set WORKDIR to /app
++PLAN: - Copy only requirements.txt first to leverage Docker cache
++PLAN: - Copy source code after dependencies are installed
++PLAN: 
++PLAN: 4. Install System Dependencies
++PLAN: ------------------------------
++PLAN: - Install git, wget, unzip as needed
++PLAN: - Install build tools (gcc, build-essential) if required by any Python packages
++PLAN: 
++PLAN: 5. Install Python Dependencies
++PLAN: ------------------------------
++PLAN: - pip install --no-cache-dir --upgrade pip
++PLAN: - pip install --no-cache-dir -r requirements.txt
++PLAN: 
++PLAN: 6. Copy and Organize Source Code
++PLAN: --------------------------------
++PLAN: - COPY . /app
++PLAN: - Ensure hidden files (.gitignore, etc.) are copied if relevant
++PLAN: 
++PLAN: 7. Configure Environment Variables
++PLAN: ----------------------------------
++PLAN: - ENV PYTHONUNBUFFERED=1
++PLAN: - ENV PYTHONDONTWRITEBYTECODE=1
++PLAN: - Optionally set a DATA_DIR or CACHE_DIR
++PLAN: 
++PLAN: 8. Expose Ports and Volumes
++PLAN: ---------------------------
++PLAN: - (Optional) EXPOSE 8888 for Jupyter or similar
++PLAN: - Declare VOLUME for /app/logs, /app/data or /app/saves for persistence
++PLAN: 
++PLAN: 9. Define Entry Point and Default Command
++PLAN: ------------------------------------------
++PLAN: - ENTRYPOINT ["python3", "main.py"]
++PLAN: - CMD ["--help"]
++PLAN: 
++PLAN: 10. Implement GPU Support (Optional)
++PLAN: ------------------------------------
++PLAN: - Document usage of NVIDIA Container Toolkit:
++PLAN:   nvidia-docker run --gpus all ...
++PLAN: - Test GPU visibility inside container (torch.cuda.is_available())
++PLAN: 
++PLAN: 11. Test the Docker Image Locally
++PLAN: ---------------------------------
++PLAN: - Build: docker build -f envgym/envgym.dockerfile -t lth-pytorch:latest .
++PLAN: - Run a sample training: docker run --rm -v $(pwd)/saves:/app/saves lth-pytorch:latest \
++PLAN:   --arch_type=fc1 --dataset=mnist --prune_percent=10 --prune_iterations=1
++PLAN: - Validate outputs in the mounted saves directory
++PLAN: 
++PLAN: 12. Optimize and Harden the Image
++PLAN: ---------------------------------
++PLAN: - Remove unnecessary packages to reduce image size
++PLAN: - Switch to non-root user inside the container
++PLAN: 
++PLAN: 13. Update Documentation
++PLAN: ------------------------
++PLAN: - Add Docker build/run instructions to README.md
++PLAN: - Include sample commands and explanations for GPU/CPU modes
++PLAN: 
++PLAN: 14. Publish and Automate
++PLAN: ------------------------
++PLAN: - Tag and push the image to DockerHub (or private registry)
++PLAN: - Integrate Docker build into CI pipeline (GitHub Actions, TravisCI, etc.)
++PLAN: 
++PLAN: 15. Next Steps and Maintenance
++PLAN: ------------------------------
++PLAN: - Monitor dependency updates (Python, CUDA, libraries)
++PLAN: - Periodically rebuild base images to pick up security patches
++PLAN: 
++PLAN: End of plan.

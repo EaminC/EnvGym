@@ -1,0 +1,73 @@
+=== Docker Execution Log - 20250622_063050 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1750591847
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 650B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.7-slim
+#2 DONE 0.7s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b
+#4 resolve docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 4.90kB done
+#5 DONE 0.0s
+
+#6 [2/4] WORKDIR /app
+#6 CACHED
+
+#7 [3/4] COPY . /app
+#7 DONE 0.0s
+
+#8 [4/4] RUN pip install --no-cache-dir -r requirements.txt
+#8 1.038 ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+#8 1.287 
+#8 1.287 [notice] A new release of pip is available: 23.0.1 -> 24.0
+#8 1.287 [notice] To update, run: pip install --upgrade pip
+#8 ERROR: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1
+------
+ > [4/4] RUN pip install --no-cache-dir -r requirements.txt:
+1.038 ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+1.287 
+1.287 [notice] A new release of pip is available: 23.0.1 -> 24.0
+1.287 [notice] To update, run: pip install --upgrade pip
+------
+envgym.dockerfile:11
+--------------------
+   9 |     
+  10 |     # Install any needed packages specified in requirements.txt
+  11 | >>> RUN pip install --no-cache-dir -r requirements.txt
+  12 |     
+  13 |     # Make port 80 available to the world outside this container
+--------------------
+ERROR: failed to solve: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/2wqxubmy1keypfytqblz9xa0h
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

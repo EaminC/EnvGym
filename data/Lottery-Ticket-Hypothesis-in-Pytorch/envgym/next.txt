@@ -1,42 +1,5 @@
-Next steps based on status analysis:
-
-1. Address system requirement mismatch:
-   - Either run on Ubuntu 18.04 or update the setup instructions to support Ubuntu 22.04.
-
-2. Install Python 3.7 and create the virtual environment:
-   ```bash
-   sudo apt update && sudo apt install -y python3.7 python3.7-venv
-   python3.7 -m venv venv
-   source venv/bin/activate
-   ```
-
-3. Install project dependencies:
-   ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
-
-4. (Optional) Install GPU-enabled PyTorch if required:
-   ```bash
-   pip install --upgrade --force-reinstall \
-       torch==1.2.0 torchvision==0.4.0 \
-       -f https://download.pytorch.org/whl/cu100/stable
-   ```
-
-5. Verify the installation:
-   ```bash
-   python main.py --help
-   ```
-
-6. Install Docker (or skip if not needed) and build the Docker image:
-   ```bash
-   sudo apt install -y docker.io
-   cd envgym
-   docker build -t lottery-ticket .
-   ```
-
-7. Run the smoke test:
-   ```bash
-   python main.py --prune_type=lt --arch_type=fc1 --dataset=mnist \
-       --prune_percent=10 --prune_iterations=1 --end_iter=1
-   ```
+Next Steps:
+-----------
+- Update Dockerfile to include installation of BLAS/LAPACK development packages
+  (for example: libopenblas-dev, liblapack-dev) before pip install.
+- Re-run the Docker build and verify that pip install completes successfully.

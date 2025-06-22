@@ -1,57 +1,96 @@
-Environment Setup Plan for Lottery Ticket Hypothesis in PyTorch
-===============================================
+Plan for Building a Docker Image for Lottery-Ticket-Hypothesis-in-Pytorch
+========================================================================
 
-This document outlines the steps to prepare a reproducible development environment
-for the Lottery Ticket Hypothesis implementation in PyTorch.
+This plan outlines the steps required to create, test, and publish a self-contained
+Docker image that can run the Lottery-Ticket-Hypothesis-in-Pytorch project with minimal
+setup. It covers base image selection, dependency installation, GPU support, volume
+mounting, testing, and documentation updates.
 
-1. System requirements
-   - Ubuntu 18.04 (or compatible Linux distribution)
-   - Python 3.7
-   - CUDA 10.0 (optional, for GPU support)
-   - Git
+1. Gather Requirements
+----------------------
+- Target Python version (3.7.x as per README)
+- System libraries (CUDA/cuDNN for GPU, build-essential, git, etc.)
+- Python dependencies from requirements.txt
+- Dataset download and storage paths
+- Entry points (CLI flags, scripts)
 
-2. Clone the repository
-   ```bash
-   git clone https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch.git
-   cd Lottery-Ticket-Hypothesis-in-Pytorch
-   ```
+2. Choose Base Image
+--------------------
+CPU-only option:
+- Use official slim Debian-based Python image (e.g., python:3.7-slim)
 
-3. Create and activate a Python virtual environment
-   ```bash
-   python3.7 -m venv venv
-   source venv/bin/activate
-   ```
+GPU-accelerated option:
+- Use NVIDIA CUDA runtime image matching target CUDA/cuDNN versions
+  (e.g., nvidia/cuda:11.1-cudnn8-runtime-ubuntu20.04)
 
-4. Upgrade pip and install Python dependencies
-   ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
+3. Define Docker Context and Working Directory
+----------------------------------------------
+- Set WORKDIR to /app
+- Copy only requirements.txt first to leverage Docker cache
+- Copy source code after dependencies are installed
 
-5. (Optional) Install GPU-enabled PyTorch
-   If you have a CUDA-enabled NVIDIA GPU and CUDA 10.0 is installed, install the
-   matching PyTorch/CUDA wheel:
-   ```bash
-   pip install --upgrade --force-reinstall \
-     torch==1.2.0 torchvision==0.4.0 \
-     -f https://download.pytorch.org/whl/cu100/stable
-   ```
+4. Install System Dependencies
+------------------------------
+- Install git, wget, unzip as needed
+- Install build tools (gcc, build-essential) if required by any Python packages
 
-6. Verify the installation
-   ```bash
-   python main.py --help
-   ```
+5. Install Python Dependencies
+------------------------------
+- pip install --no-cache-dir --upgrade pip
+- pip install --no-cache-dir -r requirements.txt
 
-7. (Optional) Build the Docker development environment
-   ```bash
-   cd envgym
-   docker build -t lottery-ticket .
-   ```
+6. Copy and Organize Source Code
+--------------------------------
+- COPY . /app
+- Ensure hidden files (.gitignore, etc.) are copied if relevant
 
-8. Run a quick smoke test
-   ```bash
-   python main.py --prune_type=lt --arch_type=fc1 --dataset=mnist \
-                --prune_percent=10 --prune_iterations=1 --end_iter=1
-   ```
+7. Configure Environment Variables
+----------------------------------
+- ENV PYTHONUNBUFFERED=1
+- ENV PYTHONDONTWRITEBYTECODE=1
+- Optionally set a DATA_DIR or CACHE_DIR
 
-Your environment is now ready for experimentation with the Lottery Ticket Hypothesis in PyTorch.
+8. Expose Ports and Volumes
+---------------------------
+- (Optional) EXPOSE 8888 for Jupyter or similar
+- Declare VOLUME for /app/logs, /app/data or /app/saves for persistence
+
+9. Define Entry Point and Default Command
+------------------------------------------
+- ENTRYPOINT ["python3", "main.py"]
+- CMD ["--help"]
+
+10. Implement GPU Support (Optional)
+------------------------------------
+- Document usage of NVIDIA Container Toolkit:
+  nvidia-docker run --gpus all ...
+- Test GPU visibility inside container (torch.cuda.is_available())
+
+11. Test the Docker Image Locally
+---------------------------------
+- Build: docker build -f envgym/envgym.dockerfile -t lth-pytorch:latest .
+- Run a sample training: docker run --rm -v $(pwd)/saves:/app/saves lth-pytorch:latest \
+  --arch_type=fc1 --dataset=mnist --prune_percent=10 --prune_iterations=1
+- Validate outputs in the mounted saves directory
+
+12. Optimize and Harden the Image
+---------------------------------
+- Remove unnecessary packages to reduce image size
+- Switch to non-root user inside the container
+
+13. Update Documentation
+------------------------
+- Add Docker build/run instructions to README.md
+- Include sample commands and explanations for GPU/CPU modes
+
+14. Publish and Automate
+------------------------
+- Tag and push the image to DockerHub (or private registry)
+- Integrate Docker build into CI pipeline (GitHub Actions, TravisCI, etc.)
+
+15. Next Steps and Maintenance
+------------------------------
+- Monitor dependency updates (Python, CUDA, libraries)
+- Periodically rebuild base images to pick up security patches
+
+End of plan.
