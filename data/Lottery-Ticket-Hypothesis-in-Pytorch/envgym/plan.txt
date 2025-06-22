@@ -1,0 +1,57 @@
+Environment Setup Plan for Lottery Ticket Hypothesis in PyTorch
+===============================================
+
+This document outlines the steps to prepare a reproducible development environment
+for the Lottery Ticket Hypothesis implementation in PyTorch.
+
+1. System requirements
+   - Ubuntu 18.04 (or compatible Linux distribution)
+   - Python 3.7
+   - CUDA 10.0 (optional, for GPU support)
+   - Git
+
+2. Clone the repository
+   ```bash
+   git clone https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch.git
+   cd Lottery-Ticket-Hypothesis-in-Pytorch
+   ```
+
+3. Create and activate a Python virtual environment
+   ```bash
+   python3.7 -m venv venv
+   source venv/bin/activate
+   ```
+
+4. Upgrade pip and install Python dependencies
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+5. (Optional) Install GPU-enabled PyTorch
+   If you have a CUDA-enabled NVIDIA GPU and CUDA 10.0 is installed, install the
+   matching PyTorch/CUDA wheel:
+   ```bash
+   pip install --upgrade --force-reinstall \
+     torch==1.2.0 torchvision==0.4.0 \
+     -f https://download.pytorch.org/whl/cu100/stable
+   ```
+
+6. Verify the installation
+   ```bash
+   python main.py --help
+   ```
+
+7. (Optional) Build the Docker development environment
+   ```bash
+   cd envgym
+   docker build -t lottery-ticket .
+   ```
+
+8. Run a quick smoke test
+   ```bash
+   python main.py --prune_type=lt --arch_type=fc1 --dataset=mnist \
+                --prune_percent=10 --prune_iterations=1 --end_iter=1
+   ```
+
+Your environment is now ready for experimentation with the Lottery Ticket Hypothesis in PyTorch.

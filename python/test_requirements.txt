@@ -1,0 +1,10 @@
+pytest
+coverage
+boto3
+anthropic
+moto
+pytest-mock
+pytest-asyncio
+openai
+libsql-client
+ruff>=0.11.4

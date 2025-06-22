@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  envgym:
+    build:
+      context: .
+      dockerfile: envgym.dockerfile
+    container_name: envgym-dev
+    volumes:
+      - .:/workspace
+      - envgym-cache:/root/.cache
+    ports:
+      - "8000:8000"    # Python应用
+      - "3000:3000"    # React/Node.js
+      - "4321:4321"    # Astro docs
+    environment:
+      - PYTHONPATH=/workspace
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+    command: bash
+
+  # 可选的数据库服务
+  postgres:
+    image: postgres:13
+    container_name: envgym-db
+    environment:
+      POSTGRES_DB: envgym
+      POSTGRES_USER: envgym
+      POSTGRES_PASSWORD: envgym123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    profiles:
+      - database
+
+  # 可选的Redis服务
+  redis:
+    image: redis:7-alpine
+    container_name: envgym-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    profiles:
+      - cache
+
+volumes:
+  envgym-cache:
+  postgres-data:
+  redis-data:

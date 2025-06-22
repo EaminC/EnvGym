@@ -1,0 +1,221 @@
+---
+title: SQL Storage
+description: Using SQL databases (SQLite/Turso) for persistent conversation storage in the Agent Squad System
+---
+
+SQL storage provides a flexible and reliable solution for storing conversation history in the Agent Squad System. This implementation supports both local SQLite databases and remote Turso databases, making it suitable for various deployment scenarios from development to production.
+
+## Features
+
+- Persistent storage across application restarts
+- Support for both local and remote databases
+- Built-in connection pooling and retry mechanisms
+- Compatible with edge and serverless deployments
+- Transaction support for data consistency
+- Efficient indexing for quick data retrieval
+
+## When to Use SQL Storage
+
+- When you need a balance between simplicity and scalability
+- For applications requiring persistent storage without complex infrastructure
+- In both development and production environments
+- When working with edge or serverless deployments
+- When you need local-first development with remote deployment options
+
+## Python Package Installation
+
+To use SQL storage in your Python application, make sure to install them:
+
+```bash
+pip install "agent-squad[sql]"
+```
+
+This will install the `libsql-client` package required for SQL storage functionality.
+
+## Implementation
+
+To use SQL storage in your Agent Squad:
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { SqlChatStorage, AgentSquad } from 'agent-squad';
+
+    // For local SQLite database
+    const localStorage = new SqlChatStorage('file:local.db');
+    await localStorage.waitForInitialization();
+
+    // For remote database
+    const remoteStorage = new SqlChatStorage(
+      'libsql://your-database-url.example.com',
+      'your-auth-token'
+    );
+    await remoteStorage.waitForInitialization();
+
+    const orchestrator = new AgentSquad({
+      storage: localStorage // or remoteStorage
+    });
+
+
+    // Close the database connections when done
+    await localStorage.close();
+    await remoteStorage.close();
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.storage import SqlChatStorage
+    from agent_squad.orchestrator import AgentSquad
+
+    # For local SQLite database
+    local_storage = SqlChatStorage('file:local.db')
+    await local_storage.initialize()  # Must be called before use
+
+    # For remote Turso database
+    remote_storage = SqlChatStorage(
+        url='libsql://your-database-url.turso.io',
+        auth_token='your-auth-token'
+    )
+    await remote_storage.initialize()
+
+    # Create orchestrator with storage
+    orchestrator = AgentSquad(storage=local_storage)  # or remote_storage
+
+    # Example usage
+    messages = await local_storage.save_chat_message(
+        user_id="user123",
+        session_id="session456",
+        agent_id="agent789",
+        new_message=ConversationMessage(
+            role="user",
+            content=[{"text": "Hello!"}]
+        )
+    )
+    # messages will contain the updated conversation history
+
+    # Don't forget to close connections when done
+    await local_storage.close()
+    ```
+  </TabItem>
+</Tabs>
+
+## Configuration
+
+### Local DB
+For local development, simply provide a file URL:
+<Tabs syncKey="local-storage">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    const storage = new SqlChatStorage('file:local.db');
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python" color="blue">
+    ```python
+    storage = SqlChatStorage('file:local.db')
+    await storage.initialize()  # Must be called before use
+    ```
+  </TabItem>
+</Tabs>
+
+### Remote DB
+For production with Turso:
+1. Create a Turso database through their platform
+2. Obtain your database URL and authentication token
+3. Configure your storage:
+<Tabs syncKey="remote-storage">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    const storage = new SqlChatStorage(
+      'libsql://your-database-url.turso.io',
+      'your-auth-token'
+    );
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python" color="blue">
+    ```python
+    storage = SqlChatStorage(
+        url='libsql://your-database-url.turso.io',
+        auth_token='your-auth-token'
+    )
+    await storage.initialize()  # Required initialization
+    ```
+  </TabItem>
+</Tabs>
+
+## Database Schema
+
+The SQL storage implementation uses the following schema:
+
+```sql
+CREATE TABLE conversations (
+  user_id TEXT NOT NULL,
+  session_id TEXT NOT NULL,
+  agent_id TEXT NOT NULL,
+  message_index INTEGER NOT NULL,
+  role TEXT NOT NULL,
+  content TEXT NOT NULL,
+  timestamp INTEGER NOT NULL,
+  PRIMARY KEY (user_id, session_id, agent_id, message_index)
+);
+
+CREATE INDEX idx_conversations_lookup
+ON conversations(user_id, session_id, agent_id);
+```
+
+## Considerations
+
+- Automatic table and index creation on initialization
+- Built-in transaction support for data consistency
+- Efficient query performance through proper indexing
+- Support for message history size limits
+- Automatic JSON serialization/deserialization of message content
+
+## Best Practices (Python)
+
+1. **Initialization**:
+   ```python
+   storage = SqlChatStorage('file:local.db')
+   await storage.initialize()  # Always call initialize after creation
+   ```
+
+2. **Error Handling**:
+   ```python
+   try:
+       messages = await storage.save_chat_message(...)
+   except Exception as e:
+       logger.error(f"Storage error: {e}")
+   ```
+
+3. **Resource Cleanup**:
+   ```python
+   try:
+       storage = SqlChatStorage('file:local.db')
+       await storage.initialize()
+       # ... use storage ...
+   finally:
+       await storage.close()  # Always close when done
+   ```
+
+4. **Message History Management**:
+   ```python
+   # Limit conversation history
+   messages = await storage.save_chat_message(
+       ...,
+       max_history_size=50  # Keep last 50 messages
+   )
+   ```
+
+5. **Batch Operations**:
+   ```python
+   # Save multiple messages efficiently
+   messages = await storage.save_chat_messages(
+       user_id="user123",
+       session_id="session456",
+       agent_id="agent789",
+       new_messages=[message1, message2, message3]
+   )
+   ```
+
+SQL storage provides a robust and flexible solution for managing conversation history in the Agent Squad System. It offers a good balance between simplicity and features, making it suitable for both development and production environments.

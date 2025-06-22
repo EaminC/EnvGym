@@ -1,0 +1,10 @@
+packages:
+  - codex-cli
+  - docs
+  - packages/*
+
+ignoredBuiltDependencies:
+  - esbuild
+
+patchedDependencies:
+  marked-terminal@7.3.0: patches/marked-terminal@7.3.0.patch

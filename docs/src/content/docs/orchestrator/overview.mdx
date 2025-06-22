@@ -1,0 +1,430 @@
+---
+title: Orchestrator overview
+description: An introduction to the Orchestrator
+---
+
+The Agent Squad is the central component of the framework, responsible for managing agents, routing requests, and handling conversations. This page provides an overview of how to initialize the Orchestrator and details all available configuration options.
+
+### Initializing the Orchestrator
+
+To create a new Orchestrator instance, you can use the `AgentSquad` class:
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { AgentSquad } from "agent-squad";
+
+    const orchestrator = new AgentSquad(options);
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.orchestrator import AgentSquad
+
+    orchestrator = AgentSquad(options=options)
+    ```
+  </TabItem>
+</Tabs>
+
+The `options` parameter is optional and allows you to customize various aspects of the Orchestrator's behavior.
+
+### Configuration options
+
+The Orchestrator accepts an `AgentSquadConfig` object during initialization. All options are optional and will use default values if not specified. Here's a complete list of available options:
+
+1. `storage`: Specifies the storage mechanism for chat history. Default is `InMemoryChatStorage`.
+2. `config`: An instance of `AgentSquadConfig` containing various configuration flags and values:
+   - `LOG_AGENT_CHAT`: Boolean flag to log agent chat interactions.
+   - `LOG_CLASSIFIER_CHAT`: Boolean flag to log classifier chat interactions.
+   - `LOG_CLASSIFIER_RAW_OUTPUT`: Boolean flag to log raw classifier output.
+   - `LOG_CLASSIFIER_OUTPUT`: Boolean flag to log processed classifier output.
+   - `LOG_EXECUTION_TIMES`: Boolean flag to log execution times of various operations.
+   - `MAX_RETRIES`: Number of maximum retry attempts for the classifier.
+   - `MAX_MESSAGE_PAIRS_PER_AGENT`: Maximum number of message pairs to retain per agent.
+   - `USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED`: Boolean flag to use the default agent when no specific agent is identified.
+   - `CLASSIFICATION_ERROR_MESSAGE`: Custom error message for classification errors.
+   - `NO_SELECTED_AGENT_MESSAGE`: Custom message when no agent is selected.
+   - `GENERAL_ROUTING_ERROR_MSG_MESSAGE`: Custom message for general routing errors.
+3. `logger`: Custom logger instance. If not provided, a default logger will be used.
+4. `classifier`: Custom classifier instance. If not provided, a `BedrockClassifier` will be used.
+5. `default_agent`: A default agent when the classifier could not determine the most suitable agent.
+
+### Example with all options
+
+Here's an example that demonstrates how to initialize the Orchestrator with all available options:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { AgentSquad, AgentSquadConfig } from "agent-squad";
+    import { DynamoDBChatStorage } from "agent-squad/storage";
+    import { CustomClassifier } from "./custom-classifier";
+    import { CustomLogger } from "./custom-logger";
+
+    const orchestrator = new AgentSquad({
+      storage: new DynamoDBChatStorage(),
+      config: {
+        LOG_AGENT_CHAT: true,
+        LOG_CLASSIFIER_CHAT: true,
+        LOG_CLASSIFIER_RAW_OUTPUT: false,
+        LOG_CLASSIFIER_OUTPUT: true,
+        LOG_EXECUTION_TIMES: true,
+        MAX_RETRIES: 3,
+        MAX_MESSAGE_PAIRS_PER_AGENT: 50,
+        USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED: true,
+        CLASSIFICATION_ERROR_MESSAGE: "Oops! We couldn't process your request. Please try again.",
+        NO_SELECTED_AGENT_MESSAGE: "I'm sorry, I couldn't determine how to handle your request. Could you please rephrase it?",
+        GENERAL_ROUTING_ERROR_MSG_MESSAGE: "An error occurred while processing your request. Please try again later.",
+      },
+      logger: new CustomLogger(),
+      classifier: new CustomClassifier(),
+    });
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.orchestrator import AgentSquad, AgentSquadConfig
+    from agent_squad.storage import DynamoDBChatStorage
+    from agent_squad.classifiers import BedrockClassifier, BedrockClassifierOptions
+    from agent_squad.utils.logger import Logger
+    from custom_classifier import CustomClassifier
+    from custom_logger import CustomLogger
+
+    orchestrator = AgentSquad(
+      options=AgentSquadConfig(
+        LOG_AGENT_CHAT=True,
+        LOG_CLASSIFIER_CHAT=True,
+        LOG_CLASSIFIER_RAW_OUTPUT=False,
+        LOG_CLASSIFIER_OUTPUT=True,
+        LOG_EXECUTION_TIMES=True,
+        MAX_RETRIES=3,
+        MAX_MESSAGE_PAIRS_PER_AGENT=50,
+        USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED=True,
+        CLASSIFICATION_ERROR_MESSAGE="Oops! We couldn't process your request. Please try again.",
+        NO_SELECTED_AGENT_MESSAGE="I'm sorry, I couldn't determine how to handle your request. Could you please rephrase it?",
+        GENERAL_ROUTING_ERROR_MSG_MESSAGE="An error occurred while processing your request. Please try again later.",
+      ),
+      storage=DynamoDBChatStorage(),
+      classifier=CustomClassifier(),
+      logger=CustomLogger(),
+      default_agent=BedrockLLMAgent(BedrockLLMAgentOptions(
+        name="Default Agent",
+        streaming=False,
+        description="This is the default agent that handles general queries and tasks.",
+      ))
+    )
+    ```
+  </TabItem>
+</Tabs>
+
+Remember, all these options are optional. If you don't specify an option, the Orchestrator will use its default value.
+
+### Default values
+
+The default configuration is defined as follows:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    export const DEFAULT_CONFIG: AgentSquadConfig = {
+      LOG_AGENT_CHAT: false,
+      LOG_CLASSIFIER_CHAT: false,
+      LOG_CLASSIFIER_RAW_OUTPUT: false,
+      LOG_CLASSIFIER_OUTPUT: false,
+      LOG_EXECUTION_TIMES: false,
+      MAX_RETRIES: 3,
+      USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED: true,
+      NO_SELECTED_AGENT_MESSAGE: "I'm sorry, I couldn't determine how to handle your request. Could you please rephrase it?",
+      MAX_MESSAGE_PAIRS_PER_AGENT: 100,
+    };
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.types import AgentSquadConfig
+
+    DEFAULT_CONFIG = AgentSquadConfig()
+    ```
+  </TabItem>
+</Tabs>
+
+In both implementations, `DEFAULT_CONFIG` is an instance of `AgentSquadConfig` with default values.
+
+### Available Functions
+
+The AgentSquad provides several key functions to manage agents, process requests, and configure the orchestrator. Here's a detailed overview of each function, explaining what it does and why you might use it:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    1. addAgent(agent: Agent): void
+    2. getDefaultAgent(): Agent
+    3. setDefaultAgent(agent: Agent): void
+    4. getAllAgents(): { [key: string]: { name: string; description: string } }
+    5. routeRequest(userInput: string, userId: string, sessionId: string, additionalParams: Record<string, string> = {}): Promise<AgentResponse>
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    1. add_agent(agent: Agent) -> None
+    2. get_default_agent() -> Agent
+    3. set_default_agent(agent: Agent) -> None
+    4. get_all_agents() -> Dict[str, Dict[str, str]]
+    5. route_request(user_input: str, user_id: str, session_id: str, additional_params: Dict[str, str] = {}, stream_response: bool | None = False) -> AgentResponse
+    ```
+  </TabItem>
+</Tabs>
+
+Let's break down each function:
+
+1. **addAgent** (TypeScript) / **add_agent** (Python)
+   - **What it does**: Adds a new agent to the orchestrator.
+   - **Why use it**: Use this function to expand the capabilities of your system by introducing new specialized agents. Each agent can handle specific types of queries or tasks.
+   - **Example use case**: Adding a weather agent to handle weather-related queries, or a booking agent for reservation tasks.
+
+2. **getDefaultAgent**
+   - **What it does**: Retrieves the current default agent.
+   - **Why use it**: This function is useful when you need to reference or use the default agent, perhaps for fallback scenarios or to compare its capabilities with other agents.
+   - **Example use case**: Checking the current default agent's configuration before deciding whether to replace it.
+
+3. **setDefaultAgent**
+   - **What it does**: Sets a new default agent for the orchestrator.
+   - **Why use it**: This allows you to change the fallback agent used when no specific agent is selected for a query. It's useful for customizing the general-purpose response handling of your system.
+   - **Example use case**: Replacing the default generalist agent with a more specialized one that better fits your application's primary use case.
+
+4. **getAllAgents**
+   - **What it does**: Retrieves a dictionary of all registered agents, including their names and descriptions.
+   - **Why use it**: This function is useful for getting an overview of all available agents in the system. It can be used for debugging, logging, or providing user-facing information about system capabilities.
+   - **Example use case**: Generating a help message that lists all available agents and their capabilities.
+
+5. **routeRequest**
+   - **What it does**: This is the main function for processing user requests. It takes a user's input, classifies it, selects an appropriate agent, and returns the agent's response.
+   - **Why use it**: This is the core function you'll use to handle user interactions in your application. It encapsulates the entire process of understanding the user's intent and generating an appropriate response.
+   - **Example use case**: Processing a user's message in a chatbot interface and returning the appropriate response.
+
+Each of these functions plays a crucial role in configuring and operating the Agent Squad. By using them effectively, you can create a flexible, powerful system capable of handling a wide range of user requests across multiple domains.
+
+These functions allow you to configure the orchestrator, manage agents, and process user requests.
+
+
+
+#### Function Examples
+
+
+Here are practical examples of how to use each function:
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+```typescript
+  import { AgentSquad, BedrockLLMAgent, AnthropicClassifier } from "agent-squad";
+  const orchestrator = new AgentSquad();
+
+  // 1. addAgent Example
+  const techAgent = new BedrockLLMAgent({
+    name: "Tech Agent",
+    description: "Handles technical questions about programming and software",
+    streaming: true
+  });
+  orchestrator.addAgent(techAgent);
+
+  // 2. getDefaultAgent Example
+  const currentDefault = orchestrator.getDefaultAgent();
+  console.log(`Current default agent: ${currentDefault.name}`);
+
+  // 3. setDefaultAgent Example
+  const customDefault = new BedrockLLMAgent({
+    name: "Custom Default",
+    description: "Handles general queries with specialized knowledge"
+  });
+  orchestrator.setDefaultAgent(customDefault);
+
+  // 4. getAllAgents Example
+  const agents = orchestrator.getAllAgents();
+  console.log("Available agents:");
+  Object.entries(agents).forEach(([id, info]) => {
+    console.log(`${id}: ${info.name} - ${info.description}`);
+  });
+
+  // 5. routeRequest Example
+  async function handleUserQuery() {
+    const response = await orchestrator.routeRequest(
+      "How do I optimize a Python script?",
+      "user123",
+      "session456",
+      { priority: "high" }  // Additional parameters
+    );
+
+    if (response.streaming) {
+      for await (const chunk of response.output) {
+        process.stdout.write(chunk);
+      }
+    } else {
+      console.log(response.output);
+    }
+  }
+```
+</TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.orchestrator import AgentSquad
+    from agent_squad.agents import BedrockLLMAgent, BedrockLLMAgentOptions, AgentStreamResponse
+    from agent_squad.classifiers import AnthropicClassifier, AnthropicClassifierOptions
+    import asyncio
+    orchestrator = AgentSquad()
+
+# 1. add_agent Example
+tech_agent = BedrockLLMAgent(BedrockLLMAgentOptions(
+    name="Tech Agent",
+    description="Handles technical questions about programming and software",
+    streaming=True
+))
+orchestrator.add_agent(tech_agent)
+
+# 2. get_default_agent Example
+current_default = orchestrator.get_default_agent()
+print(f"Current default agent: {current_default.name}")
+
+# 3. set_default_agent Example
+custom_default = BedrockLLMAgent(BedrockLLMAgentOptions(
+    name="Custom Default",
+    description="Handles general queries with specialized knowledge"
+))
+orchestrator.set_default_agent(custom_default)
+
+
+# 5. get_all_agents Example
+agents = orchestrator.get_all_agents()
+print("Available agents:")
+for agent_id, info in agents.items():
+    print(f"{agent_id}: {info['name']} - {info['description']}")
+
+# 6. route_request Example
+async def handle_user_query():
+    response = await orchestrator.route_request(
+        "How do I optimize a Python script?",
+        "user123",
+        "session456",
+        {"priority": "high"}  # Additional parameters,
+        True,
+    )
+
+    if response.streaming:
+        async for chunk in response.output:
+          if isinstance(chunk, AgentStreamResponse):
+            print(chunk.text, end='', flush=True)
+    else:
+        print(response.output)
+
+# Run the example
+asyncio.run(handle_user_query())
+```
+</TabItem>
+</Tabs>
+
+### Agent Selection and Default Behavior
+
+When a user sends a request to the Agent Squad, the system attempts to classify the intent and select an appropriate agent to handle the request. However, there are cases where no specific agent is selected.
+
+#### When No Agent is Selected
+
+If the classifier cannot confidently determine which agent should handle a request, it may result in no agent being selected. The orchestrator's behavior in this case depends on the `USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED` configuration option:
+
+1. If `USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED` is `True` (default):
+   - The orchestrator will use the default agent to handle the request.
+   - This ensures that users always receive a response, even if it's from a generalist agent.
+
+2. If `USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED` is `False`:
+   - The orchestrator will return a message specified by the `NO_SELECTED_AGENT_MESSAGE` configuration.
+   - This prompts the user to rephrase their request for better agent identification.
+
+#### Default Agent
+
+The default agent is a `BedrockLLMAgent` configured as a generalist, capable of handling a wide range of topics. It's used when:
+
+1. No specific agent is selected and `USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED` is `True`.
+2. You explicitly set it as the fallback option.
+
+You can customize the default agent or replace it entirely using the `set_default_agent` method:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { BedrockLLMAgent, BedrockLLMAgentOptions } from "agent-squad";
+
+    const customDefaultAgent = new BedrockLLMAgent({
+      name: "Custom Default Agent",
+      description: "A custom generalist agent for handling various queries",
+      // Add other options as needed
+    });
+
+    orchestrator.setDefaultAgent(customDefaultAgent);
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.agents import BedrockLLMAgent, BedrockLLMAgentOptions
+
+    custom_default_agent = BedrockLLMAgent(BedrockLLMAgentOptions(
+        name="Custom Default Agent",
+        description="A custom generalist agent for handling various queries",
+        # Add other options as needed
+    ))
+
+    orchestrator.set_default_agent(custom_default_agent)
+    ```
+  </TabItem>
+</Tabs>
+
+#### Customizing NO_SELECTED_AGENT_MESSAGE
+
+You can customize the message returned when no agent is selected (and `USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED` is `False`) by setting the `NO_SELECTED_AGENT_MESSAGE` in the orchestrator configuration:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { AgentSquad, AgentSquadConfig } from "agent-squad";
+
+    const orchestrator = new AgentSquad({
+      config: {
+        USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED: false,
+        NO_SELECTED_AGENT_MESSAGE: "I'm not sure how to handle your request. Could you please provide more details or rephrase it?"
+      }
+    });
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.orchestrator import AgentSquad, AgentSquadConfig
+
+    orchestrator = AgentSquad(
+      options=AgentSquadConfig(
+        USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED=False,
+        NO_SELECTED_AGENT_MESSAGE="I'm not sure how to handle your request. Could you please provide more details or rephrase it?"
+      )
+    )
+    ```
+  </TabItem>
+</Tabs>
+
+#### Best Practices
+
+1. **Default Agent Usage**: Use the default agent when you want to ensure all user queries receive a response, even if it's not from a specialized agent.
+
+2. **Prompting for Clarification**: Set `USE_DEFAULT_AGENT_IF_NONE_IDENTIFIED` to `False` and customize the `NO_SELECTED_AGENT_MESSAGE` when you want to encourage users to provide more specific or clear requests.
+
+3. **Balancing Specificity and Coverage**: Consider your use case carefully. Using a default agent provides broader coverage but may sacrifice specificity. Prompting for clarification may lead to more accurate agent selection but requires additional user interaction.
+
+4. **Monitoring and Iteration**: Regularly review cases where no agent is selected. This can help you identify gaps in your agent coverage or refine your classification process.
+
+By understanding and customizing these behaviors, you can fine-tune your Agent Squad to provide the best possible user experience for your specific use case.
+
+### Additional notes
+
+- The `storage` option allows you to specify a custom storage mechanism. By default, it uses in-memory storage (`InMemoryChatStorage`), but you can implement your own storage solution or use built-in options like DynamoDB storage. For more information, see the [Storage section](/agent-squad/storage/overview).
+
+- The `logger` option lets you provide a custom logger. If not specified, a default logger will be used. To learn how to implement a custom logger, check out [the logging section](/agent-squad/advanced-features/custom-logging).
+
+- The `classifier` option allows you to use a custom classifier for intent classification. If not provided, a `BedrockClassifier` will be used by default. For details on implementing a custom classifier, see the [Custom Classifiers](/agent-squad/classifiers/custom-classifier) documentation.
+
+By customizing these options, you can tailor the Orchestrator's behavior to suit your specific use case and requirements.

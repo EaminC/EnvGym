@@ -1,0 +1,86 @@
+---
+title: DynamoDB Storage
+description: Using Amazon DynamoDB for persistent conversation storage in the Agent Squad System
+---
+
+DynamoDB storage provides a scalable and persistent solution for storing conversation history in the Agent Squad System. This option is ideal for production environments where long-term data retention and high availability are crucial.
+
+## Features
+
+- Persistent storage across application restarts
+- Scalable to handle large volumes of conversation data
+- Integrated with AWS services for robust security and management
+
+## When to Use DynamoDB Storage
+
+- In production environments
+- When long-term persistence of conversation history is required
+- For applications that need to scale horizontally
+
+## Python Package
+
+If you haven't already installed the AWS-related dependencies, make sure to install them:
+
+```bash
+pip install "agent-squad[aws]"
+```
+
+## Implementation
+
+To use DynamoDB storage in your Agent Squad:
+
+1. Set up a DynamoDB table with the following schema:
+   - Partition Key: `PK` (String)
+   - Sort Key: `SK` (String)
+   - Additionally, you can also set up your DynamoDB table with a TTL Key to automatically delete older conversation items
+
+2. Use the DynamoDbChatStorage when creating your orchestrator:
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { DynamoDbChatStorage, AgentSquad } from 'agent-squad';
+
+    const tableName = 'YourDynamoDBTableName';
+    const region = 'your-aws-region';
+    const TTL_DURATION = 3600; // in seconds
+    const dynamoDbStorage = new DynamoDbChatStorage(tableName, region, 'your-ttl-key-name', TTL_DURATION);
+    const orchestrator = new AgentSquad({
+      storage: dynamoDbStorage
+    });
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.storage import DynamoDbChatStorage
+    from agent_squad.orchestrator import AgentSquad
+
+    table_name = 'YourDynamoDBTableName'
+    region = 'your-aws-region'
+    TTL_DURATION = 3600  # in seconds
+    dynamodb_storage = DynamoDbChatStorage(table_name, region, ttl_key='your-ttl-key-name', ttl_duration=TTL_DURATION)
+    orchestrator = AgentSquad(storage=dynamodb_storage)
+    ```
+  </TabItem>
+</Tabs>
+
+## Configuration
+
+Ensure your AWS credentials are properly set up and that your application has the necessary permissions to access the DynamoDB table.
+
+## Considerations
+
+- Requires AWS account and proper IAM permissions
+- May incur costs based on usage and data storage
+- Read and write operations may have higher latency compared to in-memory storage
+
+## Best Practices
+
+- Use DynamoDB storage for production deployments
+- Implement proper error handling for network-related issues
+- Consider implementing a caching layer for frequently accessed data to optimize performance
+- Regularly backup your DynamoDB table to prevent data loss
+
+DynamoDB storage offers a robust and scalable solution for managing conversation history in production environments. It ensures data persistence and allows your Agent Squad System to handle large-scale deployments with reliable data storage and retrieval capabilities.

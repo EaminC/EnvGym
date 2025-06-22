@@ -1,0 +1,266 @@
+---
+title: AmazonBedrockAgent
+description: Documentation for the AmazonBedrockAgent in the Agent Squad
+---
+
+The `AmazonBedrockAgent` is a specialized agent class in the Agent Squad that integrates directly with [Amazon Bedrock agents](https://aws.amazon.com/bedrock/agents/?nc1=h_ls).
+
+## Creating an AmazonBedrockAgent
+
+Here are various examples showing different ways to create and configure an AmazonBedrockAgent:
+
+### Python Package
+
+If you haven't already installed the AWS-related dependencies, make sure to install them:
+
+```bash
+pip install "agent-squad[aws]"
+```
+
+### Basic Examples
+
+**1. Minimal Configuration**
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+```typescript
+const agent = new AmazonBedrockAgent({
+  name: 'My Bank Agent',
+  description: 'A helpful and friendly agent that answers questions about loan-related inquiries',
+  agentId: 'your-agent-id',
+  agentAliasId: 'your-agent-alias-id'
+});
+```
+</TabItem>
+  <TabItem label="Python" icon="seti:python">
+```python
+agent = AmazonBedrockAgent(AmazonBedrockAgentOptions(
+    name='My Bank Agent',
+    description='A helpful and friendly agent that answers questions about loan-related inquiries',
+    agent_id='your-agent-id',
+    agent_alias_id='your-agent-alias-id'
+))
+```
+  </TabItem>
+</Tabs>
+
+<hr/>
+
+**2. Using Custom Client**
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+```typescript
+import { BedrockAgentRuntimeClient } from "@aws-sdk/client-bedrock-agent-runtime";
+const customClient = new BedrockAgentRuntimeClient({ region: 'us-east-1' });
+const agent = new AmazonBedrockAgent({
+  name: 'My Bank Agent',
+  description: 'A helpful and friendly agent for banking inquiries',
+  agentId: 'your-agent-id',
+  agentAliasId: 'your-agent-alias-id',
+  client: customClient
+});
+```
+</TabItem>
+  <TabItem label="Python" icon="seti:python">
+```python
+import boto3
+custom_client = boto3.client('bedrock-agent-runtime', region_name='us-east-1')
+agent = AmazonBedrockAgent(AmazonBedrockAgentOptions(
+name='My Bank Agent',
+description='A helpful and friendly agent for banking inquiries',
+agent_id='your-agent-id',
+agent_alias_id='your-agent-alias-id',
+client=custom_client
+))
+```
+</TabItem>
+</Tabs>
+
+<hr/>
+
+**3. With Tracing Enabled**
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+```typescript
+const agent = new AmazonBedrockAgent({
+  name: 'My Bank Agent',
+  description: 'A banking agent with tracing enabled',
+  agentId: 'your-agent-id',
+  agentAliasId: 'your-agent-alias-id',
+  enableTrace: true
+});
+```
+</TabItem>
+  <TabItem label="Python" icon="seti:python">
+```python
+agent = AmazonBedrockAgent(AmazonBedrockAgentOptions(
+    name='My Bank Agent',
+    description='A banking agent with tracing enabled',
+    agent_id='your-agent-id',
+    agent_alias_id='your-agent-alias-id',
+    enable_trace=True
+))
+```
+  </TabItem>
+</Tabs>
+
+<hr/>
+
+**4. With Streaming Enabled**
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+```typescript
+const agent = new AmazonBedrockAgent({
+  name: 'My Bank Agent',
+  description: 'A streaming-enabled banking agent',
+  agentId: 'your-agent-id',
+  agentAliasId: 'your-agent-alias-id',
+  streaming: true
+});
+```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+```python
+agent = AmazonBedrockAgent(AmazonBedrockAgentOptions(
+    name='My Bank Agent',
+    description='A streaming-enabled banking agent',
+    agent_id='your-agent-id',
+    agent_alias_id='your-agent-alias-id',
+    streaming=True
+))
+```
+  </TabItem>
+</Tabs>
+
+<hr/>
+
+**5. Complete Example with All Options**
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+```typescript
+import { AmazonBedrockAgent } from "agent-squad";
+import { BedrockAgentRuntimeClient } from "@aws-sdk/client-bedrock-agent-runtime";
+const agent = new AmazonBedrockAgent({
+  // Required fields
+  name: "Advanced Bank Agent",
+  description: "A fully configured banking agent with all features enabled",
+  agentId: "your-agent-id",
+  agentAliasId: "your-agent-alias-id",
+  // Optional fields
+  region: "us-west-2",
+  streaming: true,
+  enableTrace: true,
+  client: new BedrockAgentRuntimeClient({ region: "us-west-2" }),
+});
+
+```
+</TabItem>
+  <TabItem label="Python" icon="seti:python">
+```python
+import boto3
+from agent_squad.agents import AmazonBedrockAgent, AmazonBedrockAgentOptions
+
+custom_client = boto3.client('bedrock-agent-runtime', region_name='us-west-2')
+
+agent = AmazonBedrockAgent(AmazonBedrockAgentOptions(
+    # Required fields
+    name='Advanced Bank Agent',
+    description='A fully configured banking agent with all features enabled',
+    agent_id='your-agent-id',
+    agent_alias_id='your-agent-alias-id',
+
+    # Optional fields
+    region='us-west-2',
+    streaming=True,
+    enable_trace=True,
+    client=custom_client
+))
+```
+</TabItem>
+</Tabs>
+
+
+### Option Explanations
+
+- `name`: (Required) Identifies the agent within your system.
+- `description`: (Required) Describes the agent's purpose or capabilities.
+- `agentId/agent_id`: (Required) The ID of the Amazon Bedrock agent you want to use.
+- `agentAliasId/agent_alias_id`: (Required) The alias ID of the Amazon Bedrock agent.
+- `region`: (Optional) AWS region for the Bedrock service. If not provided, uses the default AWS region.
+- `client`: (Optional) Custom BedrockAgentRuntimeClient for specialized configurations.
+- `enableTrace/enable_trace`: (Optional) When set to true, enables tracing of the agent's steps and reasoning process.
+- `streaming`: (Optional) Enables streaming for the final response. Defaults to false.
+
+
+
+## Adding the Agent to the Orchestrator
+
+To integrate the AmazonBedrockAgent into your Agent Squad, follow these steps:
+
+1. First, ensure you have created an instance of the orchestrator:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { AgentSquad } from "agent-squad";
+
+    const orchestrator = new AgentSquad();
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.orchestrator import AgentSquad
+
+    orchestrator = AgentSquad()
+    ```
+  </TabItem>
+</Tabs>
+
+2. Then, add the agent to the orchestrator:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    orchestrator.addAgent(agent);
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    orchestrator.add_agent(agent)
+    ```
+  </TabItem>
+</Tabs>
+
+3. Now you can use the orchestrator to route requests to the appropriate agent, including your Amazon Bedrock agent:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    const response = await orchestrator.routeRequest(
+      "What is the base rate interest for 30 years?",
+      "user123",
+      "session456"
+    );
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    response = await orchestrator.route_request(
+        "What is the base rate interest for 30 years?",
+        "user123",
+        "session456"
+    )
+    ```
+  </TabItem>
+</Tabs>
+
+
+---
+
+By leveraging the `AmazonBedrockAgent`, you can easily integrate **pre-built Amazon Bedrock agents** into your Agent Squad.

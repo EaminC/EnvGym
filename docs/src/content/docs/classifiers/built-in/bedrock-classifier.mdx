@@ -1,0 +1,303 @@
+---
+title: Bedrock Classifier
+description: How to configure the Bedrock classifier
+---
+
+The Bedrock Classifier is the default classifier used in the Agent Squad. It leverages Amazon Bedrock's models through Converse API providing powerful and flexible classification capabilities.
+
+## Features
+
+- Utilizes Amazon Bedrock's models through Converse API
+- Configurable model selection and inference parameters
+- Supports custom system prompts and variables
+- Handles conversation history for context-aware classification
+
+### Default Model
+
+The classifier uses Claude 3.5 Sonnet as its default model:
+```typescript
+BEDROCK_MODEL_ID_CLAUDE_3_5_SONNET = "anthropic.claude-3-5-sonnet-20240620-v1:0"
+```
+
+### Model Support for Tool Choice
+
+The BedrockClassifier's toolChoice configuration for structured outputs is only available with specific models in Amazon Bedrock. As of January 2025, the following models support tool use:
+
+- **Anthropic Models**:
+  - Claude 3 models (all variants except Haiku)
+  - Claude 3.5 Sonnet (`anthropic.claude-3-5-sonnet-20240620-v1:0`)
+  - Claude 3.5 Sonnet v2
+
+- **AI21 Labs Models**:
+  - Jamba 1.5 Large
+  - Jamba 1.5 Mini
+
+- **Amazon Models**:
+  - Nova Pro
+  - Nova Lite
+  - Nova Micro
+
+- **Meta Models**:
+  - Llama 3.2 11b
+  - Llama 3.2 90b
+
+- **Mistral AI Models**:
+  - Mistral Large
+  - Mistral Large 2 (24.07)
+  - Mistral Small
+
+- **Cohere Models**:
+  - Command R
+  - Command R+
+
+When using other models:
+- The tool configuration will still be included in the request
+- The model won't be explicitly directed to use the `analyzePrompt` tool
+- Response formats may be less consistent
+
+For the most up-to-date list of supported models and their features, please refer to the [Amazon Bedrock Converse API documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html).
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="tip">
+For optimal classification results, we recommend using one of the supported models listed above, particularly the Claude family of models which are thoroughly tested with the BedrockClassifier.
+</Aside>
+
+
+### Python Package
+
+If you haven't already installed the AWS-related dependencies, make sure to install them:
+
+```bash
+pip install "agent-squad[aws]"
+```
+
+### Basic Usage
+
+By default, the Agent Squad uses the Bedrock Classifier:
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { AgentSquad } from "agent-squad";
+
+    const orchestrator = new AgentSquad();
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.orchestrator import AgentSquad
+
+    orchestrator = AgentSquad()
+    ```
+  </TabItem>
+</Tabs>
+
+## System Prompt and Variables
+
+### Full Default System Prompt
+
+The default system prompt used by the classifier is comprehensive and includes examples of both simple and complex interactions:
+
+```
+You are AgentMatcher, an intelligent assistant designed to analyze user queries and match them with
+the most suitable agent or department. Your task is to understand the user's request,
+identify key entities and intents, and determine which agent or department would be best equipped
+to handle the query.
+
+Important: The user's input may be a follow-up response to a previous interaction.
+The conversation history, including the name of the previously selected agent, is provided.
+If the user's input appears to be a continuation of the previous conversation
+(e.g., "yes", "ok", "I want to know more", "1"), select the same agent as before.
+
+Analyze the user's input and categorize it into one of the following agent types:
+<agents>
+{{AGENT_DESCRIPTIONS}}
+</agents>
+If you are unable to select an agent put "unknown"
+
+Guidelines for classification:
+
+    Agent Type: Choose the most appropriate agent type based on the nature of the query.
+    For follow-up responses, use the same agent type as the previous interaction.
+    Priority: Assign based on urgency and impact.
+        High: Issues affecting service, billing problems, or urgent technical issues
+        Medium: Non-urgent product inquiries, sales questions
+        Low: General information requests, feedback
+    Key Entities: Extract important nouns, product names, or specific issues mentioned.
+    For follow-up responses, include relevant entities from the previous interaction if applicable.
+    For follow-ups, relate the intent to the ongoing conversation.
+    Confidence: Indicate how confident you are in the classification.
+        High: Clear, straightforward requests or clear follow-ups
+        Medium: Requests with some ambiguity but likely classification
+        Low: Vague or multi-faceted requests that could fit multiple categories
+    Is Followup: Indicate whether the input is a follow-up to a previous interaction.
+
+Handle variations in user input, including different phrasings, synonyms,
+and potential spelling errors.
+For short responses like "yes", "ok", "I want to know more", or numerical answers,
+treat them as follow-ups and maintain the previous agent selection.
+
+Here is the conversation history that you need to take into account before answering:
+<history>
+{{HISTORY}}
+</history>
+
+Skip any preamble and provide only the response in the specified format.
+```
+
+### Example Variable Replacements
+
+#### AGENT_DESCRIPTIONS Example
+```
+aws-services-agent:Expert in AWS services configuration, troubleshooting, and best practices
+security-agent:Handles security-related inquiries, compliance questions, and access management
+billing-agent:Manages AWS billing inquiries, cost optimization, and pricing details
+developer-support:Assists with code, SDK issues, and AWS service implementation
+```
+
+### Extended HISTORY Examples
+
+The conversation history is formatted to include agent names in the responses, allowing the classifier to track which agent handled each interaction. Each assistant response is prefixed with `[agent-name]` in the history, making it clear who provided each response:
+
+#### Example 1: AWS Services to Billing Transition
+```
+user: How do I set up an S3 bucket with versioning?
+assistant: [aws-services-agent] I'll help you set up S3 versioning. First, do you already have an S3 bucket created?
+user: No, but how much will it cost?
+assistant: [billing-agent] I can help explain S3 pricing. The cost depends on storage usage, versioning, and access patterns. What's your expected storage volume?
+user: Around 500GB of files that change frequently
+```
+
+In this example, you can see how the history shows the transition from `aws-services-agent` to `billing-agent`, with each response clearly marked.
+
+#### Example 2: Multiple Department Interaction
+```
+user: I can't access my EC2 instance
+assistant: [aws-services-agent] Let's troubleshoot your EC2 access. Can you see the instance in your console?
+user: Yes, but SSH keeps saying permission denied
+assistant: [security-agent] This sounds like a security group or key pair issue. When was the last time you successfully connected to this instance?
+user: Yesterday, but we rotated some keys
+assistant: [security-agent] I'll help you verify your key configuration and permissions. Which key pair are you currently using to connect?
+```
+
+Here, the history shows the conversation moving between `aws-services-agent` and `security-agent` as the topic shifts from general access to security configuration.
+
+The agent prefixing (e.g., `[agent-name]`) is automatically handled by the Agent Squad when formatting the conversation history. This helps the classifier understand:
+- Which agent handled each part of the conversation
+- The context of previous interactions
+- When agent transitions occurred
+- How to maintain continuity for follow-up responses
+
+## Tool-Based Response Structure
+
+Like the Anthropic Classifier, the BedrockClassifier uses a tool specification to enforce structured output from the model. This is a design pattern that ensures consistent and properly formatted responses.
+
+### The Tool Specification
+```json
+{
+  "toolSpec": {
+    "name": "analyzePrompt",
+    "description": "Analyze the user input and provide structured output",
+    "inputSchema": {
+      "json": {
+        "type": "object",
+        "properties": {
+          "userinput": {"type": "string"},
+          "selected_agent": {"type": "string"},
+          "confidence": {"type": "number"}
+        },
+        "required": ["userinput", "selected_agent", "confidence"]
+      }
+    }
+  }
+}
+```
+
+### Why Use Tools?
+
+1. **Structured Output**: Instead of free-form text, the model must provide exactly the data structure we need.
+2. **Guaranteed Format**: The tool schema ensures we always get:
+   - A valid agent identifier
+   - A properly formatted confidence score
+   - All required fields
+3. **Implementation Note**: The tool isn't actually executed - it's a pattern to force the model to structure its response in a specific way that maps directly to our `ClassifierResult` type.
+
+Example Response:
+```json
+{
+  "userinput": "How do I configure VPC endpoints?",
+  "selected_agent": "aws-services-agent",
+  "confidence": 0.95
+}
+```
+
+### Custom Configuration
+
+You can customize the BedrockClassifier by creating an instance with specific options:
+
+<Tabs syncKey="runtime">
+  <TabItem label="TypeScript" icon="seti:typescript" color="blue">
+    ```typescript
+    import { BedrockClassifier, AgentSquad } from "agent-squad";
+
+    const customBedrockClassifier = new BedrockClassifier({
+      modelId: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      region: 'us-west-2',
+      inferenceConfig: {
+        maxTokens: 500,
+        temperature: 0.7,
+        topP: 0.9
+      }
+    });
+
+    const orchestrator = new AgentSquad({ classifier: customBedrockClassifier });
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agent_squad.orchestrator import AgentSquad
+    from agent_squad.classifiers import BedrockClassifier, BedrockClassifierOptions
+
+    custom_bedrock_classifier = BedrockClassifier(BedrockClassifierOptions(
+        model_id='anthropic.claude-3-sonnet-20240229-v1:0',
+        region='us-west-2',
+        inference_config={
+            'maxTokens': 500,
+            'temperature': 0.7,
+            'topP': 0.9
+        }
+    ))
+
+    orchestrator = AgentSquad(classifier=custom_bedrock_classifier)
+    ```
+  </TabItem>
+</Tabs>
+
+The BedrockClassifier accepts the following configuration options:
+
+- `model_id` (optional): The ID of the Bedrock model to use. Defaults to Claude 3.5 Sonnet.
+- `region` (optional): The AWS region to use. If not provided, it will use the `REGION` environment variable.
+- `inference_config` (optional): A dictionary containing inference configuration parameters:
+  - `maxTokens` (optional): The maximum number of tokens to generate.
+  - `temperature` (optional): Controls randomness in output generation.
+  - `topP` (optional): Controls diversity of output generation.
+  - `stopSequences` (optional): A list of sequences that will stop generation.
+
+## Best Practices
+
+1. **AWS Configuration**: Ensure proper AWS credentials and Bedrock access are configured.
+2. **Model Selection**: Choose appropriate models based on your use case requirements.
+3. **Region Selection**: Consider using the region closest to your application for optimal latency.
+4. **Inference Configuration**: Experiment with different parameters to optimize classification accuracy.
+5. **System Prompt**: Consider customizing the system prompt for your specific use case, while maintaining the core classification structure.
+
+## Limitations
+
+- Requires an active AWS account with access to Amazon Bedrock
+- Classification quality depends on the chosen model and the quality of agent descriptions
+- Subject to Amazon Bedrock service quotas and pricing
+
+For more information, see the [Classifier Overview](/agent-squad/classifier/overview) and [Agents](/agent-squad/agents/overview) documentation.
