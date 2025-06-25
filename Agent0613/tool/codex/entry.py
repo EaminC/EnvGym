@@ -8,6 +8,12 @@ import os
 import subprocess
 from pathlib import Path
 
+# =============================================================================
+# 模型配置 - 统一管理模型名称
+# =============================================================================
+MODEL_NAME = 'gpt-4.1'  # Codex使用的OpenAI模型
+# =============================================================================
+
 # Set up codex path
 codex_path = os.path.join(os.path.dirname(__file__), '..', 'Agent0613', 'tool', 'codex')
 sys.path.insert(0, codex_path)
@@ -23,7 +29,7 @@ try:
 except ImportError:
     _run_codex_command = None
 
-def run_codex_command(query, approval_mode='full-auto', verbose=False):
+def run_codex_command(query, approval_mode='full-auto', verbose=False, model=None):
     """
     Run codex command and return result
     
@@ -31,6 +37,7 @@ def run_codex_command(query, approval_mode='full-auto', verbose=False):
         query: Query string to execute
         approval_mode: Approval mode, options: 'full-auto', 'semi-auto', 'manual'
         verbose: Whether to show verbose information
+        model: Model to use (if None, uses MODEL_NAME from config)
     
     Returns:
         str: Command execution result
@@ -47,11 +54,15 @@ def run_codex_command(query, approval_mode='full-auto', verbose=False):
         if not os.path.exists(cli_path):
             raise FileNotFoundError(f"Cannot find codex cli: {cli_path}")
         
+        # Use specified model or default MODEL_NAME
+        model_to_use = model if model else MODEL_NAME
+        
         # Build command
         cmd = [
             'node',
             cli_path,
             '-q',  # quiet mode
+            '-m', model_to_use,  # model parameter
             f'--approval-mode={approval_mode}',
             query
         ]
@@ -80,7 +91,7 @@ def run_codex_command(query, approval_mode='full-auto', verbose=False):
             print(error_msg)
         return error_msg
 
-def execute_codex_query(query, approval_mode='full-auto', verbose=True):
+def execute_codex_query(query, approval_mode='full-auto', verbose=True, model=None):
     """
     Wrapper function for run_codex_command with more descriptive name.
     
@@ -88,6 +99,7 @@ def execute_codex_query(query, approval_mode='full-auto', verbose=True):
         query: The query string to execute
         approval_mode: Approval mode for command execution ('full-auto', 'semi-auto', 'manual')
         verbose: Enable verbose output
+        model: Model to use (if None, uses MODEL_NAME from config)
         
     Returns:
         str: Command execution result
@@ -95,7 +107,8 @@ def execute_codex_query(query, approval_mode='full-auto', verbose=True):
     return run_codex_command(
         query=query,
         approval_mode=approval_mode,
-        verbose=verbose
+        verbose=verbose,
+        model=model
     )
 
 def simple_codex_agent(task_description):
@@ -127,6 +140,7 @@ def simple_codex_agent(task_description):
             'node',
             cli_path,
             '-q',  # quiet mode
+            '-m', MODEL_NAME,  # model parameter
             '--approval-mode', 'full-auto',
             task_description
         ]

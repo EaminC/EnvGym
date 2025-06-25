@@ -1,0 +1,430 @@
+=== Docker Execution Log - 20250622_210338 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1750644073
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 472B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/golang:1.24-bullseye
+#2 DONE 1.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 129.58kB 0.1s done
+#4 DONE 0.1s
+
+#5 [1/5] FROM docker.io/library/golang:1.24-bullseye@sha256:dfd72198d14bc22f270c9e000c304a2ffd19f5a5f693fad82643311afdc6b568
+#5 resolve docker.io/library/golang:1.24-bullseye@sha256:dfd72198d14bc22f270c9e000c304a2ffd19f5a5f693fad82643311afdc6b568 done
+#5 sha256:976b6d321be39c3167558551bc6c286bd6f7d69d0eaa1602ef84f953d38c0e99 126B / 126B 0.1s done
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 0B / 81.43MB 0.2s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 0B / 54.85MB 0.2s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 0B / 15.75MB 0.2s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 0B / 52.25MB 0.2s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 5.24MB / 81.43MB 1.7s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 1.05MB / 15.75MB 2.0s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 2.10MB / 15.75MB 2.6s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 9.44MB / 81.43MB 2.9s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 3.15MB / 15.75MB 3.0s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 4.19MB / 15.75MB 3.8s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 3.15MB / 52.25MB 3.9s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 5.24MB / 15.75MB 4.1s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 6.29MB / 15.75MB 4.7s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 3.15MB / 54.85MB 4.8s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 13.63MB / 81.43MB 5.3s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 7.34MB / 15.75MB 5.4s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 6.29MB / 52.25MB 5.6s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 8.39MB / 15.75MB 5.9s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 9.44MB / 15.75MB 6.5s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 6.29MB / 54.85MB 6.9s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 10.49MB / 15.75MB 7.2s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 9.44MB / 52.25MB 7.4s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 17.83MB / 81.43MB 7.8s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 11.53MB / 15.75MB 7.8s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 9.44MB / 54.85MB 8.4s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 12.58MB / 15.75MB 8.4s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 12.58MB / 52.25MB 8.9s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 13.63MB / 15.75MB 9.0s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 14.68MB / 15.75MB 9.6s
+#5 sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 15.75MB / 15.75MB 10.0s done
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 22.02MB / 81.43MB 10.4s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 12.58MB / 54.85MB 10.4s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 15.73MB / 52.25MB 10.4s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 15.73MB / 54.85MB 11.6s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 18.87MB / 52.25MB 11.6s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 22.02MB / 52.25MB 12.6s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 26.21MB / 81.43MB 13.1s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 18.87MB / 54.85MB 13.2s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 25.17MB / 52.25MB 13.7s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 28.31MB / 52.25MB 15.0s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 22.02MB / 54.85MB 15.3s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 30.41MB / 81.43MB 15.5s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 31.46MB / 52.25MB 16.1s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 25.17MB / 54.85MB 17.3s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 34.60MB / 52.25MB 17.4s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 34.60MB / 81.43MB 18.2s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 37.75MB / 52.25MB 18.8s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 28.31MB / 54.85MB 18.9s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 40.89MB / 52.25MB 20.1s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 38.80MB / 81.43MB 20.6s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 31.46MB / 54.85MB 20.9s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 44.04MB / 52.25MB 22.1s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 34.60MB / 54.85MB 22.2s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 42.99MB / 81.43MB 23.3s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 37.75MB / 54.85MB 23.6s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 47.19MB / 52.25MB 23.7s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 50.33MB / 52.25MB 25.5s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 40.89MB / 54.85MB 25.7s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 47.19MB / 81.43MB 26.4s
+#5 sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 52.25MB / 52.25MB 26.1s done
+#5 extracting sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 44.04MB / 54.85MB 26.9s
+#5 extracting sha256:01b9f05048bbb73f25cf8fdb677f6390611ed20f4945645387ddce6122b5075e 0.7s done
+#5 extracting sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714
+#5 extracting sha256:db6f3b6fbce84c42871ea80f05b2c61e622e08647f7164e9a95a391926c1f714 0.1s done
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 47.19MB / 54.85MB 28.1s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 51.38MB / 81.43MB 28.7s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 50.33MB / 54.85MB 29.6s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 55.57MB / 81.43MB 30.3s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 53.48MB / 54.85MB 31.1s
+#5 sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 54.85MB / 54.85MB 31.6s done
+#5 extracting sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 59.73MB / 81.43MB 31.8s
+#5 extracting sha256:dc7850095446c84fa9107622e378378aa7daf4b928caeecbc1149118900d32f7 0.7s done
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 63.96MB / 81.43MB 32.9s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 68.16MB / 81.43MB 33.8s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 72.35MB / 81.43MB 34.5s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 76.55MB / 81.43MB 35.3s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 80.74MB / 81.43MB 36.3s
+#5 sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 81.43MB / 81.43MB 36.6s done
+#5 extracting sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2
+#5 extracting sha256:ce21d4bbe9184212fde8adefbfc030f40411c90d06a55c1e3138b2484c5ef9a2 0.7s done
+#5 DONE 37.3s
+
+#5 [1/5] FROM docker.io/library/golang:1.24-bullseye@sha256:dfd72198d14bc22f270c9e000c304a2ffd19f5a5f693fad82643311afdc6b568
+#5 extracting sha256:f244882bda0eb70b1153262e9054d1f8801651888a3a6fc5a828db420391040e
+#5 extracting sha256:f244882bda0eb70b1153262e9054d1f8801651888a3a6fc5a828db420391040e 1.6s done
+#5 DONE 38.9s
+
+#5 [1/5] FROM docker.io/library/golang:1.24-bullseye@sha256:dfd72198d14bc22f270c9e000c304a2ffd19f5a5f693fad82643311afdc6b568
+#5 extracting sha256:976b6d321be39c3167558551bc6c286bd6f7d69d0eaa1602ef84f953d38c0e99 done
+#5 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 done
+#5 DONE 38.9s
+
+#6 [2/5] RUN apt-get update && apt-get install -y --no-install-recommends     git make bash ca-certificates     && rm -rf /var/lib/apt/lists/*
+#6 0.231 Get:1 http://deb.debian.org/debian bullseye InRelease [116 kB]
+#6 0.325 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.2 kB]
+#6 0.361 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.0 kB]
+#6 0.432 Get:4 http://deb.debian.org/debian bullseye/main arm64 Packages [7955 kB]
+#6 6.626 Get:5 http://deb.debian.org/debian-security bullseye-security/main arm64 Packages [376 kB]
+#6 6.828 Get:6 http://deb.debian.org/debian bullseye-updates/main arm64 Packages [16.3 kB]
+#6 7.156 Fetched 8534 kB in 7s (1215 kB/s)
+#6 7.156 Reading package lists...
+#6 7.390 Reading package lists...
+#6 7.603 Building dependency tree...
+#6 7.661 Reading state information...
+#6 7.724 bash is already the newest version (5.1-2+deb11u1).
+#6 7.724 bash set to manually installed.
+#6 7.724 ca-certificates is already the newest version (20210119).
+#6 7.724 make is already the newest version (4.3-4.1).
+#6 7.724 git is already the newest version (1:2.30.2-1+deb11u4).
+#6 7.724 0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.
+#6 DONE 8.1s
+
+#7 [3/5] WORKDIR /app
+#7 DONE 0.0s
+
+#8 [4/5] COPY . .
+#8 DONE 0.3s
+
+#9 [5/5] RUN make install
+#9 0.095 GOOS= GOARCH= GOARM= GOFLAGS= CGO_ENABLED= go build -o script/build script/build.go
+#9 0.099 go: downloading github.com/cli/safeexec v1.0.1
+#9 1.957 go build -trimpath -ldflags "-X github.com/cli/cli/v2/internal/build.Date=2025-06-23 -X github.com/cli/cli/v2/internal/build.Version=v2.74.2-40-gd4efe0bd0 " -o bin/gh ./cmd/gh
+#9 1.969 go: downloading github.com/AlecAivazis/survey/v2 v2.3.7
+#9 1.970 go: downloading github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
+#9 1.970 go: downloading gopkg.in/yaml.v3 v3.0.1
+#9 1.970 go: downloading github.com/cli/go-gh/v2 v2.12.1
+#9 1.970 go: downloading github.com/spf13/cobra v1.9.1
+#9 1.971 go: downloading github.com/hashicorp/go-version v1.3.0
+#9 1.971 go: downloading github.com/mattn/go-isatty v0.0.20
+#9 1.975 go: downloading golang.org/x/term v0.32.0
+#9 3.297 go: downloading github.com/spf13/pflag v1.0.6
+#9 3.298 go: downloading github.com/briandowns/spinner v1.18.1
+#9 3.323 go: downloading github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
+#9 3.324 go: downloading github.com/mattn/go-colorable v0.1.14
+#9 3.324 go: downloading github.com/zalando/go-keyring v0.2.5
+#9 3.325 go: downloading github.com/MakeNowJust/heredoc v1.0.0
+#9 3.329 go: downloading github.com/shurcooL/githubv4 v0.0.0-20240120211514-18a1ae0e79dc
+#9 3.329 go: downloading golang.org/x/sync v0.15.0
+#9 3.329 go: downloading github.com/charmbracelet/huh v0.7.0
+#9 3.330 go: downloading github.com/stretchr/testify v1.10.0
+#9 3.457 go: downloading golang.org/x/sys v0.33.0
+#9 3.590 go: downloading github.com/cli/shurcooL-graphql v0.0.4
+#9 3.830 go: downloading github.com/henvic/httpretty v0.1.4
+#9 4.136 go: downloading golang.org/x/text v0.26.0
+#9 4.136 go: downloading github.com/itchyny/gojq v0.12.15
+#9 4.136 go: downloading github.com/Masterminds/sprig/v3 v3.3.0
+#9 4.136 go: downloading github.com/thlib/go-timezone-local v0.0.0-20210907160436-ef149e42d28e
+#9 4.136 go: downloading github.com/muesli/termenv v0.16.0
+#9 4.178 go: downloading github.com/microsoft/dev-tunnels v0.0.25
+#9 4.344 go: downloading github.com/muhammadmuzzammil1998/jsonc v0.0.0-20201229145248-615b0916ca38
+#9 4.696 go: downloading github.com/charmbracelet/lipgloss v1.1.1-0.20250319133953-166f707985bc
+#9 4.698 go: downloading github.com/charmbracelet/glamour v0.9.2-0.20250319212134-549f544650e3
+#9 4.698 go: downloading github.com/cli/browser v1.3.0
+#9 4.985 go: downloading github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
+#9 5.005 go: downloading github.com/gdamore/tcell/v2 v2.5.4
+#9 5.321 go: downloading github.com/rivo/tview v0.0.0-20221029100920-c4a7e501810d
+#9 5.491 go: downloading github.com/godbus/dbus/v5 v5.1.0
+#9 5.884 go: downloading github.com/fatih/color v1.16.0
+#9 6.344 go: downloading github.com/shurcooL/graphql v0.0.0-20230722043721-ed46e5a46466
+#9 6.344 go: downloading github.com/charmbracelet/bubbles v0.21.0
+#9 6.344 go: downloading github.com/catppuccin/go v0.3.0
+#9 7.903 go: downloading github.com/charmbracelet/bubbletea v1.3.4
+#9 7.903 go: downloading github.com/charmbracelet/x/cellbuf v0.0.13
+#9 7.905 go: downloading github.com/charmbracelet/x/exp/strings v0.0.0-20240722160745-212f7b056ed0
+#9 7.907 go: downloading github.com/mitchellh/hashstructure/v2 v2.0.2
+#9 7.907 go: downloading github.com/muesli/reflow v0.3.0
+#9 9.039 go: downloading github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
+#9 9.106 go: downloading github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2
+#9 9.107 go: downloading github.com/stretchr/objx v0.5.2
+#9 9.111 go: downloading github.com/digitorus/timestamp v0.0.0-20231217203849-220c5c2851b7
+#9 9.111 go: downloading github.com/in-toto/attestation v1.1.2
+#9 9.112 go: downloading github.com/sigstore/sigstore-go v1.0.0
+#9 9.733 go: downloading google.golang.org/protobuf v1.36.6
+#9 9.733 go: downloading github.com/cenkalti/backoff/v4 v4.3.0
+#9 9.738 go: downloading github.com/hashicorp/go-multierror v1.1.1
+#9 9.738 go: downloading github.com/joho/godotenv v1.5.1
+#9 9.738 go: downloading golang.org/x/crypto v0.39.0
+#9 9.738 go: downloading github.com/opentracing/opentracing-go v1.2.0
+#9 9.739 go: downloading google.golang.org/grpc v1.72.2
+#9 9.739 go: downloading dario.cat/mergo v1.0.1
+#9 9.740 go: downloading github.com/Masterminds/goutils v1.1.1
+#9 11.15 go: downloading github.com/Masterminds/semver/v3 v3.3.0
+#9 11.15 go: downloading github.com/google/uuid v1.6.0
+#9 11.15 go: downloading github.com/huandu/xstrings v1.5.0
+#9 11.15 go: downloading github.com/mitchellh/copystructure v1.2.0
+#9 11.15 go: downloading github.com/shopspring/decimal v1.4.0
+#9 11.62 go: downloading github.com/spf13/cast v1.7.1
+#9 12.75 go: downloading github.com/itchyny/timefmt-go v0.1.5
+#9 12.76 go: downloading github.com/aymanbagabas/go-osc52/v2 v2.0.1
+#9 12.76 go: downloading github.com/lucasb-eyer/go-colorful v1.2.0
+#9 12.76 go: downloading github.com/rivo/uniseg v0.4.7
+#9 12.76 go: downloading github.com/gorilla/websocket v1.5.3
+#9 12.79 go: downloading github.com/rodaine/table v1.0.1
+#9 12.80 go: downloading github.com/charmbracelet/x/ansi v0.8.0
+#9 12.80 go: downloading github.com/yuin/goldmark v1.7.12
+#9 12.80 go: downloading github.com/yuin/goldmark-emoji v1.0.5
+#9 13.60 go: downloading github.com/gdamore/encoding v1.0.0
+#9 13.60 go: downloading github.com/mattn/go-runewidth v0.0.16
+#9 13.60 go: downloading github.com/atotto/clipboard v0.1.4
+#9 13.60 go: downloading github.com/dustin/go-humanize v1.0.1
+#9 13.60 go: downloading github.com/charmbracelet/x/term v0.2.1
+#9 13.60 go: downloading github.com/charmbracelet/colorprofile v0.2.3-0.20250311203215-f60798e515dc
+#9 13.62 go: downloading github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6
+#9 13.76 go: downloading github.com/muesli/cancelreader v0.2.2
+#9 13.77 go: downloading github.com/golang/snappy v0.0.4
+#9 13.77 go: downloading github.com/sigstore/protobuf-specs v0.4.3
+#9 13.77 go: downloading github.com/distribution/reference v0.6.0
+#9 13.77 go: downloading github.com/google/go-containerregistry v0.20.6
+#9 13.81 go: downloading github.com/cenkalti/backoff/v5 v5.0.2
+#9 13.90 go: downloading github.com/theupdateframework/go-tuf/v2 v2.1.1
+#9 13.90 go: downloading github.com/digitorus/pkcs7 v0.0.0-20230818184609-3a137a874352
+#9 15.37 go: downloading github.com/secure-systems-lab/go-securesystemslib v0.9.0
+#9 15.65 go: downloading golang.org/x/mod v0.25.0
+#9 15.65 go: downloading github.com/cli/oauth v1.1.1
+#9 15.65 go: downloading github.com/gabriel-vasile/mimetype v1.4.9
+#9 15.65 go: downloading github.com/sigstore/sigstore v1.9.4
+#9 15.68 go: downloading github.com/google/certificate-transparency-go v1.3.1
+#9 15.68 go: downloading github.com/theupdateframework/go-tuf v0.7.0
+#9 17.24 go: downloading github.com/hashicorp/errwrap v1.1.0
+#9 17.24 go: downloading github.com/mitchellh/reflectwalk v1.0.2
+#9 17.24 go: downloading github.com/alecthomas/chroma/v2 v2.14.0
+#9 18.59 go: downloading github.com/microcosm-cc/bluemonday v1.0.27
+#9 18.59 go: downloading golang.org/x/net v0.41.0
+#9 18.59 go: downloading github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
+#9 18.59 go: downloading github.com/sigstore/timestamp-authority v1.2.7
+#9 18.59 go: downloading google.golang.org/genproto/googleapis/api v0.0.0-20250414145226-207652e42e2e
+#9 18.59 go: downloading github.com/opencontainers/go-digest v1.0.0
+#9 18.59 go: downloading github.com/cyberphone/json-canonicalization v0.0.0-20220623050100-57a0ce2678a7
+#9 18.59 go: downloading github.com/go-openapi/strfmt v0.23.0
+#9 18.59 go: downloading github.com/go-openapi/runtime v0.28.0
+#9 19.55 go: downloading github.com/go-openapi/swag v0.23.1
+#9 19.55 go: downloading github.com/sigstore/rekor v1.3.10
+#9 19.78 go: downloading github.com/docker/cli v28.2.2+incompatible
+#9 20.17 go: downloading github.com/mitchellh/go-homedir v1.1.0
+#9 20.31 go: downloading github.com/docker/distribution v2.8.3+incompatible
+#9 20.44 go: downloading github.com/letsencrypt/boulder v0.0.0-20240620165639-de9c06129bec
+#9 20.58 go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20250414145226-207652e42e2e
+#9 20.58 go: downloading github.com/transparency-dev/merkle v0.0.2
+#9 20.58 go: downloading k8s.io/klog/v2 v2.130.1
+#9 20.58 go: downloading github.com/dlclark/regexp2 v1.11.0
+#9 20.58 go: downloading github.com/aymerick/douceur v0.2.0
+#9 20.98 go: downloading github.com/pkg/errors v0.9.1
+#9 21.10 go: downloading github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
+#9 21.10 go: downloading github.com/go-openapi/errors v0.22.1
+#9 21.10 go: downloading github.com/mitchellh/mapstructure v1.5.0
+#9 21.10 go: downloading github.com/oklog/ulid v1.3.1
+#9 21.17 go: downloading go.mongodb.org/mongo-driver v1.14.0
+#9 21.17 go: downloading github.com/mailru/easyjson v0.9.0
+#9 21.19 go: downloading github.com/go-openapi/validate v0.24.0
+#9 21.19 go: downloading github.com/blang/semver v3.5.1+incompatible
+#9 21.53 go: downloading golang.org/x/exp v0.0.0-20240531132922-fd00a4e0eefc
+#9 21.53 go: downloading github.com/in-toto/in-toto-golang v0.9.0
+#9 21.67 go: downloading github.com/spf13/viper v1.20.1
+#9 21.67 go: downloading github.com/sirupsen/logrus v1.9.3
+#9 21.67 go: downloading github.com/go-logr/logr v1.4.3
+#9 21.67 go: downloading github.com/gorilla/css v1.0.1
+#9 21.67 go: downloading github.com/titanous/rocacheck v0.0.0-20171023193734-afe73141d399
+#9 22.11 go: downloading github.com/opencontainers/image-spec v1.1.1
+#9 22.49 go: downloading github.com/containerd/stargz-snapshotter/estargz v0.16.3
+#9 22.63 go: downloading github.com/klauspost/compress v1.18.0
+#9 22.63 go: downloading github.com/go-chi/chi v4.1.2+incompatible
+#9 22.63 go: downloading go.uber.org/zap v1.27.0
+#9 22.63 go: downloading github.com/josharian/intern v1.0.0
+#9 22.77 go: downloading github.com/docker/docker-credential-helpers v0.9.3
+#9 23.08 go: downloading github.com/go-jose/go-jose/v4 v4.0.5
+#9 23.09 go: downloading github.com/fsnotify/fsnotify v1.8.0
+#9 23.09 go: downloading github.com/go-viper/mapstructure/v2 v2.2.1
+#9 23.09 go: downloading github.com/sagikazarmark/locafero v0.7.0
+#9 23.23 go: downloading github.com/spf13/afero v1.12.0
+#9 23.23 go: downloading github.com/go-openapi/jsonpointer v0.21.0
+#9 23.23 go: downloading github.com/jedisct1/go-minisign v0.0.0-20211028175153-1c139d1cc84b
+#9 23.23 go: downloading github.com/go-openapi/analysis v0.23.0
+#9 23.23 go: downloading github.com/go-openapi/loads v0.22.0
+#9 23.23 go: downloading github.com/go-openapi/spec v0.21.0
+#9 23.23 go: downloading github.com/sassoftware/relic v7.2.1+incompatible
+#9 23.27 go: downloading go.opentelemetry.io/otel v1.36.0
+#9 23.98 go: downloading go.opentelemetry.io/otel/trace v1.36.0
+#9 23.98 go: downloading github.com/shibumi/go-pathspec v1.3.0
+#9 24.22 go: downloading github.com/vbatts/tar-split v0.12.1
+#9 24.22 go: downloading go.uber.org/multierr v1.11.0
+#9 24.22 go: downloading github.com/subosito/gotenv v1.6.0
+#9 24.29 go: downloading github.com/pelletier/go-toml/v2 v2.2.3
+#9 24.31 go: downloading github.com/sourcegraph/conc v0.3.0
+#9 24.31 go: downloading github.com/go-openapi/jsonreference v0.21.0
+#9 24.79 go: downloading go.opentelemetry.io/otel/metric v1.36.0
+#9 24.79 go: downloading github.com/go-logr/stdr v1.2.2
+#9 24.79 go: downloading go.opentelemetry.io/auto/sdk v1.1.0
+#9 49.29 go run ./cmd/gen-docs --man-page --doc-path ./share/man/man1/
+#9 49.30 go: downloading github.com/cpuguy83/go-md2man/v2 v2.0.7
+#9 49.60 go: downloading github.com/russross/blackfriday/v2 v2.1.0
+#9 59.61 mkdir -p ./share/bash-completion/completions ./share/fish/vendor_completions.d ./share/zsh/site-functions
+#9 59.61 bin/gh completion -s bash > ./share/bash-completion/completions/gh
+#9 59.65 bin/gh completion -s fish > ./share/fish/vendor_completions.d/gh.fish
+#9 59.68 bin/gh completion -s zsh > ./share/zsh/site-functions/_gh
+#9 59.71 install -d /usr/local/bin
+#9 59.71 install -m755 bin/gh /usr/local/bin/
+#9 59.97 install -d /usr/local/share/man/man1
+#9 59.98 install -m644 ./share/man/man1/* /usr/local/share/man/man1/
+#9 59.98 install -d /usr/local/share/bash-completion/completions
+#9 59.98 install -m644 ./share/bash-completion/completions/gh /usr/local/share/bash-completion/completions/gh
+#9 59.98 install -d /usr/local/share/fish/vendor_completions.d
+#9 59.98 install -m644 ./share/fish/vendor_completions.d/gh.fish /usr/local/share/fish/vendor_completions.d/gh.fish
+#9 59.98 install -d /usr/local/share/zsh/site-functions
+#9 59.98 install -m644 ./share/zsh/site-functions/_gh /usr/local/share/zsh/site-functions/_gh
+#9 DONE 60.2s
+
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 28.6s done
+#10 exporting manifest sha256:042a279224785388ab42d880ab232c76daef192a7804f0fff231e39606638308
+#10 exporting manifest sha256:042a279224785388ab42d880ab232c76daef192a7804f0fff231e39606638308 0.0s done
+#10 exporting config sha256:57329d34f28b521136854952c5a9de31acbfde154036d28a17751f3aa2e942ca done
+#10 exporting attestation manifest sha256:fcb4486beeab06f9dc9eaba5289fed6571456b89bd7e2b58bbf8e5132c410d2b 0.0s done
+#10 exporting manifest list sha256:b6d82a15880a3ce1f5189f5d3ac0e56341f5c24fe7cc7d783968aae08bcdcd4e done
+#10 naming to docker.io/library/envgym_test_1750644073:latest done
+#10 unpacking to docker.io/library/envgym_test_1750644073:latest
+#10 unpacking to docker.io/library/envgym_test_1750644073:latest 5.7s done
+#10 DONE 34.4s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/sg1yyu0e3u61c7dns9np5e8k1
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+Work seamlessly with GitHub from the command line.
+
+USAGE
+  gh <command> <subcommand> [flags]
+
+CORE COMMANDS
+  auth:          Authenticate gh and git with GitHub
+  browse:        Open repositories, issues, pull requests, and more in the browser
+  codespace:     Connect to and manage codespaces
+  gist:          Manage gists
+  issue:         Manage issues
+  org:           Manage organizations
+  pr:            Manage pull requests
+  project:       Work with GitHub Projects.
+  release:       Manage releases
+  repo:          Manage repositories
+
+GITHUB ACTIONS COMMANDS
+  cache:         Manage GitHub Actions caches
+  run:           View details about workflow runs
+  workflow:      View details about GitHub Actions workflows
+
+ALIAS COMMANDS
+  co:            Alias for "pr checkout"
+
+ADDITIONAL COMMANDS
+  alias:         Create command shortcuts
+  api:           Make an authenticated GitHub API request
+  attestation:   Work with artifact attestations
+  completion:    Generate shell completion scripts
+  config:        Manage configuration for gh
+  extension:     Manage gh extensions
+  gpg-key:       Manage GPG keys
+  label:         Manage labels
+  preview:       Execute previews for gh features
+  ruleset:       View info about repo rulesets
+  search:        Search for repositories, issues, and pull requests
+  secret:        Manage GitHub secrets
+  ssh-key:       Manage SSH keys
+  status:        Print information about relevant issues, pull requests, and notifications across repositories
+  variable:      Manage GitHub Actions variables
+
+HELP TOPICS
+  accessibility: Learn about GitHub CLI's accessibility experiences
+  actions:       Learn about working with GitHub Actions
+  environment:   Environment variables that can be used with gh
+  exit-codes:    Exit codes used by gh
+  formatting:    Formatting options for JSON data exported from gh
+  mintty:        Information about using gh with MinTTY
+  reference:     A comprehensive reference of all gh commands
+
+FLAGS
+  --help      Show help for command
+  --version   Show gh version
+
+EXAMPLES
+  $ gh issue create
+  $ gh repo clone cli/cli
+  $ gh pr checkout 321
+
+LEARN MORE
+  Use `gh <command> <subcommand> --help` for more information about a command.
+  Read the manual at https://cli.github.com/manual
+  Learn about exit codes using `gh help exit-codes`
+  Learn about accessibility experiences using `gh help accessibility`
+
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

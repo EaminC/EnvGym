@@ -1,0 +1,24 @@
+=== ENVIRONMENT SETUP PLAN ===
+1. DOWNLOADS NEEDED: 
+- Go toolchain version 1.24 (or higher, matching go.mod)
+- All Go module dependencies (as specified in go.mod/go.sum)
+
+2. FILES TO CREATE: 
+- Dockerfile (suggest renaming envgym.dockerfile to Dockerfile for standard Docker build, or use as is)
+- Compiled binary (bin/gh) via build process
+
+3. COMPLETE TODO LIST:
+- Ensure Go 1.24+ is installed in the Docker image
+- Copy the project source code into the Docker image
+- Run 'go mod download' to fetch dependencies
+- Build the binary using 'make bin/gh' or 'go run script/build.go bin/gh'
+- Optionally, generate manpages and shell completions if needed
+- Set up the Docker image to run the compiled binary as entrypoint or CMD
+- (Optional) Clean up build dependencies for a smaller image
+
+NOTES:
+- No requirements.txt, setup.py, or other Python/Node environment files found
+- No explicit Docker instructions in README; Dockerfile content is missing/empty and needs to be created or filled
+- The build is Go-based and uses Makefile/script/build.go for orchestration
+
+If Dockerfile content is needed, base it on golang:1.24, copy source, build, then use a minimal base (e.g., scratch or distroless) for the final image if desired.

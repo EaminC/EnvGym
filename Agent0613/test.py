@@ -18,6 +18,36 @@ import asyncio
 import json
 import time
 
+# =============================================================================
+# 统一配置 - 管理所有模型和参数设置
+# =============================================================================
+# 模型配置
+MODEL_NAME = 'gpt-4.1'  # 统一使用的OpenAI模型
+
+# Token 配置
+MAX_TOKENS_CLASSIFIER = 4500  # 分类器最大token数
+MAX_TOKENS_AGENT_DEFAULT = 4500  # Agent默认最大token数
+MAX_TOKENS_INITIALIZATION = 800  # 初始化Agent token数
+
+# 温度配置 (控制随机性 0-1)
+TEMPERATURE_CLASSIFIER = 0.2  # 分类器温度
+TEMPERATURE_DEFAULT = 0.7  # 默认温度
+TEMPERATURE_FOCUSED = 0.3  # 专注分析温度
+TEMPERATURE_STABLE = 0.2  # 稳定执行温度
+TEMPERATURE_PRECISE = 0.1  # 精确操作温度
+
+# Top-P 配置 (核心采样)
+TOP_P_DEFAULT = 0.9  # 默认top-p值
+
+# 工具递归配置
+TOOL_MAX_RECURSIONS_DEFAULT = 5  # 默认工具最大递归次数
+TOOL_MAX_RECURSIONS_SIMPLE = 3  # 简单操作递归次数
+TOOL_MAX_RECURSIONS_COMPLEX = 6  # 复杂操作递归次数
+TOOL_MAX_RECURSIONS_PLANNING = 10  # 规划类操作递归次数
+TOOL_MAX_RECURSIONS_DOCKER = 15  # Docker操作递归次数
+TOOL_MAX_RECURSIONS_EXECUTION = 10  # 执行类操作递归次数
+# =============================================================================
+
 # Tools
 from tool.compat.package_version import analyze_package_formatted
 from tool.aider.entry import get_repo_map
@@ -39,11 +69,11 @@ if not my_api_key:
 
 custom_openai_classifier = OpenAIClassifier(OpenAIClassifierOptions(
     api_key=my_api_key,
-    model_id='gpt-4o',
+    model_id=MODEL_NAME,
     inference_config={
-        'max_tokens': 1500,
-        'temperature': 0.2,
-        'top_p': 0.9,
+        'max_tokens': MAX_TOKENS_CLASSIFIER,
+        'temperature': TEMPERATURE_CLASSIFIER,
+        'top_p': TOP_P_DEFAULT,
         'stop_sequences': ['']
     }
 ))
@@ -98,15 +128,15 @@ agent_package_compatibility = HybridAgent(HybridAgentOptions(
     api_key=my_api_key,
 
     # Optional fields
-    model='gpt-4o',         # Choose OpenAI model
+    model=MODEL_NAME,         # 使用统一的模型配置
     streaming=True,        # Enable streaming responses
     #retriever=custom_retriever,  # Custom retriever for additional context
 
     # Inference configuration
     inference_config={
-        'maxTokens': 1000,     # Maximum tokens to generate
-        'temperature': 0.7,   # Control randomness (0-1)
-        'topP': 0.9,         # Control diversity via nucleus sampling
+        'maxTokens': MAX_TOKENS_AGENT_DEFAULT,     # Maximum tokens to generate
+        'temperature': TEMPERATURE_DEFAULT,   # Control randomness (0-1)
+        'topP': TOP_P_DEFAULT,         # Control diversity via nucleus sampling
         'stopSequences': None  # Sequences that stop generation
     },
 
@@ -132,7 +162,7 @@ Current supported languages: {{LANGUAGES}}""",
     # Tool configuration
     tool_config={
         'tool': package_tools,
-        'toolMaxRecursions': 5,  # Maximum number of tool calls in one conversation
+        'toolMaxRecursions': TOOL_MAX_RECURSIONS_DEFAULT,  # Maximum number of tool calls in one conversation
     }
 ))
 
@@ -191,15 +221,15 @@ agent_repo_map = HybridAgent(HybridAgentOptions(
     api_key=my_api_key,
 
     # Optional fields
-    model='gpt-4o',         # Choose OpenAI model
+    model=MODEL_NAME,         # 使用统一的模型配置
     streaming=True,        # Enable streaming responses
     #retriever=custom_retriever,  # Custom retriever for additional context
 
     # Inference configuration
     inference_config={
-        'maxTokens': 2000,     # Maximum tokens to generate
-        'temperature': 0.3,   # Lower temperature for more focused analysis
-        'topP': 0.9,         # Control diversity via nucleus sampling
+        'maxTokens': MAX_TOKENS_AGENT_DEFAULT,     # Maximum tokens to generate
+        'temperature': TEMPERATURE_FOCUSED,   # Lower temperature for more focused analysis
+        'topP': TOP_P_DEFAULT,         # Control diversity via nucleus sampling
         'stopSequences': None  # Sequences that stop generation
     },
 
@@ -228,7 +258,7 @@ Key capabilities: {{CAPABILITIES}}""",
     # Tool configuration
     tool_config={
         'tool': tool_repo_map,
-        'toolMaxRecursions': 3,  # Maximum number of tool calls in one conversation
+        'toolMaxRecursions': TOOL_MAX_RECURSIONS_SIMPLE,  # Maximum number of tool calls in one conversation
     }
 ))
 
@@ -253,16 +283,16 @@ agent_initialization = HybridAgent(HybridAgentOptions(
     name='initialization_agent',
     description='Creates envgym directory with plan.txt, next.txt, status.txt, log.txt ,history.txt, envgym.dockerfile files',
     api_key=my_api_key,
-    model='gpt-4o',
+    model=MODEL_NAME,  # 使用统一的模型配置
     streaming=True,
-    inference_config={'maxTokens': 800, 'temperature': 0.2},
+    inference_config={'maxTokens': MAX_TOKENS_INITIALIZATION, 'temperature': TEMPERATURE_STABLE},
     custom_system_prompt={
         'template': """You create envgym directory structure. Use this single command:
 "create envgym directory with empty files plan.txt next.txt status.txt log.txt ,history.txt, envgym.dockerfile inside it"
 Then verify with: "list envgym directory contents".""",
         'variables': {}
     },
-    tool_config={'tool': tool_codex, 'toolMaxRecursions': 3}
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': TOOL_MAX_RECURSIONS_SIMPLE}
 ))
 
 # Auto-save agent - records execution status to history.txt
@@ -270,9 +300,9 @@ agent_auto_save = HybridAgent(HybridAgentOptions(
     name='auto_save_agent',
     description='Automatically saves execution status and file contents to history.txt for each iteration',
     api_key=my_api_key,
-    model='gpt-4o',
+    model=MODEL_NAME,  # 使用统一的模型配置
     streaming=True,
-    inference_config={'maxTokens': 1000, 'temperature': 0.1},
+    inference_config={'maxTokens': MAX_TOKENS_AGENT_DEFAULT, 'temperature': TEMPERATURE_PRECISE},
     custom_system_prompt={
         'template': """You save execution status to history.txt. For iteration {i}, execute these commands:
 1. "append to envgym/history.txt: === Iteration {i} - [current timestamp] ==="
@@ -285,7 +315,7 @@ agent_auto_save = HybridAgent(HybridAgentOptions(
 Always append, never overwrite history.txt.""",
         'variables': {}
     },
-    tool_config={'tool': tool_codex, 'toolMaxRecursions': 6}
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': TOOL_MAX_RECURSIONS_COMPLEX}
 ))
 
 # Planning agent - analyzes project and generates environment configuration plan
@@ -293,9 +323,9 @@ agent_planner = HybridAgent(HybridAgentOptions(
     name='planner_agent',
     description='This is an agent for making comprehensive plans before environment configuration and write it in envgym/plan.txt',
     api_key=my_api_key,
-    model='gpt-4o',
+    model=MODEL_NAME,  # 使用统一的模型配置
     streaming=True,
-    inference_config={'maxTokens': 3000, 'temperature': 0.2},
+    inference_config={'maxTokens': MAX_TOKENS_AGENT_DEFAULT, 'temperature': TEMPERATURE_STABLE},
     custom_system_prompt={
         'template': """You need to make a comprehensive plan of how to build up a complete docker image to run the project and please remember to write it in envgym/plan.txt.
 First ,make sure you can access the envgym directory and there is a plan.txt file in it.
@@ -314,7 +344,7 @@ Output format to envgym/plan.txt:
 Make sure you have make a complete plan, and the plan is updated to envgym/plan.txt.Tell me if there is something wrong saving it to envgym/plan.txt""",
         'variables': {}
     },
-    tool_config={'tool': tool_codex, 'toolMaxRecursions': 10}
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': TOOL_MAX_RECURSIONS_PLANNING}
 ))
 
 # Write Docker agent - writes and prepares Dockerfile
@@ -322,15 +352,15 @@ write_docker_agent = HybridAgent(HybridAgentOptions(
     name='write_docker_agent',
     description='Writes Dockerfile: analyzes status, creates virtual environment, generates/updates Dockerfile',
     api_key=my_api_key,
-    model='gpt-4o',
+    model=MODEL_NAME,  # 使用统一的模型配置
     streaming=True,
-    inference_config={'maxTokens': 2000, 'temperature': 0.2},
+    inference_config={'maxTokens': MAX_TOKENS_AGENT_DEFAULT, 'temperature': TEMPERATURE_STABLE},
     custom_system_prompt={
         'template': """IMPORTANT: You write Dockerfile to envgym/envgym.dockerfile - this is the ONLY target file for Dockerfile generation.
 
 You write Dockerfile. Execute these steps:
 
-1. "create virtual environment for the project if needed"
+1. Please read the codebase before writing dockerfile
 2. Check envgym/status.txt and envgym/next.txt - if empty, this is first execution (only read plan.txt), otherwise read all files to understand current situation
 3. "create or modify Dockerfile in envgym/envgym.dockerfile based on plan.txt requirements and current status/next steps"
 4. "write 'Ready for Docker execution' to envgym/next.txt"
@@ -342,7 +372,7 @@ CRITICAL:
 - The run docker agent will automatically use envgym/envgym.dockerfile""",
         'variables': {}
     },
-    tool_config={'tool': tool_codex, 'toolMaxRecursions': 8}
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': TOOL_MAX_RECURSIONS_DOCKER}
 ))
 
 # Update log file agent - updates log files and status
@@ -350,9 +380,9 @@ update_log_file_agent = HybridAgent(HybridAgentOptions(
     name='update_log_file_agent',
     description='Updates log files: analyzes Docker execution results from log.txt and updates status.txt and next.txt',
     api_key=my_api_key,
-    model='gpt-4o',
+    model=MODEL_NAME,  # 使用统一的模型配置
     streaming=True,
-    inference_config={'maxTokens': 2000, 'temperature': 0.2},
+    inference_config={'maxTokens': MAX_TOKENS_AGENT_DEFAULT, 'temperature': TEMPERATURE_STABLE},
     custom_system_prompt={
         'template': """You update log files and status. Execute these steps:
 
@@ -368,7 +398,7 @@ update_log_file_agent = HybridAgent(HybridAgentOptions(
 Always provide actionable analysis and clear next steps for continuous improvement.""",
         'variables': {}
     },
-    tool_config={'tool': tool_codex, 'toolMaxRecursions': 6}
+    tool_config={'tool': tool_codex, 'toolMaxRecursions': TOOL_MAX_RECURSIONS_COMPLEX}
 ))
 
 
@@ -397,14 +427,14 @@ run_docker_agent = HybridAgent(HybridAgentOptions(
     name='run_docker_agent',
     description='Runs Docker: executes envgym/envgym.dockerfile and captures all logs to envgym/log.txt',
     api_key=my_api_key,
-    model='gpt-4o',
+    model=MODEL_NAME,  # 使用统一的模型配置
     streaming=True,
     
     # Inference configuration
     inference_config={
-        'maxTokens': 2000,
-        'temperature': 0.2,    # Lower temperature for stable execution
-        'topP': 0.9,
+        'maxTokens': MAX_TOKENS_AGENT_DEFAULT,
+        'temperature': TEMPERATURE_STABLE,    # Lower temperature for stable execution
+        'topP': TOP_P_DEFAULT,
         'stopSequences': None
     },
 
@@ -447,7 +477,7 @@ Always provide detailed feedback about:
     # Tool configuration
     tool_config={
         'tool': tool_docker_runner,
-        'toolMaxRecursions': 3,
+        'toolMaxRecursions': TOOL_MAX_RECURSIONS_EXECUTION,
     }
 ))
 
@@ -496,7 +526,7 @@ async def handle_request(_orchestrator: AgentSquad, _user_input: str, _user_id: 
     if response.streaming:
         print('Response:', response.output.content[0]['text'])
     else:
-        print('Response:', response.output.content[0]['text'])   
+        print('Response:', response.output.content[0]['text'])  
 if __name__ == "__main__":
     USER_ID = "user1231"
     SESSION_ID = str(uuid.uuid4())

@@ -1,0 +1,31 @@
+=== ENVIRONMENT SETUP PLAN ===
+1. DOWNLOADS NEEDED:
+   - Go toolchain version 1.24 or higher (as specified in go.mod)
+   - System build utilities: git, make, bash (and coreutils)
+   - Project source code (this repository)
+
+2. FILES TO CREATE:
+   - envgym/envgym.dockerfile (populate with a Dockerfile for Go build)
+   - (No requirements.txt, package.json, or Python/Node files needed)
+
+3. COMPLETE TODO LIST:
+   1. Install Docker if not already present
+   2. Write a Dockerfile (envgym/envgym.dockerfile) with:
+      - Base image: golang:1.24-bullseye
+      - Install: git, make, bash, ca-certificates
+      - Set WORKDIR to /app
+      - COPY . .
+      - RUN make build (or make install for full install)
+      - Set ENTRYPOINT or CMD as needed (e.g., ./bin/gh)
+   3. Build the Docker image:
+      docker build -t envgym -f envgym/envgym.dockerfile .
+   4. Run the container:
+      docker run -it --rm envgym
+   5. (Optional) Mount source code for development:
+      docker run -it --rm -v $(pwd):/app envgym
+   6. (Optional) Add any additional tools/scripts as needed for your workflow
+
+NOTES:
+- No Python, Node.js, or other language dependencies detected.
+- All Go dependencies are managed via go.mod/go.sum and fetched by 'go mod download' or 'make'.
+- If you need to cross-compile or build for Windows/macOS, see Makefile and script/build.go for environment variables.
