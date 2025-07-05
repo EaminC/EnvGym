@@ -7,16 +7,7 @@ This repository contains a **Pytorch** implementation of the paper [The Lottery 
 ```
 pip3 install -r requirements.txt
 ```
-
-## Docker
-
-A Dockerfile is provided for a development environment. To build and run the Docker container while capturing build and run logs to `envgym/log.txt`, use the provided script:
-
-```bash
-chmod +x docker_build_and_run.sh
-./docker_build_and_run.sh
-```
-## How to run the code ?
+## How to run the code ? 
 ### Using datasets/architectures included with this repository :
 ```
 python3 main.py --prune_type=lt --arch_type=fc1 --dataset=mnist --prune_percent=10 --prune_iterations=35

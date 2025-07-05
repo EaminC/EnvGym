@@ -111,29 +111,20 @@ def execute_codex_query(query, approval_mode='full-auto', verbose=True, model=No
         model=model
     )
 
-def simple_codex_agent(task_description):
+def simple_codex_agent(task_description, streaming=False):
     """
     Simplified codex agent interface function - designed for agent.py
     
     Args:
         task_description (str): Description of the task for the agent to perform
+        streaming (bool): Whether to use streaming output (True: real-time, False: batch)
         
     Returns:
         str: Command execution result
     """
     try:
         # Use absolute path to ensure correct CLI tool location
-        cli_path = "/zp_goku/scratch_lb/eamin/envgym0618/EnvGym/Agent0613/tool/codex/codex-cli/dist/cli.js"
-        
-        # Check if CLI file exists
-        if not os.path.exists(cli_path):
-            # If absolute path doesn't exist, try relative path
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            project_root = os.path.join(current_dir, '..', '..', '..')
-            cli_path = os.path.join(project_root, 'Agent0613', 'tool', 'codex', 'codex-cli', 'dist', 'cli.js')
-            
-            if not os.path.exists(cli_path):
-                return f"Error: Cannot find codex CLI tool at path: {cli_path}"
+        cli_path = "/Users/eamin/Desktop/data/学习资料/科研/kexin/0620/kjhkjh/Agent0613/tool/codex/codex-cli/dist/cli.js"
         
         # Build command - using same parameters as user example
         cmd = [
@@ -145,22 +136,71 @@ def simple_codex_agent(task_description):
             task_description
         ]
         
-        # Execute command
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            check=True,
-            cwd=os.getcwd()  # Execute in current working directory
-        )
-        
-        return result.stdout.strip() if result.stdout.strip() else "Command executed successfully, no output"
+        if streaming:
+            # Streaming mode - real-time output
+            print(f"🤖 Executing: {task_description}")
+            print("=" * 50)
+            
+            # Execute command with streaming output
+            process = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+                universal_newlines=True,
+                cwd=os.getcwd()
+            )
+            
+            output_lines = []
+            
+            # Read output line by line in real-time
+            while True:
+                output = process.stdout.readline()
+                if output == '' and process.poll() is not None:
+                    break
+                if output:
+                    print(output.strip())  # Print in real-time
+                    output_lines.append(output.strip())
+            
+            # Wait for process to complete
+            return_code = process.wait()
+            
+            # Handle any remaining stderr
+            if return_code != 0:
+                stderr_output = process.stderr.read()
+                if stderr_output:
+                    print(f"Error: {stderr_output}")
+                    return f"Command execution failed: {stderr_output}"
+            
+            full_output = '\n'.join(output_lines)
+            result = full_output if full_output.strip() else "Command executed successfully, no output"
+            
+            print("=" * 50)
+            print("✅ Execution completed!")
+            
+            return result
+        else:
+            # Batch mode - wait for completion then return result
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                check=True,
+                cwd=os.getcwd()  # Execute in current working directory
+            )
+            
+            return result.stdout.strip() if result.stdout.strip() else "Command executed successfully, no output"
         
     except subprocess.CalledProcessError as e:
         error_msg = f"Command execution failed: {e.stderr if e.stderr else e.stdout}"
+        if streaming:
+            print(f"❌ Error: {error_msg}")
         return error_msg
     except Exception as e:
         error_msg = f"Error occurred: {str(e)}"
+        if streaming:
+            print(f"❌ Error: {error_msg}")
         return error_msg
 
 def test_codex_basic():
@@ -185,7 +225,7 @@ def test_codex_with_different_modes():
         )
         print(f"Result: {result}")
 
-# Export main functions for use by other modules
+# Export main functions for use by other modules  
 __all__ = ['run_codex_command', 'execute_codex_query', 'simple_codex_agent']
 
 if __name__ == "__main__":
@@ -208,14 +248,16 @@ Simplified usage examples:
 # Simplest usage - designed for agent.py
 from Agent0613.tool.codex.entry import simple_codex_agent
 
-# Just pass the task description
+# Batch output (default)
 result = simple_codex_agent("create a hello.txt file with content 'Hello World'")
 print(result)
 
-result = simple_codex_agent("list all python files in current directory")
+# Streaming output - real-time display
+result = simple_codex_agent("list all python files in current directory", streaming=True)
 print(result)
 
-result = simple_codex_agent("show current directory structure")
+# Batch output - wait for completion
+result = simple_codex_agent("show current directory structure", streaming=False)
 print(result)
 
 # Original full functionality is still available

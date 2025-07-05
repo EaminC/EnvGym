@@ -1,5 +1,0 @@
-Next Steps:
------------
-- Update Dockerfile to include installation of BLAS/LAPACK development packages
-  (for example: libopenblas-dev, liblapack-dev) before pip install.
-- Re-run the Docker build and verify that pip install completes successfully.

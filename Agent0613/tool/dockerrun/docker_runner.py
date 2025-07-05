@@ -67,7 +67,7 @@ class DockerRunner:
                 build_cmd,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5分钟超时
+                timeout=1500  # 5分钟超时
             )
             
             success = result.returncode == 0
