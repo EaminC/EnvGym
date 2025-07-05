@@ -124,6 +124,10 @@ class HybridAgent(Agent):
             for tool in self.tool_config["tool"]:
                 if isinstance(tool, AgentTool):
                     tools.append(tool.to_openai_format())
+                elif isinstance(tool, AgentTools):
+                    # 处理AgentTools对象列表
+                    for sub_tool in tool.tools:
+                        tools.append(sub_tool.to_openai_format())
                 else:
                     tools.append(tool)
         else:
@@ -359,19 +363,7 @@ class HybridAgent(Agent):
             tool_name = tool_call.function.name
             arguments = json.loads(tool_call.function.arguments)
             
-            if isinstance(self.tool_config["tool"], AgentTools):
-                # 使用AgentTools执行
-                tool = next(
-                    (t for t in self.tool_config["tool"].tools if t.name == tool_name), 
-                    None
-                )
-                if tool:
-                    result = await tool.func(**arguments)
-                    return str(result)
-                else:
-                    return f"Tool '{tool_name}' not found"
-            else:
-                return f"Tool execution not supported for this configuration"
+            return await self._find_and_execute_tool(tool_name, arguments)
         
         except Exception as e:
             return f"Error executing tool '{tool_call.function.name}': {str(e)}"
@@ -382,22 +374,48 @@ class HybridAgent(Agent):
             tool_name = tool_call_dict["function"]["name"]
             arguments = json.loads(tool_call_dict["function"]["arguments"])
             
-            if isinstance(self.tool_config["tool"], AgentTools):
-                # 使用AgentTools执行
-                tool = next(
-                    (t for t in self.tool_config["tool"].tools if t.name == tool_name), 
-                    None
-                )
-                if tool:
-                    result = await tool.func(**arguments)
-                    return str(result)
-                else:
-                    return f"Tool '{tool_name}' not found"
-            else:
-                return f"Tool execution not supported for this configuration"
+            return await self._find_and_execute_tool(tool_name, arguments)
         
         except Exception as e:
             return f"Error executing tool '{tool_name}': {str(e)}"
+
+    async def _find_and_execute_tool(self, tool_name: str, arguments: dict) -> str:
+        """在工具配置中查找并执行指定的工具"""
+        if not self.tool_config:
+            return f"No tool configuration found"
+        
+        # 检查不同类型的工具配置
+        if isinstance(self.tool_config["tool"], AgentTools):
+            # 单个AgentTools对象
+            tool = next(
+                (t for t in self.tool_config["tool"].tools if t.name == tool_name), 
+                None
+            )
+            if tool:
+                result = await tool.func(**arguments)
+                return str(result)
+        elif isinstance(self.tool_config["tool"], list):
+            # 工具列表 - 需要在所有AgentTools对象中查找
+            for tool_container in self.tool_config["tool"]:
+                if isinstance(tool_container, AgentTools):
+                    tool = next(
+                        (t for t in tool_container.tools if t.name == tool_name), 
+                        None
+                    )
+                    if tool:
+                        result = await tool.func(**arguments)
+                        return str(result)
+                elif isinstance(tool_container, AgentTool):
+                    if tool_container.name == tool_name:
+                        result = await tool_container.func(**arguments)
+                        return str(result)
+        elif isinstance(self.tool_config["tool"], AgentTool):
+            # 单个AgentTool对象
+            if self.tool_config["tool"].name == tool_name:
+                result = await self.tool_config["tool"].func(**arguments)
+                return str(result)
+        
+        return f"Tool '{tool_name}' not found"
 
     def set_system_prompt(self,
                          template: Optional[str] = None,

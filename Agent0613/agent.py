@@ -167,7 +167,7 @@ agent_dockerfile_writer = HybridAgent(HybridAgentOptions(
 
 agent_dockerfile_runner = HybridAgent(HybridAgentOptions(
     name='run_docker_agent',
-    description='Runs Docker: executes envgym/envgym.dockerfile and captures all logs to envgym/log.txt',
+    description='Runs Docker: executes envgym/envgym.dockerfile and captures all logs to envgym/log.txt using the run_dockerfile tool,also summarize the build and run status to envgym/next.txt using the codex tool',
     api_key=my_api_key,
     model=MODEL_NAME_DEFAULT,  
     streaming=True,
@@ -187,7 +187,7 @@ agent_dockerfile_runner = HybridAgent(HybridAgentOptions(
     
     # Tool configuration
     tool_config={
-        'tool': tool_docker_runner,
+        'tool': [tool_docker_runner,tool_codex],
         'toolMaxRecursions': TOOL_MAX_RECURSIONS_DEFAULT,
     }
 ))
