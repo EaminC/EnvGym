@@ -6,7 +6,7 @@ from agent_squad.utils.logger import Logger
 from agent_squad.types import ConversationMessage
 from agent_squad.classifiers import Classifier, ClassifierResult
 
-OPENAI_MODEL_ID_GPT_O_MINI = "gpt-4o-mini"
+OPENAI_MODEL_ID_GPT_O_MINI = "gpt-4.1"
 
 class OpenAIClassifierOptions:
     def __init__(self,

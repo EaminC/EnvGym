@@ -1,3 +1,0 @@
-agent-squad
-streamlit
-duckduckgo-search
