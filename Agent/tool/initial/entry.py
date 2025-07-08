@@ -31,7 +31,8 @@ def create_envgym_directory(base_path: Optional[str] = None) -> Dict[str, Any]:
             "history.txt", 
             "next.txt",
             "status.txt",
-            "envgym.dockerfile"
+            "envgym.dockerfile",
+            "documents.json"
         ]
         
         created_files = []

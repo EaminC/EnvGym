@@ -1,20 +1,41 @@
 plan_instruction = """
-You need to make a comprehensive plan of how to build up a complete docker image to run the project and please remember to write it into envgym/plan.txt.
+Based on the newly provided file content, combine it with the existing environment configuration plan to update and improve the plan.
 
-You dont need to run any source code but only to read the README and DOCKERFILE and output the plan.
-You can breifly scan the whole codebase but through tree command and read following documents and dont read the other files:
+Analysis requirements:
+- Identify new requirements introduced by the new file
+- Check for conflicts with existing plans
+- Supplement missing configuration items
+- Optimize existing configuration steps
 
-1. README and other turoial files (README.md, README.txt, readme.md etc.)
-2. Existing environment files (Dockerfile, requirements.txt, package.json, setup.py, pyproject.toml etc.)
-
-
-
-Output format to envgym/plan.txt:
+Output format requirements (complete updated plan):
 === ENVIRONMENT SETUP PLAN ===
-1. DOWNLOADS NEEDED: [specific list]
-2. FILES TO CREATE: [specific list]  
-3. NECESSARY TEST CASES IN THE CODEBASE: [specific list]
-4. COMPLETE TODO LIST: [specific steps]
-The plan should be comprehensive and detailed, You can
-You can write the plan step by step and update the envgym/plan.txt file
+
+1. DOWNLOADS NEEDED: 
+   - [Complete updated download list]
+   - [Newly added dependencies and tools]
+   - [Version compatibility requirements]
+
+2. FILES TO CREATE: 
+   - [Complete updated file creation list]
+   - [Newly added configuration files]
+   - [Modified existing files]
+
+3. NECESSARY TEST CASES IN THE CODEBASE: 
+   - [Complete updated test case list]
+   - [Newly added test scenarios]
+   - [Tests for new features]
+
+4. COMPLETE TODO LIST: 
+   - [Complete updated step list]
+   - [Integrate new and old steps, maintaining logical order]
+   - [Include configuration steps for new features]
+   - [Updated verification methods]
+
+Update principles:
+- Maintain plan consistency and completeness
+- Reasonably integrate new and old requirements
+- Avoid duplication and conflicts
+- Ensure step executability
+
+Please output the complete updated plan without any additional explanatory text.
 """

@@ -124,16 +124,9 @@ setup_environment_variables() {
 # OpenAI API Configuration
 OPENAI_API_KEY=your-openai-api-key-here
 
-# Anthropic API Configuration  
-ANTHROPIC_API_KEY=your-anthropic-api-key-here
+# FORGE API Configuration  
+FORGE_API_KEY=your-forge-api-key-here
 
-# AWS Configuration (if needed)
-AWS_ACCESS_KEY_ID=your-aws-access-key-here
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
-AWS_DEFAULT_REGION=us-east-1
-
-# Other configurations
-PYTHONPATH=.
 EOF
         
         log_success ".env file created"
