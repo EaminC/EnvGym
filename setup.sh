@@ -192,12 +192,12 @@ download_data_repositories() {
     
     cd data
     
-    if [ -f "down.sh" ]; then
-        chmod +x down.sh
-        bash down.sh
+    if [ -f "down_one.sh" ]; then
+        chmod +x down_one.sh
+        bash down_one.sh
         log_success "Data repositories downloaded"
     else
-        log_warning "down.sh not found, skipping data download"
+        log_warning "down_one.sh not found, skipping data download"
     fi
     
     # Return to root directory
