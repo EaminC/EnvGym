@@ -1,116 +1,261 @@
-# EnvGym - 多语言开发环境平台
+# EnvGym - Multi-Language Development Environment Platform
 
-EnvGym是一个支持多种编程语言和开发工具的集成开发环境平台，旨在提供一致性的开发体验。
-![image](https://github.com/user-attachments/assets/6664c32c-5e32-4712-b5f9-71b37e457be3)
+EnvGym is an integrated development environment platform that supports multiple programming languages and development tools, designed to provide a consistent development experience for AI-assisted coding and research.
 
-## 特性
+![EnvGym Overview](https://github.com/user-attachments/assets/6664c32c-5e32-4712-b5f9-71b37e457be3)
 
-- 🐍 **Python支持**: 包含agent-squad、机器学习工具等
-- 📱 **TypeScript/JavaScript**: 完整的前端开发环境
-- ☕ **Java支持**: 企业级开发环境
-- 🦀 **Rust支持**: 系统编程和高性能应用
-- 🐹 **Go支持**: 云原生和微服务开发
-- 🐳 **Docker化**: 一键部署和环境隔离
-- 🤖 **AI集成**: 集成多种AI模型和工具
+## Features
 
-## 快速开始
+- 🤖 **AI-Powered Agents**: Advanced AI agents for code generation, analysis, and automation
+- 🐍 **Python Ecosystem**: Complete Python development environment with agent-squad integration
+- 📱 **TypeScript/JavaScript**: Full-featured frontend and backend development tools
+- ☕ **Java Support**: Enterprise-level development environment
+- 🦀 **Rust Integration**: System programming and high-performance applications
+- 🐹 **Go Development**: Cloud-native and microservices development
+- 🔧 **Multiple Tools**: Integrated development tools including Aider, Codex, and more
+- 🐳 **Containerized**: Docker support for easy deployment and environment isolation
+- 📊 **Research-Ready**: Pre-configured with multiple research repositories and datasets
 
-### 使用Docker（推荐）
+## Quick Start
 
-1. 克隆仓库：
+### Prerequisites
+
+- **Conda/Miniconda**: For Python environment management
+- **Node.js 16+**: For TypeScript/JavaScript tools
+- **Git**: For repository management
+- **Docker** (optional): For containerized deployment
+
+### One-Click Setup
+
+1. **Clone the repository**:
+
 ```bash
-git clone https://github.com/yourusername/EnvGym.git
+git clone https://github.com/EaminC/EnvGym.git
 cd EnvGym
 ```
 
-2. 配置环境变量：
+2. **Run the setup script**:
+
 ```bash
-cp .env.example .env
-# 编辑.env文件，填入你的API keys
+chmod +x setup.sh
+./setup.sh
 ```
 
-3. 构建并运行环境：
+The setup script will automatically:
+
+- Create a conda environment with Python 3.10
+- Install all Python dependencies
+- Set up environment variables
+- Build and configure Codex CLI tools
+- Download research repositories
+
+3. **Activate the environment**:
+
 ```bash
-docker build -t envgym -f envgym.dockerfile .
-docker run -it --rm -v $(pwd):/workspace envgym
+conda activate envgym
 ```
 
-### 本地安装
+### Manual Installation
 
-#### Python环境
+If you prefer manual setup:
+
+#### Python Environment
+
 ```bash
-cd python
-pip install -e .
+conda create -n envgym python=3.10
+conda activate envgym
+pip install -r requirements.txt
 ```
 
-#### TypeScript环境
+#### Environment Variables
+
 ```bash
-cd typescript
-npm install
-npm run build
+cp .env.example .env  # Create from template if available
+# Edit .env and add your API keys
 ```
 
-## 项目结构
+#### Codex CLI Setup
+
+```bash
+cd Agent/tool/codex/codex-cli
+corepack enable
+pnpm install
+pnpm build
+./scripts/install_native_deps.sh
+```
+
+#### Download Research Data
+
+```bash
+cd data
+bash down.sh
+```
+
+## Project Structure
 
 ```
 EnvGym/
-├── Agent0613/              # AI代理系统
-├── python/                 # Python包和工具
-├── typescript/             # TypeScript/JavaScript代码
-├── examples/               # 示例和演示
-├── docs/                   # 文档
-├── data/                   # 数据和模型
-├── test_agent_squad/       # 测试代码
-└── tool_tests/            # 工具测试
+├── Agent/                    # AI Agent System
+│   ├── agent/               # Core agent implementations
+│   ├── prompt/              # Prompt engineering modules
+│   └── tool/                # Development tools
+│       ├── aider/           # AI-assisted coding tool
+│       ├── codex/           # Code generation and analysis
+│       ├── compat/          # Multi-language compatibility
+│       ├── dockerrun/       # Docker integration
+│       ├── history_manager/ # Development history tracking
+│       ├── initial/         # Project initialization
+│       └── update/          # Update management
+├── python/                  # Python packages and libraries
+│   └── src/agent_squad/     # Multi-agent orchestration
+├── data/                    # Research repositories and datasets
+├── requirements.txt         # Python dependencies
+├── setup.sh                 # One-click setup script
+└── README.md               # This file
 ```
 
-## 配置
+## Configuration
 
 ### API Keys
 
-在`.env`文件中配置以下API keys：
+Create a `.env` file in the root directory with your API keys:
 
-- `OPENAI_API_KEY`: OpenAI API密钥
-- `ANTHROPIC_API_KEY`: Anthropic API密钥
-- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`: AWS凭证
-
-### 开发工具
-
-项目包含以下开发工具：
-
-- **Aider**: AI辅助编码
-- **Codex**: 代码生成和分析
-- **Agent Squad**: 多代理系统
-- **各种兼容性工具**: 支持多语言包管理
-
-## 示例
-
-### Python Agent示例
 ```bash
-cd examples/python
-python main.py
+# OpenAI API Configuration
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Anthropic API Configuration
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
+
+# AWS Configuration (if needed)
+AWS_ACCESS_KEY_ID=your-aws-access-key-here
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
+AWS_DEFAULT_REGION=us-east-1
 ```
 
-### TypeScript开发
+### Development Tools
+
+The platform includes several integrated development tools:
+
+- **Aider**: AI-powered pair programming assistant
+- **Codex**: Advanced code generation and analysis
+- **Agent Squad**: Multi-agent system orchestration
+- **Compatibility Tools**: Support for multiple programming languages
+- **Docker Integration**: Containerized development environments
+
+## Usage Examples
+
+### Running AI Agents
+
 ```bash
-cd typescript
-npm run test
+# Activate the environment
+conda activate envgym
+
+# Run the main agent
+cd data/exli
+python ../../Agent/agent.py
 ```
 
-### AI代理演示
+### Using Codex CLI
+
 ```bash
-cd Agent0613
-python agent.py
+cd Agent/tool/codex/codex-cli
+pnpm start
 ```
 
-## 贡献
+### Python Development
 
-欢迎贡献！请参阅[CONTRIBUTING.md](CONTRIBUTING.md)了解详细信息。
+```bash
+cd python
+pip install -e .
+python -m pytest tests/
+```
 
-## 许可证
+### Working with Research Repositories
 
-本项目采用MIT许可证 - 详见[LICENSE](LICENSE)文件。
+The `data/` directory contains multiple research repositories that are automatically cloned:
 
-## 支持
+- **RelTR**: Relation Transformer for scene graph generation
+- **FEMU**: FPGA-based NVMe SSD emulator
+- **TabPFN**: Tabular data prediction with transformers
+- **RSNN**: Recurrent spiking neural networks
+- **And many more...**
 
-如有问题，请提交issue或联系维护者。
+Each repository can be used for experimentation and research.
+
+## Research Integration
+
+EnvGym is designed to support various research workflows:
+
+1. **Code Analysis**: Analyze existing codebases with AI assistance
+2. **Automated Testing**: Generate and run tests across multiple languages
+3. **Performance Optimization**: Identify and optimize performance bottlenecks
+4. **Documentation Generation**: Automatically generate documentation
+5. **Multi-Language Support**: Work seamlessly across different programming languages
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Conda environment creation fails**:
+
+   - Ensure conda is properly installed and in your PATH
+   - Try updating conda: `conda update conda`
+
+2. **Node.js dependencies fail to install**:
+
+   - Ensure Node.js 16+ is installed
+   - Install pnpm globally: `npm install -g pnpm`
+
+3. **API key errors**:
+
+   - Verify your API keys are correctly set in the `.env` file
+   - Check that the keys have sufficient permissions
+
+4. **Permission errors on scripts**:
+   - Make scripts executable: `chmod +x setup.sh`
+   - Ensure you have write permissions in the project directory
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Citation
+
+If you use EnvGym in your research, please cite:
+
+```bibtex
+@software{envgym2024,
+  title={EnvGym: Multi-Language Development Environment Platform},
+  author={EnvGym Contributors},
+  year={2024},
+  url={https://github.com/EaminC/EnvGym}
+}
+```
+
+## Support
+
+- 📧 **Issues**: Please report bugs and feature requests via [GitHub Issues](https://github.com/EaminC/EnvGym/issues)
+- 💬 **Discussions**: Join our community discussions for questions and support
+- 📚 **Documentation**: Check our [documentation](docs/) for detailed guides
+
+## Acknowledgments
+
+This project builds upon and integrates several open-source tools and research projects. We thank the contributors to:
+
+- Aider and other AI-assisted coding tools
+- The various research repositories included in our dataset
+- The open-source community for their invaluable contributions

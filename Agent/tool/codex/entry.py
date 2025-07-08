@@ -123,8 +123,13 @@ def simple_codex_agent(task_description, streaming=False):
         str: Command execution result
     """
     try:
-        # Use absolute path to ensure correct CLI tool location
-        cli_path = "/Users/eamin/Desktop/data/学习资料/科研/kexin/0620/kjhkjh/Agent0613/tool/codex/codex-cli/dist/cli.js"
+        # Use relative path based on current file location
+        current_dir = os.path.dirname(__file__)
+        cli_path = os.path.join(current_dir, 'codex-cli', 'dist', 'cli.js')
+        
+        # Verify CLI tool exists
+        if not os.path.exists(cli_path):
+            raise FileNotFoundError(f"Cannot find codex cli: {cli_path}")
         
         # Build command - using same parameters as user example
         cmd = [

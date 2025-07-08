@@ -1,0 +1,4 @@
+boto3>=1.26
+anthropic>=0.3.11
+openai>=1.30
+python-dotenv>=1.0.0
