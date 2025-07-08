@@ -1,6 +1,7 @@
 # EnvGym - 多语言开发环境平台
 
 EnvGym是一个支持多种编程语言和开发工具的集成开发环境平台，旨在提供一致性的开发体验。
+![image](https://github.com/user-attachments/assets/6664c32c-5e32-4712-b5f9-71b37e457be3)
 
 ## 特性
 
