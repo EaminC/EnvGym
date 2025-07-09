@@ -50,9 +50,6 @@ main() {
     # Setup environment variables
     setup_environment_variables
     
-    # Setup Codex CLI
-    setup_codex_cli
-    
     # Download data repositories
     download_data_repositories
     
@@ -121,64 +118,29 @@ setup_environment_variables() {
     if [ ! -f ".env" ]; then
         log_info "Creating .env file..."
         cat > .env << 'EOF'
-# OpenAI API Configuration
-OPENAI_API_KEY=your-openai-api-key-here
-
-# FORGE API Configuration  
+# Forge API Configuration
 FORGE_API_KEY=your-forge-api-key-here
 
 EOF
         
         log_success ".env file created"
-        log_warning "Please edit .env file and add your API keys"
+        log_info "📝 Only manual input needed: Enter your Forge API key below"
         
-        # Prompt for OpenAI API key
-        read -p "Enter your OpenAI API Key (or press Enter to skip): " api_key
+        # Prompt for Forge API key
+        read -p "Enter your Forge API Key (required): " api_key
         if [ -n "$api_key" ]; then
-            sed -i.bak "s/your-openai-api-key-here/$api_key/" .env
+            sed -i.bak "s/your-forge-api-key-here/$api_key/" .env
             rm .env.bak 2>/dev/null || true
-            log_success "OpenAI API key saved"
+            log_success "Forge API key saved - setup complete!"
+        else
+            log_warning "API key not provided. Please edit .env file manually: FORGE_API_KEY=your-actual-key"
         fi
     else
         log_info ".env file already exists, skipping"
     fi
 }
 
-setup_codex_cli() {
-    log_info "Setting up Codex CLI..."
-    
-    cd Agent/tool/codex/codex-cli
-    
-    # Enable corepack for pnpm
-    if command_exists corepack; then
-        corepack enable
-        log_success "Corepack enabled"
-    else
-        log_warning "Corepack not found, make sure you have Node.js 16+ installed"
-    fi
-    
-    # Install dependencies
-    if command_exists pnpm; then
-        log_info "Installing Node.js dependencies..."
-        pnpm install
-        log_info "Building Codex CLI..."
-        pnpm build
-        log_success "Codex CLI built successfully"
-    else
-        log_warning "pnpm not found, please install it manually: npm install -g pnpm"
-    fi
-    
-    # Install native dependencies if script exists
-    if [ -f "scripts/install_native_deps.sh" ]; then
-        log_info "Installing native dependencies..."
-        chmod +x scripts/install_native_deps.sh
-        ./scripts/install_native_deps.sh
-        log_success "Native dependencies installed"
-    fi
-    
-    # Return to root directory
-    cd ../../../../
-}
+
 
 download_data_repositories() {
     log_info "Downloading data repositories..."

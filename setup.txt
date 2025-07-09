@@ -1,31 +1,19 @@
 git clone https://github.com/EaminC/EnvGym.git
 cd EnvGym
 
-conda create -n conda create -n envgym python=3.10
+# 运行一键安装脚本（会自动创建环境、安装依赖、配置API key）
+chmod +x setup.sh
+./setup.sh
+
+# 激活环境
 conda activate envgym
 
-pip install requirements.txt
+# 下载研究数据
+cd data
+bash down_one.sh
 
-
-api example in .env.example you can create a new .env
-[ -f .env ] || (cp .env.example .env && echo ".env created." && read -p "Enter your OpenAI API Key: " apikey && echo "OPENAI_API_KEY=$apikey" > .env && echo "[✅] .env saved.")
-export FORGE_API_KEY="your-api-key-here" the same as user given before 
-
-
-cd Agent/tool/codex/codex-cli
-corepack enable
-
-pnpm install
-pnpm build
-
-./scripts/install_native_deps.sh
-
-cd ../../../../data
-bash down.sh
-
-
-
-cd exli(example in down.sh)
+# 运行测试（以exli为例）
+cd exli
 python ../../Agent/agent.py
 
 

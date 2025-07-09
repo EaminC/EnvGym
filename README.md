@@ -8,11 +8,10 @@ EnvGym is an integrated development environment platform that supports multiple 
 
 - 🤖 **AI-Powered Agents**: Advanced AI agents for code generation, analysis, and automation
 - 🐍 **Python Ecosystem**: Complete Python development environment with agent-squad integration
-- 📱 **TypeScript/JavaScript**: Full-featured frontend and backend development tools
 - ☕ **Java Support**: Enterprise-level development environment
 - 🦀 **Rust Integration**: System programming and high-performance applications
 - 🐹 **Go Development**: Cloud-native and microservices development
-- 🔧 **Multiple Tools**: Integrated development tools including Aider, Codex, and more
+- 🔧 **Multiple Tools**: Integrated development tools including Aider and more
 - 🐳 **Containerized**: Docker support for easy deployment and environment isolation
 - 📊 **Research-Ready**: Pre-configured with multiple research repositories and datasets
 
@@ -21,7 +20,6 @@ EnvGym is an integrated development environment platform that supports multiple 
 ### Prerequisites
 
 - **Conda/Miniconda**: For Python environment management
-- **Node.js 16+**: For TypeScript/JavaScript tools
 - **Git**: For repository management
 - **Docker** (optional): For containerized deployment
 
@@ -45,15 +43,20 @@ The setup script will automatically:
 
 - Create a conda environment with Python 3.10
 - Install all Python dependencies
-- Set up environment variables
-- Build and configure Codex CLI tools
+- Create `.env` file and prompt for your Forge API key (only manual input required!)
 - Download research repositories
 
-3. **Activate the environment**:
+3. **Activate the environment and start using**:
 
 ```bash
 conda activate envgym
+
+# Test the setup
+cd data/exli
+python ../../Agent/agent.py
 ```
+
+That's it! The setup script handles everything automatically except your Forge API key input.
 
 ### Manual Installation
 
@@ -70,25 +73,16 @@ pip install -r requirements.txt
 #### Environment Variables
 
 ```bash
-cp .env.example .env  # Create from template if available
-# Edit .env and add your API keys
-```
-
-#### Codex CLI Setup
-
-```bash
-cd Agent/tool/codex/codex-cli
-corepack enable
-pnpm install
-pnpm build
-./scripts/install_native_deps.sh
+cp .env.example .env
+# You only need to edit the .env file to add your Forge API key:
+# FORGE_API_KEY=your-actual-forge-api-key
 ```
 
 #### Download Research Data
 
 ```bash
 cd data
-bash down.sh
+bash down_one.sh
 ```
 
 ## Project Structure
@@ -118,19 +112,11 @@ EnvGym/
 
 ### API Keys
 
-Create a `.env` file in the root directory with your API keys:
+The setup script will automatically create the `.env` file and prompt you for your Forge API key. The configuration format is:
 
 ```bash
-# OpenAI API Configuration
-OPENAI_API_KEY=your-openai-api-key-here
-
-# Anthropic API Configuration
-ANTHROPIC_API_KEY=your-anthropic-api-key-here
-
-# AWS Configuration (if needed)
-AWS_ACCESS_KEY_ID=your-aws-access-key-here
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
-AWS_DEFAULT_REGION=us-east-1
+# Forge API Configuration
+FORGE_API_KEY=your-forge-api-key-here
 ```
 
 ### Development Tools
@@ -138,7 +124,6 @@ AWS_DEFAULT_REGION=us-east-1
 The platform includes several integrated development tools:
 
 - **Aider**: AI-powered pair programming assistant
-- **Codex**: Advanced code generation and analysis
 - **Agent Squad**: Multi-agent system orchestration
 - **Compatibility Tools**: Support for multiple programming languages
 - **Docker Integration**: Containerized development environments
@@ -154,13 +139,6 @@ conda activate envgym
 # Run the main agent
 cd data/exli
 python ../../Agent/agent.py
-```
-
-### Using Codex CLI
-
-```bash
-cd Agent/tool/codex/codex-cli
-pnpm start
 ```
 
 ### Python Development
@@ -215,17 +193,12 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for deta
    - Ensure conda is properly installed and in your PATH
    - Try updating conda: `conda update conda`
 
-2. **Node.js dependencies fail to install**:
+2. **API key errors**:
 
-   - Ensure Node.js 16+ is installed
-   - Install pnpm globally: `npm install -g pnpm`
+   - Verify your Forge API key is correctly set in the `.env` file
+   - Check that the key has sufficient permissions
 
-3. **API key errors**:
-
-   - Verify your API keys are correctly set in the `.env` file
-   - Check that the keys have sufficient permissions
-
-4. **Permission errors on scripts**:
+3. **Permission errors on scripts**:
    - Make scripts executable: `chmod +x setup.sh`
    - Ensure you have write permissions in the project directory
 
