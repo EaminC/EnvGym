@@ -8,8 +8,9 @@ import time
 from datetime import datetime
 
 
-
+from tool.scanning.entry import ScanningTool
 from tool.codex.entry import simple_codex_agent
+from tool.hardware_checking.entry import HardwareCheckingTool
 from tool.dockerrun.entry import run_dockerfile_with_logs
 from tool.history_manager.entry import auto_save_to_history, read_history_summary
 from tool.initial.entry import create_envgym_directory
@@ -43,15 +44,15 @@ if __name__ == "__main__":
 
 
     # print("Initializing envgym directory")
-    # create_envgym_directory()
+    #create_envgym_directory()
     
     
     # print("Mapping the whole repo")
-    # simple_codex_agent(scanning_instruction,streaming=True)
-    
+    #simple_codex_agent(scanning_instruction,streaming=True)
+    #ScanningTool().run()
     #print("Planning the whole project")
     #PlanningTool().run()
-
+    HardwareCheckingTool().run()
     
     #simple_codex_agent(user_input,streaming=True)
 

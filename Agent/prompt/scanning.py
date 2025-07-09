@@ -5,4 +5,5 @@ You can breifly scan the whole codebase but through tree command and read follow
 1. README and other turoial files (README.md, README.txt, readme.md etc.)
 2. Existing environment files (Dockerfile, requirements.txt, package.json, setup.py, pyproject.toml etc.)
 
+If there is submodule which also include such files, you should also include them.
 """
