@@ -113,34 +113,35 @@ install_python_dependencies() {
 
 setup_environment_variables() {
     log_info "Setting up environment variables..."
-    
-    # Create .env file if it doesn't exist
-    if [ ! -f ".env" ]; then
-        log_info "Creating .env file..."
-        cat > .env << 'EOF'
-# Forge API Configuration
-FORGE_API_KEY=your-forge-api-key-here
 
-EOF
-        
-        log_success ".env file created"
-        log_info "📝 Only manual input needed: Enter your Forge API key below"
-        
-        # Prompt for Forge API key
-        read -p "Enter your Forge API Key (required): " api_key
-        if [ -n "$api_key" ]; then
-            sed -i.bak "s/your-forge-api-key-here/$api_key/" .env
-            rm .env.bak 2>/dev/null || true
-            log_success "Forge API key saved - setup complete!"
-        else
-            log_warning "API key not provided. Please edit .env file manually: FORGE_API_KEY=your-actual-key"
+    # Only proceed if .env does not exist
+    if [ ! -f ".env" ]; then
+        if [ ! -f ".env.example" ]; then
+            log_error ".env.example not found. Cannot continue."
+            exit 1
         fi
+
+        cp .env.example .env
+        log_success ".env file created from .env.example"
+
+        # Prompt user for API key (loop until provided)
+        while [ -z "$api_key" ]; do
+            read -p "Enter your Forge API Key (required): " api_key
+        done
+
+        # Escape sed-sensitive characters
+        escaped_api_key=$(printf '%s\n' "$api_key" | sed -e 's/[\/&]/\\&/g')
+
+        # Replace placeholder in .env (assumes double quotes)
+        sed -i.bak "s|FORGE_API_KEY=\"your-forge-api-key-here\"|FORGE_API_KEY=\"$escaped_api_key\"|" .env
+        rm .env.bak 2>/dev/null || true
+
+        log_success "Forge API key saved in .env"
+        log_info "✅ Environment setup complete. You can now use EnvGym!"
     else
-        log_info ".env file already exists, skipping"
+        log_info ".env file already exists. Skipping creation."
     fi
 }
-
-
 
 download_data_repositories() {
     log_info "Downloading data repositories..."
