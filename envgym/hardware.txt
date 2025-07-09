@@ -1,6 +1,0 @@
-- Architecture: arm64 (use --platform=linux/arm64)
-- Memory: Limit containers to ≤ 7GB; avoid heavy builds due to 7.65GB available to Docker
-- CPU: Allocate up to 6–10 cores for builds/containers
-- Storage: 485GB free; periodic image/container cleanup recommended
-- Docker: Docker Desktop 27.5.1; use images compatible with Docker 27.x and ARM64
-- Base Image: Use official ARM64 images (e.g., ubuntu:22.04, python:3.x-slim-bullseye, alpine:latest)

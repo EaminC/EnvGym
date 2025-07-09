@@ -1,0 +1,5 @@
+current progress
+Dockerfile created but failed due to missing package xyz
+
+next step
+Add package repository or fix package name

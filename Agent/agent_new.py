@@ -9,6 +9,7 @@ from datetime import datetime
 
 
 from tool.scanning.entry import ScanningTool
+from tool.test_scanning.entry import TestScanningTool
 from tool.codex.entry import simple_codex_agent
 from tool.hardware_checking.entry import HardwareCheckingTool
 from tool.dockerrun.entry import run_dockerfile_with_logs
@@ -16,14 +17,11 @@ from tool.history_manager.entry import auto_save_to_history, read_history_summar
 from tool.initial.entry import create_envgym_directory
 from tool.update.entry import update_log_files
 from tool.planning.entry import PlanningTool
+from tool.hardware_adjustment.entry import HardwareAdjustmentTool
+from tool.writing_docker_initial.entry import WritingDockerInitialTool
+from tool.writing_docker_revision.entry import WritingDockerRevisionTool
+from tool.summarize.entry import SummarizeTool
 
-
-from prompt.scanning import scanning_instruction
-from prompt.planning import plan_instruction
-from prompt.write_docker import write_docker_instruction
-from prompt.write_docker_initial import write_docker_initial_instruction
-from prompt.updating import updating_instruction
-from prompt.run_docker import run_docker_instruction
 
 
   
@@ -42,45 +40,45 @@ if __name__ == "__main__":
     USER_ID = "user1231"
     SESSION_ID = str(uuid.uuid4())
 
+    print("Initializing envgym directory")
+    create_envgym_directory()
+    
+    print("Mapping the whole repo")
+    ScanningTool().run()
 
-    # print("Initializing envgym directory")
-    #create_envgym_directory()
+    print("Scanning for test files")
+    TestScanningTool().run()
     
-    
-    # print("Mapping the whole repo")
-    #simple_codex_agent(scanning_instruction,streaming=True)
-    #ScanningTool().run()
-    #print("Planning the whole project")
-    #PlanningTool().run()
+    print("Checking the hardware")
     HardwareCheckingTool().run()
+
+    print("Planning the whole project")
+    PlanningTool().run()
     
-    #simple_codex_agent(user_input,streaming=True)
+    print("Adjusting plan based on hardware")
+    HardwareAdjustmentTool().run()
+    
+    Exec_Repeat = 20
+    for i in range(Exec_Repeat):
+        print(f"=== Iteration {i+1} ===")
+        print(f"\n--- Step 1: Write Dockerfile (Iteration {i+1}) ---")
+        if i == 0:
+            print("Writing initial dockerfile based on plan...")
+            WritingDockerInitialTool().run()
+        else:
+            print("Revising dockerfile based on logs and recommendations...")
+            WritingDockerRevisionTool().run()
 
-    # Exec_Repeat = 20
-    # for i in range(Exec_Repeat):
-       
-    #     print(f"=== Iteration {i+1} ===")
-    #     print(f"\n--- Step 1: Write Dockerfile (Iteration {i+1}) ---")
-    #     if i == 0:
-    #         user_input = write_docker_initial_instruction+"""Now please write a dockerfile to build up the environment and write it in envgym/envgym.dockerfile.
-    #         """
-    #     else:
-    #         user_input = write_docker_instruction+"""Now please write a dockerfile to build up the environment and write it in envgym/envgym.dockerfile.
-    #     """
-    #     simple_codex_agent(user_input)
+        print(f"\n--- Step 2: Run Dockerfile (Iteration {i+1}) ---")
+        run_dockerfile_with_logs()
 
-    #     print(f"\n--- Step 2: Run Dockerfile (Iteration {i+1}) ---")
-    #     user_input = run_docker_instruction+"""Now please run the dockerfile to build up the environment and capture the logs to envgym/log.txt.
-    #     """
-    #     run_dockerfile_with_logs()
+        print(f"\n--- Step 3: Summarize Progress (Iteration {i+1}) ---")
+        print("Summarizing current progress...")
+        SummarizeTool().run()
 
-    #     print(f"\n--- Step 3: Update Status (Iteration {i+1}) ---")
-        
-    #     user_input = updating_instruction+"""Please save the current execution status for iteration {i+1}. 
-    #     """    
-    #     simple_codex_agent(user_input)
-    #     user_input = updating_instruction+"""Now please update the status of the environment to the following files:
-    #     """
-    #     update_log_files(i+1,verbose=True)
-    #     if check_success_status():
-    #         break
+        print(f"\n--- Step 4: Update Status (Iteration {i+1}) ---")
+        update_log_files(i+1,verbose=True)
+        if check_success_status():
+            break
+ 
+
