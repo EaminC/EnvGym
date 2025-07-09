@@ -135,10 +135,10 @@ Please review the plan and see if there are any parts that need to be adjusted b
 - Storage space requirements
 - Operating system compatibility
 - Available development tools and versions
-- Docker compatibility
-- Network requirements
+- Paths and directories correctness
 
-Please only return the adjusted plan. If no adjustments are needed, return the original plan as is.
+
+Please adjust the current plan based on the hardware information.Please only answer the completeadjusted plan.
 """
         
         # Prepare system message based on language setting
