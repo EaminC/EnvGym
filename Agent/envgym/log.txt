@@ -1,2 +1,0 @@
-Error: Unable to locate package xyz
-E: Package xyz has no installation candidate
