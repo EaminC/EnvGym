@@ -13,8 +13,11 @@ if agent_dir not in sys.path:
     sys.path.insert(0, agent_dir)
 
 class ScanningTool:
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False, use_json_tree: bool = True):
+        """Initialize scanning tool"""
         self.verbose = verbose
+        self.use_json_tree = use_json_tree
+        
         # Try to load environment variables from multiple possible locations
         possible_env_paths = [
             Path(__file__).parent.parent.parent / '.env',  # EnvGym/.env
@@ -25,10 +28,12 @@ class ScanningTool:
         for env_path in possible_env_paths:
             if env_path.exists():
                 load_dotenv(env_path)
-                print(f"Loaded environment from: {env_path}")
+                if self.verbose:
+                    print(f"Loaded environment from: {env_path}")
                 break
         else:
-            print("Warning: No .env file found")
+            if self.verbose:
+                print("Warning: No .env file found")
         
         # Get configuration from environment
         api_key = os.getenv("FORGE_API_KEY")
@@ -85,8 +90,16 @@ class ScanningTool:
         print(f"  - Model: {self.model}")
         print(f"  - Temperature: {self.temperature}")
         print(f"  - System Language: {self.system_language}")
+        print(f"  - Tree format: {'JSON' if self.use_json_tree else 'Text'}")
     
-    def get_directory_tree(self) -> str:
+    def get_directory_tree(self, output_format: str = "text") -> str:
+        """Get directory tree structure in text or JSON format"""
+        if output_format == "json":
+            return self._get_directory_tree_json()
+        else:
+            return self._get_directory_tree_text()
+    
+    def _get_directory_tree_text(self) -> str:
         """Get directory tree structure using tree command or fallback to manual traversal"""
         try:
             # Try using tree command
@@ -122,17 +135,61 @@ class ScanningTool:
         walk_directory(current_dir)
         return "\n".join(tree_lines)
     
-    def scan_for_documents(self, directory_tree: str) -> List[str]:
+    def _get_directory_tree_json(self) -> str:
+        """Get directory tree structure in JSON format"""
+        def build_tree(path: Path) -> dict:
+            if path.name == 'envgym':
+                return None
+                
+            result = {
+                "name": path.name,
+                "type": "directory" if path.is_dir() else "file",
+                "path": str(path)
+            }
+            
+            if path.is_dir():
+                children = []
+                try:
+                    items = list(path.iterdir())
+                    items = [item for item in items if item.name != 'envgym']
+                    items.sort(key=lambda x: (x.is_file(), x.name.lower()))
+                    
+                    for item in items:
+                        child = build_tree(item)
+                        if child is not None:
+                            children.append(child)
+                    
+                    if children:
+                        result["children"] = children
+                except PermissionError:
+                    result["error"] = "Permission denied"
+            
+            return result
+        
+        current_dir = Path('.')
+        tree_data = build_tree(current_dir)
+        return json.dumps(tree_data, indent=2, ensure_ascii=False)
+    
+    def scan_for_documents(self, directory_tree: str, is_json_format: bool = False) -> List[str]:
         """Use AI to scan for configuration and documentation files"""
         from prompt.scanning import scanning_instruction
         
-        prompt = f"""Here is the directory tree structure of the current working directory:
+        if is_json_format:
+            tree_description = "Here is the directory tree structure in JSON format:"
+            format_note = "The directory structure is provided in JSON format with 'name', 'type', 'path', and 'children' fields."
+        else:
+            tree_description = "Here is the directory tree structure of the current working directory:"
+            format_note = "The directory structure is provided in traditional tree format."
+        
+        prompt = f"""{tree_description}
 
 {directory_tree}
 
+{format_note}
+
 {scanning_instruction}
 
-Please analyze this directory structure and return ONLY a JSON array containing the relative paths of files that help with environment configuration. The format should be exactly like this(they are just examples):
+Please analyze this directory structure and return ONLY a JSON array containing the relative paths of files that help with environment configuration. Please rank the files by importance. The format should be exactly like this(they are just examples):
 
 [
   "README.md",
@@ -220,21 +277,23 @@ IMPORTANT: Return ONLY the JSON array, no additional text, explanations, or mark
             print("Scanning current directory structure...")
             if self.verbose:
                 print(f"Verbose mode enabled")
+                print(f"JSON tree format: {self.use_json_tree}")
                 print(f"Current working directory: {os.getcwd()}")
             
-            # Get directory tree
-            directory_tree = self.get_directory_tree()
-            print(f"Directory tree generated successfully")
+            # Get directory tree in specified format
+            tree_format = "json" if self.use_json_tree else "text"
+            directory_tree = self.get_directory_tree(tree_format)
+            print(f"Directory tree generated successfully ({'JSON' if self.use_json_tree else 'text'} format)")
             
             if self.verbose:
-                print("\nDirectory tree structure:")
+                print(f"\nDirectory tree structure ({'JSON' if self.use_json_tree else 'text'} format):")
                 print("-" * 40)
                 print(directory_tree)
                 print("-" * 40)
             
             # Ask AI to identify configuration files
             print("Requesting AI to identify environment configuration files...")
-            documents = self.scan_for_documents(directory_tree)
+            documents = self.scan_for_documents(directory_tree, self.use_json_tree)
             
             if not documents:
                 print("No configuration files found or AI response parsing error")
@@ -265,9 +324,9 @@ IMPORTANT: Return ONLY the JSON array, no additional text, explanations, or mark
                 print("Detailed error information:")
                 traceback.print_exc()
 
-def main(verbose: bool = False):
+def main(verbose: bool = False, use_json_tree: bool = False):
     """Main function"""
-    tool = ScanningTool(verbose=verbose)
+    tool = ScanningTool(verbose=verbose, use_json_tree=use_json_tree)
     tool.run()
 
 if __name__ == "__main__":
@@ -276,6 +335,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Scan current directory and identify environment configuration files')
     parser.add_argument('-v', '--verbose', action='store_true', 
                        help='Enable verbose output mode to show AI interaction process')
+    parser.add_argument('-j', '--json', action='store_true', 
+                       help='Use JSON format for directory tree (more LLM-friendly)')
     
     args = parser.parse_args()
-    main(verbose=args.verbose) 
+    main(verbose=args.verbose, use_json_tree=args.json) 

@@ -13,8 +13,9 @@ if agent_dir not in sys.path:
     sys.path.insert(0, agent_dir)
 
 class WritingDockerRevisionTool:
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False, use_json_tree: bool = True):
         self.verbose = verbose
+        self.use_json_tree = use_json_tree
         # Try to load environment variables from multiple possible locations
         possible_env_paths = [
             Path(__file__).parent.parent.parent / '.env',  # EnvGym/.env
@@ -88,6 +89,7 @@ class WritingDockerRevisionTool:
             print(f"  - Model: {self.model}")
             print(f"  - Temperature: {self.temperature}")
             print(f"  - System Language: {self.system_language}")
+            print(f"  - Tree format: {'JSON' if self.use_json_tree else 'Text'}")
     
     def read_file_content(self, file_path: str) -> str:
         """Read file content"""
@@ -105,8 +107,15 @@ class WritingDockerRevisionTool:
         except Exception as e:
             return f"Error reading file: {str(e)}"
     
-    def get_directory_tree(self, max_depth: int = 3) -> str:
-        """Get current working directory tree structure"""
+    def get_directory_tree(self, max_depth: int = 3, output_format: str = "text") -> str:
+        """Get directory tree structure in text or JSON format"""
+        if output_format == "json":
+            return self._get_directory_tree_json(max_depth)
+        else:
+            return self._get_directory_tree_text(max_depth)
+    
+    def _get_directory_tree_text(self, max_depth: int = 3) -> str:
+        """Get current working directory tree structure in text format"""
         try:
             # Try to use tree command first
             result = subprocess.run(['tree', '-L', str(max_depth), '-a', '-I', '__pycache__|*.pyc|.git'], 
@@ -121,6 +130,46 @@ class WritingDockerRevisionTool:
             return self._generate_tree_manually(Path.cwd(), max_depth)
         except Exception as e:
             return f"Error generating directory tree: {str(e)}"
+    
+    def _get_directory_tree_json(self, max_depth: int = 3) -> str:
+        """Get directory tree structure in JSON format"""
+        def build_tree(path: Path, current_depth: int = 0) -> dict:
+            if current_depth >= max_depth:
+                return None
+                
+            # Filter out hidden files and common unwanted directories
+            if (path.name.startswith('.') or 
+                path.name in ['__pycache__', 'node_modules', '.git', 'envgym']):
+                return None
+                
+            result = {
+                "name": path.name,
+                "type": "directory" if path.is_dir() else "file",
+                "path": str(path.relative_to(Path.cwd()))
+            }
+            
+            if path.is_dir() and current_depth < max_depth - 1:
+                children = []
+                try:
+                    items = list(path.iterdir())
+                    # Sort: directories first, then files
+                    items.sort(key=lambda x: (x.is_file(), x.name.lower()))
+                    
+                    for item in items:
+                        child = build_tree(item, current_depth + 1)
+                        if child is not None:
+                            children.append(child)
+                    
+                    if children:
+                        result["children"] = children
+                except PermissionError:
+                    result["error"] = "Permission denied"
+            
+            return result
+        
+        current_dir = Path.cwd()
+        tree_data = build_tree(current_dir)
+        return json.dumps(tree_data, indent=2, ensure_ascii=False)
     
     def _generate_tree_manually(self, path: Path, max_depth: int, current_depth: int = 0) -> str:
         """Manually generate directory tree when tree command is not available"""
@@ -181,19 +230,25 @@ class WritingDockerRevisionTool:
         
         return self.read_file_content(next_path)
     
-    def revise_dockerfile(self, dockerfile_content: str, log_content: str, next_content: str, directory_tree: str) -> str:
+    def revise_dockerfile(self, dockerfile_content: str, log_content: str, next_content: str, directory_tree: str, is_json_format: bool = False) -> str:
         """Revise dockerfile based on current dockerfile, failure log, next steps, and directory structure using AI"""
         
         # Import the prompt from write_docker.py
         from prompt.write_docker import write_docker_instruction
         
-        # Format the prompt with actual content
+        # Add format information to the prompt
+        if is_json_format:
+            format_info = "\nNote: The directory tree is provided in JSON format with 'name', 'type', 'path', and 'children' fields."
+        else:
+            format_info = "\nNote: The directory tree is provided in traditional text tree format."
+        
+        # Format the prompt with actual content and format information
         prompt = write_docker_instruction.format(
             dockerfile_content=dockerfile_content,
             log_content=log_content,
             next_content=next_content,
             directory_tree=directory_tree
-        )
+        ) + format_info
         
         # Prepare system message based on language setting
         if self.system_language.lower() in ['chinese', 'zh', '中文']:
@@ -214,6 +269,7 @@ class WritingDockerRevisionTool:
             print("Request Details:")
             print(f"Model: {self.model}")
             print(f"Temperature: {self.temperature}")
+            print(f"Directory Tree Format: {'JSON' if is_json_format else 'Text'}")
             print("Sending request to AI...")
             print("-"*80)
             
@@ -257,11 +313,12 @@ class WritingDockerRevisionTool:
         """Execute docker revision tool"""
         try:
             print("Getting current directory structure...")
-            directory_tree = self.get_directory_tree()
-            print("Directory structure obtained")
+            tree_format = "json" if self.use_json_tree else "text"
+            directory_tree = self.get_directory_tree(output_format=tree_format)
+            print(f"Directory structure obtained ({'JSON' if self.use_json_tree else 'text'} format)")
             
             if self.verbose:
-                print("\nCurrent Directory Tree:")
+                print(f"\nCurrent Directory Tree ({'JSON' if self.use_json_tree else 'text'} format):")
                 print("-" * 40)
                 print(directory_tree)
                 print("-" * 40)
@@ -280,13 +337,14 @@ class WritingDockerRevisionTool:
             
             if self.verbose:
                 print("\nLoaded content summary:")
+                print(f"Directory tree format: {'JSON' if self.use_json_tree else 'Text'}")
                 print(f"Directory tree length: {len(directory_tree)} characters")
                 print(f"Dockerfile length: {len(dockerfile_content)} characters")
                 print(f"Log length: {len(log_content)} characters")
                 print(f"Next steps length: {len(next_content)} characters")
             
             print("Revising dockerfile based on logs, recommendations, and directory structure...")
-            revised_dockerfile = self.revise_dockerfile(dockerfile_content, log_content, next_content, directory_tree)
+            revised_dockerfile = self.revise_dockerfile(dockerfile_content, log_content, next_content, directory_tree, self.use_json_tree)
             
             print("Saving revised dockerfile...")
             self.save_dockerfile(revised_dockerfile)
@@ -307,10 +365,10 @@ class WritingDockerRevisionTool:
                 traceback.print_exc()
 
 
-def main(verbose: bool = False):
+def main(verbose: bool = False, use_json_tree: bool = False):
     """Main entry point for writing docker revision tool"""
     try:
-        tool = WritingDockerRevisionTool(verbose=verbose)
+        tool = WritingDockerRevisionTool(verbose=verbose, use_json_tree=use_json_tree)
         tool.run()
     except Exception as e:
         print(f"Writing docker revision tool execution failed: {e}")
@@ -326,6 +384,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Revise Dockerfile based on failure logs and recommendations")
     parser.add_argument("-v", "--verbose", action="store_true", 
                        help="Enable verbose output mode")
+    parser.add_argument("-j", "--json", action="store_true", 
+                       help="Use JSON format for directory tree (more LLM-friendly)")
     
     args = parser.parse_args()
-    main(verbose=args.verbose) 
+    main(verbose=args.verbose, use_json_tree=args.json) 

@@ -68,6 +68,7 @@ if __name__ == "__main__":
 
         print(f"\n--- Step 4: Update Status (Iteration {i+1}) ---")
         update_log_files(i+1,verbose=True)
+        
         if check_success_status():
             break
     

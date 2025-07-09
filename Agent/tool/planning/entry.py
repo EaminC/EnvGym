@@ -201,7 +201,16 @@ I want to configure the environment. Please modify or add to the plan content ba
                 print("No files found to process")
                 return
             
-            # Process first file
+            # Check if README.md exists and prioritize it
+            readme_files = [f for f in documents if os.path.basename(f).lower() == 'readme.md']
+            if readme_files:
+                readme_file = readme_files[0]  # Take the first README.md found
+                # Remove README.md from original position and put it at the beginning
+                documents.remove(readme_file)
+                documents.insert(0, readme_file)
+                print(f"Found README.md, prioritizing it for analysis: {readme_file}")
+            
+            # Process first file (now prioritized README.md if exists)
             first_file = documents[0]
             print(f"Processing first file: {first_file}")
             
