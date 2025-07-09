@@ -26,7 +26,7 @@ from tool.summarize.entry import SummarizeTool
 
 if __name__ == "__main__":
     
-    # Record start time
+
     start_time = time.time()
     print("Starting envgym execution...")
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         if check_success_status():
             break
     
-    # Print execution summary
+
     end_time = time.time()
     print_execution_summary(start_time, end_time)
  
