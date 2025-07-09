@@ -1,12 +1,11 @@
 import os
 import sys
 from pathlib import Path
-import uuid
-import asyncio
 import json
 import time
 from datetime import datetime
 
+from utils import check_success_status, print_execution_summary
 
 from tool.scanning.entry import ScanningTool
 from tool.test_scanning.entry import TestScanningTool
@@ -25,19 +24,11 @@ from tool.summarize.entry import SummarizeTool
 
   
 
-def check_success_status():
-    """Check if the environment build is successful"""
-    status_file_path = os.path.join(os.getcwd(), "envgym", "status.txt")
-    
-    if os.path.exists(status_file_path):
-        with open(status_file_path, "r") as f:
-            if "SUCCESS" in f.read():
-                return True
-    return False
-            
 if __name__ == "__main__":
-    USER_ID = "user1231"
-    SESSION_ID = str(uuid.uuid4())
+    
+    # Record start time
+    start_time = time.time()
+    print("Starting envgym execution...")
 
     print("Initializing envgym directory")
     create_envgym_directory()
@@ -79,5 +70,9 @@ if __name__ == "__main__":
         update_log_files(i+1,verbose=True)
         if check_success_status():
             break
+    
+    # Print execution summary
+    end_time = time.time()
+    print_execution_summary(start_time, end_time)
  
 
