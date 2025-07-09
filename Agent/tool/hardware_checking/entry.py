@@ -154,13 +154,28 @@ class HardwareCheckingTool:
             current_path = os.getcwd()
             disk_usage = psutil.disk_usage(current_path)
             return {
-                'current_directory': current_path,
                 'total_gb': f"{disk_usage.total / (1024**3):.1f}",
                 'free_gb': f"{disk_usage.free / (1024**3):.1f}",
                 'usage_percent': f"{(disk_usage.used / disk_usage.total) * 100:.1f}%"
             }
         except Exception as e:
             return {'error': f"Could not check disk space: {str(e)}"}
+
+    def check_working_directory(self) -> Dict[str, str]:
+        """Check current working directory information"""
+        try:
+            current_path = os.getcwd()
+            absolute_path = os.path.abspath(current_path)
+            parent_dir = os.path.dirname(absolute_path)
+            
+            return {
+                'current_directory': current_path,
+                'absolute_path': absolute_path,
+                'parent_directory': parent_dir,
+                'directory_name': os.path.basename(absolute_path)
+            }
+        except Exception as e:
+            return {'error': f"Could not check working directory: {str(e)}"}
 
     def check_docker_status(self) -> Dict[str, str]:
         """Check if Docker is running"""
@@ -185,6 +200,7 @@ class HardwareCheckingTool:
         print("Collecting essential hardware information...")
         
         return {
+            'working_directory': self.check_working_directory(),
             'cpu': self.check_cpu_info(),
             'gpu': self.check_gpu_info(),
             'memory': self.check_memory_info(),

@@ -92,3 +92,4 @@ data/*
 !data/down_one.sh
 !data/down_all.sh
 
+miniconda.sh
