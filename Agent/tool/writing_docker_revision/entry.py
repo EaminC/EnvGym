@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import subprocess
 from pathlib import Path
 from typing import List, Dict
 from openai import OpenAI
@@ -104,6 +105,58 @@ class WritingDockerRevisionTool:
         except Exception as e:
             return f"Error reading file: {str(e)}"
     
+    def get_directory_tree(self, max_depth: int = 3) -> str:
+        """Get current working directory tree structure"""
+        try:
+            # Try to use tree command first
+            result = subprocess.run(['tree', '-L', str(max_depth), '-a', '-I', '__pycache__|*.pyc|.git'], 
+                                  capture_output=True, text=True, timeout=10)
+            if result.returncode == 0:
+                return result.stdout.strip()
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
+        
+        # Fallback to manual tree generation
+        try:
+            return self._generate_tree_manually(Path.cwd(), max_depth)
+        except Exception as e:
+            return f"Error generating directory tree: {str(e)}"
+    
+    def _generate_tree_manually(self, path: Path, max_depth: int, current_depth: int = 0) -> str:
+        """Manually generate directory tree when tree command is not available"""
+        if current_depth >= max_depth:
+            return ""
+        
+        items = []
+        try:
+            # Get all items and sort them
+            all_items = list(path.iterdir())
+            # Filter out hidden files and common unwanted directories
+            filtered_items = [item for item in all_items 
+                            if not item.name.startswith('.') 
+                            and item.name not in ['__pycache__', 'node_modules', '.git']]
+            
+            # Sort: directories first, then files
+            sorted_items = sorted(filtered_items, key=lambda x: (x.is_file(), x.name.lower()))
+            
+            for i, item in enumerate(sorted_items):
+                is_last = i == len(sorted_items) - 1
+                prefix = "└── " if is_last else "├── "
+                
+                if item.is_dir():
+                    items.append(f"{'│   ' * current_depth}{prefix}{item.name}/")
+                    # Recursively add subdirectory contents
+                    if current_depth < max_depth - 1:
+                        subtree = self._generate_tree_manually(item, max_depth, current_depth + 1)
+                        if subtree:
+                            items.append(subtree)
+                else:
+                    items.append(f"{'│   ' * current_depth}{prefix}{item.name}")
+        except PermissionError:
+            items.append(f"{'│   ' * current_depth}[Permission Denied]")
+        
+        return '\n'.join(items)
+    
     def load_current_dockerfile(self) -> str:
         """Load current dockerfile from envgym/envgym.dockerfile"""
         dockerfile_path = "envgym/envgym.dockerfile"
@@ -128,8 +181,8 @@ class WritingDockerRevisionTool:
         
         return self.read_file_content(next_path)
     
-    def revise_dockerfile(self, dockerfile_content: str, log_content: str, next_content: str) -> str:
-        """Revise dockerfile based on current dockerfile, failure log, and next steps using AI"""
+    def revise_dockerfile(self, dockerfile_content: str, log_content: str, next_content: str, directory_tree: str) -> str:
+        """Revise dockerfile based on current dockerfile, failure log, next steps, and directory structure using AI"""
         
         # Import the prompt from write_docker.py
         from prompt.write_docker import write_docker_instruction
@@ -138,7 +191,8 @@ class WritingDockerRevisionTool:
         prompt = write_docker_instruction.format(
             dockerfile_content=dockerfile_content,
             log_content=log_content,
-            next_content=next_content
+            next_content=next_content,
+            directory_tree=directory_tree
         )
         
         # Prepare system message based on language setting
@@ -202,6 +256,16 @@ class WritingDockerRevisionTool:
     def run(self):
         """Execute docker revision tool"""
         try:
+            print("Getting current directory structure...")
+            directory_tree = self.get_directory_tree()
+            print("Directory structure obtained")
+            
+            if self.verbose:
+                print("\nCurrent Directory Tree:")
+                print("-" * 40)
+                print(directory_tree)
+                print("-" * 40)
+            
             print("Loading current dockerfile...")
             dockerfile_content = self.load_current_dockerfile()
             print("Current dockerfile loaded")
@@ -216,12 +280,13 @@ class WritingDockerRevisionTool:
             
             if self.verbose:
                 print("\nLoaded content summary:")
+                print(f"Directory tree length: {len(directory_tree)} characters")
                 print(f"Dockerfile length: {len(dockerfile_content)} characters")
                 print(f"Log length: {len(log_content)} characters")
                 print(f"Next steps length: {len(next_content)} characters")
             
-            print("Revising dockerfile based on logs and recommendations...")
-            revised_dockerfile = self.revise_dockerfile(dockerfile_content, log_content, next_content)
+            print("Revising dockerfile based on logs, recommendations, and directory structure...")
+            revised_dockerfile = self.revise_dockerfile(dockerfile_content, log_content, next_content, directory_tree)
             
             print("Saving revised dockerfile...")
             self.save_dockerfile(revised_dockerfile)
