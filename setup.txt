@@ -9,7 +9,7 @@ pip install requirements.txt
 
 api example in .env.example you can create a new .env
 [ -f .env ] || (cp .env.example .env && echo ".env created." && read -p "Enter your OpenAI API Key: " apikey && echo "OPENAI_API_KEY=$apikey" > .env && echo "[✅] .env saved.")
-export OPENAI_API_KEY="your-api-key-here" the same as user given before 
+export FORGE_API_KEY="your-api-key-here" the same as user given before 
 
 
 cd Agent/tool/codex/codex-cli

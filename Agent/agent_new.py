@@ -10,7 +10,6 @@ from datetime import datetime
 
 from tool.scanning.entry import ScanningTool
 from tool.test_scanning.entry import TestScanningTool
-from tool.codex.entry import simple_codex_agent
 from tool.hardware_checking.entry import HardwareCheckingTool
 from tool.dockerrun.entry import run_dockerfile_with_logs
 from tool.history_manager.entry import auto_save_to_history, read_history_summary
