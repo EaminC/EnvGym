@@ -1,0 +1,662 @@
+{
+  "acto": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 22,
+      "chars": 302,
+      "size_kb": 0.29,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 164,
+      "chars": 3920,
+      "size_kb": 3.83,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 595,
+      "chars": 15866,
+      "size_kb": 15.49,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 1419,
+      "chars": 45478,
+      "size_kb": 44.41,
+      "error": null
+    }
+  },
+  "anvil": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 26,
+      "chars": 398,
+      "size_kb": 0.39,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 77,
+      "chars": 1597,
+      "size_kb": 1.56,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 192,
+      "chars": 4646,
+      "size_kb": 4.54,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 680,
+      "chars": 21128,
+      "size_kb": 20.63,
+      "error": null
+    }
+  },
+  "Baleen": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 13,
+      "chars": 180,
+      "size_kb": 0.18,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 25,
+      "chars": 442,
+      "size_kb": 0.43,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 43,
+      "chars": 1095,
+      "size_kb": 1.07,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 46,
+      "chars": 1198,
+      "size_kb": 1.17,
+      "error": null
+    }
+  },
+  "CrossPrefetch": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 9,
+      "chars": 130,
+      "size_kb": 0.13,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 66,
+      "chars": 1203,
+      "size_kb": 1.17,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 1743,
+      "chars": 39292,
+      "size_kb": 38.37,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 81424,
+      "chars": 2896935,
+      "size_kb": 2829.04,
+      "error": null
+    }
+  },
+  "ELECT": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 8,
+      "chars": 107,
+      "size_kb": 0.1,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 23,
+      "chars": 358,
+      "size_kb": 0.35,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 124,
+      "chars": 2964,
+      "size_kb": 2.89,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 5950,
+      "chars": 339612,
+      "size_kb": 331.65,
+      "error": null
+    }
+  },
+  "exli": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 15,
+      "chars": 191,
+      "size_kb": 0.19,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 45,
+      "chars": 1164,
+      "size_kb": 1.14,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 61,
+      "chars": 1512,
+      "size_kb": 1.48,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 196,
+      "chars": 7353,
+      "size_kb": 7.18,
+      "error": null
+    }
+  },
+  "Fairify": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 20,
+      "chars": 272,
+      "size_kb": 0.27,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 77,
+      "chars": 1598,
+      "size_kb": 1.56,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 144,
+      "chars": 3035,
+      "size_kb": 2.96,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 160,
+      "chars": 3452,
+      "size_kb": 3.37,
+      "error": null
+    }
+  },
+  "Femu": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 109,
+      "chars": 1493,
+      "size_kb": 1.46,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 1691,
+      "chars": 33603,
+      "size_kb": 32.82,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 7952,
+      "chars": 191904,
+      "size_kb": 187.41,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 78836,
+      "chars": 3783358,
+      "size_kb": 3694.69,
+      "error": null
+    }
+  },
+  "flex": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 8,
+      "chars": 107,
+      "size_kb": 0.1,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 16,
+      "chars": 277,
+      "size_kb": 0.27,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 28,
+      "chars": 603,
+      "size_kb": 0.59,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 42,
+      "chars": 992,
+      "size_kb": 0.97,
+      "error": null
+    }
+  },
+  "gluetest": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 15,
+      "chars": 255,
+      "size_kb": 0.25,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 31,
+      "chars": 495,
+      "size_kb": 0.48,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 52,
+      "chars": 909,
+      "size_kb": 0.89,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 465,
+      "chars": 19410,
+      "size_kb": 18.96,
+      "error": null
+    }
+  },
+  "Lottory": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 11,
+      "chars": 157,
+      "size_kb": 0.15,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 14,
+      "chars": 206,
+      "size_kb": 0.2,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 30,
+      "chars": 546,
+      "size_kb": 0.53,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 30,
+      "chars": 546,
+      "size_kb": 0.53,
+      "error": null
+    }
+  },
+  "Metis": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 23,
+      "chars": 317,
+      "size_kb": 0.31,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 205,
+      "chars": 4829,
+      "size_kb": 4.72,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 399,
+      "chars": 10039,
+      "size_kb": 9.8,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 516,
+      "chars": 13522,
+      "size_kb": 13.21,
+      "error": null
+    }
+  },
+  "P4Ctl": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 10,
+      "chars": 145,
+      "size_kb": 0.14,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 26,
+      "chars": 461,
+      "size_kb": 0.45,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 27,
+      "chars": 493,
+      "size_kb": 0.48,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 27,
+      "chars": 493,
+      "size_kb": 0.48,
+      "error": null
+    }
+  },
+  "probfuzz": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 19,
+      "chars": 269,
+      "size_kb": 0.26,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 42,
+      "chars": 731,
+      "size_kb": 0.71,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 50,
+      "chars": 938,
+      "size_kb": 0.92,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 50,
+      "chars": 938,
+      "size_kb": 0.92,
+      "error": null
+    }
+  },
+  "RelTR": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 15,
+      "chars": 182,
+      "size_kb": 0.18,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 42,
+      "chars": 708,
+      "size_kb": 0.69,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 49,
+      "chars": 896,
+      "size_kb": 0.88,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 56,
+      "chars": 1117,
+      "size_kb": 1.09,
+      "error": null
+    }
+  },
+  "rfuse": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 11,
+      "chars": 132,
+      "size_kb": 0.13,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 59,
+      "chars": 900,
+      "size_kb": 0.88,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 1750,
+      "chars": 38766,
+      "size_kb": 37.86,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 79079,
+      "chars": 2787457,
+      "size_kb": 2722.13,
+      "error": null
+    }
+  },
+  "RSNN": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 18,
+      "chars": 321,
+      "size_kb": 0.31,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 55,
+      "chars": 1309,
+      "size_kb": 1.28,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 144,
+      "chars": 3650,
+      "size_kb": 3.56,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 157,
+      "chars": 4025,
+      "size_kb": 3.93,
+      "error": null
+    }
+  },
+  "SEED-GNN": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 18,
+      "chars": 254,
+      "size_kb": 0.25,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 35,
+      "chars": 568,
+      "size_kb": 0.55,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 47,
+      "chars": 840,
+      "size_kb": 0.82,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 171,
+      "chars": 4771,
+      "size_kb": 4.66,
+      "error": null
+    }
+  },
+  "Silhouette": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 15,
+      "chars": 236,
+      "size_kb": 0.23,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 35,
+      "chars": 786,
+      "size_kb": 0.77,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 175,
+      "chars": 3746,
+      "size_kb": 3.66,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 687,
+      "chars": 20596,
+      "size_kb": 20.11,
+      "error": null
+    }
+  },
+  "sixthsense": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 11,
+      "chars": 159,
+      "size_kb": 0.16,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 15,
+      "chars": 233,
+      "size_kb": 0.23,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 15,
+      "chars": 233,
+      "size_kb": 0.23,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 15,
+      "chars": 233,
+      "size_kb": 0.23,
+      "error": null
+    }
+  },
+  "SymMC": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 10,
+      "chars": 148,
+      "size_kb": 0.14,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 28,
+      "chars": 450,
+      "size_kb": 0.44,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 68,
+      "chars": 1312,
+      "size_kb": 1.28,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 1374,
+      "chars": 47979,
+      "size_kb": 46.85,
+      "error": null
+    }
+  },
+  "TabPFN": {
+    "depth_1": {
+      "depth": 1,
+      "lines": 14,
+      "chars": 195,
+      "size_kb": 0.19,
+      "error": null
+    },
+    "depth_2": {
+      "depth": 2,
+      "lines": 44,
+      "chars": 1048,
+      "size_kb": 1.02,
+      "error": null
+    },
+    "depth_3": {
+      "depth": 3,
+      "lines": 73,
+      "chars": 1953,
+      "size_kb": 1.91,
+      "error": null
+    },
+    "unlimited": {
+      "depth": "unlimited",
+      "lines": 89,
+      "chars": 2441,
+      "size_kb": 2.38,
+      "error": null
+    }
+  }
+}
