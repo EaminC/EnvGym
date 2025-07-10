@@ -79,7 +79,7 @@ class DockerRunner:
             return False, "", f"Docker build exception: {str(e)}"
     
     def run_container(self, image_name: str, command: Optional[str] = None, 
-                     timeout: int = 60) -> Tuple[bool, str, str]:
+                     timeout: int = 1500) -> Tuple[bool, str, str]:
         """
         运行 Docker 容器
         
@@ -254,8 +254,8 @@ Runtime Status: {'Success' if run_result[0] else 'Failed'}
                 elif run_result[1]:
                     # 如果运行成功且有输出，显示输出（但可能截断很长的输出）
                     output = run_result[1]
-                    if len(output) > 500:  # 缩短截断长度，成功时输出通常不需要太多
-                        output = output[:500] + "\n...\n[输出截断，完整内容请查看 log_complete.txt]"
+                    if len(output) > 2000:  # 缩短截断长度，成功时输出通常不需要太多
+                        output = output[:2000] + "\n...\n[输出截断，完整内容请查看 log_complete.txt]"
                     log_summary_content += f"Runtime Output:\n{output}\n"
                 
                 log_summary_content += "\n=== Execution End ===\n"

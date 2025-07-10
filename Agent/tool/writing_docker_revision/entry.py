@@ -13,9 +13,10 @@ if agent_dir not in sys.path:
     sys.path.insert(0, agent_dir)
 
 class WritingDockerRevisionTool:
-    def __init__(self, verbose: bool = False, use_json_tree: bool = True):
+    def __init__(self, verbose: bool = False, use_json_tree: bool = True, max_depth: int = None):
         self.verbose = verbose
         self.use_json_tree = use_json_tree
+        self.max_depth = max_depth if max_depth is not None else 99  # 默认打印到底
         # Try to load environment variables from multiple possible locations
         possible_env_paths = [
             Path(__file__).parent.parent.parent / '.env',  # EnvGym/.env
@@ -90,6 +91,7 @@ class WritingDockerRevisionTool:
             print(f"  - Temperature: {self.temperature}")
             print(f"  - System Language: {self.system_language}")
             print(f"  - Tree format: {'JSON' if self.use_json_tree else 'Text'}")
+            print(f"  - Tree max depth: {self.max_depth if self.max_depth != 99 else 'unlimited'}")
     
     def read_file_content(self, file_path: str) -> str:
         """Read file content"""
@@ -314,8 +316,8 @@ class WritingDockerRevisionTool:
         try:
             print("Getting current directory structure...")
             tree_format = "json" if self.use_json_tree else "text"
-            directory_tree = self.get_directory_tree(output_format=tree_format)
-            print(f"Directory structure obtained ({'JSON' if self.use_json_tree else 'text'} format)")
+            directory_tree = self.get_directory_tree(max_depth=self.max_depth, output_format=tree_format)
+            print(f"Directory structure obtained ({'JSON' if self.use_json_tree else 'text'} format, max depth: {self.max_depth})")
             
             if self.verbose:
                 print(f"\nCurrent Directory Tree ({'JSON' if self.use_json_tree else 'text'} format):")
@@ -338,6 +340,7 @@ class WritingDockerRevisionTool:
             if self.verbose:
                 print("\nLoaded content summary:")
                 print(f"Directory tree format: {'JSON' if self.use_json_tree else 'Text'}")
+                print(f"Directory tree max depth: {self.max_depth if self.max_depth != 99 else 'unlimited'}")
                 print(f"Directory tree length: {len(directory_tree)} characters")
                 print(f"Dockerfile length: {len(dockerfile_content)} characters")
                 print(f"Log length: {len(log_content)} characters")
@@ -365,10 +368,10 @@ class WritingDockerRevisionTool:
                 traceback.print_exc()
 
 
-def main(verbose: bool = False, use_json_tree: bool = False):
+def main(verbose: bool = False, use_json_tree: bool = False, max_depth: int = None):
     """Main entry point for writing docker revision tool"""
     try:
-        tool = WritingDockerRevisionTool(verbose=verbose, use_json_tree=use_json_tree)
+        tool = WritingDockerRevisionTool(verbose=verbose, use_json_tree=use_json_tree, max_depth=max_depth)
         tool.run()
     except Exception as e:
         print(f"Writing docker revision tool execution failed: {e}")
@@ -386,6 +389,8 @@ if __name__ == "__main__":
                        help="Enable verbose output mode")
     parser.add_argument("-j", "--json", action="store_true", 
                        help="Use JSON format for directory tree (more LLM-friendly)")
+    parser.add_argument("-d", "--depth", type=int, default=None,
+                       help="Maximum depth for directory tree (default: unlimited)")
     
     args = parser.parse_args()
-    main(verbose=args.verbose, use_json_tree=args.json) 
+    main(verbose=args.verbose, use_json_tree=args.json, max_depth=args.depth) 

@@ -13,10 +13,11 @@ if agent_dir not in sys.path:
     sys.path.insert(0, agent_dir)
 
 class ScanningTool:
-    def __init__(self, verbose: bool = False, use_json_tree: bool = True):
+    def __init__(self, verbose: bool = False, use_json_tree: bool = True, max_depth: int = None):
         """Initialize scanning tool"""
         self.verbose = verbose
         self.use_json_tree = use_json_tree
+        self.max_depth = max_depth if max_depth is not None else 99  # 默认打印到底
         
         # Try to load environment variables from multiple possible locations
         possible_env_paths = [
@@ -91,20 +92,22 @@ class ScanningTool:
         print(f"  - Temperature: {self.temperature}")
         print(f"  - System Language: {self.system_language}")
         print(f"  - Tree format: {'JSON' if self.use_json_tree else 'Text'}")
+        print(f"  - Tree max depth: {self.max_depth if self.max_depth != 99 else 'unlimited'}")
     
-    def get_directory_tree(self, output_format: str = "text") -> str:
+    def get_directory_tree(self, max_depth: int = None, output_format: str = "text") -> str:
         """Get directory tree structure in text or JSON format"""
+        depth = max_depth if max_depth is not None else self.max_depth
         if output_format == "json":
-            return self._get_directory_tree_json()
+            return self._get_directory_tree_json(depth)
         else:
-            return self._get_directory_tree_text()
+            return self._get_directory_tree_text(depth)
     
-    def _get_directory_tree_text(self) -> str:
+    def _get_directory_tree_text(self, max_depth: int = 99) -> str:
         """Get directory tree structure using tree command or fallback to manual traversal"""
         try:
             # Try using tree command
-            result = subprocess.run(['tree', '-a', '-I', 'envgym'], 
-                                  capture_output=True, text=True, cwd='.')
+            cmd = ['tree', '-L', str(max_depth), '-a', '-I', 'envgym']
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd='.')
             if result.returncode == 0:
                 return result.stdout
         except (subprocess.SubprocessError, FileNotFoundError):
@@ -114,8 +117,8 @@ class ScanningTool:
         tree_lines = []
         current_dir = Path('.')
         
-        def walk_directory(path: Path, prefix: str = "", is_last: bool = True):
-            if path.name == 'envgym':
+        def walk_directory(path: Path, prefix: str = "", is_last: bool = True, current_depth: int = 0):
+            if path.name == 'envgym' or current_depth >= max_depth:
                 return
                 
             items = list(path.iterdir())
@@ -127,18 +130,18 @@ class ScanningTool:
                 current_prefix = "└── " if is_last_item else "├── "
                 tree_lines.append(f"{prefix}{current_prefix}{item.name}")
                 
-                if item.is_dir():
+                if item.is_dir() and current_depth < max_depth - 1:
                     extension = "    " if is_last_item else "│   "
-                    walk_directory(item, prefix + extension, is_last_item)
+                    walk_directory(item, prefix + extension, is_last_item, current_depth + 1)
         
         tree_lines.append(str(current_dir.name))
         walk_directory(current_dir)
         return "\n".join(tree_lines)
     
-    def _get_directory_tree_json(self) -> str:
+    def _get_directory_tree_json(self, max_depth: int = 99) -> str:
         """Get directory tree structure in JSON format"""
-        def build_tree(path: Path) -> dict:
-            if path.name == 'envgym':
+        def build_tree(path: Path, current_depth: int = 0) -> dict:
+            if path.name == 'envgym' or current_depth >= max_depth:
                 return None
                 
             result = {
@@ -147,7 +150,7 @@ class ScanningTool:
                 "path": str(path)
             }
             
-            if path.is_dir():
+            if path.is_dir() and current_depth < max_depth - 1:
                 children = []
                 try:
                     items = list(path.iterdir())
@@ -155,7 +158,7 @@ class ScanningTool:
                     items.sort(key=lambda x: (x.is_file(), x.name.lower()))
                     
                     for item in items:
-                        child = build_tree(item)
+                        child = build_tree(item, current_depth + 1)
                         if child is not None:
                             children.append(child)
                     
@@ -282,8 +285,8 @@ IMPORTANT: Return ONLY the JSON array, no additional text, explanations, or mark
             
             # Get directory tree in specified format
             tree_format = "json" if self.use_json_tree else "text"
-            directory_tree = self.get_directory_tree(tree_format)
-            print(f"Directory tree generated successfully ({'JSON' if self.use_json_tree else 'text'} format)")
+            directory_tree = self.get_directory_tree(max_depth=self.max_depth, output_format=tree_format)
+            print(f"Directory tree generated successfully ({'JSON' if self.use_json_tree else 'text'} format, max depth: {self.max_depth if self.max_depth != 99 else 'unlimited'})")
             
             if self.verbose:
                 print(f"\nDirectory tree structure ({'JSON' if self.use_json_tree else 'text'} format):")
@@ -324,9 +327,9 @@ IMPORTANT: Return ONLY the JSON array, no additional text, explanations, or mark
                 print("Detailed error information:")
                 traceback.print_exc()
 
-def main(verbose: bool = False, use_json_tree: bool = False):
+def main(verbose: bool = False, use_json_tree: bool = False, max_depth: int = None):
     """Main function"""
-    tool = ScanningTool(verbose=verbose, use_json_tree=use_json_tree)
+    tool = ScanningTool(verbose=verbose, use_json_tree=use_json_tree, max_depth=max_depth)
     tool.run()
 
 if __name__ == "__main__":
@@ -337,6 +340,8 @@ if __name__ == "__main__":
                        help='Enable verbose output mode to show AI interaction process')
     parser.add_argument('-j', '--json', action='store_true', 
                        help='Use JSON format for directory tree (more LLM-friendly)')
+    parser.add_argument('-d', '--depth', type=int, default=None,
+                       help='Maximum depth for directory tree (default: unlimited)')
     
     args = parser.parse_args()
-    main(verbose=args.verbose, use_json_tree=args.json) 
+    main(verbose=args.verbose, use_json_tree=args.json, max_depth=args.depth) 

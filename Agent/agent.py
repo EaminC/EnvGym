@@ -25,7 +25,7 @@ from tool.summarize.entry import SummarizeTool
   
 
 if __name__ == "__main__":
-    
+    verbose = False
 
     start_time = time.time()
     print("Starting envgym execution...")
@@ -34,10 +34,10 @@ if __name__ == "__main__":
     create_envgym_directory()
     
     print("Mapping the whole repo")
-    ScanningTool().run()
+    ScanningTool(verbose=verbose).run()
 
     print("Scanning for test files")
-    TestScanningTool().run()
+    TestScanningTool(verbose=verbose).run()
     
     print("Checking the hardware")
     HardwareCheckingTool().run()
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     PlanningTool().run()
     
     print("Adjusting plan based on hardware")
-    HardwareAdjustmentTool().run()
+    HardwareAdjustmentTool(verbose=verbose).run()
     
     Exec_Repeat = 20
     for i in range(Exec_Repeat):
@@ -54,17 +54,17 @@ if __name__ == "__main__":
         print(f"\n--- Step 1: Write Dockerfile (Iteration {i+1}) ---")
         if i == 0:
             print("Writing initial dockerfile based on plan...")
-            WritingDockerInitialTool().run()
+            WritingDockerInitialTool(verbose=verbose).run()
         else:
             print("Revising dockerfile based on logs and recommendations...")
-            WritingDockerRevisionTool().run()
+            WritingDockerRevisionTool(verbose=verbose).run()
 
         print(f"\n--- Step 2: Run Dockerfile (Iteration {i+1}) ---")
         run_dockerfile_with_logs()
 
         print(f"\n--- Step 3: Summarize Progress (Iteration {i+1}) ---")
         print("Summarizing current progress...")
-        SummarizeTool().run()
+        SummarizeTool(verbose=verbose).run()
 
         print(f"\n--- Step 4: Update Status (Iteration {i+1}) ---")
         update_log_files(i+1,verbose=True)
