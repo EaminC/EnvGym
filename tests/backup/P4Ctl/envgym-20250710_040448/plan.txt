@@ -1,0 +1,215 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, No GPU, Docker 28.3.1, /home/cc/EnvGym/data/P4Ctl) ===
+
+1. DOWNLOADS NEEDED:  
+   - Python 3.7 (exact version; use pyenv or system package manager; ensure x86_64/amd64 build)
+   - Tofino Switch SDE 9.7.0 (x86_64/amd64 build; from Barefoot/Intel; requires registration and license)
+   - BCC (BPF Compiler Collection) compatible with Linux kernel 5.15.0 (x86_64 build)
+   - Linux kernel 5.15.0 (for BCC/eBPF compatibility; Ubuntu 20.04.1 LTS recommended, but see note below)
+   - Bison 3.8.2 (x86_64)
+   - Flex 2.6.4 (x86_64)
+   - Scapy 2.4.5 (Python package)
+   - ncat (from Nmap suite; for testing network connections)
+   - pyroute2 (Python package)
+   - gcc, make, and other build tools (for compiling eBPF, P4 programs, and NetCL compiler)
+   - (Optional) virtualenv (for Python environment isolation)
+   - (Optional) tmux/screen (for managing multiple terminal sessions)
+   - (Optional) Git (for version control)
+   - make (explicitly required for building the NetCL compiler)
+   - (Optional) Additional C/C++ build dependencies if required by the NetCL compiler (refer to compiler/README.md or Makefile for specifics)
+   - **NOTE:** All packages and binaries must be x86_64/amd64 compatible. Do not use ARM or GPU-specific builds.
+
+2. FILES TO CREATE/UPDATE:  
+   - ~/.bashrc or ~/.profile:  
+     - Add environment variables:
+       ```
+       export SDE=~/bf-sde-9.7.0/
+       export SDE_INSTALL=~/bf-sde-9.7.0/install
+       export PATH=$SDE_INSTALL/bin:$PATH
+       ```
+   - host_agent/host_agent_ebpf.c:  
+     - Update `TAGGED_TERMINAL` variable with correct PID for manual labeling.
+   - host_agent/host_agent.py:  
+     - Update interface name to match the actual network interface on each host.
+   - switch/p4control.p4:  
+     - Ensure the P4 program exists and is up to date.
+   - switch/controller.py:  
+     - Control plane script; verify IPs and labels match your topology.
+   - switch/netcl.py:  
+     - For compiled NetCL rules; content should be updated after compiling rules.
+   - netcl-compile (executable or script):  
+     - Ensure this script is present and executable for compiling NetCL rules.
+   - custom-send.py, custom-receive.py:  
+     - Scapy-based tools for custom packet generation and sniffing.
+   - requirements.txt:  
+     - List all Python dependencies:
+       ```
+       scapy==2.4.5
+       pyroute2
+       bcc
+       ```
+   - test/ (directory for test scripts):  
+     - test_switch_connectivity.py: Test basic switch and host connectivity.
+     - test_ebpf_labeling.py: Test eBPF labeling and enforcement.
+     - test_netcl_compilation.py: Test NetCL rule compilation and loading.
+     - test_custom_tools.py: Test custom packet send/receive.
+   - compiler/README.md:  
+     - Reference for rebuilding the NetCL compiler.
+   - compiler/Makefile and NetCL compiler source files:  
+     - Ensure these exist for building the NetCL compiler.
+   - (Optional) README.md:  
+     - Update with notes on rebuilding the NetCL compiler and any environment-specific changes.
+   - **NOTE:** If using Docker, ensure all file paths and volumes are mapped correctly (e.g., /home/cc/EnvGym/data/P4Ctl as project root).
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Verify P4 program builds and loads successfully on Tofino switch.
+   - Confirm control plane (controller.py) can insert and enforce NetCL policies.
+   - Test eBPF host agent attaches to the correct interface and labels processes as expected.
+   - Simulate cross-host attack (Host1 → Host3 via Host2) and confirm traffic is blocked as per policy.
+   - Test manual PID labeling in host_agent_ebpf.c and verify enforcement.
+   - Compile sample NetCL rules and verify they are correctly loaded and enforced.
+   - Use custom Scapy tools to send/receive DIFC-labeled packets and verify correct handling.
+   - Test error handling for missing dependencies, misconfiguration, and interface mismatches.
+   - **New:** Test rebuilding the NetCL compiler:
+     - After modifying compiler source code, run `make clean && make netcl` in the `compiler/` directory.
+     - Verify that the `netcl-compile` executable is updated and functional.
+   - **New:** Test that the rebuilt NetCL compiler correctly compiles NetCL rules and integrates with the rest of the pipeline.
+
+4. COMPLETE TODO LIST (ADJUSTED):  
+
+   1. Prepare the base OS:
+      - **Recommended:** Install Ubuntu 20.04.1 LTS (x86_64/amd64) on all hosts and the switch controller.  
+        - If using Docker, base images should be amd64-compatible (e.g., ubuntu:20.04, ubuntu:22.04, python:3.7-slim-buster, debian:buster).
+        - **Do NOT use ARM or GPU images.**
+      - Update system packages: `sudo apt update && sudo apt upgrade -y`
+      - Verify kernel version: `uname -r` (should be 5.15.0); upgrade/downgrade if necessary.
+      - **If using Docker:** Set `--platform=linux/amd64` for all builds and containers.
+
+   2. Install dependencies:
+      - Install Python 3.7 (x86_64):  
+        - `sudo apt install python3.7 python3.7-venv python3.7-dev`
+        - **If using Docker:** Use `python:3.7-slim-buster` or similar as base.
+      - Install pip for Python 3.7:  
+        - `sudo apt install python3-pip`
+      - (Optional) Set up a Python virtual environment:  
+        - `python3.7 -m venv venv`
+        - `source venv/bin/activate`
+      - Install Python packages:  
+        - `pip install scapy==2.4.5 pyroute2 bcc`
+      - Install build tools:  
+        - `sudo apt install build-essential gcc make`
+      - Install Bison and Flex:  
+        - `sudo apt install bison=3.8.2 flex=2.6.4`
+      - Install ncat:  
+        - `sudo apt install ncat`
+      - Install Git:  
+        - `sudo apt install git`
+      - Install BCC:  
+        - Follow official BCC installation instructions for Ubuntu 20.04 and kernel 5.15.0.
+        - **Ensure all BCC binaries are x86_64.**
+      - Download and install Tofino SDE 9.7.0:  
+        - Obtain from Intel/Barefoot (requires registration).
+        - Extract to `~/bf-sde-9.7.0/`.
+        - Run SDE installation scripts as per vendor instructions.
+        - **Ensure SDE is for x86_64/amd64.**
+      - Set environment variables in `~/.bashrc` or `~/.profile`:  
+        - Add SDE and SDE_INSTALL as described above.
+        - `source ~/.bashrc` to apply changes.
+      - **If using Docker:**  
+        - Set ENV variables in Dockerfile or entrypoint script.
+        - Mount `/home/cc/EnvGym/data/P4Ctl` as working directory in container.
+
+   3. Configure project files:
+      - Clone or copy the project repository to all relevant machines or containers.
+      - **Ensure all file paths are correct for /home/cc/EnvGym/data/P4Ctl.**
+      - Update `host_agent/host_agent.py` with the correct network interface name for each host.
+      - In `host_agent/host_agent_ebpf.c`, set `TAGGED_TERMINAL` to the PID of the terminal to be labeled.
+      - Ensure all scripts (`p4_build.sh`, `run_switchd.sh`, `netcl-compile`) are present and executable.
+      - Create or update `requirements.txt` with all Python dependencies.
+      - Ensure `compiler/README.md`, `compiler/Makefile`, and NetCL compiler source files are present.
+
+   4. Build and deploy the NetCL compiler:
+      - Navigate to the `compiler/` directory.
+      - To rebuild after modifying compiler code, run:
+        ```
+        make clean
+        make netcl
+        ```
+      - Verify that the `netcl-compile` executable is created or updated.
+      - If additional dependencies are required for the compiler build, install them as specified in `compiler/README.md` or the Makefile.
+      - **If using multi-core CPU:**  
+        - Use `make -j$(nproc)` for faster builds.
+
+   5. Build and deploy the P4 program:
+      - On the switch/controller, run:
+        - `cd ~/bf-sde-9.7.0/`
+        - `./p4_build.sh -p switch/p4control.p4`
+        - `./run_switchd.sh -p p4control`
+      - Verify switchd is running and listening.
+
+   6. Start the control plane:
+      - Run: `python3 switch/controller.py`
+      - Verify that NetCL policies are inserted and enforced (check logs/output).
+
+   7. Deploy the eBPF host agent:
+      - On each host, check the PID of the desired terminal: `ps`
+      - Update `TAGGED_TERMINAL` in `host_agent/host_agent_ebpf.c` with the PID.
+      - Run: `python3 host_agent/host_agent.py`
+      - Verify that eBPF programs are attached (check with `bpftool` or `lsmod`).
+
+   8. Compile and load NetCL rules:
+      - Run: `./netcl-compile -i <netcl_rules> -o <compiled_rules>`
+      - Copy contents of `<compiled_rules>` into `switch/netcl.py`.
+      - Restart the control plane: `python3 switch/controller.py`
+      - Verify rules are loaded (check logs/output).
+
+   9. Test cross-host attack prevention:
+      - On Host2 and Host3: `sudo ncat -nlvp 9999 -e /bin/bash`
+      - On Host1: `sudo ncat 10.0.0.2 9999`
+      - From Host1, connect to Host3 via Host2: `ncat 10.0.0.3 9999`
+      - Confirm that connection from Host1 to Host3 is blocked as expected.
+
+   10. Test custom Scapy tools:
+       - On receiving host: `python3 custom-receive.py`
+       - On sending host: `python3 custom-send.py <destination_IP> <label> <tracker> <message>`
+       - Verify that packets are received and labeled correctly.
+
+   11. Run and verify test scripts:
+       - Execute all scripts in the `test/` directory.
+       - Check for correct enforcement, labeling, and error handling.
+       - Log results and fix any issues found.
+
+   12. Error handling and verification:
+       - Check for missing dependencies: run `which <tool>` for all required binaries.
+       - Verify all environment variables are set: `echo $SDE $SDE_INSTALL`
+       - Confirm all scripts are executable: `chmod +x <script>`
+       - Use `dmesg`, `journalctl`, or application logs to debug any failures.
+       - Document any deviations or fixes applied.
+
+   13. (Optional) Version control and backup:
+       - Initialize a Git repository if not already present.
+       - Commit all configuration changes and test scripts.
+       - Backup configuration files and scripts.
+
+   14. Documentation:
+       - Update README.md with any environment-specific notes or changes.
+       - Document any customizations to network topology, interface names, or host labels.
+       - **New:** Add instructions for rebuilding the NetCL compiler from `compiler/README.md` to the documentation.
+
+   15. Final verification:
+       - Reboot hosts and switch to ensure all services persist and reattach as needed.
+       - Repeat key test cases to confirm persistent configuration.
+       - **New:** After any changes to the NetCL compiler, repeat the compiler build and integration tests to verify continued correct operation.
+
+**ADDITIONAL NOTES BASED ON HARDWARE/ENVIRONMENT:**
+- All installations and builds must target x86_64/amd64 architecture. Do not use ARM or GPU-specific binaries.
+- No CUDA or NVIDIA-specific dependencies or Docker images should be used.
+- Large memory/storage available: consider using `make -j$(nproc)` for faster builds.
+- If using Docker, always specify `--platform=linux/amd64` for images and containers.
+- Ensure that `/home/cc/EnvGym/data/P4Ctl` is used as the project root in all scripts and Dockerfile WORKDIRs.
+- If running in containers, mount persistent volumes for `/home/cc/EnvGym/data/P4Ctl` to avoid data loss.
+- If using Ubuntu 22.04 or newer as base image, verify compatibility of BCC, kernel, and Tofino SDE (20.04.1 is safest).
+- If any package version is unavailable in apt for Ubuntu 20.04, consider using pip or building from source (ensure x86_64 compatibility).
+- No GPU runtime or CUDA libraries are required; do not include `--gpus` or `nvidia/cuda` images in Dockerfiles.
+
+**Summary:**  
+This plan is now fully aligned with your x86_64 hardware, lack of GPU, modern Docker version, and working directory structure. All instructions are compatible with amd64 architecture, and no GPU or ARM-specific steps are included. If you use Docker, ensure all images and builds are for linux/amd64, and mount `/home/cc/EnvGym/data/P4Ctl` as the project root.

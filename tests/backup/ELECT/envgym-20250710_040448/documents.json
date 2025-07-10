@@ -1,0 +1,13 @@
+[
+  "README.md",
+  "src/elect/README.asc",
+  "src/elect/READMEOriginal.asc",
+  "src/elect/redhat/README.md",
+  "src/elect/examples/ssl-factory/README.txt",
+  "src/elect/examples/triggers/README.txt",
+  "src/elect/doc/README.md",
+  "src/elect/tools/stress/README.txt",
+  "scripts/ycsb/README.md",
+  "src/elect/pylib/requirements.txt",
+  "src/elect/pylib/setup.py"
+]

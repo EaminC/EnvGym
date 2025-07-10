@@ -1,0 +1,22 @@
+current progress
+
+- Docker image builds and runs successfully on Ubuntu 22.04 (x86_64, CPU-only).
+- System dependencies for Python 3.10.12 and required libraries are installed.
+- Python 3.10 is set as the default Python interpreter.
+- requirements.txt is copied and patched for the stork dependency.
+- Python dependencies (including CPU-only torch/torchaudio/torchvision) are installed via pip.
+- The full repository is copied into the image.
+- /models and /results directories are created.
+- Python environment variables are set for best practices.
+- The Dockerfile does not include any CUDA, GPU, or NVIDIA-specific instructions.
+- The container opens to a bash shell by default.
+
+next step
+
+- Verify that requirements.txt pins all required versions and specifies CPU-only torch/torchaudio/torchvision (if not, update requirements.txt and rebuild).
+- Confirm that all project files (including /conf, /challenge, results_extract_from_logs.ipynb, etc.) are present and correctly copied in the Docker context.
+- Ensure the Dockerfile creates or copies .gitignore, README.md, and any setup scripts if needed.
+- (Optional) Add a test RUN command to verify successful import of all key Python packages after pip install.
+- (Optional) Add a HEALTHCHECK or CI step to validate that the environment is functional (e.g., run a basic python -c "import torch; print(torch.__version__)").
+- (Optional) Clean up any unnecessary build steps or optimize layer ordering for cache efficiency.
+- Document in the README that this Dockerfile is for CPU-only, Ubuntu 22.04, no CUDA, and no GPU support.

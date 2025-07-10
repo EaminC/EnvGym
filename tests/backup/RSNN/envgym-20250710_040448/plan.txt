@@ -1,0 +1,179 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (CPU-ONLY, x86_64, UBUNTU 22.04, NO GPU) ===
+
+1. DOWNLOADS NEEDED:  
+   - Python 3.10.12 (ensure exact version for compatibility)
+   - pip (latest version)
+   - Git (for cloning repositories and installing editable/source dependencies)
+   - Python packages (as specified in requirements.txt, install exact versions if possible):
+     - numpy
+     - torch (PyTorch, **CPU-only version**)
+     - scipy
+     - matplotlib
+     - seaborn
+     - h5py
+     - soundfile
+     - tables
+     - torchaudio (**CPU-only version**)
+     - torchvision (**CPU-only version**)
+     - tonic
+     - xlsxwriter
+     - hydra-core
+     - neurobench
+     - pandas
+     - snntorch
+     - omegaconf
+     - KDEpy
+     - stork (installed from GitHub at commit 40c68fe via editable mode)
+     - randman (installed from GitHub via latest commit)
+   - Jupyter Notebook (for running results_extract_from_logs.ipynb)
+   - (Optional) virtualenv or conda (for isolated environment management)
+   - (Optional) Additional tools for data handling or visualization as needed
+
+   - **Version Compatibility Requirements:**
+     - Ensure all dependencies are compatible with Python 3.10.12 and each other.
+     - **Do NOT install CUDA toolkit or NVIDIA GPU drivers** (no GPU present).
+     - **Install CPU-only versions of torch, torchaudio, and torchvision**:
+       - In requirements.txt, specify e.g. `torch==<version>+cpu` and use the appropriate index URL if needed, or simply `pip install torch torchvision torchaudio` (PyPI defaults to CPU wheels).
+     - Remove any CUDA-specific instructions or dependencies.
+     - If any code attempts to use CUDA (e.g., `torch.cuda.is_available()`), ensure it handles CPU-only gracefully.
+
+2. FILES TO CREATE:  
+   - requirements.txt
+     - List all Python dependencies as in the provided file, including:
+       - All standard libraries
+       - Editable stork install from GitHub at commit 40c68fe
+       - randman from GitHub
+     - (Optional) Pin versions for all dependencies for reproducibility.
+     - **Do NOT include any CUDA or GPU-specific packages.**
+   - /conf/data/data-default.yaml
+     - Contains data_dir parameter (path to dataset) and pretrain_filenames parameter.
+   - /conf/config.yaml
+     - Contains hydra output directory configuration and other global settings.
+   - /conf/[other config files as needed by training/evaluation scripts]
+     - E.g., model hyperparameters, training settings, etc.
+   - .gitignore
+     - Ignore outputs, logs, model checkpoints, __pycache__, etc.
+   - /challenge/[__init__.py, data_loader.py, model.py, training.py, evaluation.py, neurobench/]
+     - Ensure all source code modules are present and importable.
+   - /models/
+     - Directory for storing model state dictionaries.
+   - /results/
+     - Directory for evaluation results (json files).
+   - results_extract_from_logs.ipynb
+     - Notebook for extracting results from hydra logs.
+   - README.md
+     - Project documentation (update to reflect **CPU-only setup** and no CUDA requirements).
+   - setup.sh or setup.bat
+     - Optional: shell/batch script to automate environment setup steps, including installation from requirements.txt.
+   - (Optional) requirements.lock.txt or environment.yml
+     - For environment reproducibility and locking versions.
+   - **If using Docker:**
+     - Dockerfile:
+       - Use `FROM ubuntu:22.04` or `FROM python:3.10-slim` (amd64/x86_64).
+       - Set `WORKDIR /home/cc/EnvGym/data/RSNN` or `/app` as appropriate.
+       - **Do NOT include any CUDA, nvidia-smi, or GPU-related instructions.**
+       - Install build-essential and other dev tools as needed for Python packages.
+       - Ensure adequate storage for dataset and models.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Data Loading:
+     - Test that data loaders correctly load and preprocess data from the specified data_dir.
+     - Test handling of missing/corrupt data files.
+     - Test compatibility with h5py, tables, soundfile, and other new data-related libraries.
+   - Model Initialization:
+     - Test instantiation of bigRSNN and tinyRSNN models with various input sizes.
+     - Test model forward pass with dummy data.
+     - Test torch, snnTorch, and stork integration.
+   - Training Pipeline:
+     - Test single epoch training for both models with small synthetic data.
+     - Test checkpoint saving and loading.
+     - Test compatibility with randman and tonic datasets if used.
+   - Evaluation Pipeline:
+     - Test evaluation script on a small test set.
+     - Test compatibility with both stork and snnTorch backends.
+   - Configuration Management:
+     - Test that hydra correctly loads configs and outputs to the specified directory.
+     - Test command-line overrides for seeds and other parameters.
+     - Test omegaconf integration for configuration handling.
+   - Results Extraction:
+     - Test notebook for extracting results from logs.
+     - Test xlsxwriter and KDEpy usage if present in result processing.
+   - **CPU Compatibility:**
+     - Test that code runs on CPU and does not require CUDA.
+     - Test torchaudio and torchvision on CPU.
+     - Ensure code does not fail if `torch.cuda.is_available()` is False.
+     - **If code has GPU/CPU branching, ensure CPU path works and is default.**
+   - Error Handling:
+     - Test for informative errors when dependencies are missing or misconfigured.
+     - Test for graceful failure when CUDA is unavailable (should not be required).
+   - Dependency Import Tests:
+     - Test import of all new libraries (seaborn, soundfile, tables, torchaudio, torchvision, tonic, xlsxwriter, omegaconf, KDEpy, randman).
+   - Data Visualization:
+     - Test matplotlib and seaborn visualizations with sample data.
+   - (Optional) Notebook Execution:
+     - Test that results_extract_from_logs.ipynb runs end-to-end without errors.
+
+4. COMPLETE TODO LIST:  
+   1. Install Python 3.10.12 (verify with `python --version`).
+   2. Install pip (verify with `pip --version`).
+   3. (Optional) Create and activate a virtual environment (venv or conda).
+   4. **SKIP CUDA toolkit and NVIDIA drivers installation.**
+      - **Do NOT run or include `nvcc --version` or `nvidia-smi`.**
+   5. Clone the project repository (if not already done).
+   6. Create or update requirements.txt with all dependencies as per the provided file:
+      - Ensure inclusion of all listed libraries and GitHub sources.
+      - (Optional) Pin versions for reproducibility.
+      - **Specify CPU-only torch/torchaudio/torchvision.**
+   7. Run `pip install -r requirements.txt`.
+      - This will install all standard and GitHub-based dependencies (stork, randman).
+      - **If torch installation fails, use the official CPU-only wheels from PyPI.**
+      - Verify installation by importing all major packages in Python shell.
+   8. Download the ["Nonhuman Primate Reaching with Multichannel Sensorimotor Cortex Electrophysiology" dataset](https://zenodo.org/records/583331).
+      - Place data in a directory as referenced in /conf/data/data-default.yaml.
+      - **Ensure sufficient storage space for dataset and models.**
+   9. Create /conf/data/data-default.yaml and set:
+      - data_dir: [path to dataset]
+      - pretrain_filenames: challenge-data (if only using challenge sessions)
+   10. Create /conf/config.yaml and set hydra output directory (default: ./outputs).
+   11. Verify that all code modules in /challenge/ are present and importable.
+   12. Ensure /models/ and /results/ directories exist and are writable.
+   13. (Optional) Create .gitignore to exclude outputs, logs, models, __pycache__, etc.
+   14. (Optional) Create setup.sh or setup.bat to automate steps 1-13, including `pip install -r requirements.txt`.
+   15. Run basic test cases:
+       - Data loading test (load a sample file using h5py, tables, soundfile).
+       - Model instantiation and forward pass test (torch, snnTorch, stork).
+       - Training script dry run (single epoch, small data).
+       - Evaluation script dry run (small data).
+       - Hydra config loading test (hydra-core, omegaconf).
+       - Import test for all libraries in requirements.txt.
+       - Visualization test (matplotlib, seaborn).
+   16. Run `python train-bigRSNN.py --multirun seed=1` and verify training starts and outputs are generated.
+   17. Run `python evaluate.py modelname=bigRSNN` and verify evaluation completes and results are saved.
+   18. Open results_extract_from_logs.ipynb and verify it parses logs and summarizes results (test xlsxwriter, KDEpy if used).
+   19. **Test code on CPU only.**
+       - **Do NOT set CUDA_VISIBLE_DEVICES or attempt to use CUDA.**
+       - Ensure code does not fail if `torch.cuda.is_available()` is False.
+   20. Document any environment-specific issues and update README.md as needed (include new dependencies and setup steps).
+       - **Explicitly state that the environment is CPU-only and does not require CUDA or NVIDIA drivers.**
+   21. (Optional) Set up continuous integration (CI) to run basic tests on push/PR, including dependency installation and import tests.
+   22. (Optional) Archive or backup environment (e.g., export conda env, pip freeze > requirements.lock.txt).
+   23. Final verification:
+       - All scripts run without error.
+       - Models can be trained and evaluated.
+       - Results are reproducible.
+       - Environment is documented and portable across systems.
+
+**NOTES ON HARDWARE/OS COMPATIBILITY:**  
+- All dependencies and code must be compatible with Ubuntu 22.04, x86_64 (amd64).
+- No ARM-specific or GPU-specific instructions.
+- Ensure all scripts and Dockerfiles use the correct working directory (`/home/cc/EnvGym/data/RSNN` or `/app`).
+- If using Docker, set `--platform=linux/amd64` as needed.
+- Monitor memory and storage usage, especially with large datasets and models.
+- If any package requires compilation, ensure build-essential and Python dev headers are installed in the environment or Docker image.
+
+**SUMMARY OF CHANGES:**  
+- All CUDA, GPU, and NVIDIA driver steps/instructions are removed.
+- All torch/torchaudio/torchvision installations are CPU-only.
+- All test cases and code must run and be validated on CPU.
+- README and documentation must reflect CPU-only, no-GPU setup.
+- Dockerfile and environment setup must not reference or install any GPU/CUDA dependencies.

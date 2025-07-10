@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250710_000201",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752105720",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.59kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.2s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:3c61d3759c2639d4b836d32a2d3c83fa0214e36f195a3421018dbaaf79cbe37f\n#4 CACHED\n\n#5 [internal] load build context\n#5 transferring context: 141B done\n#5 DONE 0.0s\n\n#6 [ 3/14] RUN apt-get update &&     apt-get install -y --no-install-recommends         openjdk-11-jdk         openjdk-11-jre         ant         ant-optional         maven         clang         llvm         libisal-dev         python3         python3-pip         python3-dev         cython3         ansible         bc         make         ssh         tar         git         asciidoc         curl         build-essential         npm         wheel         sudo         chrony         ca-certificates &&     apt-get clean &&     rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [ 7/14] COPY --chown=cc:cc src/elect/pylib/requirements.txt /home/cc/EnvGym/data/ELECT/src/elect/pylib/requirements.txt\n#7 CACHED\n\n#8 [ 5/14] RUN echo \"cc ALL=(ALL) NOPASSWD:ALL\" > /etc/sudoers.d/cc && chmod 0440 /etc/sudoers.d/cc\n#8 CACHED\n\n#9 [ 6/14] WORKDIR /home/cc/EnvGym/data/ELECT\n#9 CACHED\n\n#10 [ 4/14] RUN npm install -g @antora/cli @antora/site-generator-default\n#10 CACHED\n\n#11 [ 8/14] COPY --chown=cc:cc setup.py /home/cc/EnvGym/data/ELECT/setup.py\n#11 ERROR: failed to calculate checksum of ref 5eeea680-c455-4d17-a425-08efb16a18b7::vk7u6duvx9offwbh6em4vr354: \"/setup.py\": not found\n\n#12 [ 2/14] RUN useradd -ms /bin/bash cc &&     mkdir -p /home/cc/EnvGym/data/ELECT &&     chown -R cc:cc /home/cc\n#12 0.306 runc run failed: container process is already dead\n#12 CANCELED\n------\n > [ 8/14] COPY --chown=cc:cc setup.py /home/cc/EnvGym/data/ELECT/setup.py:\n------\nenvgym.dockerfile:60\n--------------------\n  58 |     # Copy requirements and setup files if they exist (to leverage Docker cache)\n  59 |     COPY --chown=cc:cc src/elect/pylib/requirements.txt $WORKDIR/src/elect/pylib/requirements.txt\n  60 | >>> COPY --chown=cc:cc setup.py $WORKDIR/setup.py\n  61 |     \n  62 |     # Upgrade pip and install Python dependencies\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 5eeea680-c455-4d17-a425-08efb16a18b7::vk7u6duvx9offwbh6em4vr354: \"/setup.py\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

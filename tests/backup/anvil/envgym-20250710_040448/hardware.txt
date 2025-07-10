@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/anvil; project likely located in "anvil" subdirectory; context path should be set accordingly.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim, etc.); no CUDA or GPU base image required.
+- GPU: No NVIDIA GPU detected; NVIDIA-SMI failed; do not use CUDA or nvidia/cuda base images.
+- Instruction Notes: No GPU-specific instructions (no RUN nvidia-smi, no CUDA installs); multi-core build optimizations possible; large memory/storage available for builds.
+- Docker Version: 28.3.1; supports BuildKit and modern Dockerfile features; --gpus flag not applicable.

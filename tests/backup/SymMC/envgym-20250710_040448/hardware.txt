@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/SymMC; project located in SymMC directory, nested under EnvGym/data
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim); no CUDA or GPU-specific base needed
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda images
+- Instruction Notes: No GPU-related Dockerfile instructions (e.g., no RUN apt install nvidia-driver or CUDA toolkit); multi-core builds possible; standard Linux instructions apply; set WORKDIR to /home/cc/EnvGym/data/SymMC if needed
+- Docker Version: 28.3.1; BuildKit supported; --gpus flag not applicable due to lack of NVIDIA GPU

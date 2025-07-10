@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/acto; project likely in Python or ML context; set WORKDIR accordingly
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim, debian:buster); no need for ARM images
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (no RUN nvidia-smi or CUDA installs); leverage multi-core CPU for build optimizations if needed; ensure compatibility with Ubuntu 22.04 host
+- Docker Version: 28.3.1; BuildKit supported; --gpus flag available but not needed; supports modern Dockerfile syntax

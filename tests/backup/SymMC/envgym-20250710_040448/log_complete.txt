@@ -1,0 +1,56 @@
+=== Docker Execution Log - 20250710_034826 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1752119292
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.05kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/ubuntu:22.04@sha256:3c61d3759c2639d4b836d32a2d3c83fa0214e36f195a3421018dbaaf79cbe37f
+#4 DONE 0.0s
+
+#5 [2/4] WORKDIR /home/cc/EnvGym/data/SymMC
+#5 CACHED
+
+#6 [3/4] RUN apt-get update &&     apt-get install -y --no-install-recommends         openjdk-8-jdk         ant         git         cmake         build-essential         libgmp-dev         zlib1g-dev         python3         wget         ca-certificates         unzip         curl     && apt-get clean && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [4/4] RUN find . -type f -name "*.sh" -exec chmod +x {} ; || true
+#7 DONE 0.2s
+
+#8 exporting to image
+#8 exporting layers
+#8 exporting layers 13.0s done
+#8 writing image sha256:2249f4ef4ab9e53db97db37dccc0f313c8dde74eb65e9aa52054a43fcf91fc3c done
+#8 naming to docker.io/library/envgym_test_1752119292 done
+#8 DONE 13.1s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - UndefinedVar: Usage of undefined variable '$LD_LIBRARY_PATH' (line 29)
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

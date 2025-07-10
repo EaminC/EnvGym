@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/CrossPrefetch; project likely Python-based, located in subdirectory of EnvGym/data
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: ubuntu:22.04, python:3.x-slim, or other amd64-compatible images
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (e.g., no RUN nvidia-smi, no CUDA installs); standard Linux/Ubuntu instructions apply; large memory and CPU available for multi-stage builds or parallel compilation
+- Docker Version: 28.3.1; BuildKit supported; --gpus flag not applicable due to lack of NVIDIA GPU

@@ -1,0 +1,22 @@
+current progress
+
+- Docker image builds and runs successfully on Ubuntu 20.04 (x86_64/amd64) with Python 3.7, required system tools, Python packages (scapy, pyroute2, bcc, virtualenv), and project files copied to /home/cc/EnvGym/data/P4Ctl.
+- Environment variables (SDE, SDE_INSTALL, PATH) are set in both Dockerfile and .bashrc.
+- NetCL compiler is built via `make -C compiler/ netcl`.
+- All shell scripts and the netcl-compile binary are set as executable.
+- Python virtual environment is created.
+- Port 9999 is exposed.
+- ENTRYPOINT is set to /bin/bash.
+- BCC build dependencies are installed, but bpftool installation is omitted due to package install failure.
+- No Tofino SDE 9.7.0 installation or extraction is performed in the Dockerfile.
+- Project root and working directory are correctly set.
+
+next step
+
+- Add installation and extraction steps for Tofino SDE 9.7.0 (if licensing permits automation), or document manual installation if required.
+- (Optional) Add installation of bpftool if needed for eBPF debugging (resolve previous install failure).
+- Verify and ensure all required files (e.g., switch/p4control.p4, host_agent/host_agent.py, netcl-compile, test scripts) exist in the build context and are copied.
+- (Optional) Add steps to build and install BCC from source if prebuilt packages are insufficient or missing features.
+- (Optional) Add healthcheck or CMD to automatically start key services/scripts if desired.
+- Test that all environment variables are correctly loaded in interactive and non-interactive shells.
+- Document any manual steps required post-build (e.g., SDE license activation, kernel module loading).

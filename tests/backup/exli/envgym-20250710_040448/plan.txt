@@ -1,0 +1,134 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Hardware/Host Context**  
+- Working Directory: /home/cc/EnvGym/data/exli (project root)
+- Architecture: x86_64 (amd64)
+- OS: Ubuntu 22.04 (amd64 recommended)
+- No NVIDIA GPU (no CUDA, no nvidia-smi, no --gpus flag)
+- Docker: 28.3.1 (BuildKit supported), Docker Compose v2.38.1
+- Large memory/CPU available
+- No GPU-specific instructions; all images and tools must be amd64-compatible
+
+---
+
+**1. DOWNLOADS NEEDED (adjusted for hardware/OS):**
+
+- **Docker**: Latest stable version (already installed, v28.3.1)
+- **Base Image**: Use `ubuntu:22.04` (amd64 only; do NOT use ARM or CUDA images)
+    - If specifying platform, use `--platform=linux/amd64` in `docker build` for explicit compatibility.
+- **Miniconda**: Latest x86_64 installer; install to `/opt/conda`
+- **Python**: 3.9 or later (via Conda environment); ensure conda-forge channel is used for best compatibility
+- **Java 8**: OpenJDK 8.0.302 via SDKMAN (ensure SDKMAN is installed for x86_64)
+- **SDKMAN**: For Java/Maven management (x86_64 binaries)
+- **Maven**: Install via SDKMAN (preferred for version control); ensure `MAVEN_HOME` is set and writable
+- **JUnit 4**: As Java dependency (no system install needed)
+- **Git, curl, wget, unzip, zip, gcc, mono-mcs, sudo, emacs, vim, less, build-essential, pkg-config, libicu-dev, firefox**: Install via `apt-get` (all available for Ubuntu 22.04 amd64)
+- **Geckodriver v0.31.0**: Download x86_64 tarball only
+- **[Optional] UniversalMutator, EvoSuite, Randoop, itest framework**: Download x86_64-compatible jars/executables only
+- **Python packages**: All via pip/conda in the environment (no architecture-specific constraints)
+- **Jacoco Maven Extension**: Build from source (Java, no hardware constraints)
+- **[Version compatibility requirements]**: All as previously specified (Python >=3.7, Java 8.0.302, Geckodriver v0.31.0, Ubuntu 22.04)
+
+**Hardware-specific adjustments:**
+- Do NOT include any CUDA, NVIDIA, or GPU-specific dependencies or instructions.
+- All downloads/installers must be for x86_64/amd64 architecture.
+- If using prebuilt binaries (e.g., Geckodriver), always select the Linux x86_64 version.
+
+---
+
+**2. FILES TO CREATE (with path corrections):**
+
+- **Dockerfile**: Place in `/home/cc/EnvGym/data/exli` (project root)
+    - Set `WORKDIR /home/cc/EnvGym/data/exli` in Dockerfile for consistency with host.
+- **exli/python/prepare-conda-env.sh**: Ensure paths are relative to `/home/cc/EnvGym/data/exli`
+- **exli/python/environment.yml** or `requirements.txt`: As before
+- **exli/python/setup.py**: As before
+- **.env**: Place in `/home/cc/EnvGym/data/exli` or `exli/python/`
+- **Other config files**: Place in `/home/cc/EnvGym/data/exli` or subdirectories as appropriate
+- **README.md, .gitignore, jacoco-extension/README.md, jacoco-extension/pom.xml, etc.**: As before
+- **[Optional] scripts for batch execution, test scripts, Makefile, etc.**: Place in `/home/cc/EnvGym/data/exli` or subdirectories
+
+**Hardware-specific adjustments:**
+- All file paths and scripts should use `/home/cc/EnvGym/data/exli` as the root.
+- No references to `/root` or `/home/itdocker` unless explicitly creating user home directories in Dockerfile.
+- If using Docker, ensure `WORKDIR` is set to `/home/cc/EnvGym/data/exli` for all RUN/COPY commands.
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE (hardware-aware):**
+
+- All test cases as previously specified.
+- **Additional hardware-specific verifications:**
+    - Test that all installed binaries are x86_64/amd64 (e.g., `file $(which geckodriver)` should show x86-64).
+    - Test that no CUDA/NVIDIA tools are present (`which nvidia-smi` should fail).
+    - Test that all tools run successfully under the specified `WORKDIR` and with the expected user permissions.
+
+---
+
+**4. COMPLETE TODO LIST (hardware- and path-adjusted):**
+
+1. **Install Docker**: Already present (v28.3.1); no changes needed.
+2. **Clone ExLi repository**: To `/home/cc/EnvGym/data/exli` (already set as working directory).
+3. **Review and update Dockerfile**:
+    - Use `FROM ubuntu:22.04` (amd64 only).
+    - Add `WORKDIR /home/cc/EnvGym/data/exli` at the top.
+    - All `COPY`/`ADD`/`RUN` commands should use this as the base path.
+    - No CUDA, NVIDIA, or GPU-specific lines.
+    - When installing Geckodriver, download the Linux x86_64 tarball.
+    - If creating a user (e.g., `itdocker`), set their home to `/home/cc/EnvGym/data/exli` or `/home/itdocker` as needed, but ensure all scripts and permissions match.
+4. **Build Docker image**:
+    - Use `docker build --platform=linux/amd64 -t exli .` if building on a non-amd64 host or for explicitness.
+5. **Run Docker container**:
+    - Use `docker run -it exli /bin/bash`
+    - Confirm shell opens in `/home/cc/EnvGym/data/exli`
+6. **Verify repository structure**: All paths relative to `/home/cc/EnvGym/data/exli`
+7. **Verify Conda environment setup**: As before; ensure conda is installed for x86_64.
+8. **Install exli-research package**: As before.
+9. **[Optional] Generate environment.yml/requirements.txt**: As before.
+10. **[Optional] Create .env file**: Place in `/home/cc/EnvGym/data/exli` or subdir.
+11. **[Optional] Download/install optional tools**: Always select x86_64 binaries.
+12. **Verify Python dependencies**: As before.
+13. **Run test commands**: As before.
+14. **Verify Java and Maven installation**: As before.
+15. **Verify Geckodriver and Firefox**: Ensure both are x86_64 and compatible.
+16. **Run full pipeline**: As before.
+17. **Jacoco Maven Extension setup**: As before.
+18. **Jacoco Extension usage verification**: As before.
+19. **Update README.md and documentation**:
+    - Clearly state that only x86_64/amd64 is supported.
+    - Document that no GPU/CUDA/NVIDIA support is present.
+    - Specify `WORKDIR /home/cc/EnvGym/data/exli` in all examples.
+20. **[Optional] Add scripts/Makefile for Jacoco**: As before.
+21. **[Optional] Add test cases/CI for Jacoco**: As before.
+22. **[Optional] Add .gitignore for Jacoco artifacts**: As before.
+23. **[Optional] Ensure permissions for `${MAVEN_HOME}/lib/ext`**: As before.
+24. **[Optional] Provide Docker build ARG/ENV for Jacoco**: As before.
+25. **[Optional] Document Jacoco caveats**: As before.
+26. **[Optional] Update Maven wrapper scripts**: As before.
+27. **[Optional] Add/modify test scripts for Jacoco**: As before.
+28. **[Optional] Ensure consistency in setup.py/Conda/requirements.txt**: As before.
+29. **[Optional] Write/update CI/CD scripts**: As before.
+30. **Update .gitignore**: As before.
+31. **Document manual steps/troubleshooting**: As before; add note about x86_64-only support.
+32. **[Optional] Test on different OSes**: Only test on x86_64/amd64 hosts or Docker with `--platform=linux/amd64`.
+33. **Clean up**: As before.
+34. **Back up/version control configs/scripts**: As before.
+35. **Final verification**: As before.
+36. **[Optional] Review/update user permissions**: As before.
+37. **[Optional] Ensure environment variables are set**: As before.
+38. **[Optional] Explicit Maven install if not via SDKMAN/apt**: As before.
+39. **[Optional] Ensure JUnit 4 is in Java dependencies**: As before.
+40. **[New] Ensure setup.py/Jacoco extension are reflected in docs/scripts**: As before.
+
+---
+
+**Summary of Key Hardware/OS Adjustments:**
+- All images, binaries, and tools must be x86_64/amd64.
+- No CUDA/NVIDIA/GPU dependencies or instructions.
+- All paths and scripts should use `/home/cc/EnvGym/data/exli` as the root.
+- Use `--platform=linux/amd64` in Docker builds if needed.
+- Ensure all documentation and scripts are consistent with the above.
+
+---
+
+**End of Adjusted Plan**

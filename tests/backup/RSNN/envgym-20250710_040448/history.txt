@@ -1,0 +1,1744 @@
+=== Iteration 1 - [2025-07-10 03:35:32] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN (CPU-ONLY, x86_64, UBUNTU 22.04, NO GPU) ===
+  1. DOWNLOADS NEEDED:  
+     - Python 3.10.12 (ensure exact version for compatibility)
+     - pip (latest version)
+     - Git (for cloning repositories and installing editable/source dependencies)
+     - Python packages (as specified in requirements.txt, install exact versions if possible):
+       - numpy
+       - torch (PyTorch, **CPU-only version**)
+       - scipy
+       - matplotlib
+       - seaborn
+       - h5py
+       - soundfile
+       - tables
+       - torchaudio (**CPU-only version**)
+       - torchvision (**CPU-only version**)
+       - tonic
+       - xlsxwriter
+       - hydra-core
+       - neurobench
+       - pandas
+       - snntorch
+       - omegaconf
+       - KDEpy
+       - stork (installed from GitHub at commit 40c68fe via editable mode)
+       - randman (installed from GitHub via latest commit)
+     - Jupyter Notebook (for running results_extract_from_logs.ipynb)
+     - (Optional) virtualenv or conda (for isolated environment management)
+     - (Optional) Additional tools for data handling or visualization as needed
+     - **Version Compatibility Requirements:**
+       - Ensure all dependencies are compatible with Python 3.10.12 and each other.
+       - **Do NOT install CUDA toolkit or NVIDIA GPU drivers** (no GPU present).
+       - **Install CPU-only versions of torch, torchaudio, and torchvision**:
+         - In requirements.txt, specify e.g. `torch==<version>+cpu` and use the appropriate index URL if needed, or simply `pip install torch torchvision torchaudio` (PyPI defaults to CPU wheels).
+       - Remove any CUDA-specific instructions or dependencies.
+       - If any code attempts to use CUDA (e.g., `torch.cuda.is_available()`), ensure it handles CPU-only gracefully.
+  2. FILES TO CREATE:  
+     - requirements.txt
+       - List all Python dependencies as in the provided file, including:
+         - All standard libraries
+         - Editable stork install from GitHub at commit 40c68fe
+         - randman from GitHub
+       - (Optional) Pin versions for all dependencies for reproducibility.
+       - **Do NOT include any CUDA or GPU-specific packages.**
+     - /conf/data/data-default.yaml
+       - Contains data_dir parameter (path to dataset) and pretrain_filenames parameter.
+     - /conf/config.yaml
+       - Contains hydra output directory configuration and other global settings.
+     - /conf/[other config files as needed by training/evaluation scripts]
+       - E.g., model hyperparameters, training settings, etc.
+     - .gitignore
+       - Ignore outputs, logs, model checkpoints, __pycache__, etc.
+     - /challenge/[__init__.py, data_loader.py, model.py, training.py, evaluation.py, neurobench/]
+       - Ensure all source code modules are present and importable.
+     - /models/
+       - Directory for storing model state dictionaries.
+     - /results/
+       - Directory for evaluation results (json files).
+     - results_extract_from_logs.ipynb
+       - Notebook for extracting results from hydra logs.
+     - README.md
+       - Project documentation (update to reflect **CPU-only setup** and no CUDA requirements).
+     - setup.sh or setup.bat
+       - Optional: shell/batch script to automate environment setup steps, including installation from requirements.txt.
+     - (Optional) requirements.lock.txt or environment.yml
+       - For environment reproducibility and locking versions.
+     - **If using Docker:**
+       - Dockerfile:
+         - Use `FROM ubuntu:22.04` or `FROM python:3.10-slim` (amd64/x86_64).
+         - Set `WORKDIR /home/cc/EnvGym/data/RSNN` or `/app` as appropriate.
+         - **Do NOT include any CUDA, nvidia-smi, or GPU-related instructions.**
+         - Install build-essential and other dev tools as needed for Python packages.
+         - Ensure adequate storage for dataset and models.
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - Data Loading:
+       - Test that data loaders correctly load and preprocess data from the specified data_dir.
+       - Test handling of missing/corrupt data files.
+       - Test compatibility with h5py, tables, soundfile, and other new data-related libraries.
+     - Model Initialization:
+       - Test instantiation of bigRSNN and tinyRSNN models with various input sizes.
+       - Test model forward pass with dummy data.
+       - Test torch, snnTorch, and stork integration.
+     - Training Pipeline:
+       - Test single epoch training for both models with small synthetic data.
+       - Test checkpoint saving and loading.
+       - Test compatibility with randman and tonic datasets if used.
+     - Evaluation Pipeline:
+       - Test evaluation script on a small test set.
+       - Test compatibility with both stork and snnTorch backends.
+     - Configuration Management:
+       - Test that hydra correctly loads configs and outputs to the specified directory.
+       - Test command-line overrides for seeds and other parameters.
+       - Test omegaconf integration for configuration handling.
+     - Results Extraction:
+       - Test notebook for extracting results from logs.
+       - Test xlsxwriter and KDEpy usage if present in result processing.
+     - **CPU Compatibility:**
+       - Test that code runs on CPU and does not require CUDA.
+       - Test torchaudio and torchvision on CPU.
+       - Ensure code does not fail if `torch.cuda.is_available()` is False.
+       - **If code has GPU/CPU branching, ensure CPU path works and is default.**
+     - Error Handling:
+       - Test for informative errors when dependencies are missing or misconfigured.
+       - Test for graceful failure when CUDA is unavailable (should not be required).
+     - Dependency Import Tests:
+       - Test import of all new libraries (seaborn, soundfile, tables, torchaudio, torchvision, tonic, xlsxwriter, omegaconf, KDEpy, randman).
+     - Data Visualization:
+       - Test matplotlib and seaborn visualizations with sample data.
+     - (Optional) Notebook Execution:
+       - Test that results_extract_from_logs.ipynb runs end-to-end without errors.
+  4. COMPLETE TODO LIST:  
+     1. Install Python 3.10.12 (verify with `python --version`).
+     2. Install pip (verify with `pip --version`).
+     3. (Optional) Create and activate a virtual environment (venv or conda).
+     4. **SKIP CUDA toolkit and NVIDIA drivers installation.**
+        - **Do NOT run or include `nvcc --version` or `nvidia-smi`.**
+     5. Clone the project repository (if not already done).
+     6. Create or update requirements.txt with all dependencies as per the provided file:
+        - Ensure inclusion of all listed libraries and GitHub sources.
+        - (Optional) Pin versions for reproducibility.
+        - **Specify CPU-only torch/torchaudio/torchvision.**
+     7. Run `pip install -r requirements.txt`.
+        - This will install all standard and GitHub-based dependencies (stork, randman).
+        - **If torch installation fails, use the official CPU-only wheels from PyPI.**
+        - Verify installation by importing all major packages in Python shell.
+     8. Download the ["Nonhuman Primate Reaching with Multichannel Sensorimotor Cortex Electrophysiology" dataset](https://zenodo.org/records/583331).
+        - Place data in a directory as referenced in /conf/data/data-default.yaml.
+        - **Ensure sufficient storage space for dataset and models.**
+     9. Create /conf/data/data-default.yaml and set:
+        - data_dir: [path to dataset]
+        - pretrain_filenames: challenge-data (if only using challenge sessions)
+     10. Create /conf/config.yaml and set hydra output directory (default: ./outputs).
+     11. Verify that all code modules in /challenge/ are present and importable.
+     12. Ensure /models/ and /results/ directories exist and are writable.
+     13. (Optional) Create .gitignore to exclude outputs, logs, models, __pycache__, etc.
+     14. (Optional) Create setup.sh or setup.bat to automate steps 1-13, including `pip install -r requirements.txt`.
+     15. Run basic test cases:
+         - Data loading test (load a sample file using h5py, tables, soundfile).
+         - Model instantiation and forward pass test (torch, snnTorch, stork).
+         - Training script dry run (single epoch, small data).
+         - Evaluation script dry run (small data).
+         - Hydra config loading test (hydra-core, omegaconf).
+         - Import test for all libraries in requirements.txt.
+         - Visualization test (matplotlib, seaborn).
+     16. Run `python train-bigRSNN.py --multirun seed=1` and verify training starts and outputs are generated.
+     17. Run `python evaluate.py modelname=bigRSNN` and verify evaluation completes and results are saved.
+     18. Open results_extract_from_logs.ipynb and verify it parses logs and summarizes results (test xlsxwriter, KDEpy if used).
+     19. **Test code on CPU only.**
+         - **Do NOT set CUDA_VISIBLE_DEVICES or attempt to use CUDA.**
+         - Ensure code does not fail if `torch.cuda.is_available()` is False.
+     20. Document any environment-specific issues and update README.md as needed (include new dependencies and setup steps).
+         - **Explicitly state that the environment is CPU-only and does not require CUDA or NVIDIA drivers.**
+     21. (Optional) Set up continuous integration (CI) to run basic tests on push/PR, including dependency installation and import tests.
+     22. (Optional) Archive or backup environment (e.g., export conda env, pip freeze > requirements.lock.txt).
+     23. Final verification:
+         - All scripts run without error.
+         - Models can be trained and evaluated.
+         - Results are reproducible.
+         - Environment is documented and portable across systems.
+  **NOTES ON HARDWARE/OS COMPATIBILITY:**  
+  - All dependencies and code must be compatible with Ubuntu 22.04, x86_64 (amd64).
+  - No ARM-specific or GPU-specific instructions.
+  - Ensure all scripts and Dockerfiles use the correct working directory (`/home/cc/EnvGym/data/RSNN` or `/app`).
+  - If using Docker, set `--platform=linux/amd64` as needed.
+  - Monitor memory and storage usage, especially with large datasets and models.
+  - If any package requires compilation, ensure build-essential and Python dev headers are installed in the environment or Docker image.
+  **SUMMARY OF CHANGES:**  
+  - All CUDA, GPU, and NVIDIA driver steps/instructions are removed.
+  - All torch/torchaudio/torchvision installations are CPU-only.
+  - All test cases and code must run and be validated on CPU.
+  - README and documentation must reflect CPU-only, no-GPU setup.
+  - Dockerfile and environment setup must not reference or install any GPU/CUDA dependencies.
+NEXT:
+  current progress
+  - The Dockerfile is mostly complete and correctly set up for a CPU-only, Ubuntu 22.04, Python 3.10.12 environment.
+  - System dependencies, Python, and pip are installed as required.
+  - The working directory, environment variables, and directory creation steps are correctly specified.
+  - The build failed at the `pip install --no-cache-dir -r requirements.txt` step due to an error with the stork GitHub dependency: "Could not detect requirement name for 'git+https://github.com/fmi-basel/stork.git@40c68fe', please specify one with #egg=your_package_name".
+  - No runtime errors beyond the failed build step.
+  next step
+  - Edit `requirements.txt` to specify the stork dependency with an explicit package name using the `#egg=` syntax, e.g.:
+    ```
+    git+https://github.com/fmi-basel/stork.git@40c68fe#egg=stork
+    ```
+  - Rebuild the Docker image to verify that the dependency installs correctly.
+  - If there are other GitHub dependencies (e.g., randman), ensure they also use the correct `#egg=` syntax.
+  - Proceed with further steps only after confirming all dependencies install without error.
+LOG:
+  === Docker Execution Log - 20250710_033526 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1752118503
+  === Build Log ===
+  Build Status: Failed
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.57kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/ubuntu:22.04
+  #2 DONE 0.3s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [1/8] FROM docker.io/library/ubuntu:22.04@sha256:3c61d3759c2639d4b836d32a2d3c83fa0214e36f195a3421018dbaaf79cbe37f
+  #4 CACHED
+  #5 [2/8] WORKDIR /home/cc/EnvGym/data/RSNN
+  #5 DONE 0.0s
+  #6 [internal] load build context
+  #6 transferring context: 282.28MB 3.1s done
+  #6 DONE 3.1s
+  #7 [3/8] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget         curl         git         build-essential         python3.10         python3.10-venv         python3.10-dev         python3-pip         libsndfile1         libhdf5-dev         libatlas-base-dev         libblas-dev         liblapack-dev         libffi-dev         libssl-dev         libjpeg-dev         libpng-dev         ca-certificates         pkg-config         unzip         &&     rm -rf /var/lib/apt/lists/*
+  #7 0.383 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+  #7 0.384 Get:2 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+  #7 0.835 Get:3 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3103 kB]
+  #7 0.862 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+  #7 0.968 Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+  #7 1.084 Get:6 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+  #7 1.128 Get:7 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+  #7 1.336 Get:8 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [4795 kB]
+  #7 1.453 Get:9 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [48.5 kB]
+  #7 1.454 Get:10 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1266 kB]
+  #7 1.838 Get:11 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+  #7 1.870 Get:12 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+  #7 1.874 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3415 kB]
+  #7 1.964 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [56.4 kB]
+  #7 1.965 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [4948 kB]
+  #7 2.119 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1569 kB]
+  #7 2.160 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.2 kB]
+  #7 2.160 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [83.2 kB]
+  #7 3.212 Fetched 39.7 MB in 3s (13.3 MB/s)
+  #7 3.212 Reading package lists...
+  #7 4.237 Reading package lists...
+  #7 5.169 Building dependency tree...
+  #7 5.319 Reading state information...
+  #7 5.488 The following additional packages will be installed:
+  #7 5.488   binutils binutils-common binutils-x86-64-linux-gnu bzip2 cpp cpp-11 dpkg-dev
+  #7 5.488   g++ g++-11 gcc gcc-11 gcc-11-base git-man hdf5-helpers libaec-dev libaec0
+  #7 5.488   libasan6 libatlas3-base libatomic1 libbinutils libblas3 libbrotli1
+  #7 5.488   libc-dev-bin libc6-dev libcc1-0 libcrypt-dev libctf-nobfd0 libctf0
+  #7 5.488   libcurl3-gnutls libcurl4 libcurl4-openssl-dev libdpkg-perl liberror-perl
+  #7 5.488   libexpat1 libexpat1-dev libflac8 libgcc-11-dev libgdbm-compat4 libgdbm6
+  #7 5.488   libgfortran5 libglib2.0-0 libgomp1 libhdf5-103-1 libhdf5-cpp-103-1
+  #7 5.488   libhdf5-fortran-102 libhdf5-hl-100 libhdf5-hl-cpp-100 libhdf5-hl-fortran-100
+  #7 5.488   libisl23 libitm1 libjpeg-turbo8 libjpeg-turbo8-dev libjpeg8 libjpeg8-dev
+  #7 5.488   liblapack3 libldap-2.5-0 liblsan0 libmpc3 libmpdec3 libmpfr6 libnghttp2-14
+  #7 5.488   libnsl-dev libogg0 libopus0 libperl5.34 libpng16-16 libpsl5
+  #7 5.488   libpython3-stdlib libpython3.10 libpython3.10-dev libpython3.10-minimal
+  #7 5.488   libpython3.10-stdlib libquadmath0 libreadline8 librtmp1 libsasl2-2
+  #7 5.488   libsasl2-modules-db libsqlite3-0 libssh-4 libstdc++-11-dev libsz2
+  #7 5.489   libtirpc-dev libtsan0 libubsan1 libvorbis0a libvorbisenc2 linux-libc-dev
+  #7 5.489   lto-disabled-list make media-types openssl patch perl perl-modules-5.34
+  #7 5.489   python3 python3-distutils python3-lib2to3 python3-minimal python3-pip-whl
+  #7 5.489   python3-pkg-resources python3-setuptools python3-setuptools-whl
+  #7 5.489   python3-wheel python3.10-minimal readline-common rpcsvc-proto xz-utils
+  #7 5.489   zlib1g-dev
+  #7 5.490 Suggested packages:
+  #7 5.490   binutils-doc bzip2-doc cpp-doc gcc-11-locales debian-keyring g++-multilib
+  #7 5.490   g++-11-multilib gcc-11-doc gcc-multilib manpages-dev autoconf automake
+  #7 5.490   libtool flex bison gdb gcc-doc gcc-11-multilib gettext-base git-daemon-run
+  #7 5.490   | git-daemon-sysvinit git-doc git-email git-gui gitk gitweb git-cvs
+  #7 5.490   git-mediawiki git-svn libatlas-doc liblapack-doc glibc-doc libcurl4-doc
+  #7 5.490   libidn11-dev libkrb5-dev libldap2-dev librtmp-dev libssh2-1-dev gnupg bzr
+  #7 5.490   gdbm-l10n libhdf5-doc opus-tools libssl-doc libstdc++-11-doc make-doc ed
+  #7 5.490   diffutils-doc perl-doc libterm-readline-gnu-perl
+  #7 5.490   | libterm-readline-perl-perl libtap-harness-archive-perl python3-doc
+  #7 5.490   python3-tk python3-venv python-setuptools-doc python3.10-doc binfmt-support
+  #7 5.490   readline-doc zip
+  #7 5.490 Recommended packages:
+  #7 5.490   fakeroot gnupg libalgorithm-merge-perl less ssh-client manpages manpages-dev
+  #7 5.490   libc-devtools libfile-fcntllock-perl liblocale-gettext-perl libglib2.0-data
+  #7 5.490   shared-mime-info xdg-user-dirs libldap-common libpng-tools publicsuffix
+  #7 5.490   libsasl2-modules netbase python3-dev
+  #7 5.763 The following NEW packages will be installed:
+  #7 5.763   binutils binutils-common binutils-x86-64-linux-gnu build-essential bzip2
+  #7 5.763   ca-certificates cpp cpp-11 curl dpkg-dev g++ g++-11 gcc gcc-11 gcc-11-base
+  #7 5.763   git git-man hdf5-helpers libaec-dev libaec0 libasan6 libatlas-base-dev
+  #7 5.763   libatlas3-base libatomic1 libbinutils libblas-dev libblas3 libbrotli1
+  #7 5.763   libc-dev-bin libc6-dev libcc1-0 libcrypt-dev libctf-nobfd0 libctf0
+  #7 5.763   libcurl3-gnutls libcurl4 libcurl4-openssl-dev libdpkg-perl liberror-perl
+  #7 5.763   libexpat1 libexpat1-dev libffi-dev libflac8 libgcc-11-dev libgdbm-compat4
+  #7 5.763   libgdbm6 libgfortran5 libglib2.0-0 libgomp1 libhdf5-103-1 libhdf5-cpp-103-1
+  #7 5.763   libhdf5-dev libhdf5-fortran-102 libhdf5-hl-100 libhdf5-hl-cpp-100
+  #7 5.763   libhdf5-hl-fortran-100 libisl23 libitm1 libjpeg-dev libjpeg-turbo8
+  #7 5.763   libjpeg-turbo8-dev libjpeg8 libjpeg8-dev liblapack-dev liblapack3
+  #7 5.763   libldap-2.5-0 liblsan0 libmpc3 libmpdec3 libmpfr6 libnghttp2-14 libnsl-dev
+  #7 5.763   libogg0 libopus0 libperl5.34 libpng-dev libpng16-16 libpsl5
+  #7 5.763   libpython3-stdlib libpython3.10 libpython3.10-dev libpython3.10-minimal
+  #7 5.764   libpython3.10-stdlib libquadmath0 libreadline8 librtmp1 libsasl2-2
+  #7 5.764   libsasl2-modules-db libsndfile1 libsqlite3-0 libssh-4 libssl-dev
+  #7 5.764   libstdc++-11-dev libsz2 libtirpc-dev libtsan0 libubsan1 libvorbis0a
+  #7 5.764   libvorbisenc2 linux-libc-dev lto-disabled-list make media-types openssl
+  #7 5.764   patch perl perl-modules-5.34 pkg-config python3 python3-distutils
+  #7 5.764   python3-lib2to3 python3-minimal python3-pip python3-pip-whl
+  #7 5.764   python3-pkg-resources python3-setuptools python3-setuptools-whl
+  #7 5.764   python3-wheel python3.10 python3.10-dev python3.10-minimal python3.10-venv
+  #7 5.764   readline-common rpcsvc-proto unzip wget xz-utils zlib1g-dev
+  #7 5.962 0 upgraded, 128 newly installed, 0 to remove and 1 not upgraded.
+  #7 5.962 Need to get 124 MB of archives.
+  #7 5.962 After this operation, 474 MB of additional disk space will be used.
+  #7 5.962 Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-minimal amd64 3.10.12-1~22.04.10 [815 kB]
+  #7 6.569 Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1 amd64 2.4.7-1ubuntu0.6 [92.1 kB]
+  #7 6.575 Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-minimal amd64 3.10.12-1~22.04.10 [2277 kB]
+  #7 6.750 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-minimal amd64 3.10.6-1~22.04.1 [24.3 kB]
+  #7 6.751 Get:5 http://archive.ubuntu.com/ubuntu jammy/main amd64 media-types all 7.0.0 [25.5 kB]
+  #7 6.753 Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpdec3 amd64 2.5.1-2build2 [86.8 kB]
+  #7 6.755 Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 readline-common all 8.1.2-1 [53.5 kB]
+  #7 6.757 Get:8 http://archive.ubuntu.com/ubuntu jammy/main amd64 libreadline8 amd64 8.1.2-1 [153 kB]
+  #7 6.762 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsqlite3-0 amd64 3.37.2-2ubuntu0.4 [643 kB]
+  #7 6.784 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-stdlib amd64 3.10.12-1~22.04.10 [1850 kB]
+  #7 6.840 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10 amd64 3.10.12-1~22.04.10 [508 kB]
+  #7 6.849 Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3-stdlib amd64 3.10.6-1~22.04.1 [6812 B]
+  #7 6.850 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3 amd64 3.10.6-1~22.04.1 [22.8 kB]
+  #7 6.922 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl-modules-5.34 all 5.34.0-3ubuntu1.4 [2977 kB]
+  #7 6.972 Get:15 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm6 amd64 1.23-1 [33.9 kB]
+  #7 6.973 Get:16 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm-compat4 amd64 1.23-1 [6606 B]
+  #7 6.973 Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libperl5.34 amd64 5.34.0-3ubuntu1.4 [4820 kB]
+  #7 7.132 Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl amd64 5.34.0-3ubuntu1.4 [232 kB]
+  #7 7.136 Get:19 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 openssl amd64 3.0.2-0ubuntu1.19 [1186 kB]
+  #7 7.189 Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 ca-certificates all 20240203~22.04.1 [162 kB]
+  #7 7.191 Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-0 amd64 2.72.4-0ubuntu2.5 [1466 kB]
+  #7 7.221 Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-pkg-resources all 59.6.0-1.2ubuntu0.22.04.3 [133 kB]
+  #7 7.223 Get:23 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnghttp2-14 amd64 1.43.0-1ubuntu0.2 [76.9 kB]
+  #7 7.224 Get:24 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpng16-16 amd64 1.6.37-3build5 [191 kB]
+  #7 7.304 Get:25 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpsl5 amd64 0.21.0-1.2build2 [58.4 kB]
+  #7 7.305 Get:26 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 wget amd64 1.21.2-2ubuntu1.1 [339 kB]
+  #7 7.311 Get:27 http://archive.ubuntu.com/ubuntu jammy/main amd64 xz-utils amd64 5.2.5-2ubuntu1 [84.8 kB]
+  #7 7.313 Get:28 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 binutils-common amd64 2.38-4ubuntu2.8 [223 kB]
+  #7 7.317 Get:29 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libbinutils amd64 2.38-4ubuntu2.8 [661 kB]
+  #7 7.329 Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libctf-nobfd0 amd64 2.38-4ubuntu2.8 [108 kB]
+  #7 7.387 Get:31 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libctf0 amd64 2.38-4ubuntu2.8 [103 kB]
+  #7 7.389 Get:32 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 binutils-x86-64-linux-gnu amd64 2.38-4ubuntu2.8 [2324 kB]
+  #7 7.428 Get:33 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 binutils amd64 2.38-4ubuntu2.8 [3196 B]
+  #7 7.471 Get:34 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc-dev-bin amd64 2.35-0ubuntu3.10 [20.3 kB]
+  #7 7.472 Get:35 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 linux-libc-dev amd64 5.15.0-143.153 [1305 kB]
+  #7 7.494 Get:36 http://archive.ubuntu.com/ubuntu jammy/main amd64 libcrypt-dev amd64 1:4.4.27-1 [112 kB]
+  #7 7.496 Get:37 http://archive.ubuntu.com/ubuntu jammy/main amd64 rpcsvc-proto amd64 1.4.2-0ubuntu6 [68.5 kB]
+  #7 7.498 Get:38 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtirpc-dev amd64 1.3.2-2ubuntu0.1 [192 kB]
+  #7 7.501 Get:39 http://archive.ubuntu.com/ubuntu jammy/main amd64 libnsl-dev amd64 1.3.0-2build2 [71.3 kB]
+  #7 7.503 Get:40 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc6-dev amd64 2.35-0ubuntu3.10 [2100 kB]
+  #7 7.576 Get:41 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gcc-11-base amd64 11.4.0-1ubuntu1~22.04 [20.2 kB]
+  #7 7.576 Get:42 http://archive.ubuntu.com/ubuntu jammy/main amd64 libisl23 amd64 0.24-2build1 [727 kB]
+  #7 7.587 Get:43 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpfr6 amd64 4.1.0-3build3 [1425 kB]
+  #7 7.656 Get:44 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpc3 amd64 1.2.1-2build1 [46.9 kB]
+  #7 7.657 Get:45 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 cpp-11 amd64 11.4.0-1ubuntu1~22.04 [10.0 MB]
+  #7 7.995 Get:46 http://archive.ubuntu.com/ubuntu jammy/main amd64 cpp amd64 4:11.2.0-1ubuntu1 [27.7 kB]
+  #7 7.996 Get:47 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcc1-0 amd64 12.3.0-1ubuntu1~22.04 [48.3 kB]
+  #7 7.998 Get:48 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgomp1 amd64 12.3.0-1ubuntu1~22.04 [126 kB]
+  #7 8.000 Get:49 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libitm1 amd64 12.3.0-1ubuntu1~22.04 [30.2 kB]
+  #7 8.001 Get:50 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libatomic1 amd64 12.3.0-1ubuntu1~22.04 [10.4 kB]
+  #7 8.002 Get:51 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libasan6 amd64 11.4.0-1ubuntu1~22.04 [2282 kB]
+  #7 8.049 Get:52 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 liblsan0 amd64 12.3.0-1ubuntu1~22.04 [1069 kB]
+  #7 8.092 Get:53 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtsan0 amd64 11.4.0-1ubuntu1~22.04 [2260 kB]
+  #7 8.153 Get:54 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libubsan1 amd64 12.3.0-1ubuntu1~22.04 [976 kB]
+  #7 8.179 Get:55 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libquadmath0 amd64 12.3.0-1ubuntu1~22.04 [154 kB]
+  #7 8.184 Get:56 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgcc-11-dev amd64 11.4.0-1ubuntu1~22.04 [2517 kB]
+  #7 8.252 Get:57 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gcc-11 amd64 11.4.0-1ubuntu1~22.04 [20.1 MB]
+  #7 8.835 Get:58 http://archive.ubuntu.com/ubuntu jammy/main amd64 gcc amd64 4:11.2.0-1ubuntu1 [5112 B]
+  #7 8.835 Get:59 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libstdc++-11-dev amd64 11.4.0-1ubuntu1~22.04 [2101 kB]
+  #7 8.877 Get:60 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 g++-11 amd64 11.4.0-1ubuntu1~22.04 [11.4 MB]
+  #7 9.202 Get:61 http://archive.ubuntu.com/ubuntu jammy/main amd64 g++ amd64 4:11.2.0-1ubuntu1 [1412 B]
+  #7 9.203 Get:62 http://archive.ubuntu.com/ubuntu jammy/main amd64 make amd64 4.3-4.1build1 [180 kB]
+  #7 9.206 Get:63 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libdpkg-perl all 1.21.1ubuntu2.3 [237 kB]
+  #7 9.211 Get:64 http://archive.ubuntu.com/ubuntu jammy/main amd64 bzip2 amd64 1.0.8-5build1 [34.8 kB]
+  #7 9.212 Get:65 http://archive.ubuntu.com/ubuntu jammy/main amd64 patch amd64 2.7.6-7build2 [109 kB]
+  #7 9.214 Get:66 http://archive.ubuntu.com/ubuntu jammy/main amd64 lto-disabled-list all 24 [12.5 kB]
+  #7 9.214 Get:67 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 dpkg-dev all 1.21.1ubuntu2.3 [922 kB]
+  #7 9.232 Get:68 http://archive.ubuntu.com/ubuntu jammy/main amd64 build-essential amd64 12.9ubuntu3 [4744 B]
+  #7 9.232 Get:69 http://archive.ubuntu.com/ubuntu jammy/main amd64 libbrotli1 amd64 1.0.9-2build6 [315 kB]
+  #7 9.289 Get:70 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-modules-db amd64 2.1.27+dfsg2-3ubuntu1.2 [20.5 kB]
+  #7 9.373 Get:71 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-2 amd64 2.1.27+dfsg2-3ubuntu1.2 [53.8 kB]
+  #7 9.375 Get:72 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libldap-2.5-0 amd64 2.5.19+dfsg-0ubuntu0.22.04.1 [184 kB]
+  #7 9.380 Get:73 http://archive.ubuntu.com/ubuntu jammy/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2build4 [58.2 kB]
+  #7 9.382 Get:74 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssh-4 amd64 0.9.6-2ubuntu0.22.04.4 [187 kB]
+  #7 9.387 Get:75 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl4 amd64 7.81.0-1ubuntu1.20 [289 kB]
+  #7 9.395 Get:76 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 curl amd64 7.81.0-1ubuntu1.20 [194 kB]
+  #7 9.401 Get:77 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl3-gnutls amd64 7.81.0-1ubuntu1.20 [284 kB]
+  #7 9.409 Get:78 http://archive.ubuntu.com/ubuntu jammy/main amd64 liberror-perl all 0.17029-1 [26.5 kB]
+  #7 9.410 Get:79 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git-man all 1:2.34.1-1ubuntu1.14 [955 kB]
+  #7 9.457 Get:80 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git amd64 1:2.34.1-1ubuntu1.14 [3166 kB]
+  #7 9.549 Get:81 http://archive.ubuntu.com/ubuntu jammy/universe amd64 hdf5-helpers amd64 1.10.7+repack-4ubuntu2 [14.2 kB]
+  #7 9.550 Get:82 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libaec0 amd64 1.0.6-1 [20.1 kB]
+  #7 9.551 Get:83 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgfortran5 amd64 12.3.0-1ubuntu1~22.04 [879 kB]
+  #7 9.571 Get:84 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libatlas3-base amd64 3.10.3-12ubuntu1 [3340 kB]
+  #7 9.661 Get:85 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libatlas-base-dev amd64 3.10.3-12ubuntu1 [3590 kB]
+  #7 9.755 Get:86 http://archive.ubuntu.com/ubuntu jammy/main amd64 libblas3 amd64 3.10.0-2ubuntu1 [228 kB]
+  #7 9.760 Get:87 http://archive.ubuntu.com/ubuntu jammy/main amd64 libblas-dev amd64 3.10.0-2ubuntu1 [164 kB]
+  #7 9.763 Get:88 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl4-openssl-dev amd64 7.81.0-1ubuntu1.20 [386 kB]
+  #7 9.771 Get:89 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1-dev amd64 2.4.7-1ubuntu0.6 [148 kB]
+  #7 9.774 Get:90 http://archive.ubuntu.com/ubuntu jammy/main amd64 libogg0 amd64 1.3.5-0ubuntu3 [22.9 kB]
+  #7 9.775 Get:91 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libflac8 amd64 1.3.3-2ubuntu0.2 [111 kB]
+  #7 9.777 Get:92 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libsz2 amd64 1.0.6-1 [5354 B]
+  #7 9.777 Get:93 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libhdf5-103-1 amd64 1.10.7+repack-4ubuntu2 [1295 kB]
+  #7 9.822 Get:94 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libhdf5-cpp-103-1 amd64 1.10.7+repack-4ubuntu2 [129 kB]
+  #7 9.888 Get:95 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libhdf5-fortran-102 amd64 1.10.7+repack-4ubuntu2 [90.9 kB]
+  #7 9.891 Get:96 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libhdf5-hl-100 amd64 1.10.7+repack-4ubuntu2 [59.1 kB]
+  #7 9.892 Get:97 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libhdf5-hl-fortran-100 amd64 1.10.7+repack-4ubuntu2 [33.8 kB]
+  #7 9.893 Get:98 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libhdf5-hl-cpp-100 amd64 1.10.7+repack-4ubuntu2 [10.6 kB]
+  #7 9.894 Get:99 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 zlib1g-dev amd64 1:1.2.11.dfsg-2ubuntu9.2 [164 kB]
+  #7 9.898 Get:100 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg-turbo8 amd64 2.1.2-0ubuntu1 [134 kB]
+  #7 9.901 Get:101 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg-turbo8-dev amd64 2.1.2-0ubuntu1 [257 kB]
+  #7 9.955 Get:102 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg8 amd64 8c-2ubuntu10 [2264 B]
+  #7 9.979 Get:103 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg8-dev amd64 8c-2ubuntu10 [1476 B]
+  #7 9.980 Get:104 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg-dev amd64 8c-2ubuntu10 [1472 B]
+  #7 9.980 Get:105 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libaec-dev amd64 1.0.6-1 [17.9 kB]
+  #7 10.00 Get:106 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssl-dev amd64 3.0.2-0ubuntu1.19 [2376 kB]
+  #7 10.18 Get:107 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libhdf5-dev amd64 1.10.7+repack-4ubuntu2 [2684 kB]
+  #7 10.23 Get:108 http://archive.ubuntu.com/ubuntu jammy/main amd64 liblapack3 amd64 3.10.0-2ubuntu1 [2504 kB]
+  #7 10.28 Get:109 http://archive.ubuntu.com/ubuntu jammy/main amd64 liblapack-dev amd64 3.10.0-2ubuntu1 [4774 kB]
+  #7 10.35 Get:110 http://archive.ubuntu.com/ubuntu jammy/main amd64 libopus0 amd64 1.3.1-0.1build2 [203 kB]
+  #7 10.37 Get:111 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpng-dev amd64 1.6.37-3build5 [192 kB]
+  #7 10.37 Get:112 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10 amd64 3.10.12-1~22.04.10 [1950 kB]
+  #7 10.38 Get:113 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-dev amd64 3.10.12-1~22.04.10 [4763 kB]
+  #7 10.43 Get:114 http://archive.ubuntu.com/ubuntu jammy/main amd64 libvorbis0a amd64 1.3.7-1build2 [99.2 kB]
+  #7 10.43 Get:115 http://archive.ubuntu.com/ubuntu jammy/main amd64 libvorbisenc2 amd64 1.3.7-1build2 [82.6 kB]
+  #7 10.45 Get:116 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsndfile1 amd64 1.0.31-2ubuntu0.2 [196 kB]
+  #7 10.47 Get:117 http://archive.ubuntu.com/ubuntu jammy/main amd64 pkg-config amd64 0.29.2-1ubuntu3 [48.2 kB]
+  #7 10.47 Get:118 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-lib2to3 all 3.10.8-1~22.04 [77.6 kB]
+  #7 10.48 Get:119 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-distutils all 3.10.8-1~22.04 [139 kB]
+  #7 10.48 Get:120 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-setuptools all 59.6.0-1.2ubuntu0.22.04.3 [340 kB]
+  #7 10.51 Get:121 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-wheel all 0.37.1-2ubuntu0.22.04.1 [32.0 kB]
+  #7 10.51 Get:122 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-pip all 22.0.2+dfsg-1ubuntu0.6 [1306 kB]
+  #7 10.52 Get:123 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-pip-whl all 22.0.2+dfsg-1ubuntu0.6 [1680 kB]
+  #7 10.54 Get:124 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-setuptools-whl all 59.6.0-1.2ubuntu0.22.04.3 [789 kB]
+  #7 10.56 Get:125 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-dev amd64 3.10.12-1~22.04.10 [508 kB]
+  #7 10.57 Get:126 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3.10-venv amd64 3.10.12-1~22.04.10 [5722 B]
+  #7 10.57 Get:127 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 unzip amd64 6.0-26ubuntu3.2 [175 kB]
+  #7 10.59 Get:128 http://archive.ubuntu.com/ubuntu jammy/main amd64 libffi-dev amd64 3.4.2-4 [63.7 kB]
+  #7 10.75 debconf: delaying package configuration, since apt-utils is not installed
+  #7 10.78 Fetched 124 MB in 5s (25.8 MB/s)
+  #7 10.79 Selecting previously unselected package libpython3.10-minimal:amd64.
+  #7 10.79 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 4393 files and directories currently installed.)
+  #7 10.79 Preparing to unpack .../libpython3.10-minimal_3.10.12-1~22.04.10_amd64.deb ...
+  #7 10.79 Unpacking libpython3.10-minimal:amd64 (3.10.12-1~22.04.10) ...
+  #7 10.84 Selecting previously unselected package libexpat1:amd64.
+  #7 10.84 Preparing to unpack .../libexpat1_2.4.7-1ubuntu0.6_amd64.deb ...
+  #7 10.84 Unpacking libexpat1:amd64 (2.4.7-1ubuntu0.6) ...
+  #7 10.85 Selecting previously unselected package python3.10-minimal.
+  #7 10.85 Preparing to unpack .../python3.10-minimal_3.10.12-1~22.04.10_amd64.deb ...
+  #7 10.85 Unpacking python3.10-minimal (3.10.12-1~22.04.10) ...
+  #7 10.90 Setting up libpython3.10-minimal:amd64 (3.10.12-1~22.04.10) ...
+  #7 10.90 Setting up libexpat1:amd64 (2.4.7-1ubuntu0.6) ...
+  #7 10.90 Setting up python3.10-minimal (3.10.12-1~22.04.10) ...
+  #7 11.48 Selecting previously unselected package python3-minimal.
+  #7 11.48 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 4697 files and directories currently installed.)
+  #7 11.48 Preparing to unpack .../0-python3-minimal_3.10.6-1~22.04.1_amd64.deb ...
+  #7 11.48 Unpacking python3-minimal (3.10.6-1~22.04.1) ...
+  #7 11.49 Selecting previously unselected package media-types.
+  #7 11.49 Preparing to unpack .../1-media-types_7.0.0_all.deb ...
+  #7 11.49 Unpacking media-types (7.0.0) ...
+  #7 11.51 Selecting previously unselected package libmpdec3:amd64.
+  #7 11.51 Preparing to unpack .../2-libmpdec3_2.5.1-2build2_amd64.deb ...
+  #7 11.51 Unpacking libmpdec3:amd64 (2.5.1-2build2) ...
+  #7 11.52 Selecting previously unselected package readline-common.
+  #7 11.52 Preparing to unpack .../3-readline-common_8.1.2-1_all.deb ...
+  #7 11.52 Unpacking readline-common (8.1.2-1) ...
+  #7 11.53 Selecting previously unselected package libreadline8:amd64.
+  #7 11.53 Preparing to unpack .../4-libreadline8_8.1.2-1_amd64.deb ...
+  #7 11.53 Unpacking libreadline8:amd64 (8.1.2-1) ...
+  #7 11.54 Selecting previously unselected package libsqlite3-0:amd64.
+  #7 11.54 Preparing to unpack .../5-libsqlite3-0_3.37.2-2ubuntu0.4_amd64.deb ...
+  #7 11.54 Unpacking libsqlite3-0:amd64 (3.37.2-2ubuntu0.4) ...
+  #7 11.56 Selecting previously unselected package libpython3.10-stdlib:amd64.
+  #7 11.56 Preparing to unpack .../6-libpython3.10-stdlib_3.10.12-1~22.04.10_amd64.deb ...
+  #7 11.56 Unpacking libpython3.10-stdlib:amd64 (3.10.12-1~22.04.10) ...
+  #7 11.61 Selecting previously unselected package python3.10.
+  #7 11.61 Preparing to unpack .../7-python3.10_3.10.12-1~22.04.10_amd64.deb ...
+  #7 11.61 Unpacking python3.10 (3.10.12-1~22.04.10) ...
+  #7 11.63 Selecting previously unselected package libpython3-stdlib:amd64.
+  #7 11.63 Preparing to unpack .../8-libpython3-stdlib_3.10.6-1~22.04.1_amd64.deb ...
+  #7 11.63 Unpacking libpython3-stdlib:amd64 (3.10.6-1~22.04.1) ...
+  #7 11.64 Setting up python3-minimal (3.10.6-1~22.04.1) ...
+  #7 11.78 Selecting previously unselected package python3.
+  #7 11.78 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 5127 files and directories currently installed.)
+  #7 11.78 Preparing to unpack .../000-python3_3.10.6-1~22.04.1_amd64.deb ...
+  #7 11.79 Unpacking python3 (3.10.6-1~22.04.1) ...
+  #7 11.80 Selecting previously unselected package perl-modules-5.34.
+  #7 11.80 Preparing to unpack .../001-perl-modules-5.34_5.34.0-3ubuntu1.4_all.deb ...
+  #7 11.80 Unpacking perl-modules-5.34 (5.34.0-3ubuntu1.4) ...
+  #7 11.95 Selecting previously unselected package libgdbm6:amd64.
+  #7 11.95 Preparing to unpack .../002-libgdbm6_1.23-1_amd64.deb ...
+  #7 11.95 Unpacking libgdbm6:amd64 (1.23-1) ...
+  #7 11.96 Selecting previously unselected package libgdbm-compat4:amd64.
+  #7 11.96 Preparing to unpack .../003-libgdbm-compat4_1.23-1_amd64.deb ...
+  #7 11.96 Unpacking libgdbm-compat4:amd64 (1.23-1) ...
+  #7 11.97 Selecting previously unselected package libperl5.34:amd64.
+  #7 11.97 Preparing to unpack .../004-libperl5.34_5.34.0-3ubuntu1.4_amd64.deb ...
+  #7 11.97 Unpacking libperl5.34:amd64 (5.34.0-3ubuntu1.4) ...
+  #7 12.10 Selecting previously unselected package perl.
+  #7 12.10 Preparing to unpack .../005-perl_5.34.0-3ubuntu1.4_amd64.deb ...
+  #7 12.11 Unpacking perl (5.34.0-3ubuntu1.4) ...
+  #7 12.12 Selecting previously unselected package openssl.
+  #7 12.12 Preparing to unpack .../006-openssl_3.0.2-0ubuntu1.19_amd64.deb ...
+  #7 12.12 Unpacking openssl (3.0.2-0ubuntu1.19) ...
+  #7 12.15 Selecting previously unselected package ca-certificates.
+  #7 12.15 Preparing to unpack .../007-ca-certificates_20240203~22.04.1_all.deb ...
+  #7 12.15 Unpacking ca-certificates (20240203~22.04.1) ...
+  #7 12.17 Selecting previously unselected package libglib2.0-0:amd64.
+  #7 12.17 Preparing to unpack .../008-libglib2.0-0_2.72.4-0ubuntu2.5_amd64.deb ...
+  #7 12.17 Unpacking libglib2.0-0:amd64 (2.72.4-0ubuntu2.5) ...
+  #7 12.20 Selecting previously unselected package python3-pkg-resources.
+  #7 12.20 Preparing to unpack .../009-python3-pkg-resources_59.6.0-1.2ubuntu0.22.04.3_all.deb ...
+  #7 12.20 Unpacking python3-pkg-resources (59.6.0-1.2ubuntu0.22.04.3) ...
+  #7 12.21 Selecting previously unselected package libnghttp2-14:amd64.
+  #7 12.21 Preparing to unpack .../010-libnghttp2-14_1.43.0-1ubuntu0.2_amd64.deb ...
+  #7 12.21 Unpacking libnghttp2-14:amd64 (1.43.0-1ubuntu0.2) ...
+  #7 12.22 Selecting previously unselected package libpng16-16:amd64.
+  #7 12.23 Preparing to unpack .../011-libpng16-16_1.6.37-3build5_amd64.deb ...
+  #7 12.23 Unpacking libpng16-16:amd64 (1.6.37-3build5) ...
+  #7 12.24 Selecting previously unselected package libpsl5:amd64.
+  #7 12.24 Preparing to unpack .../012-libpsl5_0.21.0-1.2build2_amd64.deb ...
+  #7 12.24 Unpacking libpsl5:amd64 (0.21.0-1.2build2) ...
+  #7 12.25 Selecting previously unselected package wget.
+  #7 12.25 Preparing to unpack .../013-wget_1.21.2-2ubuntu1.1_amd64.deb ...
+  #7 12.25 Unpacking wget (1.21.2-2ubuntu1.1) ...
+  #7 12.26 Selecting previously unselected package xz-utils.
+  #7 12.26 Preparing to unpack .../014-xz-utils_5.2.5-2ubuntu1_amd64.deb ...
+  #7 12.26 Unpacking xz-utils (5.2.5-2ubuntu1) ...
+  #7 12.27 Selecting previously unselected package binutils-common:amd64.
+  #7 12.27 Preparing to unpack .../015-binutils-common_2.38-4ubuntu2.8_amd64.deb ...
+  #7 12.27 Unpacking binutils-common:amd64 (2.38-4ubuntu2.8) ...
+  #7 12.28 Selecting previously unselected package libbinutils:amd64.
+  #7 12.28 Preparing to unpack .../016-libbinutils_2.38-4ubuntu2.8_amd64.deb ...
+  #7 12.29 Unpacking libbinutils:amd64 (2.38-4ubuntu2.8) ...
+  #7 12.30 Selecting previously unselected package libctf-nobfd0:amd64.
+  #7 12.30 Preparing to unpack .../017-libctf-nobfd0_2.38-4ubuntu2.8_amd64.deb ...
+  #7 12.31 Unpacking libctf-nobfd0:amd64 (2.38-4ubuntu2.8) ...
+  #7 12.32 Selecting previously unselected package libctf0:amd64.
+  #7 12.32 Preparing to unpack .../018-libctf0_2.38-4ubuntu2.8_amd64.deb ...
+  #7 12.32 Unpacking libctf0:amd64 (2.38-4ubuntu2.8) ...
+  #7 12.33 Selecting previously unselected package binutils-x86-64-linux-gnu.
+  #7 12.33 Preparing to unpack .../019-binutils-x86-64-linux-gnu_2.38-4ubuntu2.8_amd64.deb ...
+  #7 12.33 Unpacking binutils-x86-64-linux-gnu (2.38-4ubuntu2.8) ...
+  #7 12.38 Selecting previously unselected package binutils.
+  #7 12.39 Preparing to unpack .../020-binutils_2.38-4ubuntu2.8_amd64.deb ...
+  #7 12.39 Unpacking binutils (2.38-4ubuntu2.8) ...
+  #7 12.40 Selecting previously unselected package libc-dev-bin.
+  #7 12.40 Preparing to unpack .../021-libc-dev-bin_2.35-0ubuntu3.10_amd64.deb ...
+  #7 12.40 Unpacking libc-dev-bin (2.35-0ubuntu3.10) ...
+  #7 12.41 Selecting previously unselected package linux-libc-dev:amd64.
+  #7 12.41 Preparing to unpack .../022-linux-libc-dev_5.15.0-143.153_amd64.deb ...
+  #7 12.41 Unpacking linux-libc-dev:amd64 (5.15.0-143.153) ...
+  #7 12.50 Selecting previously unselected package libcrypt-dev:amd64.
+  #7 12.50 Preparing to unpack .../023-libcrypt-dev_1%3a4.4.27-1_amd64.deb ...
+  #7 12.51 Unpacking libcrypt-dev:amd64 (1:4.4.27-1) ...
+  #7 12.52 Selecting previously unselected package rpcsvc-proto.
+  #7 12.52 Preparing to unpack .../024-rpcsvc-proto_1.4.2-0ubuntu6_amd64.deb ...
+  #7 12.52 Unpacking rpcsvc-proto (1.4.2-0ubuntu6) ...
+  #7 12.53 Selecting previously unselected package libtirpc-dev:amd64.
+  #7 12.53 Preparing to unpack .../025-libtirpc-dev_1.3.2-2ubuntu0.1_amd64.deb ...
+  #7 12.53 Unpacking libtirpc-dev:amd64 (1.3.2-2ubuntu0.1) ...
+  #7 12.55 Selecting previously unselected package libnsl-dev:amd64.
+  #7 12.55 Preparing to unpack .../026-libnsl-dev_1.3.0-2build2_amd64.deb ...
+  #7 12.55 Unpacking libnsl-dev:amd64 (1.3.0-2build2) ...
+  #7 12.56 Selecting previously unselected package libc6-dev:amd64.
+  #7 12.56 Preparing to unpack .../027-libc6-dev_2.35-0ubuntu3.10_amd64.deb ...
+  #7 12.56 Unpacking libc6-dev:amd64 (2.35-0ubuntu3.10) ...
+  #7 12.65 Selecting previously unselected package gcc-11-base:amd64.
+  #7 12.65 Preparing to unpack .../028-gcc-11-base_11.4.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.65 Unpacking gcc-11-base:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 12.66 Selecting previously unselected package libisl23:amd64.
+  #7 12.66 Preparing to unpack .../029-libisl23_0.24-2build1_amd64.deb ...
+  #7 12.66 Unpacking libisl23:amd64 (0.24-2build1) ...
+  #7 12.68 Selecting previously unselected package libmpfr6:amd64.
+  #7 12.68 Preparing to unpack .../030-libmpfr6_4.1.0-3build3_amd64.deb ...
+  #7 12.68 Unpacking libmpfr6:amd64 (4.1.0-3build3) ...
+  #7 12.70 Selecting previously unselected package libmpc3:amd64.
+  #7 12.70 Preparing to unpack .../031-libmpc3_1.2.1-2build1_amd64.deb ...
+  #7 12.70 Unpacking libmpc3:amd64 (1.2.1-2build1) ...
+  #7 12.71 Selecting previously unselected package cpp-11.
+  #7 12.71 Preparing to unpack .../032-cpp-11_11.4.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.71 Unpacking cpp-11 (11.4.0-1ubuntu1~22.04) ...
+  #7 12.83 Selecting previously unselected package cpp.
+  #7 12.83 Preparing to unpack .../033-cpp_4%3a11.2.0-1ubuntu1_amd64.deb ...
+  #7 12.83 Unpacking cpp (4:11.2.0-1ubuntu1) ...
+  #7 12.84 Selecting previously unselected package libcc1-0:amd64.
+  #7 12.84 Preparing to unpack .../034-libcc1-0_12.3.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.85 Unpacking libcc1-0:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 12.86 Selecting previously unselected package libgomp1:amd64.
+  #7 12.86 Preparing to unpack .../035-libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.86 Unpacking libgomp1:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 12.87 Selecting previously unselected package libitm1:amd64.
+  #7 12.87 Preparing to unpack .../036-libitm1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.87 Unpacking libitm1:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 12.88 Selecting previously unselected package libatomic1:amd64.
+  #7 12.88 Preparing to unpack .../037-libatomic1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.88 Unpacking libatomic1:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 12.89 Selecting previously unselected package libasan6:amd64.
+  #7 12.89 Preparing to unpack .../038-libasan6_11.4.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.90 Unpacking libasan6:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 12.94 Selecting previously unselected package liblsan0:amd64.
+  #7 12.94 Preparing to unpack .../039-liblsan0_12.3.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.94 Unpacking liblsan0:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 12.96 Selecting previously unselected package libtsan0:amd64.
+  #7 12.96 Preparing to unpack .../040-libtsan0_11.4.0-1ubuntu1~22.04_amd64.deb ...
+  #7 12.96 Unpacking libtsan0:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 13.00 Selecting previously unselected package libubsan1:amd64.
+  #7 13.00 Preparing to unpack .../041-libubsan1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+  #7 13.00 Unpacking libubsan1:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 13.02 Selecting previously unselected package libquadmath0:amd64.
+  #7 13.02 Preparing to unpack .../042-libquadmath0_12.3.0-1ubuntu1~22.04_amd64.deb ...
+  #7 13.02 Unpacking libquadmath0:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 13.03 Selecting previously unselected package libgcc-11-dev:amd64.
+  #7 13.04 Preparing to unpack .../043-libgcc-11-dev_11.4.0-1ubuntu1~22.04_amd64.deb ...
+  #7 13.04 Unpacking libgcc-11-dev:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 13.10 Selecting previously unselected package gcc-11.
+  #7 13.10 Preparing to unpack .../044-gcc-11_11.4.0-1ubuntu1~22.04_amd64.deb ...
+  #7 13.10 Unpacking gcc-11 (11.4.0-1ubuntu1~22.04) ...
+  #7 13.32 Selecting previously unselected package gcc.
+  #7 13.32 Preparing to unpack .../045-gcc_4%3a11.2.0-1ubuntu1_amd64.deb ...
+  #7 13.33 Unpacking gcc (4:11.2.0-1ubuntu1) ...
+  #7 13.34 Selecting previously unselected package libstdc++-11-dev:amd64.
+  #7 13.34 Preparing to unpack .../046-libstdc++-11-dev_11.4.0-1ubuntu1~22.04_amd64.deb ...
+  #7 13.34 Unpacking libstdc++-11-dev:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 13.46 Selecting previously unselected package g++-11.
+  #7 13.47 Preparing to unpack .../047-g++-11_11.4.0-1ubuntu1~22.04_amd64.deb ...
+  #7 13.47 Unpacking g++-11 (11.4.0-1ubuntu1~22.04) ...
+  #7 13.60 Selecting previously unselected package g++.
+  #7 13.60 Preparing to unpack .../048-g++_4%3a11.2.0-1ubuntu1_amd64.deb ...
+  #7 13.60 Unpacking g++ (4:11.2.0-1ubuntu1) ...
+  #7 13.61 Selecting previously unselected package make.
+  #7 13.61 Preparing to unpack .../049-make_4.3-4.1build1_amd64.deb ...
+  #7 13.61 Unpacking make (4.3-4.1build1) ...
+  #7 13.62 Selecting previously unselected package libdpkg-perl.
+  #7 13.62 Preparing to unpack .../050-libdpkg-perl_1.21.1ubuntu2.3_all.deb ...
+  #7 13.62 Unpacking libdpkg-perl (1.21.1ubuntu2.3) ...
+  #7 13.64 Selecting previously unselected package bzip2.
+  #7 13.64 Preparing to unpack .../051-bzip2_1.0.8-5build1_amd64.deb ...
+  #7 13.65 Unpacking bzip2 (1.0.8-5build1) ...
+  #7 13.66 Selecting previously unselected package patch.
+  #7 13.66 Preparing to unpack .../052-patch_2.7.6-7build2_amd64.deb ...
+  #7 13.66 Unpacking patch (2.7.6-7build2) ...
+  #7 13.67 Selecting previously unselected package lto-disabled-list.
+  #7 13.67 Preparing to unpack .../053-lto-disabled-list_24_all.deb ...
+  #7 13.67 Unpacking lto-disabled-list (24) ...
+  #7 13.68 Selecting previously unselected package dpkg-dev.
+  #7 13.68 Preparing to unpack .../054-dpkg-dev_1.21.1ubuntu2.3_all.deb ...
+  #7 13.68 Unpacking dpkg-dev (1.21.1ubuntu2.3) ...
+  #7 13.70 Selecting previously unselected package build-essential.
+  #7 13.70 Preparing to unpack .../055-build-essential_12.9ubuntu3_amd64.deb ...
+  #7 13.71 Unpacking build-essential (12.9ubuntu3) ...
+  #7 13.72 Selecting previously unselected package libbrotli1:amd64.
+  #7 13.72 Preparing to unpack .../056-libbrotli1_1.0.9-2build6_amd64.deb ...
+  #7 13.72 Unpacking libbrotli1:amd64 (1.0.9-2build6) ...
+  #7 13.73 Selecting previously unselected package libsasl2-modules-db:amd64.
+  #7 13.73 Preparing to unpack .../057-libsasl2-modules-db_2.1.27+dfsg2-3ubuntu1.2_amd64.deb ...
+  #7 13.73 Unpacking libsasl2-modules-db:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #7 13.74 Selecting previously unselected package libsasl2-2:amd64.
+  #7 13.74 Preparing to unpack .../058-libsasl2-2_2.1.27+dfsg2-3ubuntu1.2_amd64.deb ...
+  #7 13.75 Unpacking libsasl2-2:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #7 13.76 Selecting previously unselected package libldap-2.5-0:amd64.
+  #7 13.76 Preparing to unpack .../059-libldap-2.5-0_2.5.19+dfsg-0ubuntu0.22.04.1_amd64.deb ...
+  #7 13.76 Unpacking libldap-2.5-0:amd64 (2.5.19+dfsg-0ubuntu0.22.04.1) ...
+  #7 13.77 Selecting previously unselected package librtmp1:amd64.
+  #7 13.77 Preparing to unpack .../060-librtmp1_2.4+20151223.gitfa8646d.1-2build4_amd64.deb ...
+  #7 13.77 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build4) ...
+  #7 13.78 Selecting previously unselected package libssh-4:amd64.
+  #7 13.79 Preparing to unpack .../061-libssh-4_0.9.6-2ubuntu0.22.04.4_amd64.deb ...
+  #7 13.79 Unpacking libssh-4:amd64 (0.9.6-2ubuntu0.22.04.4) ...
+  #7 13.80 Selecting previously unselected package libcurl4:amd64.
+  #7 13.80 Preparing to unpack .../062-libcurl4_7.81.0-1ubuntu1.20_amd64.deb ...
+  #7 13.80 Unpacking libcurl4:amd64 (7.81.0-1ubuntu1.20) ...
+  #7 13.81 Selecting previously unselected package curl.
+  #7 13.81 Preparing to unpack .../063-curl_7.81.0-1ubuntu1.20_amd64.deb ...
+  #7 13.81 Unpacking curl (7.81.0-1ubuntu1.20) ...
+  #7 13.82 Selecting previously unselected package libcurl3-gnutls:amd64.
+  #7 13.83 Preparing to unpack .../064-libcurl3-gnutls_7.81.0-1ubuntu1.20_amd64.deb ...
+  #7 13.83 Unpacking libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.20) ...
+  #7 13.84 Selecting previously unselected package liberror-perl.
+  #7 13.84 Preparing to unpack .../065-liberror-perl_0.17029-1_all.deb ...
+  #7 13.84 Unpacking liberror-perl (0.17029-1) ...
+  #7 13.85 Selecting previously unselected package git-man.
+  #7 13.85 Preparing to unpack .../066-git-man_1%3a2.34.1-1ubuntu1.14_all.deb ...
+  #7 13.85 Unpacking git-man (1:2.34.1-1ubuntu1.14) ...
+  #7 13.87 Selecting previously unselected package git.
+  #7 13.87 Preparing to unpack .../067-git_1%3a2.34.1-1ubuntu1.14_amd64.deb ...
+  #7 13.87 Unpacking git (1:2.34.1-1ubuntu1.14) ...
+  #7 13.96 Selecting previously unselected package hdf5-helpers.
+  #7 13.96 Preparing to unpack .../068-hdf5-helpers_1.10.7+repack-4ubuntu2_amd64.deb ...
+  #7 13.96 Unpacking hdf5-helpers (1.10.7+repack-4ubuntu2) ...
+  #7 13.97 Selecting previously unselected package libaec0:amd64.
+  #7 13.97 Preparing to unpack .../069-libaec0_1.0.6-1_amd64.deb ...
+  #7 13.97 Unpacking libaec0:amd64 (1.0.6-1) ...
+  #7 13.98 Selecting previously unselected package libgfortran5:amd64.
+  #7 13.98 Preparing to unpack .../070-libgfortran5_12.3.0-1ubuntu1~22.04_amd64.deb ...
+  #7 13.98 Unpacking libgfortran5:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 14.00 Selecting previously unselected package libatlas3-base:amd64.
+  #7 14.00 Preparing to unpack .../071-libatlas3-base_3.10.3-12ubuntu1_amd64.deb ...
+  #7 14.01 Unpacking libatlas3-base:amd64 (3.10.3-12ubuntu1) ...
+  #7 14.06 Selecting previously unselected package libatlas-base-dev:amd64.
+  #7 14.06 Preparing to unpack .../072-libatlas-base-dev_3.10.3-12ubuntu1_amd64.deb ...
+  #7 14.06 Unpacking libatlas-base-dev:amd64 (3.10.3-12ubuntu1) ...
+  #7 14.15 Selecting previously unselected package libblas3:amd64.
+  #7 14.16 Preparing to unpack .../073-libblas3_3.10.0-2ubuntu1_amd64.deb ...
+  #7 14.16 Unpacking libblas3:amd64 (3.10.0-2ubuntu1) ...
+  #7 14.17 Selecting previously unselected package libblas-dev:amd64.
+  #7 14.17 Preparing to unpack .../074-libblas-dev_3.10.0-2ubuntu1_amd64.deb ...
+  #7 14.17 Unpacking libblas-dev:amd64 (3.10.0-2ubuntu1) ...
+  #7 14.19 Selecting previously unselected package libcurl4-openssl-dev:amd64.
+  #7 14.19 Preparing to unpack .../075-libcurl4-openssl-dev_7.81.0-1ubuntu1.20_amd64.deb ...
+  #7 14.19 Unpacking libcurl4-openssl-dev:amd64 (7.81.0-1ubuntu1.20) ...
+  #7 14.20 Selecting previously unselected package libexpat1-dev:amd64.
+  #7 14.20 Preparing to unpack .../076-libexpat1-dev_2.4.7-1ubuntu0.6_amd64.deb ...
+  #7 14.20 Unpacking libexpat1-dev:amd64 (2.4.7-1ubuntu0.6) ...
+  #7 14.22 Selecting previously unselected package libogg0:amd64.
+  #7 14.22 Preparing to unpack .../077-libogg0_1.3.5-0ubuntu3_amd64.deb ...
+  #7 14.22 Unpacking libogg0:amd64 (1.3.5-0ubuntu3) ...
+  #7 14.23 Selecting previously unselected package libflac8:amd64.
+  #7 14.23 Preparing to unpack .../078-libflac8_1.3.3-2ubuntu0.2_amd64.deb ...
+  #7 14.23 Unpacking libflac8:amd64 (1.3.3-2ubuntu0.2) ...
+  #7 14.24 Selecting previously unselected package libsz2:amd64.
+  #7 14.24 Preparing to unpack .../079-libsz2_1.0.6-1_amd64.deb ...
+  #7 14.24 Unpacking libsz2:amd64 (1.0.6-1) ...
+  #7 14.25 Selecting previously unselected package libhdf5-103-1:amd64.
+  #7 14.25 Preparing to unpack .../080-libhdf5-103-1_1.10.7+repack-4ubuntu2_amd64.deb ...
+  #7 14.25 Unpacking libhdf5-103-1:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 14.28 Selecting previously unselected package libhdf5-cpp-103-1:amd64.
+  #7 14.28 Preparing to unpack .../081-libhdf5-cpp-103-1_1.10.7+repack-4ubuntu2_amd64.deb ...
+  #7 14.28 Unpacking libhdf5-cpp-103-1:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 14.29 Selecting previously unselected package libhdf5-fortran-102:amd64.
+  #7 14.29 Preparing to unpack .../082-libhdf5-fortran-102_1.10.7+repack-4ubuntu2_amd64.deb ...
+  #7 14.29 Unpacking libhdf5-fortran-102:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 14.31 Selecting previously unselected package libhdf5-hl-100:amd64.
+  #7 14.31 Preparing to unpack .../083-libhdf5-hl-100_1.10.7+repack-4ubuntu2_amd64.deb ...
+  #7 14.31 Unpacking libhdf5-hl-100:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 14.32 Selecting previously unselected package libhdf5-hl-fortran-100:amd64.
+  #7 14.33 Preparing to unpack .../084-libhdf5-hl-fortran-100_1.10.7+repack-4ubuntu2_amd64.deb ...
+  #7 14.33 Unpacking libhdf5-hl-fortran-100:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 14.34 Selecting previously unselected package libhdf5-hl-cpp-100:amd64.
+  #7 14.34 Preparing to unpack .../085-libhdf5-hl-cpp-100_1.10.7+repack-4ubuntu2_amd64.deb ...
+  #7 14.34 Unpacking libhdf5-hl-cpp-100:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 14.35 Selecting previously unselected package zlib1g-dev:amd64.
+  #7 14.35 Preparing to unpack .../086-zlib1g-dev_1%3a1.2.11.dfsg-2ubuntu9.2_amd64.deb ...
+  #7 14.35 Unpacking zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+  #7 14.36 Selecting previously unselected package libjpeg-turbo8:amd64.
+  #7 14.36 Preparing to unpack .../087-libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb ...
+  #7 14.36 Unpacking libjpeg-turbo8:amd64 (2.1.2-0ubuntu1) ...
+  #7 14.38 Selecting previously unselected package libjpeg-turbo8-dev:amd64.
+  #7 14.38 Preparing to unpack .../088-libjpeg-turbo8-dev_2.1.2-0ubuntu1_amd64.deb ...
+  #7 14.38 Unpacking libjpeg-turbo8-dev:amd64 (2.1.2-0ubuntu1) ...
+  #7 14.39 Selecting previously unselected package libjpeg8:amd64.
+  #7 14.39 Preparing to unpack .../089-libjpeg8_8c-2ubuntu10_amd64.deb ...
+  #7 14.39 Unpacking libjpeg8:amd64 (8c-2ubuntu10) ...
+  #7 14.40 Selecting previously unselected package libjpeg8-dev:amd64.
+  #7 14.40 Preparing to unpack .../090-libjpeg8-dev_8c-2ubuntu10_amd64.deb ...
+  #7 14.40 Unpacking libjpeg8-dev:amd64 (8c-2ubuntu10) ...
+  #7 14.41 Selecting previously unselected package libjpeg-dev:amd64.
+  #7 14.41 Preparing to unpack .../091-libjpeg-dev_8c-2ubuntu10_amd64.deb ...
+  #7 14.41 Unpacking libjpeg-dev:amd64 (8c-2ubuntu10) ...
+  #7 14.42 Selecting previously unselected package libaec-dev:amd64.
+  #7 14.42 Preparing to unpack .../092-libaec-dev_1.0.6-1_amd64.deb ...
+  #7 14.42 Unpacking libaec-dev:amd64 (1.0.6-1) ...
+  #7 14.43 Selecting previously unselected package libssl-dev:amd64.
+  #7 14.43 Preparing to unpack .../093-libssl-dev_3.0.2-0ubuntu1.19_amd64.deb ...
+  #7 14.43 Unpacking libssl-dev:amd64 (3.0.2-0ubuntu1.19) ...
+  #7 14.50 Selecting previously unselected package libhdf5-dev.
+  #7 14.50 Preparing to unpack .../094-libhdf5-dev_1.10.7+repack-4ubuntu2_amd64.deb ...
+  #7 14.50 Unpacking libhdf5-dev (1.10.7+repack-4ubuntu2) ...
+  #7 14.55 Selecting previously unselected package liblapack3:amd64.
+  #7 14.56 Preparing to unpack .../095-liblapack3_3.10.0-2ubuntu1_amd64.deb ...
+  #7 14.56 Unpacking liblapack3:amd64 (3.10.0-2ubuntu1) ...
+  #7 14.60 Selecting previously unselected package liblapack-dev:amd64.
+  #7 14.60 Preparing to unpack .../096-liblapack-dev_3.10.0-2ubuntu1_amd64.deb ...
+  #7 14.60 Unpacking liblapack-dev:amd64 (3.10.0-2ubuntu1) ...
+  #7 14.69 Selecting previously unselected package libopus0:amd64.
+  #7 14.69 Preparing to unpack .../097-libopus0_1.3.1-0.1build2_amd64.deb ...
+  #7 14.69 Unpacking libopus0:amd64 (1.3.1-0.1build2) ...
+  #7 14.70 Selecting previously unselected package libpng-dev:amd64.
+  #7 14.70 Preparing to unpack .../098-libpng-dev_1.6.37-3build5_amd64.deb ...
+  #7 14.70 Unpacking libpng-dev:amd64 (1.6.37-3build5) ...
+  #7 14.72 Selecting previously unselected package libpython3.10:amd64.
+  #7 14.72 Preparing to unpack .../099-libpython3.10_3.10.12-1~22.04.10_amd64.deb ...
+  #7 14.72 Unpacking libpython3.10:amd64 (3.10.12-1~22.04.10) ...
+  #7 14.75 Selecting previously unselected package libpython3.10-dev:amd64.
+  #7 14.76 Preparing to unpack .../100-libpython3.10-dev_3.10.12-1~22.04.10_amd64.deb ...
+  #7 14.76 Unpacking libpython3.10-dev:amd64 (3.10.12-1~22.04.10) ...
+  #7 14.86 Selecting previously unselected package libvorbis0a:amd64.
+  #7 14.86 Preparing to unpack .../101-libvorbis0a_1.3.7-1build2_amd64.deb ...
+  #7 14.86 Unpacking libvorbis0a:amd64 (1.3.7-1build2) ...
+  #7 14.87 Selecting previously unselected package libvorbisenc2:amd64.
+  #7 14.88 Preparing to unpack .../102-libvorbisenc2_1.3.7-1build2_amd64.deb ...
+  #7 14.88 Unpacking libvorbisenc2:amd64 (1.3.7-1build2) ...
+  #7 14.89 Selecting previously unselected package libsndfile1:amd64.
+  #7 14.89 Preparing to unpack .../103-libsndfile1_1.0.31-2ubuntu0.2_amd64.deb ...
+  #7 14.89 Unpacking libsndfile1:amd64 (1.0.31-2ubuntu0.2) ...
+  #7 14.90 Selecting previously unselected package pkg-config.
+  #7 14.90 Preparing to unpack .../104-pkg-config_0.29.2-1ubuntu3_amd64.deb ...
+  #7 14.91 Unpacking pkg-config (0.29.2-1ubuntu3) ...
+  #7 14.92 Selecting previously unselected package python3-lib2to3.
+  #7 14.92 Preparing to unpack .../105-python3-lib2to3_3.10.8-1~22.04_all.deb ...
+  #7 14.92 Unpacking python3-lib2to3 (3.10.8-1~22.04) ...
+  #7 14.94 Selecting previously unselected package python3-distutils.
+  #7 14.94 Preparing to unpack .../106-python3-distutils_3.10.8-1~22.04_all.deb ...
+  #7 14.94 Unpacking python3-distutils (3.10.8-1~22.04) ...
+  #7 14.96 Selecting previously unselected package python3-setuptools.
+  #7 14.96 Preparing to unpack .../107-python3-setuptools_59.6.0-1.2ubuntu0.22.04.3_all.deb ...
+  #7 14.96 Unpacking python3-setuptools (59.6.0-1.2ubuntu0.22.04.3) ...
+  #7 14.99 Selecting previously unselected package python3-wheel.
+  #7 14.99 Preparing to unpack .../108-python3-wheel_0.37.1-2ubuntu0.22.04.1_all.deb ...
+  #7 14.99 Unpacking python3-wheel (0.37.1-2ubuntu0.22.04.1) ...
+  #7 15.00 Selecting previously unselected package python3-pip.
+  #7 15.00 Preparing to unpack .../109-python3-pip_22.0.2+dfsg-1ubuntu0.6_all.deb ...
+  #7 15.00 Unpacking python3-pip (22.0.2+dfsg-1ubuntu0.6) ...
+  #7 15.07 Selecting previously unselected package python3-pip-whl.
+  #7 15.07 Preparing to unpack .../110-python3-pip-whl_22.0.2+dfsg-1ubuntu0.6_all.deb ...
+  #7 15.07 Unpacking python3-pip-whl (22.0.2+dfsg-1ubuntu0.6) ...
+  #7 15.09 Selecting previously unselected package python3-setuptools-whl.
+  #7 15.09 Preparing to unpack .../111-python3-setuptools-whl_59.6.0-1.2ubuntu0.22.04.3_all.deb ...
+  #7 15.09 Unpacking python3-setuptools-whl (59.6.0-1.2ubuntu0.22.04.3) ...
+  #7 15.10 Selecting previously unselected package python3.10-dev.
+  #7 15.10 Preparing to unpack .../112-python3.10-dev_3.10.12-1~22.04.10_amd64.deb ...
+  #7 15.10 Unpacking python3.10-dev (3.10.12-1~22.04.10) ...
+  #7 15.11 Selecting previously unselected package python3.10-venv.
+  #7 15.12 Preparing to unpack .../113-python3.10-venv_3.10.12-1~22.04.10_amd64.deb ...
+  #7 15.12 Unpacking python3.10-venv (3.10.12-1~22.04.10) ...
+  #7 15.13 Selecting previously unselected package unzip.
+  #7 15.13 Preparing to unpack .../114-unzip_6.0-26ubuntu3.2_amd64.deb ...
+  #7 15.13 Unpacking unzip (6.0-26ubuntu3.2) ...
+  #7 15.14 Selecting previously unselected package libffi-dev:amd64.
+  #7 15.14 Preparing to unpack .../115-libffi-dev_3.4.2-4_amd64.deb ...
+  #7 15.14 Unpacking libffi-dev:amd64 (3.4.2-4) ...
+  #7 15.17 Setting up media-types (7.0.0) ...
+  #7 15.17 Setting up gcc-11-base:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 15.17 Setting up python3-setuptools-whl (59.6.0-1.2ubuntu0.22.04.3) ...
+  #7 15.17 Setting up lto-disabled-list (24) ...
+  #7 15.18 Setting up libpsl5:amd64 (0.21.0-1.2build2) ...
+  #7 15.18 Setting up libogg0:amd64 (1.3.5-0ubuntu3) ...
+  #7 15.18 Setting up wget (1.21.2-2ubuntu1.1) ...
+  #7 15.18 Setting up hdf5-helpers (1.10.7+repack-4ubuntu2) ...
+  #7 15.18 Setting up libglib2.0-0:amd64 (2.72.4-0ubuntu2.5) ...
+  #7 15.19 No schema files found: doing nothing.
+  #7 15.19 Setting up unzip (6.0-26ubuntu3.2) ...
+  #7 15.19 Setting up libbrotli1:amd64 (1.0.9-2build6) ...
+  #7 15.20 Setting up libsqlite3-0:amd64 (3.37.2-2ubuntu0.4) ...
+  #7 15.20 Setting up binutils-common:amd64 (2.38-4ubuntu2.8) ...
+  #7 15.20 Setting up libnghttp2-14:amd64 (1.43.0-1ubuntu0.2) ...
+  #7 15.20 Setting up linux-libc-dev:amd64 (5.15.0-143.153) ...
+  #7 15.20 Setting up libctf-nobfd0:amd64 (2.38-4ubuntu2.8) ...
+  #7 15.21 Setting up libgomp1:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 15.21 Setting up perl-modules-5.34 (5.34.0-3ubuntu1.4) ...
+  #7 15.21 Setting up bzip2 (1.0.8-5build1) ...
+  #7 15.21 Setting up libffi-dev:amd64 (3.4.2-4) ...
+  #7 15.21 Setting up libaec0:amd64 (1.0.6-1) ...
+  #7 15.22 Setting up libasan6:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 15.22 Setting up libflac8:amd64 (1.3.3-2ubuntu0.2) ...
+  #7 15.22 Setting up libsasl2-modules-db:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #7 15.22 Setting up libblas3:amd64 (3.10.0-2ubuntu1) ...
+  #7 15.22 update-alternatives: using /usr/lib/x86_64-linux-gnu/blas/libblas.so.3 to provide /usr/lib/x86_64-linux-gnu/libblas.so.3 (libblas.so.3-x86_64-linux-gnu) in auto mode
+  #7 15.23 Setting up libtirpc-dev:amd64 (1.3.2-2ubuntu0.1) ...
+  #7 15.23 Setting up rpcsvc-proto (1.4.2-0ubuntu6) ...
+  #7 15.23 Setting up make (4.3-4.1build1) ...
+  #7 15.23 Setting up libmpfr6:amd64 (4.1.0-3build3) ...
+  #7 15.24 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build4) ...
+  #7 15.24 Setting up xz-utils (5.2.5-2ubuntu1) ...
+  #7 15.24 update-alternatives: using /usr/bin/xz to provide /usr/bin/lzma (lzma) in auto mode
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzma.1.gz because associated file /usr/share/man/man1/xz.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/unlzma.1.gz because associated file /usr/share/man/man1/unxz.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcat.1.gz because associated file /usr/share/man/man1/xzcat.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzmore.1.gz because associated file /usr/share/man/man1/xzmore.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzless.1.gz because associated file /usr/share/man/man1/xzless.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzdiff.1.gz because associated file /usr/share/man/man1/xzdiff.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcmp.1.gz because associated file /usr/share/man/man1/xzcmp.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzgrep.1.gz because associated file /usr/share/man/man1/xzgrep.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzegrep.1.gz because associated file /usr/share/man/man1/xzegrep.1.gz (of link group lzma) doesn't exist
+  #7 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/lzfgrep.1.gz because associated file /usr/share/man/man1/xzfgrep.1.gz (of link group lzma) doesn't exist
+  #7 15.24 Setting up libopus0:amd64 (1.3.1-0.1build2) ...
+  #7 15.24 Setting up libquadmath0:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 15.25 Setting up libssl-dev:amd64 (3.0.2-0ubuntu1.19) ...
+  #7 15.25 Setting up libpng16-16:amd64 (1.6.37-3build5) ...
+  #7 15.25 Setting up libmpc3:amd64 (1.2.1-2build1) ...
+  #7 15.25 Setting up libatomic1:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 15.25 Setting up libvorbis0a:amd64 (1.3.7-1build2) ...
+  #7 15.26 Setting up patch (2.7.6-7build2) ...
+  #7 15.26 Setting up libjpeg-turbo8:amd64 (2.1.2-0ubuntu1) ...
+  #7 15.26 Setting up libsasl2-2:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #7 15.26 Setting up libssh-4:amd64 (0.9.6-2ubuntu0.22.04.4) ...
+  #7 15.27 Setting up libgfortran5:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 15.27 Setting up libubsan1:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 15.27 Setting up libnsl-dev:amd64 (1.3.0-2build2) ...
+  #7 15.27 Setting up libcrypt-dev:amd64 (1:4.4.27-1) ...
+  #7 15.27 Setting up libmpdec3:amd64 (2.5.1-2build2) ...
+  #7 15.27 Setting up git-man (1:2.34.1-1ubuntu1.14) ...
+  #7 15.28 Setting up libbinutils:amd64 (2.38-4ubuntu2.8) ...
+  #7 15.28 Setting up libisl23:amd64 (0.24-2build1) ...
+  #7 15.28 Setting up libc-dev-bin (2.35-0ubuntu3.10) ...
+  #7 15.28 Setting up openssl (3.0.2-0ubuntu1.19) ...
+  #7 15.29 Setting up readline-common (8.1.2-1) ...
+  #7 15.29 Setting up libcc1-0:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 15.29 Setting up liblsan0:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 15.29 Setting up libblas-dev:amd64 (3.10.0-2ubuntu1) ...
+  #7 15.29 update-alternatives: using /usr/lib/x86_64-linux-gnu/blas/libblas.so to provide /usr/lib/x86_64-linux-gnu/libblas.so (libblas.so-x86_64-linux-gnu) in auto mode
+  #7 15.30 Setting up libsz2:amd64 (1.0.6-1) ...
+  #7 15.30 Setting up libitm1:amd64 (12.3.0-1ubuntu1~22.04) ...
+  #7 15.30 Setting up libvorbisenc2:amd64 (1.3.7-1build2) ...
+  #7 15.30 Setting up libgdbm6:amd64 (1.23-1) ...
+  #7 15.30 Setting up libtsan0:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 15.31 Setting up libctf0:amd64 (2.38-4ubuntu2.8) ...
+  #7 15.31 Setting up libjpeg8:amd64 (8c-2ubuntu10) ...
+  #7 15.31 Setting up cpp-11 (11.4.0-1ubuntu1~22.04) ...
+  #7 15.31 Setting up liblapack3:amd64 (3.10.0-2ubuntu1) ...
+  #7 15.31 update-alternatives: using /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3 to provide /usr/lib/x86_64-linux-gnu/liblapack.so.3 (liblapack.so.3-x86_64-linux-gnu) in auto mode
+  #7 15.31 Setting up libatlas3-base:amd64 (3.10.3-12ubuntu1) ...
+  #7 15.32 update-alternatives: using /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3 to provide /usr/lib/x86_64-linux-gnu/libblas.so.3 (libblas.so.3-x86_64-linux-gnu) in auto mode
+  #7 15.32 update-alternatives: using /usr/lib/x86_64-linux-gnu/atlas/liblapack.so.3 to provide /usr/lib/x86_64-linux-gnu/liblapack.so.3 (liblapack.so.3-x86_64-linux-gnu) in auto mode
+  #7 15.32 Setting up libreadline8:amd64 (8.1.2-1) ...
+  #7 15.32 Setting up libaec-dev:amd64 (1.0.6-1) ...
+  #7 15.32 Setting up libldap-2.5-0:amd64 (2.5.19+dfsg-0ubuntu0.22.04.1) ...
+  #7 15.33 Setting up libatlas-base-dev:amd64 (3.10.3-12ubuntu1) ...
+  #7 15.33 update-alternatives: using /usr/lib/x86_64-linux-gnu/atlas/libblas.so to provide /usr/lib/x86_64-linux-gnu/libblas.so (libblas.so-x86_64-linux-gnu) in auto mode
+  #7 15.33 update-alternatives: using /usr/lib/x86_64-linux-gnu/atlas/liblapack.so to provide /usr/lib/x86_64-linux-gnu/liblapack.so (liblapack.so-x86_64-linux-gnu) in auto mode
+  #7 15.33 Setting up libpython3.10-stdlib:amd64 (3.10.12-1~22.04.10) ...
+  #7 15.33 Setting up ca-certificates (20240203~22.04.1) ...
+  #7 15.68 Updating certificates in /etc/ssl/certs...
+  #7 16.10 146 added, 0 removed; done.
+  #7 16.12 Setting up liblapack-dev:amd64 (3.10.0-2ubuntu1) ...
+  #7 16.12 Setting up libgdbm-compat4:amd64 (1.23-1) ...
+  #7 16.12 Setting up libgcc-11-dev:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 16.13 Setting up cpp (4:11.2.0-1ubuntu1) ...
+  #7 16.13 Setting up libcurl4:amd64 (7.81.0-1ubuntu1.20) ...
+  #7 16.13 Setting up libc6-dev:amd64 (2.35-0ubuntu3.10) ...
+  #7 16.13 Setting up curl (7.81.0-1ubuntu1.20) ...
+  #7 16.14 Setting up libsndfile1:amd64 (1.0.31-2ubuntu0.2) ...
+  #7 16.14 Setting up libpython3-stdlib:amd64 (3.10.6-1~22.04.1) ...
+  #7 16.14 Setting up binutils-x86-64-linux-gnu (2.38-4ubuntu2.8) ...
+  #7 16.14 Setting up libpython3.10:amd64 (3.10.12-1~22.04.10) ...
+  #7 16.15 Setting up libjpeg-turbo8-dev:amd64 (2.1.2-0ubuntu1) ...
+  #7 16.15 Setting up libperl5.34:amd64 (5.34.0-3ubuntu1.4) ...
+  #7 16.15 Setting up python3.10 (3.10.12-1~22.04.10) ...
+  #7 16.75 Setting up python3-pip-whl (22.0.2+dfsg-1ubuntu0.6) ...
+  #7 16.75 Setting up libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.20) ...
+  #7 16.76 Setting up python3 (3.10.6-1~22.04.1) ...
+  #7 16.84 Setting up binutils (2.38-4ubuntu2.8) ...
+  #7 16.84 Setting up perl (5.34.0-3ubuntu1.4) ...
+  #7 16.85 Setting up libexpat1-dev:amd64 (2.4.7-1ubuntu0.6) ...
+  #7 16.85 Setting up libcurl4-openssl-dev:amd64 (7.81.0-1ubuntu1.20) ...
+  #7 16.85 Setting up libdpkg-perl (1.21.1ubuntu2.3) ...
+  #7 16.85 Setting up libstdc++-11-dev:amd64 (11.4.0-1ubuntu1~22.04) ...
+  #7 16.86 Setting up zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+  #7 16.86 Setting up libhdf5-103-1:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 16.86 Setting up gcc-11 (11.4.0-1ubuntu1~22.04) ...
+  #7 16.86 Setting up libhdf5-cpp-103-1:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 16.86 Setting up libjpeg8-dev:amd64 (8c-2ubuntu10) ...
+  #7 16.87 Setting up python3-lib2to3 (3.10.8-1~22.04) ...
+  #7 16.95 Setting up libhdf5-hl-100:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 16.95 Setting up python3-pkg-resources (59.6.0-1.2ubuntu0.22.04.3) ...
+  #7 17.11 Setting up python3-distutils (3.10.8-1~22.04) ...
+  #7 17.21 Setting up python3.10-venv (3.10.12-1~22.04.10) ...
+  #7 17.25 Setting up python3-setuptools (59.6.0-1.2ubuntu0.22.04.3) ...
+  #7 17.55 Setting up g++-11 (11.4.0-1ubuntu1~22.04) ...
+  #7 17.55 Setting up libpng-dev:amd64 (1.6.37-3build5) ...
+  #7 17.55 Setting up libjpeg-dev:amd64 (8c-2ubuntu10) ...
+  #7 17.55 Setting up python3-wheel (0.37.1-2ubuntu0.22.04.1) ...
+  #7 17.67 Setting up gcc (4:11.2.0-1ubuntu1) ...
+  #7 17.68 Setting up dpkg-dev (1.21.1ubuntu2.3) ...
+  #7 17.68 Setting up liberror-perl (0.17029-1) ...
+  #7 17.68 Setting up libhdf5-hl-cpp-100:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 17.68 Setting up libhdf5-fortran-102:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 17.69 Setting up pkg-config (0.29.2-1ubuntu3) ...
+  #7 17.70 Setting up libpython3.10-dev:amd64 (3.10.12-1~22.04.10) ...
+  #7 17.71 Setting up git (1:2.34.1-1ubuntu1.14) ...
+  #7 17.71 Setting up python3-pip (22.0.2+dfsg-1ubuntu0.6) ...
+  #7 18.65 Setting up python3.10-dev (3.10.12-1~22.04.10) ...
+  #7 18.65 Setting up g++ (4:11.2.0-1ubuntu1) ...
+  #7 18.66 update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode
+  #7 18.66 update-alternatives: warning: skip creation of /usr/share/man/man1/c++.1.gz because associated file /usr/share/man/man1/g++.1.gz (of link group c++) doesn't exist
+  #7 18.67 Setting up libhdf5-hl-fortran-100:amd64 (1.10.7+repack-4ubuntu2) ...
+  #7 18.67 Setting up build-essential (12.9ubuntu3) ...
+  #7 18.67 Setting up libhdf5-dev (1.10.7+repack-4ubuntu2) ...
+  #7 18.67 update-alternatives: using /usr/lib/x86_64-linux-gnu/pkgconfig/hdf5-serial.pc to provide /usr/lib/x86_64-linux-gnu/pkgconfig/hdf5.pc (hdf5.pc) in auto mode
+  #7 18.68 Processing triggers for libc-bin (2.35-0ubuntu3.10) ...
+  #7 18.69 Processing triggers for ca-certificates (20240203~22.04.1) ...
+  #7 18.69 Updating certificates in /etc/ssl/certs...
+  #7 19.01 0 added, 0 removed; done.
+  #7 19.01 Running hooks in /etc/ca-certificates/update.d...
+  #7 19.01 done.
+  #7 DONE 20.2s
+  #8 [4/8] RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 &&     update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 &&     python -m pip install --upgrade pip
+  #8 0.217 update-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python3 (python3) in auto mode
+  #8 0.218 update-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python (python) in auto mode
+  #8 0.560 Requirement already satisfied: pip in /usr/lib/python3/dist-packages (22.0.2)
+  #8 0.705 Collecting pip
+  #8 0.788   Downloading pip-25.1.1-py3-none-any.whl (1.8 MB)
+  #8 0.891      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 18.0 MB/s eta 0:00:00
+  #8 0.910 Installing collected packages: pip
+  #8 0.910   Attempting uninstall: pip
+  #8 0.910     Found existing installation: pip 22.0.2
+  #8 0.912     Not uninstalling pip at /usr/lib/python3/dist-packages, outside environment /usr
+  #8 0.912     Can't uninstall 'pip'. No files were found to uninstall.
+  #8 1.660 Successfully installed pip-25.1.1
+  #8 1.661 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+  #8 DONE 1.8s
+  #9 [5/8] COPY requirements.txt .
+  #9 DONE 0.0s
+  #10 [6/8] RUN pip install --no-cache-dir -r requirements.txt
+  #10 0.695 ERROR: Could not detect requirement name for 'git+https://github.com/fmi-basel/stork.git@40c68fe', please specify one with #egg=your_package_name
+  #10 ERROR: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1
+  ------
+   > [6/8] RUN pip install --no-cache-dir -r requirements.txt:
+  0.695 ERROR: Could not detect requirement name for 'git+https://github.com/fmi-basel/stork.git@40c68fe', please specify one with #egg=your_package_name
+  ------
+  envgym.dockerfile:44
+  --------------------
+    42 |     
+    43 |     # Install Python dependencies (CPU-only torch/torchaudio/torchvision)
+    44 | >>> RUN pip install --no-cache-dir -r requirements.txt
+    45 |     
+    46 |     # Copy the rest of the repository
+  --------------------
+  ERROR: failed to build: failed to solve: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1
+  === Runtime Log ===  
+  Runtime Status: Failed
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM ubuntu:22.04
+  # Set non-interactive frontend for apt-get
+  ENV DEBIAN_FRONTEND=noninteractive
+  # Set working directory
+  WORKDIR /home/cc/EnvGym/data/RSNN
+  # Install system dependencies
+  RUN apt-get update && \
+      apt-get install -y --no-install-recommends \
+          wget \
+          curl \
+          git \
+          build-essential \
+          python3.10 \
+          python3.10-venv \
+          python3.10-dev \
+          python3-pip \
+          libsndfile1 \
+          libhdf5-dev \
+          libatlas-base-dev \
+          libblas-dev \
+          liblapack-dev \
+          libffi-dev \
+          libssl-dev \
+          libjpeg-dev \
+          libpng-dev \
+          ca-certificates \
+          pkg-config \
+          unzip \
+          && \
+      rm -rf /var/lib/apt/lists/*
+  # Ensure python3.10 is default python and pip
+  RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
+      update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 && \
+      python -m pip install --upgrade pip
+  # Copy requirements.txt first for Docker cache efficiency
+  COPY requirements.txt .
+  # Install Python dependencies (CPU-only torch/torchaudio/torchvision)
+  RUN pip install --no-cache-dir -r requirements.txt
+  # Copy the rest of the repository
+  COPY . .
+  # Create models and results directories if not present
+  RUN mkdir -p /home/cc/EnvGym/data/RSNN/models /home/cc/EnvGym/data/RSNN/results
+  # Set environment variables for Python
+  ENV PYTHONUNBUFFERED=1
+  ENV PYTHONDONTWRITEBYTECODE=1
+  # Default command: open bash shell
+  CMD ["/bin/bash"]
+--- End of Iteration 1 ---
+
+=== Iteration 2 - [2025-07-10 03:40:19] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN (CPU-ONLY, x86_64, UBUNTU 22.04, NO GPU) ===
+  1. DOWNLOADS NEEDED:  
+     - Python 3.10.12 (ensure exact version for compatibility)
+     - pip (latest version)
+     - Git (for cloning repositories and installing editable/source dependencies)
+     - Python packages (as specified in requirements.txt, install exact versions if possible):
+       - numpy
+       - torch (PyTorch, **CPU-only version**)
+       - scipy
+       - matplotlib
+       - seaborn
+       - h5py
+       - soundfile
+       - tables
+       - torchaudio (**CPU-only version**)
+       - torchvision (**CPU-only version**)
+       - tonic
+       - xlsxwriter
+       - hydra-core
+       - neurobench
+       - pandas
+       - snntorch
+       - omegaconf
+       - KDEpy
+       - stork (installed from GitHub at commit 40c68fe via editable mode)
+       - randman (installed from GitHub via latest commit)
+     - Jupyter Notebook (for running results_extract_from_logs.ipynb)
+     - (Optional) virtualenv or conda (for isolated environment management)
+     - (Optional) Additional tools for data handling or visualization as needed
+     - **Version Compatibility Requirements:**
+       - Ensure all dependencies are compatible with Python 3.10.12 and each other.
+       - **Do NOT install CUDA toolkit or NVIDIA GPU drivers** (no GPU present).
+       - **Install CPU-only versions of torch, torchaudio, and torchvision**:
+         - In requirements.txt, specify e.g. `torch==<version>+cpu` and use the appropriate index URL if needed, or simply `pip install torch torchvision torchaudio` (PyPI defaults to CPU wheels).
+       - Remove any CUDA-specific instructions or dependencies.
+       - If any code attempts to use CUDA (e.g., `torch.cuda.is_available()`), ensure it handles CPU-only gracefully.
+  2. FILES TO CREATE:  
+     - requirements.txt
+       - List all Python dependencies as in the provided file, including:
+         - All standard libraries
+         - Editable stork install from GitHub at commit 40c68fe
+         - randman from GitHub
+       - (Optional) Pin versions for all dependencies for reproducibility.
+       - **Do NOT include any CUDA or GPU-specific packages.**
+     - /conf/data/data-default.yaml
+       - Contains data_dir parameter (path to dataset) and pretrain_filenames parameter.
+     - /conf/config.yaml
+       - Contains hydra output directory configuration and other global settings.
+     - /conf/[other config files as needed by training/evaluation scripts]
+       - E.g., model hyperparameters, training settings, etc.
+     - .gitignore
+       - Ignore outputs, logs, model checkpoints, __pycache__, etc.
+     - /challenge/[__init__.py, data_loader.py, model.py, training.py, evaluation.py, neurobench/]
+       - Ensure all source code modules are present and importable.
+     - /models/
+       - Directory for storing model state dictionaries.
+     - /results/
+       - Directory for evaluation results (json files).
+     - results_extract_from_logs.ipynb
+       - Notebook for extracting results from hydra logs.
+     - README.md
+       - Project documentation (update to reflect **CPU-only setup** and no CUDA requirements).
+     - setup.sh or setup.bat
+       - Optional: shell/batch script to automate environment setup steps, including installation from requirements.txt.
+     - (Optional) requirements.lock.txt or environment.yml
+       - For environment reproducibility and locking versions.
+     - **If using Docker:**
+       - Dockerfile:
+         - Use `FROM ubuntu:22.04` or `FROM python:3.10-slim` (amd64/x86_64).
+         - Set `WORKDIR /home/cc/EnvGym/data/RSNN` or `/app` as appropriate.
+         - **Do NOT include any CUDA, nvidia-smi, or GPU-related instructions.**
+         - Install build-essential and other dev tools as needed for Python packages.
+         - Ensure adequate storage for dataset and models.
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - Data Loading:
+       - Test that data loaders correctly load and preprocess data from the specified data_dir.
+       - Test handling of missing/corrupt data files.
+       - Test compatibility with h5py, tables, soundfile, and other new data-related libraries.
+     - Model Initialization:
+       - Test instantiation of bigRSNN and tinyRSNN models with various input sizes.
+       - Test model forward pass with dummy data.
+       - Test torch, snnTorch, and stork integration.
+     - Training Pipeline:
+       - Test single epoch training for both models with small synthetic data.
+       - Test checkpoint saving and loading.
+       - Test compatibility with randman and tonic datasets if used.
+     - Evaluation Pipeline:
+       - Test evaluation script on a small test set.
+       - Test compatibility with both stork and snnTorch backends.
+     - Configuration Management:
+       - Test that hydra correctly loads configs and outputs to the specified directory.
+       - Test command-line overrides for seeds and other parameters.
+       - Test omegaconf integration for configuration handling.
+     - Results Extraction:
+       - Test notebook for extracting results from logs.
+       - Test xlsxwriter and KDEpy usage if present in result processing.
+     - **CPU Compatibility:**
+       - Test that code runs on CPU and does not require CUDA.
+       - Test torchaudio and torchvision on CPU.
+       - Ensure code does not fail if `torch.cuda.is_available()` is False.
+       - **If code has GPU/CPU branching, ensure CPU path works and is default.**
+     - Error Handling:
+       - Test for informative errors when dependencies are missing or misconfigured.
+       - Test for graceful failure when CUDA is unavailable (should not be required).
+     - Dependency Import Tests:
+       - Test import of all new libraries (seaborn, soundfile, tables, torchaudio, torchvision, tonic, xlsxwriter, omegaconf, KDEpy, randman).
+     - Data Visualization:
+       - Test matplotlib and seaborn visualizations with sample data.
+     - (Optional) Notebook Execution:
+       - Test that results_extract_from_logs.ipynb runs end-to-end without errors.
+  4. COMPLETE TODO LIST:  
+     1. Install Python 3.10.12 (verify with `python --version`).
+     2. Install pip (verify with `pip --version`).
+     3. (Optional) Create and activate a virtual environment (venv or conda).
+     4. **SKIP CUDA toolkit and NVIDIA drivers installation.**
+        - **Do NOT run or include `nvcc --version` or `nvidia-smi`.**
+     5. Clone the project repository (if not already done).
+     6. Create or update requirements.txt with all dependencies as per the provided file:
+        - Ensure inclusion of all listed libraries and GitHub sources.
+        - (Optional) Pin versions for reproducibility.
+        - **Specify CPU-only torch/torchaudio/torchvision.**
+     7. Run `pip install -r requirements.txt`.
+        - This will install all standard and GitHub-based dependencies (stork, randman).
+        - **If torch installation fails, use the official CPU-only wheels from PyPI.**
+        - Verify installation by importing all major packages in Python shell.
+     8. Download the ["Nonhuman Primate Reaching with Multichannel Sensorimotor Cortex Electrophysiology" dataset](https://zenodo.org/records/583331).
+        - Place data in a directory as referenced in /conf/data/data-default.yaml.
+        - **Ensure sufficient storage space for dataset and models.**
+     9. Create /conf/data/data-default.yaml and set:
+        - data_dir: [path to dataset]
+        - pretrain_filenames: challenge-data (if only using challenge sessions)
+     10. Create /conf/config.yaml and set hydra output directory (default: ./outputs).
+     11. Verify that all code modules in /challenge/ are present and importable.
+     12. Ensure /models/ and /results/ directories exist and are writable.
+     13. (Optional) Create .gitignore to exclude outputs, logs, models, __pycache__, etc.
+     14. (Optional) Create setup.sh or setup.bat to automate steps 1-13, including `pip install -r requirements.txt`.
+     15. Run basic test cases:
+         - Data loading test (load a sample file using h5py, tables, soundfile).
+         - Model instantiation and forward pass test (torch, snnTorch, stork).
+         - Training script dry run (single epoch, small data).
+         - Evaluation script dry run (small data).
+         - Hydra config loading test (hydra-core, omegaconf).
+         - Import test for all libraries in requirements.txt.
+         - Visualization test (matplotlib, seaborn).
+     16. Run `python train-bigRSNN.py --multirun seed=1` and verify training starts and outputs are generated.
+     17. Run `python evaluate.py modelname=bigRSNN` and verify evaluation completes and results are saved.
+     18. Open results_extract_from_logs.ipynb and verify it parses logs and summarizes results (test xlsxwriter, KDEpy if used).
+     19. **Test code on CPU only.**
+         - **Do NOT set CUDA_VISIBLE_DEVICES or attempt to use CUDA.**
+         - Ensure code does not fail if `torch.cuda.is_available()` is False.
+     20. Document any environment-specific issues and update README.md as needed (include new dependencies and setup steps).
+         - **Explicitly state that the environment is CPU-only and does not require CUDA or NVIDIA drivers.**
+     21. (Optional) Set up continuous integration (CI) to run basic tests on push/PR, including dependency installation and import tests.
+     22. (Optional) Archive or backup environment (e.g., export conda env, pip freeze > requirements.lock.txt).
+     23. Final verification:
+         - All scripts run without error.
+         - Models can be trained and evaluated.
+         - Results are reproducible.
+         - Environment is documented and portable across systems.
+  **NOTES ON HARDWARE/OS COMPATIBILITY:**  
+  - All dependencies and code must be compatible with Ubuntu 22.04, x86_64 (amd64).
+  - No ARM-specific or GPU-specific instructions.
+  - Ensure all scripts and Dockerfiles use the correct working directory (`/home/cc/EnvGym/data/RSNN` or `/app`).
+  - If using Docker, set `--platform=linux/amd64` as needed.
+  - Monitor memory and storage usage, especially with large datasets and models.
+  - If any package requires compilation, ensure build-essential and Python dev headers are installed in the environment or Docker image.
+  **SUMMARY OF CHANGES:**  
+  - All CUDA, GPU, and NVIDIA driver steps/instructions are removed.
+  - All torch/torchaudio/torchvision installations are CPU-only.
+  - All test cases and code must run and be validated on CPU.
+  - README and documentation must reflect CPU-only, no-GPU setup.
+  - Dockerfile and environment setup must not reference or install any GPU/CUDA dependencies.
+NEXT:
+  current progress
+  - Docker image builds and runs successfully on Ubuntu 22.04 (x86_64, CPU-only).
+  - System dependencies for Python 3.10.12 and required libraries are installed.
+  - Python 3.10 is set as the default Python interpreter.
+  - requirements.txt is copied and patched for the stork dependency.
+  - Python dependencies (including CPU-only torch/torchaudio/torchvision) are installed via pip.
+  - The full repository is copied into the image.
+  - /models and /results directories are created.
+  - Python environment variables are set for best practices.
+  - The Dockerfile does not include any CUDA, GPU, or NVIDIA-specific instructions.
+  - The container opens to a bash shell by default.
+  next step
+  - Verify that requirements.txt pins all required versions and specifies CPU-only torch/torchaudio/torchvision (if not, update requirements.txt and rebuild).
+  - Confirm that all project files (including /conf, /challenge, results_extract_from_logs.ipynb, etc.) are present and correctly copied in the Docker context.
+  - Ensure the Dockerfile creates or copies .gitignore, README.md, and any setup scripts if needed.
+  - (Optional) Add a test RUN command to verify successful import of all key Python packages after pip install.
+  - (Optional) Add a HEALTHCHECK or CI step to validate that the environment is functional (e.g., run a basic python -c "import torch; print(torch.__version__)").
+  - (Optional) Clean up any unnecessary build steps or optimize layer ordering for cache efficiency.
+  - Document in the README that this Dockerfile is for CPU-only, Ubuntu 22.04, no CUDA, and no GPU support.
+STATUS:
+  SUCCESS
+LOG:
+  === Docker Execution Log - 20250710_034009 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1752118541
+  === Build Log ===
+  Build Status: Success
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.77kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/ubuntu:22.04
+  #2 DONE 0.1s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [1/9] FROM docker.io/library/ubuntu:22.04@sha256:3c61d3759c2639d4b836d32a2d3c83fa0214e36f195a3421018dbaaf79cbe37f
+  #4 DONE 0.0s
+  #5 [internal] load build context
+  #5 transferring context: 225.40kB 0.0s done
+  #5 DONE 0.0s
+  #6 [2/9] WORKDIR /home/cc/EnvGym/data/RSNN
+  #6 CACHED
+  #7 [3/9] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget         curl         git         build-essential         python3.10         python3.10-venv         python3.10-dev         python3-pip         libsndfile1         libhdf5-dev         libatlas-base-dev         libblas-dev         liblapack-dev         libffi-dev         libssl-dev         libjpeg-dev         libpng-dev         ca-certificates         pkg-config         unzip         &&     rm -rf /var/lib/apt/lists/*
+  #7 CACHED
+  #8 [4/9] RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 &&     update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 &&     python -m pip install --upgrade pip
+  #8 CACHED
+  #9 [5/9] COPY requirements.txt .
+  #9 CACHED
+  #10 [6/9] RUN sed -i 's|git+https://github.com/fmi-basel/stork.git@40c68fe|git+https://github.com/fmi-basel/stork.git@40c68fe#egg=stork|' requirements.txt
+  #10 DONE 0.2s
+  #11 [7/9] RUN pip install --no-cache-dir -r requirements.txt
+  #11 0.703 Obtaining stork from git+https://github.com/fmi-basel/stork.git@40c68fe#egg=stork (from -r requirements.txt (line 19))
+  #11 0.704   Cloning https://github.com/fmi-basel/stork.git (to revision 40c68fe) to ./src/stork
+  #11 0.705   Running command git clone --filter=blob:none --quiet https://github.com/fmi-basel/stork.git /home/cc/EnvGym/data/RSNN/src/stork
+  #11 1.526   WARNING: Did not find branch or tag '40c68fe', assuming revision or ref.
+  #11 1.529   Running command git checkout -q 40c68fe
+  #11 1.756   Resolved https://github.com/fmi-basel/stork.git to commit 40c68fe
+  #11 1.758   Preparing metadata (setup.py): started
+  #11 1.891   Preparing metadata (setup.py): finished with status 'done'
+  #11 1.899 Collecting git+https://github.com/fzenke/randman (from -r requirements.txt (line 20))
+  #11 1.900   Cloning https://github.com/fzenke/randman to /tmp/pip-req-build-gnzsi_m2
+  #11 1.902   Running command git clone --filter=blob:none --quiet https://github.com/fzenke/randman /tmp/pip-req-build-gnzsi_m2
+  #11 2.501   Resolved https://github.com/fzenke/randman to commit d3e22f5eb6d6aa65b7867abb76b6839c85d419c2
+  #11 2.503   Preparing metadata (setup.py): started
+  #11 2.635   Preparing metadata (setup.py): finished with status 'done'
+  #11 2.911 Collecting numpy (from -r requirements.txt (line 1))
+  #11 2.958   Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)
+  #11 3.008 Collecting torch (from -r requirements.txt (line 2))
+  #11 3.015   Downloading torch-2.7.1-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (29 kB)
+  #11 3.140 Collecting scipy (from -r requirements.txt (line 3))
+  #11 3.145   Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+  #11 3.307 Collecting matplotlib (from -r requirements.txt (line 4))
+  #11 3.313   Downloading matplotlib-3.10.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+  #11 3.326 Collecting seaborn (from -r requirements.txt (line 5))
+  #11 3.333   Downloading seaborn-0.13.2-py3-none-any.whl.metadata (5.4 kB)
+  #11 3.375 Collecting h5py (from -r requirements.txt (line 6))
+  #11 3.380   Downloading h5py-3.14.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.7 kB)
+  #11 3.395 Collecting soundfile (from -r requirements.txt (line 7))
+  #11 3.400   Downloading soundfile-0.13.1-py2.py3-none-manylinux_2_28_x86_64.whl.metadata (16 kB)
+  #11 3.429 Collecting tables (from -r requirements.txt (line 8))
+  #11 3.435   Downloading tables-3.10.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.2 kB)
+  #11 3.483 Collecting torchaudio (from -r requirements.txt (line 9))
+  #11 3.494   Downloading torchaudio-2.7.1-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+  #11 3.544 Collecting torchvision (from -r requirements.txt (line 10))
+  #11 3.549   Downloading torchvision-0.22.1-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (6.1 kB)
+  #11 3.607 Collecting tonic (from -r requirements.txt (line 11))
+  #11 3.613   Downloading tonic-1.6.0-py3-none-any.whl.metadata (5.4 kB)
+  #11 3.646 Collecting xlsxwriter (from -r requirements.txt (line 12))
+  #11 3.651   Downloading xlsxwriter-3.2.5-py3-none-any.whl.metadata (2.7 kB)
+  #11 3.668 Collecting hydra-core (from -r requirements.txt (line 13))
+  #11 3.677   Downloading hydra_core-1.3.2-py3-none-any.whl.metadata (5.5 kB)
+  #11 3.788 Collecting neurobench (from -r requirements.txt (line 14))
+  #11 3.813   Downloading neurobench-2.1.0-py3-none-any.whl.metadata (9.5 kB)
+  #11 3.945 Collecting pandas (from -r requirements.txt (line 15))
+  #11 3.949   Downloading pandas-2.3.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (91 kB)
+  #11 4.020 Collecting snntorch (from -r requirements.txt (line 16))
+  #11 4.026   Downloading snntorch-0.9.4-py2.py3-none-any.whl.metadata (15 kB)
+  #11 4.056 Collecting omegaconf (from -r requirements.txt (line 17))
+  #11 4.060   Downloading omegaconf-2.3.0-py3-none-any.whl.metadata (3.9 kB)
+  #11 4.128 Collecting KDEpy (from -r requirements.txt (line 18))
+  #11 4.136   Downloading kdepy-1.1.12-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.7 kB)
+  #11 4.158 Collecting filelock (from torch->-r requirements.txt (line 2))
+  #11 4.163   Downloading filelock-3.18.0-py3-none-any.whl.metadata (2.9 kB)
+  #11 4.207 Collecting typing-extensions>=4.10.0 (from torch->-r requirements.txt (line 2))
+  #11 4.212   Downloading typing_extensions-4.14.1-py3-none-any.whl.metadata (3.0 kB)
+  #11 4.227 Collecting sympy>=1.13.3 (from torch->-r requirements.txt (line 2))
+  #11 4.232   Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+  #11 4.254 Collecting networkx (from torch->-r requirements.txt (line 2))
+  #11 4.259   Downloading networkx-3.4.2-py3-none-any.whl.metadata (6.3 kB)
+  #11 4.278 Collecting jinja2 (from torch->-r requirements.txt (line 2))
+  #11 4.282   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+  #11 4.305 Collecting fsspec (from torch->-r requirements.txt (line 2))
+  #11 4.310   Downloading fsspec-2025.5.1-py3-none-any.whl.metadata (11 kB)
+  #11 4.355 Collecting nvidia-cuda-nvrtc-cu12==12.6.77 (from torch->-r requirements.txt (line 2))
+  #11 4.360   Downloading nvidia_cuda_nvrtc_cu12-12.6.77-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+  #11 4.371 Collecting nvidia-cuda-runtime-cu12==12.6.77 (from torch->-r requirements.txt (line 2))
+  #11 4.376   Downloading nvidia_cuda_runtime_cu12-12.6.77-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.5 kB)
+  #11 4.387 Collecting nvidia-cuda-cupti-cu12==12.6.80 (from torch->-r requirements.txt (line 2))
+  #11 4.392   Downloading nvidia_cuda_cupti_cu12-12.6.80-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.6 kB)
+  #11 4.405 Collecting nvidia-cudnn-cu12==9.5.1.17 (from torch->-r requirements.txt (line 2))
+  #11 4.410   Downloading nvidia_cudnn_cu12-9.5.1.17-py3-none-manylinux_2_28_x86_64.whl.metadata (1.6 kB)
+  #11 4.421 Collecting nvidia-cublas-cu12==12.6.4.1 (from torch->-r requirements.txt (line 2))
+  #11 4.426   Downloading nvidia_cublas_cu12-12.6.4.1-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.5 kB)
+  #11 4.437 Collecting nvidia-cufft-cu12==11.3.0.4 (from torch->-r requirements.txt (line 2))
+  #11 4.442   Downloading nvidia_cufft_cu12-11.3.0.4-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.5 kB)
+  #11 4.455 Collecting nvidia-curand-cu12==10.3.7.77 (from torch->-r requirements.txt (line 2))
+  #11 4.459   Downloading nvidia_curand_cu12-10.3.7.77-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.5 kB)
+  #11 4.471 Collecting nvidia-cusolver-cu12==11.7.1.2 (from torch->-r requirements.txt (line 2))
+  #11 4.476   Downloading nvidia_cusolver_cu12-11.7.1.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.6 kB)
+  #11 4.488 Collecting nvidia-cusparse-cu12==12.5.4.2 (from torch->-r requirements.txt (line 2))
+  #11 4.492   Downloading nvidia_cusparse_cu12-12.5.4.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.6 kB)
+  #11 4.501 Collecting nvidia-cusparselt-cu12==0.6.3 (from torch->-r requirements.txt (line 2))
+  #11 4.506   Downloading nvidia_cusparselt_cu12-0.6.3-py3-none-manylinux2014_x86_64.whl.metadata (6.8 kB)
+  #11 4.515 Collecting nvidia-nccl-cu12==2.26.2 (from torch->-r requirements.txt (line 2))
+  #11 4.519   Downloading nvidia_nccl_cu12-2.26.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.0 kB)
+  #11 4.530 Collecting nvidia-nvtx-cu12==12.6.77 (from torch->-r requirements.txt (line 2))
+  #11 4.534   Downloading nvidia_nvtx_cu12-12.6.77-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.6 kB)
+  #11 4.546 Collecting nvidia-nvjitlink-cu12==12.6.85 (from torch->-r requirements.txt (line 2))
+  #11 4.551   Downloading nvidia_nvjitlink_cu12-12.6.85-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.5 kB)
+  #11 4.560 Collecting nvidia-cufile-cu12==1.11.1.6 (from torch->-r requirements.txt (line 2))
+  #11 4.565   Downloading nvidia_cufile_cu12-1.11.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.5 kB)
+  #11 4.579 Collecting triton==3.3.1 (from torch->-r requirements.txt (line 2))
+  #11 4.586   Downloading triton-3.3.1-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (1.5 kB)
+  #11 4.599 Requirement already satisfied: setuptools>=40.8.0 in /usr/lib/python3/dist-packages (from triton==3.3.1->torch->-r requirements.txt (line 2)) (59.6.0)
+  #11 4.678 Collecting contourpy>=1.0.1 (from matplotlib->-r requirements.txt (line 4))
+  #11 4.683   Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.5 kB)
+  #11 4.694 Collecting cycler>=0.10 (from matplotlib->-r requirements.txt (line 4))
+  #11 4.699   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+  #11 4.855 Collecting fonttools>=4.22.0 (from matplotlib->-r requirements.txt (line 4))
+  #11 4.860   Downloading fonttools-4.58.5-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (106 kB)
+  #11 4.926 Collecting kiwisolver>=1.3.1 (from matplotlib->-r requirements.txt (line 4))
+  #11 4.930   Downloading kiwisolver-1.4.8-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.2 kB)
+  #11 4.956 Collecting packaging>=20.0 (from matplotlib->-r requirements.txt (line 4))
+  #11 4.962   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+  #11 5.177 Collecting pillow>=8 (from matplotlib->-r requirements.txt (line 4))
+  #11 5.182   Downloading pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+  #11 5.212 Collecting pyparsing>=2.3.1 (from matplotlib->-r requirements.txt (line 4))
+  #11 5.217   Downloading pyparsing-3.2.3-py3-none-any.whl.metadata (5.0 kB)
+  #11 5.229 Collecting python-dateutil>=2.7 (from matplotlib->-r requirements.txt (line 4))
+  #11 5.235   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+  #11 5.390 Collecting cffi>=1.0 (from soundfile->-r requirements.txt (line 7))
+  #11 5.395   Downloading cffi-1.17.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.5 kB)
+  #11 5.451 Collecting numexpr>=2.6.2 (from tables->-r requirements.txt (line 8))
+  #11 5.458   Downloading numexpr-2.11.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+  #11 5.468 Collecting py-cpuinfo (from tables->-r requirements.txt (line 8))
+  #11 5.473   Downloading py_cpuinfo-9.0.0-py3-none-any.whl.metadata (794 bytes)
+  #11 5.556 Collecting blosc2>=2.3.0 (from tables->-r requirements.txt (line 8))
+  #11 5.563   Downloading blosc2-3.5.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.9 kB)
+  #11 5.600 Collecting numpy (from -r requirements.txt (line 1))
+  #11 5.604   Downloading numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+  #11 5.637 Collecting importRosbag>=1.0.4 (from tonic->-r requirements.txt (line 11))
+  #11 5.643   Downloading importRosbag-1.0.4-py3-none-any.whl.metadata (4.3 kB)
+  #11 5.678 Collecting tqdm (from tonic->-r requirements.txt (line 11))
+  #11 5.683   Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+  #11 5.747 Collecting librosa (from tonic->-r requirements.txt (line 11))
+  #11 5.753   Downloading librosa-0.11.0-py3-none-any.whl.metadata (8.7 kB)
+  #11 5.779 Collecting pbr (from tonic->-r requirements.txt (line 11))
+  #11 5.784   Downloading pbr-6.1.1-py2.py3-none-any.whl.metadata (3.4 kB)
+  #11 5.900 Collecting expelliarmus (from tonic->-r requirements.txt (line 11))
+  #11 5.926   Downloading expelliarmus-1.1.12-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (13 kB)
+  #11 5.945 Collecting antlr4-python3-runtime==4.9.* (from hydra-core->-r requirements.txt (line 13))
+  #11 5.951   Downloading antlr4-python3-runtime-4.9.3.tar.gz (117 kB)
+  #11 5.976   Preparing metadata (setup.py): started
+  #11 6.114   Preparing metadata (setup.py): finished with status 'done'
+  #11 6.195 Collecting PyYAML>=5.1.0 (from omegaconf->-r requirements.txt (line 17))
+  #11 6.203   Downloading PyYAML-6.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB)
+  #11 6.278 Collecting llvmlite>=0.40.1 (from neurobench->-r requirements.txt (line 14))
+  #11 6.284   Downloading llvmlite-0.44.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.8 kB)
+  #11 6.380 Collecting numba>=0.57.1 (from neurobench->-r requirements.txt (line 14))
+  #11 6.385   Downloading numba-0.61.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.8 kB)
+  #11 6.479 Collecting pytz>=2020.1 (from pandas->-r requirements.txt (line 15))
+  #11 6.484   Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+  #11 6.497 Collecting tzdata>=2022.7 (from pandas->-r requirements.txt (line 15))
+  #11 6.502   Downloading tzdata-2025.2-py2.py3-none-any.whl.metadata (1.4 kB)
+  #11 6.559 Collecting ndindex (from blosc2>=2.3.0->tables->-r requirements.txt (line 8))
+  #11 6.565   Downloading ndindex-1.10.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.6 kB)
+  #11 6.633 Collecting msgpack (from blosc2>=2.3.0->tables->-r requirements.txt (line 8))
+  #11 6.638   Downloading msgpack-1.1.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (8.4 kB)
+  #11 6.654 Collecting platformdirs (from blosc2>=2.3.0->tables->-r requirements.txt (line 8))
+  #11 6.658   Downloading platformdirs-4.3.8-py3-none-any.whl.metadata (12 kB)
+  #11 6.686 Collecting requests (from blosc2>=2.3.0->tables->-r requirements.txt (line 8))
+  #11 6.691   Downloading requests-2.32.4-py3-none-any.whl.metadata (4.9 kB)
+  #11 6.701 Collecting pycparser (from cffi>=1.0->soundfile->-r requirements.txt (line 7))
+  #11 6.708   Downloading pycparser-2.22-py3-none-any.whl.metadata (943 bytes)
+  #11 6.754 Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib->-r requirements.txt (line 4))
+  #11 6.758   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+  #11 6.774 Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch->-r requirements.txt (line 2))
+  #11 6.779   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+  #11 6.842 Collecting MarkupSafe>=2.0 (from jinja2->torch->-r requirements.txt (line 2))
+  #11 6.847   Downloading MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.0 kB)
+  #11 6.860 Collecting audioread>=2.1.9 (from librosa->tonic->-r requirements.txt (line 11))
+  #11 6.865   Downloading audioread-3.0.1-py3-none-any.whl.metadata (8.4 kB)
+  #11 7.042 Collecting scikit-learn>=1.1.0 (from librosa->tonic->-r requirements.txt (line 11))
+  #11 7.047   Downloading scikit_learn-1.7.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (17 kB)
+  #11 7.079 Collecting joblib>=1.0 (from librosa->tonic->-r requirements.txt (line 11))
+  #11 7.084   Downloading joblib-1.5.1-py3-none-any.whl.metadata (5.6 kB)
+  #11 7.097 Collecting decorator>=4.3.0 (from librosa->tonic->-r requirements.txt (line 11))
+  #11 7.102   Downloading decorator-5.2.1-py3-none-any.whl.metadata (3.9 kB)
+  #11 7.119 Collecting pooch>=1.1 (from librosa->tonic->-r requirements.txt (line 11))
+  #11 7.124   Downloading pooch-1.8.2-py3-none-any.whl.metadata (10 kB)
+  #11 7.189 Collecting soxr>=0.3.2 (from librosa->tonic->-r requirements.txt (line 11))
+  #11 7.195   Downloading soxr-0.5.0.post1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.6 kB)
+  #11 7.209 Collecting lazy_loader>=0.1 (from librosa->tonic->-r requirements.txt (line 11))
+  #11 7.214   Downloading lazy_loader-0.4-py3-none-any.whl.metadata (7.6 kB)
+  #11 7.327 Collecting charset_normalizer<4,>=2 (from requests->blosc2>=2.3.0->tables->-r requirements.txt (line 8))
+  #11 7.332   Downloading charset_normalizer-3.4.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (35 kB)
+  #11 7.345 Collecting idna<4,>=2.5 (from requests->blosc2>=2.3.0->tables->-r requirements.txt (line 8))
+  #11 7.350   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+  #11 7.378 Collecting urllib3<3,>=1.21.1 (from requests->blosc2>=2.3.0->tables->-r requirements.txt (line 8))
+  #11 7.382   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+  #11 7.402 Collecting certifi>=2017.4.17 (from requests->blosc2>=2.3.0->tables->-r requirements.txt (line 8))
+  #11 7.406   Downloading certifi-2025.7.9-py3-none-any.whl.metadata (2.4 kB)
+  #11 7.452 Collecting threadpoolctl>=3.1.0 (from scikit-learn>=1.1.0->librosa->tonic->-r requirements.txt (line 11))
+  #11 7.456   Downloading threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+  #11 7.478 Downloading torch-2.7.1-cp310-cp310-manylinux_2_28_x86_64.whl (821.2 MB)
+  #11 32.19    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 821.2/821.2 MB 32.7 MB/s eta 0:00:00
+  #11 32.20 Downloading nvidia_cublas_cu12-12.6.4.1-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (393.1 MB)
+  #11 45.18    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 393.1/393.1 MB 30.8 MB/s eta 0:00:00
+  #11 45.19 Downloading nvidia_cuda_cupti_cu12-12.6.80-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.9 MB)
+  #11 45.40    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.9/8.9 MB 41.9 MB/s eta 0:00:00
+  #11 45.42 Downloading nvidia_cuda_nvrtc_cu12-12.6.77-py3-none-manylinux2014_x86_64.whl (23.7 MB)
+  #11 46.00    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.7/23.7 MB 40.7 MB/s eta 0:00:00
+  #11 46.01 Downloading nvidia_cuda_runtime_cu12-12.6.77-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (897 kB)
+  #11 46.03    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 897.7/897.7 kB 55.5 MB/s eta 0:00:00
+  #11 46.04 Downloading nvidia_cudnn_cu12-9.5.1.17-py3-none-manylinux_2_28_x86_64.whl (571.0 MB)
+  #11 63.96    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 571.0/571.0 MB 33.3 MB/s eta 0:00:00
+  #11 63.97 Downloading nvidia_cufft_cu12-11.3.0.4-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (200.2 MB)
+  #11 70.49    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 200.2/200.2 MB 30.7 MB/s eta 0:00:00
+  #11 70.50 Downloading nvidia_cufile_cu12-1.11.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.1 MB)
+  #11 70.53    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 35.9 MB/s eta 0:00:00
+  #11 70.55 Downloading nvidia_curand_cu12-10.3.7.77-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (56.3 MB)
+  #11 72.04    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 MB 37.9 MB/s eta 0:00:00
+  #11 72.05 Downloading nvidia_cusolver_cu12-11.7.1.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (158.2 MB)
+  #11 77.07    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 158.2/158.2 MB 31.5 MB/s eta 0:00:00
+  #11 77.07 Downloading nvidia_cusparse_cu12-12.5.4.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (216.6 MB)
+  #11 84.22    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 216.6/216.6 MB 30.3 MB/s eta 0:00:00
+  #11 84.23 Downloading nvidia_cusparselt_cu12-0.6.3-py3-none-manylinux2014_x86_64.whl (156.8 MB)
+  #11 89.55    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 156.8/156.8 MB 29.4 MB/s eta 0:00:00
+  #11 89.57 Downloading nvidia_nccl_cu12-2.26.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (201.3 MB)
+  #11 96.67    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.3/201.3 MB 28.4 MB/s eta 0:00:00
+  #11 96.68 Downloading nvidia_nvjitlink_cu12-12.6.85-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (19.7 MB)
+  #11 97.40    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19.7/19.7 MB 27.6 MB/s eta 0:00:00
+  #11 97.41 Downloading nvidia_nvtx_cu12-12.6.77-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (89 kB)
+  #11 97.42 Downloading triton-3.3.1-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (155.6 MB)
+  #11 102.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.6/155.6 MB 31.4 MB/s eta 0:00:00
+  #11 102.4 Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.7 MB)
+  #11 103.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 37.7/37.7 MB 26.4 MB/s eta 0:00:00
+  #11 103.8 Downloading matplotlib-3.10.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.6 MB)
+  #11 104.1    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.6/8.6 MB 28.5 MB/s eta 0:00:00
+  #11 104.1 Downloading seaborn-0.13.2-py3-none-any.whl (294 kB)
+  #11 104.2 Downloading h5py-3.14.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.6 MB)
+  #11 104.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 30.6 MB/s eta 0:00:00
+  #11 104.3 Downloading soundfile-0.13.1-py2.py3-none-manylinux_2_28_x86_64.whl (1.3 MB)
+  #11 104.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 28.6 MB/s eta 0:00:00
+  #11 104.4 Downloading tables-3.10.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (7.6 MB)
+  #11 104.6    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.6/7.6 MB 30.3 MB/s eta 0:00:00
+  #11 104.7 Downloading torchaudio-2.7.1-cp310-cp310-manylinux_2_28_x86_64.whl (3.5 MB)
+  #11 104.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 45.8 MB/s eta 0:00:00
+  #11 104.7 Downloading torchvision-0.22.1-cp310-cp310-manylinux_2_28_x86_64.whl (7.5 MB)
+  #11 104.9    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.5/7.5 MB 51.2 MB/s eta 0:00:00
+  #11 104.9 Downloading tonic-1.6.0-py3-none-any.whl (106 kB)
+  #11 104.9 Downloading numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
+  #11 105.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.2/18.2 MB 46.1 MB/s eta 0:00:00
+  #11 105.3 Downloading xlsxwriter-3.2.5-py3-none-any.whl (172 kB)
+  #11 105.3 Downloading hydra_core-1.3.2-py3-none-any.whl (154 kB)
+  #11 105.3 Downloading omegaconf-2.3.0-py3-none-any.whl (79 kB)
+  #11 105.3 Downloading neurobench-2.1.0-py3-none-any.whl (72 kB)
+  #11 105.4 Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+  #11 105.4 Downloading pandas-2.3.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.3 MB)
+  #11 105.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.3/12.3 MB 43.2 MB/s eta 0:00:00
+  #11 105.7 Downloading snntorch-0.9.4-py2.py3-none-any.whl (125 kB)
+  #11 105.7 Downloading kdepy-1.1.12-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (656 kB)
+  #11 105.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 656.8/656.8 kB 23.0 MB/s eta 0:00:00
+  #11 105.7 Downloading blosc2-3.5.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.4 MB)
+  #11 106.0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 17.5 MB/s eta 0:00:00
+  #11 106.0 Downloading cffi-1.17.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (446 kB)
+  #11 106.0 Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (325 kB)
+  #11 106.0 Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+  #11 106.1 Downloading fonttools-4.58.5-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.8 MB)
+  #11 106.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 17.2 MB/s eta 0:00:00
+  #11 106.3 Downloading importRosbag-1.0.4-py3-none-any.whl (28 kB)
+  #11 106.3 Downloading kiwisolver-1.4.8-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+  #11 106.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 23.7 MB/s eta 0:00:00
+  #11 106.4 Downloading llvmlite-0.44.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (42.4 MB)
+  #11 108.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 42.4/42.4 MB 23.1 MB/s eta 0:00:00
+  #11 108.3 Downloading numba-0.61.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.8 MB)
+  #11 108.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 28.0 MB/s eta 0:00:00
+  #11 108.4 Downloading numexpr-2.11.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (399 kB)
+  #11 108.4 Downloading packaging-25.0-py3-none-any.whl (66 kB)
+  #11 108.5 Downloading pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+  #11 108.6    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 41.8 MB/s eta 0:00:00
+  #11 108.6 Downloading pyparsing-3.2.3-py3-none-any.whl (111 kB)
+  #11 108.6 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+  #11 108.6 Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+  #11 108.7 Downloading PyYAML-6.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (751 kB)
+  #11 108.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 751.2/751.2 kB 45.5 MB/s eta 0:00:00
+  #11 108.7 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+  #11 108.7 Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+  #11 108.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 52.5 MB/s eta 0:00:00
+  #11 108.8 Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+  #11 108.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 42.3 MB/s eta 0:00:00
+  #11 108.8 Downloading typing_extensions-4.14.1-py3-none-any.whl (43 kB)
+  #11 108.9 Downloading tzdata-2025.2-py2.py3-none-any.whl (347 kB)
+  #11 108.9 Downloading expelliarmus-1.1.12-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (50 kB)
+  #11 108.9 Downloading filelock-3.18.0-py3-none-any.whl (16 kB)
+  #11 108.9 Downloading fsspec-2025.5.1-py3-none-any.whl (199 kB)
+  #11 108.9 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+  #11 108.9 Downloading MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20 kB)
+  #11 108.9 Downloading librosa-0.11.0-py3-none-any.whl (260 kB)
+  #11 108.9 Downloading audioread-3.0.1-py3-none-any.whl (23 kB)
+  #11 108.9 Downloading decorator-5.2.1-py3-none-any.whl (9.2 kB)
+  #11 108.9 Downloading joblib-1.5.1-py3-none-any.whl (307 kB)
+  #11 109.0 Downloading lazy_loader-0.4-py3-none-any.whl (12 kB)
+  #11 109.0 Downloading msgpack-1.1.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (408 kB)
+  #11 109.0 Downloading pooch-1.8.2-py3-none-any.whl (64 kB)
+  #11 109.0 Downloading platformdirs-4.3.8-py3-none-any.whl (18 kB)
+  #11 109.0 Downloading requests-2.32.4-py3-none-any.whl (64 kB)
+  #11 109.0 Downloading charset_normalizer-3.4.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (149 kB)
+  #11 109.0 Downloading idna-3.10-py3-none-any.whl (70 kB)
+  #11 109.0 Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+  #11 109.0 Downloading certifi-2025.7.9-py3-none-any.whl (159 kB)
+  #11 109.1 Downloading scikit_learn-1.7.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.9 MB)
+  #11 109.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.9/12.9 MB 33.4 MB/s eta 0:00:00
+  #11 109.4 Downloading soxr-0.5.0.post1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (252 kB)
+  #11 109.5 Downloading threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+  #11 109.5 Downloading ndindex-1.10.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (501 kB)
+  #11 109.5 Downloading networkx-3.4.2-py3-none-any.whl (1.7 MB)
+  #11 109.5    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 39.6 MB/s eta 0:00:00
+  #11 109.6 Downloading pbr-6.1.1-py2.py3-none-any.whl (108 kB)
+  #11 109.6 Downloading py_cpuinfo-9.0.0-py3-none-any.whl (22 kB)
+  #11 109.6 Downloading pycparser-2.22-py3-none-any.whl (117 kB)
+  #11 117.9 Building wheels for collected packages: randman, antlr4-python3-runtime
+  #11 117.9   DEPRECATION: Building 'randman' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'randman'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+  #11 117.9   Building wheel for randman (setup.py): started
+  #11 118.1   Building wheel for randman (setup.py): finished with status 'done'
+  #11 118.1   Created wheel for randman: filename=randman-0.1-py3-none-any.whl size=7123 sha256=28eeb93e272c358a9cd137054dcd825cf5bf998b23fba1782185417fd4b1467b
+  #11 118.1   Stored in directory: /tmp/pip-ephem-wheel-cache-xl479pbe/wheels/e2/1b/9b/60f6fc5a9a44b3053c7847342420e564da9d7fcaf0e038412e
+  #11 118.1   DEPRECATION: Building 'antlr4-python3-runtime' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'antlr4-python3-runtime'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+  #11 118.1   Building wheel for antlr4-python3-runtime (setup.py): started
+  #11 118.3   Building wheel for antlr4-python3-runtime (setup.py): finished with status 'done'
+  #11 118.3   Created wheel for antlr4-python3-runtime: filename=antlr4_python3_runtime-4.9.3-py3-none-any.whl size=144575 sha256=aca919972048cee30b9f7273308ebf05a4ef044397986236b56f4627fa810a2a
+  #11 118.3   Stored in directory: /tmp/pip-ephem-wheel-cache-xl479pbe/wheels/12/93/dd/1f6a127edc45659556564c5730f6d4e300888f4bca2d4c5a88
+  #11 118.3 Successfully built randman antlr4-python3-runtime
+  #11 118.7 Installing collected packages: stork, randman, pytz, py-cpuinfo, nvidia-cusparselt-cu12, mpmath, antlr4-python3-runtime, xlsxwriter, urllib3, tzdata, typing-extensions, triton, tqdm, threadpoolctl, sympy, snntorch, six, PyYAML, pyparsing, pycparser, platformdirs, pillow, pbr, packaging, nvidia-nvtx-cu12, nvidia-nvjitlink-cu12, nvidia-nccl-cu12, nvidia-curand-cu12, nvidia-cufile-cu12, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cuda-cupti-cu12, nvidia-cublas-cu12, numpy, networkx, ndindex, msgpack, MarkupSafe, llvmlite, kiwisolver, joblib, idna, fsspec, fonttools, filelock, decorator, cycler, charset_normalizer, certifi, audioread, soxr, scipy, requests, python-dateutil, omegaconf, nvidia-cusparse-cu12, nvidia-cufft-cu12, nvidia-cudnn-cu12, numexpr, numba, lazy_loader, jinja2, importRosbag, h5py, expelliarmus, contourpy, cffi, soundfile, scikit-learn, pooch, pandas, nvidia-cusolver-cu12, matplotlib, KDEpy, hydra-core, blosc2, torch, tables, seaborn, librosa, torchvision, torchaudio, tonic, neurobench
+  #11 118.7   DEPRECATION: Legacy editable install of stork from git+https://github.com/fmi-basel/stork.git@40c68fe#egg=stork (from -r requirements.txt (line 19)) (setup.py develop) is deprecated. pip 25.3 will enforce this behaviour change. A possible replacement is to add a pyproject.toml or enable --use-pep517, and use setuptools >= 64. If the resulting installation is not behaving as expected, try using --config-settings editable_mode=compat. Please consult the setuptools documentation for more information. Discussion can be found at https://github.com/pypa/pip/issues/11457
+  #11 118.7   Running setup.py develop for stork
+  #11 185.4 
+  #11 185.4 Successfully installed KDEpy-1.1.12 MarkupSafe-3.0.2 PyYAML-6.0.2 antlr4-python3-runtime-4.9.3 audioread-3.0.1 blosc2-3.5.1 certifi-2025.7.9 cffi-1.17.1 charset_normalizer-3.4.2 contourpy-1.3.2 cycler-0.12.1 decorator-5.2.1 expelliarmus-1.1.12 filelock-3.18.0 fonttools-4.58.5 fsspec-2025.5.1 h5py-3.14.0 hydra-core-1.3.2 idna-3.10 importRosbag-1.0.4 jinja2-3.1.6 joblib-1.5.1 kiwisolver-1.4.8 lazy_loader-0.4 librosa-0.11.0 llvmlite-0.44.0 matplotlib-3.10.3 mpmath-1.3.0 msgpack-1.1.1 ndindex-1.10.0 networkx-3.4.2 neurobench-2.1.0 numba-0.61.2 numexpr-2.11.0 numpy-1.26.4 nvidia-cublas-cu12-12.6.4.1 nvidia-cuda-cupti-cu12-12.6.80 nvidia-cuda-nvrtc-cu12-12.6.77 nvidia-cuda-runtime-cu12-12.6.77 nvidia-cudnn-cu12-9.5.1.17 nvidia-cufft-cu12-11.3.0.4 nvidia-cufile-cu12-1.11.1.6 nvidia-curand-cu12-10.3.7.77 nvidia-cusolver-cu12-11.7.1.2 nvidia-cusparse-cu12-12.5.4.2 nvidia-cusparselt-cu12-0.6.3 nvidia-nccl-cu12-2.26.2 nvidia-nvjitlink-cu12-12.6.85 nvidia-nvtx-cu12-12.6.77 omegaconf-2.3.0 packaging-25.0 pandas-2.3.1 pbr-6.1.1 pillow-11.3.0 platformdirs-4.3.8 pooch-1.8.2 py-cpuinfo-9.0.0 pycparser-2.22 pyparsing-3.2.3 python-dateutil-2.9.0.post0 pytz-2025.2 randman-0.1 requests-2.32.4 scikit-learn-1.7.0 scipy-1.15.3 seaborn-0.13.2 six-1.17.0 snntorch-0.9.4 soundfile-0.13.1 soxr-0.5.0.post1 stork sympy-1.14.0 tables-3.10.1 threadpoolctl-3.6.0 tonic-1.6.0 torch-2.7.1 torchaudio-2.7.1 torchvision-0.22.1 tqdm-4.67.1 triton-3.3.1 typing-extensions-4.14.1 tzdata-2025.2 urllib3-2.5.0 xlsxwriter-3.2.5
+  #11 185.4 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+  #11 DONE 191.4s
+  #12 [8/9] COPY . .
+  #12 DONE 0.9s
+  #13 [9/9] RUN mkdir -p /home/cc/EnvGym/data/RSNN/models /home/cc/EnvGym/data/RSNN/results
+  #13 DONE 0.2s
+  #14 exporting to image
+  #14 exporting layers
+  #14 exporting layers 74.6s done
+  #14 writing image sha256:5eb88ead40ef1dfa3dc5192e355a39a754ca38f9954bbf0bbb8889619aff5ea5 done
+  #14 naming to docker.io/library/envgym_test_1752118541 done
+  #14 DONE 74.6s
+  === Runtime Log ===  
+  Runtime Status: Success
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM ubuntu:22.04
+  # Set non-interactive frontend for apt-get
+  ENV DEBIAN_FRONTEND=noninteractive
+  # Set working directory
+  WORKDIR /home/cc/EnvGym/data/RSNN
+  # Install system dependencies
+  RUN apt-get update && \
+      apt-get install -y --no-install-recommends \
+          wget \
+          curl \
+          git \
+          build-essential \
+          python3.10 \
+          python3.10-venv \
+          python3.10-dev \
+          python3-pip \
+          libsndfile1 \
+          libhdf5-dev \
+          libatlas-base-dev \
+          libblas-dev \
+          liblapack-dev \
+          libffi-dev \
+          libssl-dev \
+          libjpeg-dev \
+          libpng-dev \
+          ca-certificates \
+          pkg-config \
+          unzip \
+          && \
+      rm -rf /var/lib/apt/lists/*
+  # Ensure python3.10 is default python and pip
+  RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
+      update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 && \
+      python -m pip install --upgrade pip
+  # Copy requirements.txt first for Docker cache efficiency
+  COPY requirements.txt .
+  # Fix stork dependency in requirements.txt before install
+  RUN sed -i 's|git+https://github.com/fmi-basel/stork.git@40c68fe|git+https://github.com/fmi-basel/stork.git@40c68fe#egg=stork|' requirements.txt
+  # Install Python dependencies (CPU-only torch/torchaudio/torchvision)
+  RUN pip install --no-cache-dir -r requirements.txt
+  # Copy the rest of the repository
+  COPY . .
+  # Create models and results directories if not present
+  RUN mkdir -p /home/cc/EnvGym/data/RSNN/models /home/cc/EnvGym/data/RSNN/results
+  # Set environment variables for Python
+  ENV PYTHONUNBUFFERED=1
+  ENV PYTHONDONTWRITEBYTECODE=1
+  # Default command: open bash shell
+  CMD ["/bin/bash"]
+--- End of Iteration 2 ---
+

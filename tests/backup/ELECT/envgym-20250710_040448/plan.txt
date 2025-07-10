@@ -1,0 +1,237 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu/standard Linux, no GPU, WORKDIR=/home/cc/EnvGym/data/ELECT) ===
+
+**Key Adjustments:**
+- All instructions and package selections are for x86_64 (amd64) architecture.
+- No GPU/CUDA/NVIDIA-related steps or dependencies are included.
+- All paths use /home/cc/EnvGym/data/ELECT as the project root.
+- OS is assumed to be Ubuntu 22.04+ or compatible x86_64 Linux.
+- All references to ARM, GPU, or non-x86_64 architectures are omitted.
+- Docker-specific notes: Use amd64-compatible base images only; do not use --gpus or nvidia-smi.
+- All build and install commands are compatible with the above environment.
+
+---
+
+1. DOWNLOADS NEEDED
+
+   - **Java Development Kit (JDK)**
+     - openjdk-11-jdk (recommended for Cassandra 4.x/ELECT)
+     - openjdk-11-jre
+     - **Note:** Only x86_64-compatible OpenJDK packages are required. No ARM or GPU-specific JDKs.
+
+   - **Python**
+     - python3 (Python >= 3.6)
+     - python3-pip
+     - **No need for python2.7 unless explicitly building RPMs for legacy RHEL/CentOS 7.x.**
+
+   - **Python Packages**
+     - As per `src/elect/pylib/requirements.txt` and `setup.py`
+     - Editable installs from GitHub (cassandra-driver, ccm)
+     - PyPI packages: coverage, pytest, numpy, scipy, cython
+     - Build dependencies: python3-dev, build-essential
+     - wheel (optional, recommended)
+
+   - **Ansible and Related Tools**
+     - ansible, bc
+
+   - **Java Build Tools**
+     - ant, ant-optional, maven (>=3.0)
+
+   - **Erasure Coding Dependencies**
+     - clang, llvm, libisal-dev
+
+   - **Other Tools**
+     - SSH (client/server), make, tar, git, curl
+
+   - **Documentation Build Tools**
+     - asciidoc or asciidoctor
+     - antora (install via npm if needed)
+     - make
+     - python3-sphinx (optional)
+
+   - **Benchmarking Tools**
+     - cassandra-stress (built from source)
+     - YCSB (download prebuilt or build from source using Maven)
+
+   - **SSL/TLS Development Tools**
+     - OpenSSL and Java security libraries (already included in JDK and Ubuntu)
+
+   - **OS Compatibility**
+     - All packages available via apt-get on Ubuntu 22.04+ (x86_64).
+     - No ARM, PowerPC, or GPU-specific packages.
+     - No need for RHEL/CentOS or macOS-specific instructions unless deploying on those platforms.
+
+   - **Internet Connection**
+     - Required for Maven, pip, git, and curl downloads.
+
+   - **Optional**
+     - NTP or chrony for clock synchronization.
+
+---
+
+2. FILES TO CREATE
+
+   - **All paths should be relative to /home/cc/EnvGym/data/ELECT** (i.e., project root).
+   - All file and directory creation instructions remain as in the original plan, but ensure that:
+     - Absolute or relative paths are correct for the working directory.
+     - No references to /root, /opt, or other system directories unless explicitly required.
+     - For Docker builds, set `WORKDIR /home/cc/EnvGym/data/ELECT` at the start of your Dockerfile.
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE
+
+   - All test cases remain as in the original plan.
+   - No GPU/CUDA/NVIDIA-specific tests are required.
+   - All build, install, and runtime tests should be performed on x86_64 Linux (Ubuntu 22.04+).
+   - If running in Docker, ensure containers are built for amd64 (`--platform=linux/amd64` if using multi-arch build).
+
+---
+
+4. COMPLETE TODO LIST (ADJUSTED FOR x86_64 UBUNTU, NO GPU, /home/cc/EnvGym/data/ELECT)
+
+   1. **Install System Dependencies**
+      - On Ubuntu/Debian x86_64:
+        ```
+        sudo apt-get update
+        sudo apt-get install -y openjdk-11-jdk openjdk-11-jre ant ant-optional maven clang llvm libisal-dev python3 ansible python3-pip bc make ssh tar git asciidoc curl build-essential python3-dev cython
+        ```
+        - (Optional for documentation):
+          ```
+          sudo apt-get install -y npm
+          sudo npm install -g @antora/cli @antora/site-generator-default
+          ```
+      - **No ARM, PowerPC, or GPU-specific packages.**
+      - **No CUDA, nvidia-smi, or --gpus instructions.**
+      - **No need for python2.7 unless building RPMs for RHEL/CentOS 7.x.**
+      - **No RHEL/CentOS-specific instructions unless explicitly needed.**
+      - **Verify:**
+        - All version checks as in the original plan (java, ant, mvn, python3, etc.)
+        - `uname -m` should output `x86_64`
+
+   2. **Install Python Packages and Test Tooling**
+      - As in the original plan.
+      - Ensure all pip installs are done in the context of /home/cc/EnvGym/data/ELECT.
+      - No GPU or ARM-specific Python packages.
+
+   3. **Build and Install Python Package with Cython Extension**
+      - As in the original plan.
+      - Ensure build-essential and python3-dev are installed (for x86_64).
+      - No special flags for architecture.
+
+   4. **Set Up Maven Proxy (if required)**
+      - As in the original plan.
+      - Path: `/home/cc/.m2/settings.xml` if running as user cc.
+
+   5. **Set Up SSH Key-Free Access Between All Nodes**
+      - As in the original plan.
+      - No changes.
+
+   6. **Synchronize System Clocks**
+      - As in the original plan.
+      - Recommend using `chrony` or `ntp` packages (available via apt-get).
+
+   7. **Generate Cluster Tokens**
+      - As in the original plan.
+      - Ensure scripts are run from /home/cc/EnvGym/data/ELECT/scripts.
+
+   8. **Configure ELECT Cluster**
+      - As in the original plan.
+      - All config files should be under /home/cc/EnvGym/data/ELECT.
+
+   9. **Build Erasure Coding Library**
+      - As in the original plan.
+      - Ensure JAVA_HOME points to x86_64 OpenJDK 11.
+      - Example:
+        ```
+        export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
+        ```
+      - No ARM or GPU-specific flags.
+
+   10. **Build ELECT Prototype and Cassandra-Stress Tool**
+       - As in the original plan.
+       - All builds are for x86_64.
+
+   11. **Build Object Storage Backend (OSSServer)**
+       - As in the original plan.
+       - Ensure make/gcc are for x86_64.
+
+   12. **Set Up YCSB Benchmark Tool**
+       - As in the original plan.
+       - Download or build x86_64-compatible binaries.
+       - No ARM or GPU-specific YCSB bindings.
+
+   13. **Prepare Data and Log Directories**
+       - As in the original plan.
+       - All under /home/cc/EnvGym/data/ELECT.
+
+   14. **(Optional) Unpack Distribution Archive**
+       - As in the original plan.
+       - Unpack under /home/cc/EnvGym/data/ELECT or as needed.
+
+   15. **(Red Hat/CentOS Only) Build RPM Packages**
+       - Only if explicitly targeting RHEL/CentOS 7+.
+       - Otherwise, skip this step.
+
+   16. **Build and Test SSL Factory Example**
+       - As in the original plan.
+       - All builds for x86_64.
+
+   17. **Build and Install Trigger Example**
+       - As in the original plan.
+
+   18. **Build and Generate Documentation**
+       - As in the original plan.
+       - All doc tools available for x86_64 Ubuntu.
+
+   19. **Start Object Storage Server**
+       - As in the original plan.
+
+   20. **Start ELECT Cluster**
+       - As in the original plan.
+
+   21. **Start Single Node in Foreground**
+       - As in the original plan.
+
+   22. **Launch CQLSH and Initialize Schema**
+       - As in the original plan.
+
+   23. **Create YCSB Keyspace and Tables**
+       - As in the original plan.
+
+   24. **Run YCSB Load Phase**
+       - As in the original plan.
+
+   25. **Run YCSB Benchmark Phase**
+       - As in the original plan.
+
+   26. **Run Cassandra-Stress Benchmark**
+       - As in the original plan.
+
+   27. **Test and Validate Functionality**
+       - As in the original plan.
+
+   28. **Error Handling**
+       - As in the original plan.
+       - Ignore any GPU/CUDA/NVIDIA-related troubleshooting.
+
+   29. **Consult Documentation and Community**
+       - As in the original plan.
+
+   30. **(Optional) Clean Up**
+       - As in the original plan.
+
+---
+
+**Additional Notes:**
+- **CPU Architecture:** All builds, binaries, and dependencies are for x86_64/amd64 only. No ARM or non-x86_64 support is required.
+- **Memory/Storage:** Ensure your VM or host has sufficient RAM (at least 4GB recommended for Cassandra/ELECT) and disk space (10GB+ recommended for data/logs/benchmarks).
+- **Operating System:** All instructions assume Ubuntu 22.04+ or compatible x86_64 Linux. No macOS, Windows, or ARM-specific steps.
+- **Paths/Directories:** All relative to /home/cc/EnvGym/data/ELECT. Set `WORKDIR /home/cc/EnvGym/data/ELECT` in Dockerfiles or scripts.
+- **Docker:** Use only amd64-compatible images (e.g., `ubuntu:22.04`, `python:3.10-slim`). Do not use `--gpus` or install CUDA/nvidia packages.
+- **No GPU:** No steps or dependencies for CUDA, NVIDIA drivers, or GPU acceleration.
+- **Development Tools:** All standard Ubuntu x86_64 packages; no cross-compilation or special toolchains needed.
+
+---
+
+**Summary:**  
+This plan is fully compatible with your x86_64 (amd64) Ubuntu/Linux environment, with no GPU, and with all project paths under /home/cc/EnvGym/data/ELECT. All instructions, dependencies, and test cases are appropriate for this setup. Remove any ARM, GPU, or non-x86_64 references from scripts or documentation. No further hardware-specific adjustments are required.

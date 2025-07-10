@@ -1,0 +1,103 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64, NO GPU, UBUNTU 22.04, DOCKER 28.3.1) ===
+
+**Key Hardware/OS Constraints:**
+- Architecture: x86_64 (amd64) only; no ARM/M1 support needed.
+- No GPU: Do not install CUDA, nvidia/cuda images, or run nvidia-smi.
+- OS: Ubuntu 22.04 (or compatible base images).
+- Docker: Version 28.3.1; supports BuildKit, --platform, multi-stage builds.
+- Working Directory: /home/cc/EnvGym/data/anvil (project root likely at /home/cc/EnvGym/data/anvil/anvil).
+
+---
+
+1. DOWNLOADS NEEDED
+
+**No changes to core dependencies, but:**
+- All Docker images and system packages must be for amd64/x86_64 (default for Ubuntu 22.04).
+- When building Docker images, always specify `--platform=linux/amd64` for reproducibility.
+- Do NOT include any CUDA, GPU, or nvidia-specific packages or instructions.
+- Do NOT use nvidia/cuda base images.
+- Use only Ubuntu 22.04 or other x86_64-compatible base images.
+- No GPU-specific build flags or environment variables.
+- Multi-core build optimizations (e.g., `make -j$(nproc)`) are possible and recommended for faster builds.
+- Large memory/storage: No need to restrict build parallelism or cache usage.
+
+**Path/Directory Adjustments:**
+- All local path dependencies (e.g., `../verus/source/builtin`) must resolve relative to `/home/cc/EnvGym/data/anvil/anvil` (project root).
+- In Docker builds, ensure `COPY`/`ADD` instructions use the correct context (likely `/home/cc/EnvGym/data/anvil` as build context if project is in `anvil` subdirectory).
+
+**Base Images:**
+- Use only amd64-compatible images:
+  - `ubuntu:22.04`
+  - `python:3.x-slim` (amd64)
+  - `ghcr.io/anvil-verifier/anvil/verus:latest` (ensure it's amd64)
+- For Docker builds, always specify `--platform=linux/amd64` if building on a multi-arch host or in CI.
+
+**Development Tools:**
+- All required tools (git, curl, gcc, etc.) are available for x86_64/Ubuntu 22.04.
+- No changes needed for tool versions; use latest stable or as required by Verus.
+
+---
+
+2. FILES TO CREATE
+
+**No major changes, but:**
+- All file paths and local dependencies must be correct relative to `/home/cc/EnvGym/data/anvil/anvil`.
+- In Dockerfiles, ensure `COPY`/`ADD` statements reflect the correct subdirectory if the Docker build context is `/home/cc/EnvGym/data/anvil` and the project is in `anvil/`.
+- In documentation, clarify that all instructions assume x86_64/amd64 and Ubuntu 22.04.
+- If providing example Docker build commands, always use `--platform=linux/amd64` for consistency.
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE
+
+**No changes required for test coverage, but:**
+- All tests (unit, integration, e2e, Docker) must run on x86_64/amd64.
+- No need to test for ARM or GPU-specific code paths.
+- In Docker-based tests, always use `--platform=linux/amd64` to avoid accidental ARM builds on CI or multi-arch hosts.
+- In documentation and CI, make explicit that only x86_64/amd64 is supported/tested.
+
+---
+
+4. COMPLETE TODO LIST (ADJUSTED)
+
+**General Adjustments:**
+- All steps assume x86_64/amd64 architecture and Ubuntu 22.04.
+- No GPU-related steps or dependencies.
+- All Docker builds should use `--platform=linux/amd64` for consistency.
+- All system packages and dependencies must be for amd64.
+- All local path dependencies must resolve relative to `/home/cc/EnvGym/data/anvil/anvil`.
+- In all documentation and scripts, clarify that only x86_64/amd64 is supported; no ARM or GPU support.
+
+**Specific Adjustments:**
+- When building Docker images, use:
+  - `docker build --platform=linux/amd64 ...`
+- When running containers, use:
+  - `docker run --platform=linux/amd64 ...`
+- In Dockerfiles, do NOT include any CUDA, nvidia, or GPU-specific instructions.
+- In CI configuration, ensure the runner is x86_64/amd64 and uses Ubuntu 22.04 or compatible.
+- In all documentation (README.md, e2e/README.md, docker/README.md), add a note:
+  > **Note:** This environment is designed for x86_64/amd64 architecture on Ubuntu 22.04. No ARM or GPU (CUDA) support is provided. All Docker images and builds use the amd64 architecture.
+- In Dockerfiles, base images should be explicitly set to Ubuntu 22.04 or other amd64-compatible images.
+- If using multi-stage Docker builds, ensure all stages use amd64-compatible images.
+- If using Docker Compose, ensure all services specify `platform: linux/amd64` if needed.
+- If you ever add support for other architectures, document the additional steps and test coverage required.
+
+---
+
+**Summary of Adjustments:**
+- **Architecture:** x86_64/amd64 only. All images, packages, and builds must target this architecture.
+- **No GPU:** Remove/avoid all CUDA, nvidia, or GPU-related instructions, packages, or base images.
+- **OS:** Ubuntu 22.04 (or compatible) only.
+- **Paths:** Ensure all local path dependencies resolve correctly from `/home/cc/EnvGym/data/anvil/anvil`.
+- **Docker:** Always use `--platform=linux/amd64` for builds and runs. Use only amd64-compatible images.
+- **Documentation:** Clearly state x86_64/amd64 and Ubuntu 22.04 as requirements. No ARM or GPU support.
+- **CI:** Ensure CI runners are x86_64/amd64 and use Ubuntu 22.04.
+
+---
+
+**All other steps, dependencies, and test requirements remain unchanged from the original plan.**
+
+---
+
+**EXTRA NOTE:**  
+If you ever plan to run this environment on ARM (e.g., Apple Silicon/M1) or with GPU support, you will need to revisit and adjust the plan for multi-arch builds and GPU dependencies. For now, this plan is fully optimized for your x86_64/amd64, CPU-only, Ubuntu 22.04, Docker 28.3.1 environment.

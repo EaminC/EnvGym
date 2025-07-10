@@ -1,0 +1,124 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (FOR x86_64, UBUNTU 22.04, NO GPU, DOCKER 28.3.1, WORKDIR: /home/cc/EnvGym/data/acto) ===
+
+1. DOWNLOADS NEEDED (ADJUSTED):
+
+   - **Docker**: Already installed (v28.3.1, BuildKit supported). No GPU support needed; do not use CUDA or nvidia/cuda images. Use `--platform=linux/amd64` if building multi-arch images, but not required for local x86_64.
+   - **Golang (Go)**: Use amd64 binaries. Install as per official docs; ensure `$GOPATH/bin` is in your PATH.
+   - **Kind (Kubernetes IN Docker)**: Use amd64 binary (`go install sigs.k8s.io/kind@v0.20.0`). No ARM64 or multi-arch needed.
+   - **Python**: Use system Python or install Python 3.10+ (preferably 3.12+) for Ubuntu 22.04 (which defaults to Python 3.10). No ARM/Apple Silicon instructions needed.
+   - **Python pip**: Use pip for Python 3.10+.
+   - **pip-tools, setuptools, wheel**: As specified, install in venv.
+   - **kubectl**: Download amd64 binary for Linux. Use latest stable compatible with your cluster.
+   - **[Optional] Helm/Kustomize**: Download amd64 binaries for Linux.
+   - **Git, Make**: Use Ubuntu 22.04 packages (`apt install git make`).
+   - **Ansible (ansible-core==2.17.5)**: Install in venv or via pip3. Use Ubuntu package only if pip install fails.
+     - **ansible-galaxy collections**: As specified.
+   - **Pre-commit, Python tools, Dev tools**: Install in venv as per requirements-dev.txt.
+   - **Python dependencies**: As specified; all compatible with Python 3.10+.
+   - **YAML/JSON tools**: Use pip-installed yq/jq if needed; Ubuntu 22.04 also provides jq.
+   - **No GPU-specific tools**: Do not install CUDA, nvidia-smi, or GPU drivers.
+   - **Base Docker Images**: Use only amd64-compatible images (e.g., `ubuntu:22.04`, `python:3.x-slim`, `debian:buster`). Do not use ARM or CUDA images.
+   - **No ARM/Apple Silicon instructions**: Remove any mention of ARM64, Apple Silicon, or Rosetta.
+   - **No GPU flags in Docker**: Do not use `--gpus` or related flags in Docker commands.
+   - **Multi-core CPU**: When building (e.g., `make -j$(nproc)`), you may leverage all CPU cores for faster builds.
+   - **Memory/Storage**: Ensure at least 8GB RAM and 10GB free disk space for Docker images, Kind clusters, and build artifacts. Adjust Kind cluster size if RAM is limited.
+   - **Operating System**: All instructions assume Ubuntu 22.04 or compatible x86_64 Linux. If using a different OS, adjust package manager commands accordingly.
+   - **Paths**: Use `/home/cc/EnvGym/data/acto` as the working/project directory. All relative paths are from this root.
+
+2. FILES TO CREATE (ADJUSTED):
+
+   - **All file paths**: Assume project root is `/home/cc/EnvGym/data/acto`.
+   - **No changes needed for file list**.
+   - **.env**: Set `WORKDIR=/home/cc/EnvGym/data/acto` and other relevant environment variables.
+   - **Dockerfiles**: If creating Dockerfiles, set `WORKDIR /home/cc/EnvGym/data/acto` and use `FROM python:3.12-slim` or `FROM ubuntu:22.04` as base (amd64 only).
+   - **No GPU-specific files or configs**.
+   - **No ARM/Apple Silicon-specific files or configs**.
+   - **No CUDA or nvidia-smi references**.
+
+3. NECESSARY TEST CASES IN THE CODEBASE (ADJUSTED):
+
+   - **No GPU tests**: Do not include any tests that require CUDA, nvidia-smi, or GPU acceleration.
+   - **No ARM/Apple Silicon tests**: Do not include tests for ARM64 compatibility.
+   - **Docker tests**: Ensure all Docker builds/tests use `--platform=linux/amd64` if multi-arch is relevant, but for local use, this is not required.
+   - **Kind cluster**: If RAM is limited (<8GB), reduce the number of Kind worker nodes to avoid OOM errors.
+   - **All other tests remain as specified**.
+
+4. COMPLETE TODO LIST (ADJUSTED):
+
+   1. **Install Git**: `sudo apt update && sudo apt install -y git`
+   2. **Clone the repository**: `git clone <repo-url> /home/cc/EnvGym/data/acto`
+   3. **Install Docker**: Already installed (v28.3.1). No GPU steps. Use only amd64 images.
+   4. **Install Go**: Download amd64 binary or use `sudo apt install golang-go` (Ubuntu 22.04). Verify with `go version`.
+   5. **Install Kind**: `go install sigs.k8s.io/kind@v0.20.0` (ensure `$GOPATH/bin` in PATH).
+   6. **Install kubectl**: Download amd64 binary as per Kubernetes docs.
+   7. **[Optional] Install Helm/Kustomize**: Download amd64 binaries for Linux.
+   8. **Install Python >=3.10**: Ubuntu 22.04 comes with Python 3.10. Use `sudo apt install python3.10 python3.10-venv python3.10-distutils` if needed.
+   9. **Install pip**: `sudo apt install python3-pip` or use `get-pip.py` for Python 3.10+.
+   10. **Create and activate Python venv**:  
+       ```
+       cd /home/cc/EnvGym/data/acto
+       python3.10 -m venv .venv
+       source .venv/bin/activate
+       ```
+   11. **Upgrade pip, setuptools, wheel**:  
+       ```
+       python -m pip install --upgrade pip setuptools wheel
+       ```
+   12. **Install pip-tools, build, virtualenv**:  
+       ```
+       pip install pip-tools==7.3.0 build==1.0.3 virtualenv==20.25.0
+       ```
+   13. **Install project dependencies**:  
+       ```
+       pip install -r requirements.txt
+       pip install -r requirements-dev.txt
+       ```
+   14. **Install pre-commit**:  
+       ```
+       pip install pre-commit==3.6.0
+       pre-commit install
+       pre-commit run --all-files
+       ```
+   15. **Build shared objects**:  
+       ```
+       make -j$(nproc)
+       ```
+       (Leverage all CPU cores for faster build.)
+   16. **Set up Kind cluster**:  
+       ```
+       kind create cluster
+       ```
+       - If RAM <8GB, use fewer workers:  
+         ```
+         kind create cluster --workers 1
+         ```
+       - Adjust inotify limits if needed (as in original plan).
+   17. **Deploy operator and run experiments**: As in original plan.
+   18. **Run code quality and tests**: As in original plan.
+   19. **Ansible automation**: As in original plan. No changes.
+   20. **Clean up resources**: As in original plan.
+   21. **No GPU/ARM/CUDA steps**: Omit any steps related to GPU, CUDA, nvidia-smi, ARM64, or Apple Silicon.
+   22. **No ARM64 base images**: Only use amd64 images in Dockerfiles and CI/CD.
+   23. **No CUDA/nvidia-docker flags**: Do not use `--gpus` or related flags in Docker commands.
+   24. **No Apple Silicon-specific troubleshooting**: Remove any references to Rosetta, ARM64 compatibility, or Apple-specific issues.
+   25. **Document working directory**: In `.env` and documentation, note that the project root is `/home/cc/EnvGym/data/acto`.
+
+   **Error Handling & Verification (ADJUSTED):**
+   - All error handling as in original plan.
+   - If any Docker build fails due to architecture, ensure `--platform=linux/amd64` is used.
+   - If Kind or Docker images are not compatible, verify image architecture is amd64.
+   - If memory errors occur during Kind cluster creation, reduce the number of workers or increase swap.
+   - No troubleshooting for GPU, CUDA, or ARM64 issues.
+   - All other troubleshooting as in original plan.
+
+**Summary of Adjustments:**
+- All instructions, dependencies, and Docker images are for x86_64/amd64 only.
+- No GPU, CUDA, or nvidia-smi steps or dependencies.
+- No ARM64/Apple Silicon-specific instructions or troubleshooting.
+- Use `/home/cc/EnvGym/data/acto` as the working directory in all scripts, Dockerfiles, and documentation.
+- Leverage multi-core CPU for builds (`make -j$(nproc)`).
+- If RAM is limited, reduce Kind cluster size.
+- Use only Ubuntu 22.04-compatible packages and binaries.
+- All other steps, files, and tests remain as in the original plan.
+
+=== END OF ADJUSTED PLAN ===

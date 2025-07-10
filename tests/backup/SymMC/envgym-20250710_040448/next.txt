@@ -1,0 +1,16 @@
+current progress
+- Docker image builds and runs successfully on Ubuntu 22.04, targeting x86_64/amd64.
+- All required system packages (OpenJDK 8, Ant, Git, CMake, build-essential, libgmp-dev, zlib1g-dev, Python3, wget, ca-certificates, unzip, curl) are installed.
+- Working directory is correctly set to /home/cc/EnvGym/data/SymMC.
+- JAVA_HOME, PATH, and LD_LIBRARY_PATH environment variables are set.
+- All .sh scripts in the context are made executable.
+- No CUDA/GPU dependencies or Windows/macOS-specific instructions are present.
+- The SymMC repository is not cloned within the Dockerfile (clone step is commented out).
+
+next step
+- Uncomment and set the `ARG SYMMC_REPO_URL` and `RUN git clone $SYMMC_REPO_URL /home/cc/EnvGym/data/SymMC` lines, or ensure the SymMC codebase is present in the Docker build context.
+- Add steps to download and place required Java `.jar` dependencies (e.g., `org.alloytools.alloy.dist.jar`) into `Enhanced_Kodkod/lib/`.
+- Add build steps for the Enhanced_Kodkod and Enumerator_Estimator modules (e.g., `cd Enhanced_Kodkod && ./build.sh`, `cd Enumerator_Estimator && ./build.sh`).
+- Optionally, add steps to copy or create `.env` or `config.env` with environment variables.
+- Optionally, add test and verification steps to ensure builds are successful and outputs are generated.
+- Update the Dockerfile to clean up build artifacts and document any Linux/x86_64-specific notes if needed.

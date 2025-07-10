@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/ELECT; project located under /home/cc/EnvGym/data, directory name ELECT
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim); no GPU-specific base image required
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: No GPU-related instructions (no RUN nvidia-smi, no CUDA installs); set WORKDIR to /home/cc/EnvGym/data/ELECT; use standard Linux/Ubuntu instructions
+- Docker Version: 28.3.1; BuildKit supported; --gpus flag available but not usable due to lack of NVIDIA GPU

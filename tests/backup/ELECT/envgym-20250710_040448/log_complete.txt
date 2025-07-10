@@ -1,0 +1,269 @@
+=== Docker Execution Log - 20250710_001422 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1752106441
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 5.01kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/36] FROM docker.io/library/ubuntu:22.04@sha256:3c61d3759c2639d4b836d32a2d3c83fa0214e36f195a3421018dbaaf79cbe37f
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 141B done
+#5 DONE 0.0s
+
+#6 [21/36] RUN apt-get update && apt-get install -y --no-install-recommends curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [23/36] RUN apt-get update && apt-get install -y --no-install-recommends npm && apt-get clean && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [15/36] RUN apt-get update && apt-get install -y --no-install-recommends bc && apt-get clean && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [18/36] RUN apt-get update && apt-get install -y --no-install-recommends tar && apt-get clean && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [27/36] RUN npm install -g @antora/cli @antora/site-generator-default
+#10 CACHED
+
+#11 [22/36] RUN apt-get update && apt-get install -y --no-install-recommends build-essential && apt-get clean && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [16/36] RUN apt-get update && apt-get install -y --no-install-recommends make && apt-get clean && rm -rf /var/lib/apt/lists/*
+#12 CACHED
+
+#13 [ 8/36] RUN apt-get update && apt-get install -y --no-install-recommends llvm && apt-get clean && rm -rf /var/lib/apt/lists/*
+#13 CACHED
+
+#14 [30/36] COPY --chown=cc:cc src/elect/pylib/requirements.txt /home/cc/EnvGym/data/ELECT/src/elect/pylib/requirements.txt
+#14 CACHED
+
+#15 [ 2/36] RUN useradd -ms /bin/bash cc &&     mkdir -p /home/cc/EnvGym/data/ELECT &&     chown -R cc:cc /home/cc
+#15 CACHED
+
+#16 [13/36] RUN apt-get update && apt-get install -y --no-install-recommends cython3 && apt-get clean && rm -rf /var/lib/apt/lists/*
+#16 CACHED
+
+#17 [20/36] RUN apt-get update && apt-get install -y --no-install-recommends asciidoc && apt-get clean && rm -rf /var/lib/apt/lists/*
+#17 CACHED
+
+#18 [ 9/36] RUN apt-get update && apt-get install -y --no-install-recommends libisal-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [26/36] RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*
+#19 CACHED
+
+#20 [ 4/36] RUN apt-get install -y --no-install-recommends openjdk-11-jdk &&     apt-get clean && rm -rf /var/lib/apt/lists/*
+#20 CACHED
+
+#21 [17/36] RUN apt-get update && apt-get install -y --no-install-recommends ssh && apt-get clean && rm -rf /var/lib/apt/lists/*
+#21 CACHED
+
+#22 [14/36] RUN apt-get update && apt-get install -y --no-install-recommends ansible && apt-get clean && rm -rf /var/lib/apt/lists/*
+#22 CACHED
+
+#23 [28/36] RUN echo "cc ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/cc && chmod 0440 /etc/sudoers.d/cc
+#23 CACHED
+
+#24 [19/36] RUN apt-get update && apt-get install -y --no-install-recommends git && apt-get clean && rm -rf /var/lib/apt/lists/*
+#24 CACHED
+
+#25 [29/36] WORKDIR /home/cc/EnvGym/data/ELECT
+#25 CACHED
+
+#26 [ 7/36] RUN apt-get update && apt-get install -y --no-install-recommends clang && apt-get clean && rm -rf /var/lib/apt/lists/*
+#26 CACHED
+
+#27 [24/36] RUN apt-get update && apt-get install -y --no-install-recommends sudo && apt-get clean && rm -rf /var/lib/apt/lists/*
+#27 CACHED
+
+#28 [12/36] RUN apt-get update && apt-get install -y --no-install-recommends python3-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
+#28 CACHED
+
+#29 [ 5/36] RUN apt-get update && apt-get install -y --no-install-recommends ant && apt-get clean && rm -rf /var/lib/apt/lists/*
+#29 CACHED
+
+#30 [25/36] RUN apt-get update && apt-get install -y --no-install-recommends chrony && apt-get clean && rm -rf /var/lib/apt/lists/*
+#30 CACHED
+
+#31 [11/36] RUN apt-get update && apt-get install -y --no-install-recommends python3-pip && apt-get clean && rm -rf /var/lib/apt/lists/*
+#31 CACHED
+
+#32 [ 3/36] RUN apt-get update &&     apt-get install -y --no-install-recommends         software-properties-common &&     add-apt-repository universe &&     apt-get update
+#32 CACHED
+
+#33 [ 6/36] RUN apt-get update && apt-get install -y --no-install-recommends maven && apt-get clean && rm -rf /var/lib/apt/lists/*
+#33 CACHED
+
+#34 [10/36] RUN apt-get update && apt-get install -y --no-install-recommends python3 && apt-get clean && rm -rf /var/lib/apt/lists/*
+#34 CACHED
+
+#35 [31/36] RUN python3 -m pip install --upgrade pip &&     if [ -f src/elect/pylib/requirements.txt ]; then pip install -r src/elect/pylib/requirements.txt; fi &&     pip install coverage pytest numpy scipy cython wheel
+#35 CACHED
+
+#36 [32/36] RUN pip install --no-cache-dir --upgrade cassandra-driver &&     pip install --no-cache-dir --upgrade git+https://github.com/pcmanus/ccm.git@master
+#36 0.486 Defaulting to user installation because normal site-packages is not writeable
+#36 0.619 Requirement already satisfied: cassandra-driver in ./src/cassandra-driver (3.24.0)
+#36 0.684 Collecting cassandra-driver
+#36 0.724   Downloading cassandra_driver-3.29.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.2 kB)
+#36 0.726 Requirement already satisfied: geomet<0.3,>=0.1 in /home/cc/.local/lib/python3.10/site-packages (from cassandra-driver) (0.2.1.post1)
+#36 0.727 Requirement already satisfied: click in /home/cc/.local/lib/python3.10/site-packages (from geomet<0.3,>=0.1->cassandra-driver) (8.2.1)
+#36 0.727 Requirement already satisfied: six in /usr/lib/python3/dist-packages (from geomet<0.3,>=0.1->cassandra-driver) (1.16.0)
+#36 0.735 Downloading cassandra_driver-3.29.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.9 MB)
+#36 0.760    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 252.8 MB/s eta 0:00:00
+#36 0.822 Installing collected packages: cassandra-driver
+#36 0.823   Attempting uninstall: cassandra-driver
+#36 0.823     Found existing installation: cassandra-driver 3.24.0
+#36 0.825     Uninstalling cassandra-driver-3.24.0:
+#36 0.851       Successfully uninstalled cassandra-driver-3.24.0
+#36 1.086 Successfully installed cassandra-driver-3.29.2
+#36 1.468 Defaulting to user installation because normal site-packages is not writeable
+#36 1.597 Collecting git+https://github.com/pcmanus/ccm.git@master
+#36 1.597   Cloning https://github.com/pcmanus/ccm.git (to revision master) to /tmp/pip-req-build-kr1yjndo
+#36 1.599   Running command git clone --filter=blob:none --quiet https://github.com/pcmanus/ccm.git /tmp/pip-req-build-kr1yjndo
+#36 2.324   Running command git checkout -b master --track origin/master
+#36 2.625   Switched to a new branch 'master'
+#36 2.626   Branch 'master' set up to track remote branch 'master' from 'origin'.
+#36 2.626   Resolved https://github.com/pcmanus/ccm.git to commit 4fef7668409bb30601b132a880df24d227d1d328
+#36 2.630   Preparing metadata (setup.py): started
+#36 3.428   Preparing metadata (setup.py): finished with status 'done'
+#36 3.434 Requirement already satisfied: psutil in /home/cc/.local/lib/python3.10/site-packages (from ccm==3.1.6.dev1327) (7.0.0)
+#36 3.434 Requirement already satisfied: pyYaml in /usr/lib/python3/dist-packages (from ccm==3.1.6.dev1327) (5.4.1)
+#36 3.435 Requirement already satisfied: six>=1.4.1 in /usr/lib/python3/dist-packages (from ccm==3.1.6.dev1327) (1.16.0)
+#36 3.442 Building wheels for collected packages: ccm
+#36 3.443   DEPRECATION: Building 'ccm' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'ccm'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+#36 3.444   Building wheel for ccm (setup.py): started
+#36 3.788   Building wheel for ccm (setup.py): finished with status 'done'
+#36 3.789   Created wheel for ccm: filename=ccm-3.1.6.dev1327-py3-none-any.whl size=92857 sha256=cd93229ce614c44231099295f97cf6e0707285dc381e83c3742b9642ae08612d
+#36 3.789   Stored in directory: /tmp/pip-ephem-wheel-cache-w911268k/wheels/e0/01/ce/ec6757ee34d490191fa66de14de285b102e46b35b0fdbf1470
+#36 3.792 Successfully built ccm
+#36 3.838 Installing collected packages: ccm
+#36 3.838   Attempting uninstall: ccm
+#36 3.839     Found existing installation: ccm 3.1.6.dev1340
+#36 3.841     Uninstalling ccm-3.1.6.dev1340:
+#36 3.870       Successfully uninstalled ccm-3.1.6.dev1340
+#36 3.943 Successfully installed ccm-3.1.6.dev1327
+#36 DONE 4.1s
+
+#37 [33/36] RUN pip install sphinx
+#37 0.649 Defaulting to user installation because normal site-packages is not writeable
+#37 0.861 Collecting sphinx
+#37 0.911   Downloading sphinx-8.1.3-py3-none-any.whl.metadata (6.4 kB)
+#37 0.929 Collecting sphinxcontrib-applehelp>=1.0.7 (from sphinx)
+#37 0.941   Downloading sphinxcontrib_applehelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
+#37 0.953 Collecting sphinxcontrib-devhelp>=1.0.6 (from sphinx)
+#37 0.960   Downloading sphinxcontrib_devhelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
+#37 0.975 Collecting sphinxcontrib-htmlhelp>=2.0.6 (from sphinx)
+#37 0.982   Downloading sphinxcontrib_htmlhelp-2.1.0-py3-none-any.whl.metadata (2.3 kB)
+#37 0.996 Collecting sphinxcontrib-jsmath>=1.0.1 (from sphinx)
+#37 1.000   Downloading sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl.metadata (1.4 kB)
+#37 1.014 Collecting sphinxcontrib-qthelp>=1.0.6 (from sphinx)
+#37 1.020   Downloading sphinxcontrib_qthelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
+#37 1.034 Collecting sphinxcontrib-serializinghtml>=1.1.9 (from sphinx)
+#37 1.040   Downloading sphinxcontrib_serializinghtml-2.0.0-py3-none-any.whl.metadata (2.4 kB)
+#37 1.058 Collecting Jinja2>=3.1 (from sphinx)
+#37 1.063   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#37 1.067 Requirement already satisfied: Pygments>=2.17 in /home/cc/.local/lib/python3.10/site-packages (from sphinx) (2.19.2)
+#37 1.085 Collecting docutils<0.22,>=0.20 (from sphinx)
+#37 1.092   Downloading docutils-0.21.2-py3-none-any.whl.metadata (2.8 kB)
+#37 1.107 Collecting snowballstemmer>=2.2 (from sphinx)
+#37 1.114   Downloading snowballstemmer-3.0.1-py3-none-any.whl.metadata (7.9 kB)
+#37 1.132 Collecting babel>=2.13 (from sphinx)
+#37 1.140   Downloading babel-2.17.0-py3-none-any.whl.metadata (2.0 kB)
+#37 1.156 Collecting alabaster>=0.7.14 (from sphinx)
+#37 1.164   Downloading alabaster-1.0.0-py3-none-any.whl.metadata (2.8 kB)
+#37 1.178 Collecting imagesize>=1.3 (from sphinx)
+#37 1.184   Downloading imagesize-1.4.1-py2.py3-none-any.whl.metadata (1.5 kB)
+#37 1.215 Collecting requests>=2.30.0 (from sphinx)
+#37 1.220   Downloading requests-2.32.4-py3-none-any.whl.metadata (4.9 kB)
+#37 1.240 Collecting packaging>=23.0 (from sphinx)
+#37 1.246   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#37 1.249 Requirement already satisfied: tomli>=2 in /home/cc/.local/lib/python3.10/site-packages (from sphinx) (2.2.1)
+#37 1.253 Requirement already satisfied: MarkupSafe>=2.0 in /usr/lib/python3/dist-packages (from Jinja2>=3.1->sphinx) (2.0.1)
+#37 1.340 Collecting charset_normalizer<4,>=2 (from requests>=2.30.0->sphinx)
+#37 1.353   Downloading charset_normalizer-3.4.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (35 kB)
+#37 1.371 Collecting idna<4,>=2.5 (from requests>=2.30.0->sphinx)
+#37 1.376   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#37 1.407 Collecting urllib3<3,>=1.21.1 (from requests>=2.30.0->sphinx)
+#37 1.415   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+#37 1.439 Collecting certifi>=2017.4.17 (from requests>=2.30.0->sphinx)
+#37 1.445   Downloading certifi-2025.7.9-py3-none-any.whl.metadata (2.4 kB)
+#37 1.464 Downloading sphinx-8.1.3-py3-none-any.whl (3.5 MB)
+#37 1.509    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 83.8 MB/s eta 0:00:00
+#37 1.515 Downloading docutils-0.21.2-py3-none-any.whl (587 kB)
+#37 1.523    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 587.4/587.4 kB 78.7 MB/s eta 0:00:00
+#37 1.533 Downloading alabaster-1.0.0-py3-none-any.whl (13 kB)
+#37 1.540 Downloading babel-2.17.0-py3-none-any.whl (10.2 MB)
+#37 1.669    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 78.6 MB/s eta 0:00:00
+#37 1.674 Downloading imagesize-1.4.1-py2.py3-none-any.whl (8.8 kB)
+#37 1.681 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#37 1.688 Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#37 1.699 Downloading requests-2.32.4-py3-none-any.whl (64 kB)
+#37 1.707 Downloading charset_normalizer-3.4.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (149 kB)
+#37 1.717 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#37 1.724 Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+#37 1.732 Downloading certifi-2025.7.9-py3-none-any.whl (159 kB)
+#37 1.740 Downloading snowballstemmer-3.0.1-py3-none-any.whl (103 kB)
+#37 1.752 Downloading sphinxcontrib_applehelp-2.0.0-py3-none-any.whl (119 kB)
+#37 1.761 Downloading sphinxcontrib_devhelp-2.0.0-py3-none-any.whl (82 kB)
+#37 1.774 Downloading sphinxcontrib_htmlhelp-2.1.0-py3-none-any.whl (98 kB)
+#37 1.781 Downloading sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl (5.1 kB)
+#37 1.790 Downloading sphinxcontrib_qthelp-2.0.0-py3-none-any.whl (88 kB)
+#37 1.799 Downloading sphinxcontrib_serializinghtml-2.0.0-py3-none-any.whl (92 kB)
+#37 1.948 Installing collected packages: urllib3, sphinxcontrib-serializinghtml, sphinxcontrib-qthelp, sphinxcontrib-jsmath, sphinxcontrib-htmlhelp, sphinxcontrib-devhelp, sphinxcontrib-applehelp, snowballstemmer, packaging, Jinja2, imagesize, idna, docutils, charset_normalizer, certifi, babel, alabaster, requests, sphinx
+#37 2.723   WARNING: The scripts docutils, rst2html, rst2html4, rst2html5, rst2latex, rst2man, rst2odt, rst2pseudoxml, rst2s5, rst2xetex and rst2xml are installed in '/home/cc/.local/bin' which is not on PATH.
+#37 2.723   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+#37 2.752   WARNING: The script normalizer is installed in '/home/cc/.local/bin' which is not on PATH.
+#37 2.752   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+#37 3.144   WARNING: The script pybabel is installed in '/home/cc/.local/bin' which is not on PATH.
+#37 3.144   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+#37 3.752   WARNING: The scripts sphinx-apidoc, sphinx-autogen, sphinx-build and sphinx-quickstart are installed in '/home/cc/.local/bin' which is not on PATH.
+#37 3.752   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+#37 3.760 
+#37 3.766 Successfully installed Jinja2-3.1.6 alabaster-1.0.0 babel-2.17.0 certifi-2025.7.9 charset_normalizer-3.4.2 docutils-0.21.2 idna-3.10 imagesize-1.4.1 packaging-25.0 requests-2.32.4 snowballstemmer-3.0.1 sphinx-8.1.3 sphinxcontrib-applehelp-2.0.0 sphinxcontrib-devhelp-2.0.0 sphinxcontrib-htmlhelp-2.1.0 sphinxcontrib-jsmath-1.0.1 sphinxcontrib-qthelp-2.0.0 sphinxcontrib-serializinghtml-2.0.0 urllib3-2.5.0
+#37 DONE 4.1s
+
+#38 [34/36] RUN [ ! -d "/home/cc/.ssh" ] && mkdir -p /home/cc/.ssh && chmod 700 /home/cc/.ssh || true
+#38 DONE 0.2s
+
+#39 [35/36] RUN mkdir -p /home/cc/.m2
+#39 DONE 0.4s
+
+#40 [36/36] RUN echo "export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64" >> /home/cc/.bashrc &&     echo "export PATH=/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin:$PATH" >> /home/cc/.bashrc
+#40 DONE 0.4s
+
+#41 exporting to image
+#41 exporting layers
+#41 exporting layers 11.2s done
+#41 writing image sha256:5750b32201b572edd1101deac18dcfc19a6d8370f8353fac8471a22a1e5e0705 done
+#41 naming to docker.io/library/envgym_test_1752106441 done
+#41 DONE 11.2s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

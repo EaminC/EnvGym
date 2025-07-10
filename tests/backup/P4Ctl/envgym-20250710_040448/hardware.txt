@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/P4Ctl (project located in nested data directory, likely Python or ML-related)
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim, debian:buster)
+- GPU: No NVIDIA GPU detected, CUDA images not applicable
+- Instruction Notes: No GPU-specific instructions (no --gpus, no nvidia/cuda base), multi-core build optimizations possible, large memory/storage available for builds
+- Docker Version: 28.3.1, BuildKit supported, compatible with modern Dockerfile features, no GPU runtime support required

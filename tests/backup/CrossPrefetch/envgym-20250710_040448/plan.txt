@@ -1,0 +1,174 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu 22.04, No GPU, Docker 28.3.1, /home/cc/EnvGym/data/CrossPrefetch) ===
+
+1. DOWNLOADS NEEDED: 
+
+   - Ubuntu 22.04 (confirmed compatible; base image: ubuntu:22.04 or python:3.x-slim as needed)
+   - Modified Linux kernel source: linux-5.14.0 (from repository)
+   - Git (>=2.20)
+   - Python3 (>=3.6; Ubuntu 22.04 default is >=3.10)
+   - Essential build tools: build-essential, gcc, g++, make, cmake, automake, autoconf, libtool, pkg-config
+   - Additional dependencies (to be installed via `scripts/install_packages.sh`):
+     - libaio-dev
+     - libsnappy-dev
+     - libfuse-dev
+     - libnuma-dev
+     - libssl-dev
+     - zlib1g-dev
+     - uuid-dev
+     - python3-pip
+     - python3-numpy
+     - python3-pandas
+     - openjdk-8-jdk
+     - maven
+     - f2fs-tools (for F2FS experiments)
+     - nvme-cli (for NVMe management)
+   - RocksDB and YCSB (included in repo under appbench/apps)
+   - Snappy (included in repo)
+   - Any additional dependencies listed in `scripts/install_packages.sh`
+   - CloudLab access (for node provisioning, if using CloudLab)
+   - NVMe SSD hardware (required for experiments; ensure sufficient storage space for kernel builds and experiment data)
+   - (For remote experiments) Two CloudLab m510 nodes with NVMe drives (optional)
+   - **DO NOT** install or reference CUDA, NVIDIA drivers, or GPU-specific libraries (no GPU present)
+   - **DO NOT** use nvidia/cuda base images or `--gpus` Docker flags
+
+2. FILES TO CREATE: 
+
+   - `~/ssd` directory: Mount point for NVMe SSD (can be `/home/cc/ssd` if preferred for clarity)
+   - `.bashrc` or `.profile` additions (optional): To source environment variables automatically
+   - `$BASE` environment variable: Set by `scripts/setvars.sh` (no manual file creation needed)
+   - Kernel build output: `/boot/vmlinuz-5.14.0-crossprefetch` (after kernel install)
+   - Results directories:
+     - `$BASE/results/` (for experiment outputs)
+     - `$BASE/AERESULTS/` (for master script outputs)
+   - Backup directory for results before F2FS experiments (e.g., `~/ssd/crossprefetch-backup/`)
+   - (For remote experiments) IP configuration in `scripts/remote-nvme-setup/storage_setup.sh` and `client_setup.sh`
+   - (Optional) Log files for installation and experiment runs (e.g., `install.log`, `run.log`)
+   - (If needed) Custom configuration files for RocksDB, YCSB, or benchmarks (as required by scripts)
+   - **Note:** If running inside Docker, ensure correct volume mounts for `/home/cc/EnvGym/data/CrossPrefetch` and `/home/cc/ssd` (or equivalent) to persist data and allow access to NVMe device (requires privileged mode for kernel/SSD access).
+
+3. NECESSARY TEST CASES IN THE CODEBASE: 
+
+   - Kernel installation verification:
+     - Test: Boot into modified kernel and verify version (`uname -r`)
+   - Library installation:
+     - Test: Compile and install `shared_libs/simple_prefetcher`; verify shared library is present
+   - Application/benchmark compilation:
+     - Test: Compile RocksDB-YCSB, RocksDB, snappy-c, mmap_exp, scalability, multi_read
+     - Verify executables are created
+   - Environment variable setup:
+     - Test: `$BASE` and other variables are set after sourcing `setvars.sh`
+   - Filesystem setup:
+     - Test: NVMe SSD is formatted, mounted, and writable by user
+   - Experiment execution:
+     - Test: Each benchmark runs to completion and produces expected result files (`RESULT.csv`, `SCALE-RESULT.csv`, etc.)
+   - Result extraction:
+     - Test: Python scripts parse output and generate CSVs with expected columns/values
+   - F2FS experiment:
+     - Test: Disk is formatted and mounted as F2FS, benchmarks run successfully
+   - Remote NVMe-oF setup:
+     - Test: Storage and client nodes connect, remote block device is visible and writable
+   - Error handling:
+     - Test: Scripts fail gracefully if dependencies are missing or environment is not set
+   - **No GPU-related test cases required.**
+
+4. COMPLETE TODO LIST: 
+
+   1. Provision a CloudLab r6525 node (or equivalent with NVMe SSD and >=128 cores) OR ensure your local x86_64 Ubuntu 22.04 system meets requirements.
+      - Verify node/system is accessible via SSH or local shell.
+      - If using Docker, ensure container is started with `--privileged` if kernel or block device access is needed.
+   2. Format and mount the NVMe SSD:
+      - `sudo mkfs.ext4 /dev/nvme0n1`
+      - `mkdir ~/ssd` (or `mkdir /home/cc/ssd`)
+      - `sudo mount /dev/nvme0n1 ~/ssd`
+      - `cd ~/ssd; sudo chown $USER .`
+      - Verify with `df -h` and `ls -ld ~/ssd`
+      - **If running in Docker:** Pass NVMe device into container as `--device=/dev/nvme0n1` and mount `/home/cc/ssd` as a volume.
+   3. Clone the repository:
+      - `cd ~/ssd`
+      - `git clone https://github.com/RutgersCSSystems/crossprefetch-asplos24-artifacts`
+      - `cd crossprefetch-asplos24-artifacts`
+      - Verify repo structure with `ls`
+   4. Set environment variables:
+      - `source ./scripts/setvars.sh`
+      - Verify `$BASE` is set: `echo $BASE`
+   5. Install required packages:
+      - `./scripts/install_packages.sh | tee install.log`
+      - Verify no errors in `install.log`
+      - Check for all dependencies (see above)
+      - **No CUDA, NVIDIA, or GPU-related packages should be installed.**
+   6. Compile and install the modified Linux kernel:
+      - `cd $BASE/linux-5.14.0`
+      - `./compile_modified_deb.sh`
+      - Verify kernel build completes; check for `/boot/vmlinuz-5.14.0-crossprefetch`
+      - `sudo reboot`
+      - **If running in Docker:** Kernel compilation and installation is not supported; perform this step on the host system.
+   7. After reboot, remount SSD:
+      - `sudo mount /dev/nvme0n1 ~/ssd`
+      - `cd ~/ssd; sudo chown $USER .`
+      - Verify with `df -h`
+   8. Set environment variables again:
+      - `cd ~/ssd/crossprefetch-asplos24-artifacts`
+      - `source ./scripts/setvars.sh`
+   9. Compile and install user-level library:
+      - `cd $BASE/shared_libs/simple_prefetcher/`
+      - `./compile.sh`
+      - Verify shared library is built
+   10. Compile all application workloads:
+       - For each app:
+         - `cd $BASE/appbench/apps/<app>`
+         - `./compile.sh`
+         - Verify executables are built
+   11. Run basic experiments and extract results:
+       - For each benchmark:
+         - Set environment variables if needed
+         - Run workload script (e.g., `./release-run-med.sh`)
+         - Extract results with Python script (e.g., `python3 release-extract-med.py`)
+         - Verify output CSVs (`cat RESULT.csv`)
+   12. Run scalability and memory budget experiments:
+       - Follow README instructions for each (e.g., `./release-scale-run-med.sh`, `./release-run-mem.sh`)
+       - Verify result files
+   13. Run F2FS experiments (optional, destructive):
+       - Backup all result files (`cp $BASE/results/*.csv ~/ssd/crossprefetch-backup/`)
+       - `sudo umount ~/ssd`
+       - `sudo mkfs.f2fs -f /dev/nvme0n1`
+       - `sudo mount /dev/nvme0n1 ~/ssd`
+       - `sudo chown -R $USER ~/ssd`
+       - Re-clone repo, set environment, recompile, and rerun experiments as above
+   14. Run remote storage experiments (if required):
+       - Provision two CloudLab m510 nodes with NVMe
+       - On both nodes, clone repo and navigate to `scripts/remote-nvme-setup/`
+       - On storage node:
+         - Edit `storage_setup.sh` to set correct device and IP
+         - `sudo mkfs.ext4 /dev/nvme0n1p4`
+         - `sudo ./storage_setup.sh`
+       - On client node:
+         - Edit `client_setup.sh` to set correct storage node IP
+         - `sudo ./client_setup.sh`
+         - Verify `/mnt/remote` is mounted
+       - On client node, set up environment, compile, and run remote experiments as in README
+   15. (Optional) Run all experiments at once:
+       - `cd $BASE`
+       - `$BASE/scripts/install_packages.sh`
+       - `$BASE/scripts/compile_all.sh`
+       - `$BASE/scripts/run_all.sh`
+       - Verify results in `$BASE/AERESULTS/`
+   16. Verification and error handling:
+       - After each major step, verify expected files, outputs, and system state
+       - If errors occur, check logs, dependency versions, and environment variables
+       - For kernel issues, verify booted kernel with `uname -r`
+       - For library/application issues, check compilation output and missing dependencies
+       - For experiment failures, check logs and result files for errors or missing data
+   17. (Optional) Automate environment variable sourcing by adding `source $BASE/scripts/setvars.sh` to `.bashrc` or `.profile`
+   18. Document any deviations, hardware/OS differences, or encountered issues for reproducibility
+
+**NOTES & ADJUSTMENTS BASED ON HARDWARE:**
+- All instructions are for x86_64/amd64 only; do not attempt on ARM or other architectures.
+- No GPU-specific steps or dependencies; ignore any CUDA/NVIDIA references in scripts or documentation.
+- Ubuntu 22.04 is fully supported; all package versions should be compatible.
+- If using Docker, be aware that kernel compilation and block device access may not be possible inside the container; perform those steps on the host or use `--privileged` and `--device` flags as needed.
+- Working directory is `/home/cc/EnvGym/data/CrossPrefetch`; adjust any hardcoded paths in scripts or documentation to reflect this as needed.
+- Ensure sufficient storage space on NVMe SSD for kernel builds and experiment data (tens of GBs recommended).
+- Large memory and CPU are available; consider using parallel build flags (e.g., `make -j$(nproc)`) for faster compilation.
+- All environment variable, path, and device references should be double-checked for correctness in your actual environment.
+
+**END OF ADJUSTED PLAN**

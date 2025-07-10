@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/Lottory; project is under EnvGym/data/Lottory, adjust WORKDIR accordingly
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.10-slim); no CUDA base images required
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda images
+- Instruction Notes: No GPU-specific instructions; multi-core CPU available for parallel builds; set WORKDIR to /home/cc/EnvGym/data/Lottory if needed
+- Docker Version: 28.3.1; BuildKit supported; --gpus flag not applicable

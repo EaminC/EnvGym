@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250709_205910",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752094750",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 3.75kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:3c61d3759c2639d4b836d32a2d3c83fa0214e36f195a3421018dbaaf79cbe37f\n#4 DONE 0.0s\n\n#5 [ 2/14] WORKDIR /home/cc/EnvGym/data/exli\n#5 CACHED\n\n#6 [internal] load build context\n#6 transferring context: 2.74kB done\n#6 DONE 0.0s\n\n#7 [ 4/14] RUN locale-gen en_US.UTF-8 &&     update-locale LANG=en_US.UTF-8\n#7 CACHED\n\n#8 [ 5/14] RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh &&     bash /tmp/miniconda.sh -b -p /opt/conda &&     rm /tmp/miniconda.sh &&     conda config --set always_yes yes --set changeps1 no &&     conda update -q conda &&     conda clean -afy\n#8 CACHED\n\n#9 [ 6/14] COPY python/requirements.txt python/setup.py python/prepare-conda-env.sh ./python/\n#9 ERROR: failed to calculate checksum of ref 5eeea680-c455-4d17-a425-08efb16a18b7::lujkhq53sgecz2mpefzsi04wm: \"/python/requirements.txt\": not found\n\n#10 [ 3/14] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         curl         wget         unzip         zip         gcc         mono-mcs         sudo         emacs         vim         less         build-essential         pkg-config         libicu-dev         firefox         ca-certificates         software-properties-common         locales     && rm -rf /var/lib/apt/lists/*\n#10 CANCELED\n------\n > [ 6/14] COPY python/requirements.txt python/setup.py python/prepare-conda-env.sh ./python/:\n------\nenvgym.dockerfile:49\n--------------------\n  47 |     \n  48 |     # Copy requirements.txt, setup.py, and prepare-conda-env.sh if present\n  49 | >>> COPY python/requirements.txt python/setup.py python/prepare-conda-env.sh ./python/\n  50 |     # Create Conda environment if requirements.txt is present\n  51 |     RUN if [ -f ./python/requirements.txt ]; then \\\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 5eeea680-c455-4d17-a425-08efb16a18b7::lujkhq53sgecz2mpefzsi04wm: \"/python/requirements.txt\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

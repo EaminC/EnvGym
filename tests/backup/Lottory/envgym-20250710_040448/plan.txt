@@ -1,0 +1,155 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (CPU-ONLY, x86_64, NO CUDA, CUSTOM WORKDIR) ===
+
+1. DOWNLOADS NEEDED:  
+   - Python 3.7 (ensure version compatibility; recommend Python 3.7.x)
+   - pip (latest version compatible with Python 3.7)
+   - PyTorch 1.2.0 (torch==1.2.0; as specified in requirements.txt)
+     - **Install CPU-only version:** Do NOT install any CUDA or GPU-specific builds.
+     - Use: `pip install torch==1.2.0+cpu -f https://download.pytorch.org/whl/torch_stable.html`
+   - torchvision 0.4.0 (torchvision==0.4.0; as specified in requirements.txt)
+     - **Install CPU-only version:** `pip install torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html`
+   - **DO NOT install CUDA toolkit or any GPU/CUDA dependencies.**
+   - Git (for cloning the repository)
+   - (Optional) virtualenv or conda (for isolated environment management)
+   - All packages listed in requirements.txt (install via `pip install -r requirements.txt`):
+     - cycler==0.10.0
+     - kiwisolver==1.1.0
+     - matplotlib==3.1.1
+     - numpy==1.17.2
+     - pandas==0.25.1
+     - Pillow==6.2.0
+     - protobuf==3.9.2
+     - pyparsing==2.4.2
+     - python-dateutil==2.8.0
+     - pytz==2019.2
+     - scipy==1.3.1
+     - seaborn==0.9.0
+     - six==1.12.0
+     - tensorboardX==1.8
+     - tqdm==4.36.1
+   - (Optional) Jupyter Notebook (for interactive development)
+   - (Optional) Additional plotting or analysis tools if needed (e.g., seaborn is already included)
+   - (Optional) Pre-commit, flake8, or black for code linting/formatting (for development workflow)
+   - (Optional) Continuous integration tools (e.g., GitHub Actions)
+
+   **Version compatibility requirements:**
+   - All package versions must be compatible with Python 3.7 and each other (as specified in requirements.txt).
+   - **PyTorch and torchvision must be installed as CPU-only builds.**
+   - **No CUDA toolkit or GPU dependencies should be installed.**
+   - If using conda, ensure all versions are available as conda packages or install via pip within the environment.
+
+2. FILES TO CREATE:  
+   - requirements.txt (should already exist; verify it matches the provided content and is complete)
+   - .gitignore (add standard Python ignores, e.g., __pycache__/, *.pyc, .env, .DS_Store, dumps/, saves/, plots/)
+   - config.yaml or config.json (optional, for storing experiment parameters; improves reproducibility)
+   - tests/ (directory for test scripts)
+     - tests/test_main.py (unit/integration tests for main.py)
+     - tests/test_utils.py (unit tests for utils.py)
+     - tests/test_archs.py (tests for model architectures)
+   - README.md (should already exist; verify instructions are up to date and include all dependencies from requirements.txt)
+   - environment.yml (optional, for conda environment specification; ensure it matches requirements.txt versions and does NOT include any CUDA dependencies)
+   - setup.sh or setup.bat (optional, for automating setup steps)
+   - (Optional) .pre-commit-config.yaml (for pre-commit hooks, if using)
+   - (Optional) .flake8 or pyproject.toml (for linting/formatting configuration)
+
+   **Directory/Path Adjustments:**
+   - **Set working directory to:** `/home/cc/EnvGym/data/Lottory` (update all scripts, Dockerfiles, and documentation accordingly)
+   - **If using Docker:**  
+     - Use `WORKDIR /home/cc/EnvGym/data/Lottory`
+     - Use `--platform=linux/amd64` if building multi-arch images
+     - Use base images compatible with amd64 (e.g., `ubuntu:22.04`, `python:3.7-slim`)
+     - **Do NOT use nvidia/cuda images or any GPU-specific base images**
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Test that main.py runs end-to-end with default parameters (smoke test)
+   - Test each supported architecture (fc1, LeNet5, AlexNet, VGG16, ResNet18) on a small dataset (e.g., mnist, cifar10)
+   - Test pruning functionality for both `lt` and `reinit` prune types
+   - Test that new architectures can be added and imported as per instructions
+   - Test that new datasets can be added and loaded as per instructions
+   - Test combine_plots.py generates expected output files in /plots/lt/combined_plots/
+   - Test error handling for invalid arguments (e.g., unsupported dataset or architecture)
+   - **Test that code runs correctly on CPU-only (torch.cuda.is_available() should be False)**
+   - **Test that GPU selection logic is robust to absence of CUDA (should not crash or attempt to use CUDA)**
+   - Test saving and loading of model weights/checkpoints
+   - Test that requirements.txt is sufficient to install all dependencies without errors (including all versions as specified)
+   - Test that matplotlib and seaborn plotting functions work as expected
+   - Test tensorboardX logging integration (if used in codebase)
+   - Test pandas and numpy data handling in data pipeline (if used)
+   - Test that environment.yml (if present) creates a working environment matching requirements.txt
+
+4. COMPLETE TODO LIST (ADJUSTED):  
+   1. Install Python 3.7 (verify with `python3 --version`)
+   2. Install pip (verify with `pip --version`)
+   3. (Optional) Set up a virtual environment:
+      - Using virtualenv: `python3 -m venv venv && source venv/bin/activate`
+      - Using conda: `conda create -n lottery python=3.7 && conda activate lottery`
+   4. Clone the repository: `git clone <repo_url> && cd /home/cc/EnvGym/data/Lottory`
+   5. Verify presence of requirements.txt; ensure it matches the provided content and includes all required packages/versions
+   6. Install dependencies:  
+      - **Install CPU-only PyTorch and torchvision:**  
+        ```
+        pip install torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+        ```
+      - Then install other dependencies:  
+        ```
+        pip install -r requirements.txt
+        ```
+   7. **DO NOT install CUDA toolkit or any GPU/CUDA dependencies.**
+   8. Verify torch and torchvision installation:
+      - `python -c "import torch; print(torch.__version__)"` (should be 1.2.0)
+      - `python -c "import torchvision; print(torchvision.__version__)"` (should be 0.4.0)
+      - `python -c "import torch; print(torch.cuda.is_available())"` (should print `False`)
+   9. (Optional) Install Jupyter Notebook if not present: `pip install jupyter`
+   10. Create or update .gitignore with standard Python ignores and project-specific directories (dumps/, saves/, plots/)
+   11. (Optional) Create config.yaml or config.json for experiment parameters
+   12. Create tests/ directory and add test scripts as described above
+   13. (Optional) Create environment.yml for conda environment reproducibility; ensure all versions match requirements.txt and **do not include any CUDA dependencies**
+   14. (Optional) Create setup.sh (Linux/macOS) or setup.bat (Windows) to automate steps 6-9
+   15. (Optional) Set up pre-commit hooks for linting/formatting (if desired)
+   16. Run basic smoke test:  
+       ```
+       python3 main.py --prune_type=lt --arch_type=fc1 --dataset=mnist --prune_percent=10 --prune_iterations=1
+       ```
+       - Verify that training starts and completes without errors
+   17. Run tests for each architecture and dataset combination (see test cases)
+   18. Run combine_plots.py and verify output in /plots/lt/combined_plots/
+   19. Test adding a new architecture and dataset as per README instructions; verify integration
+   20. **Verify that code does NOT attempt to use CUDA or GPU:**  
+       - Run with `--gpu=0` and check that CUDA is not used (`torch.cuda.is_available()` should be False, and code should not crash)
+   21. Test matplotlib and seaborn plotting functions (e.g., generate a sample plot)
+   22. Test tensorboardX logging (if used in codebase)
+   23. Test pandas/numpy/scipy data handling (if used in data pipeline)
+   24. Verify that requirements.txt and (if present) environment.yml are sufficient to install all dependencies without errors
+   25. Document any additional dependencies or setup steps found during testing in README.md
+   26. (Optional) Set up continuous integration (e.g., GitHub Actions) to run tests on push/PR
+   27. (Optional) Set up pre-commit hooks for linting and formatting
+   28. Clean up environment: deactivate virtualenv/conda, remove temporary files
+   29. Final verification: Re-clone repo in a fresh environment, follow setup steps, and confirm everything works as expected
+
+   **Verification methods (ADJUSTED):**
+   - Check all commands complete without errors
+   - Confirm all tests in tests/ pass
+   - Confirm plots are generated and saved in correct directories
+   - Confirm README instructions are accurate and reproducible, and list all dependencies with correct versions
+   - Confirm models train and prune as expected
+   - Confirm new architectures/datasets can be added per instructions and work correctly
+   - Confirm .gitignore prevents committing unnecessary files
+   - Confirm all package versions match those specified in requirements.txt
+   - Confirm that both requirements.txt and environment.yml (if present) are up to date and consistent
+   - **Confirm that code runs on CPU-only, does not attempt to use CUDA, and handles absence of GPU gracefully**
+   - **Confirm all paths and scripts use `/home/cc/EnvGym/data/Lottory` as the working directory**
+
+**NOTES:**  
+- All instructions and scripts should assume CPU-only operation; remove or comment out any CUDA/GPU-specific logic or documentation.
+- If using Docker, ensure the Dockerfile uses `WORKDIR /home/cc/EnvGym/data/Lottory`, and base images are amd64-compatible and CPU-only.
+- If any code attempts to use CUDA (e.g., `torch.cuda.is_available()`), ensure it handles the False case gracefully and does not crash or misbehave.
+- If memory or storage is limited, consider using smaller datasets for testing and development.
+- If using continuous integration, ensure runners are CPU-only and do not require GPU resources.
+
+**Summary of Key Adjustments:**
+- NO CUDA or GPU dependencies; install CPU-only PyTorch/torchvision.
+- Set and use `/home/cc/EnvGym/data/Lottory` as the working directory everywhere.
+- Use only amd64-compatible base images and tools.
+- Ensure all test cases and code paths work without a GPU.
+- Remove or adjust any GPU-specific instructions, flags, or documentation.
+- Confirm all package and OS compatibility for x86_64/amd64, Ubuntu 22.04 or similar, and Python 3.7.

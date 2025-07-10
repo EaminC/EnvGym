@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/exli; project likely in Python, subdirectory of EnvGym/data
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim, debian:bullseye); no CUDA base needed
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA images not required or supported
+- Instruction Notes: No GPU-specific instructions (no RUN nvidia-smi, no CUDA installs); use WORKDIR /home/cc/EnvGym/data/exli; large memory/CPU available for multi-stage builds or parallel compilation
+- Docker Version: 28.3.1; BuildKit supported; --gpus flag not applicable; Docker Compose v2.38.1 available

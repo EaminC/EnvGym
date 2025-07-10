@@ -1,0 +1,853 @@
+=== Iteration 1 - [2025-07-10 03:21:29] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN (CPU-ONLY, x86_64, NO CUDA, CUSTOM WORKDIR) ===
+  1. DOWNLOADS NEEDED:  
+     - Python 3.7 (ensure version compatibility; recommend Python 3.7.x)
+     - pip (latest version compatible with Python 3.7)
+     - PyTorch 1.2.0 (torch==1.2.0; as specified in requirements.txt)
+       - **Install CPU-only version:** Do NOT install any CUDA or GPU-specific builds.
+       - Use: `pip install torch==1.2.0+cpu -f https://download.pytorch.org/whl/torch_stable.html`
+     - torchvision 0.4.0 (torchvision==0.4.0; as specified in requirements.txt)
+       - **Install CPU-only version:** `pip install torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html`
+     - **DO NOT install CUDA toolkit or any GPU/CUDA dependencies.**
+     - Git (for cloning the repository)
+     - (Optional) virtualenv or conda (for isolated environment management)
+     - All packages listed in requirements.txt (install via `pip install -r requirements.txt`):
+       - cycler==0.10.0
+       - kiwisolver==1.1.0
+       - matplotlib==3.1.1
+       - numpy==1.17.2
+       - pandas==0.25.1
+       - Pillow==6.2.0
+       - protobuf==3.9.2
+       - pyparsing==2.4.2
+       - python-dateutil==2.8.0
+       - pytz==2019.2
+       - scipy==1.3.1
+       - seaborn==0.9.0
+       - six==1.12.0
+       - tensorboardX==1.8
+       - tqdm==4.36.1
+     - (Optional) Jupyter Notebook (for interactive development)
+     - (Optional) Additional plotting or analysis tools if needed (e.g., seaborn is already included)
+     - (Optional) Pre-commit, flake8, or black for code linting/formatting (for development workflow)
+     - (Optional) Continuous integration tools (e.g., GitHub Actions)
+     **Version compatibility requirements:**
+     - All package versions must be compatible with Python 3.7 and each other (as specified in requirements.txt).
+     - **PyTorch and torchvision must be installed as CPU-only builds.**
+     - **No CUDA toolkit or GPU dependencies should be installed.**
+     - If using conda, ensure all versions are available as conda packages or install via pip within the environment.
+  2. FILES TO CREATE:  
+     - requirements.txt (should already exist; verify it matches the provided content and is complete)
+     - .gitignore (add standard Python ignores, e.g., __pycache__/, *.pyc, .env, .DS_Store, dumps/, saves/, plots/)
+     - config.yaml or config.json (optional, for storing experiment parameters; improves reproducibility)
+     - tests/ (directory for test scripts)
+       - tests/test_main.py (unit/integration tests for main.py)
+       - tests/test_utils.py (unit tests for utils.py)
+       - tests/test_archs.py (tests for model architectures)
+     - README.md (should already exist; verify instructions are up to date and include all dependencies from requirements.txt)
+     - environment.yml (optional, for conda environment specification; ensure it matches requirements.txt versions and does NOT include any CUDA dependencies)
+     - setup.sh or setup.bat (optional, for automating setup steps)
+     - (Optional) .pre-commit-config.yaml (for pre-commit hooks, if using)
+     - (Optional) .flake8 or pyproject.toml (for linting/formatting configuration)
+     **Directory/Path Adjustments:**
+     - **Set working directory to:** `/home/cc/EnvGym/data/Lottory` (update all scripts, Dockerfiles, and documentation accordingly)
+     - **If using Docker:**  
+       - Use `WORKDIR /home/cc/EnvGym/data/Lottory`
+       - Use `--platform=linux/amd64` if building multi-arch images
+       - Use base images compatible with amd64 (e.g., `ubuntu:22.04`, `python:3.7-slim`)
+       - **Do NOT use nvidia/cuda images or any GPU-specific base images**
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - Test that main.py runs end-to-end with default parameters (smoke test)
+     - Test each supported architecture (fc1, LeNet5, AlexNet, VGG16, ResNet18) on a small dataset (e.g., mnist, cifar10)
+     - Test pruning functionality for both `lt` and `reinit` prune types
+     - Test that new architectures can be added and imported as per instructions
+     - Test that new datasets can be added and loaded as per instructions
+     - Test combine_plots.py generates expected output files in /plots/lt/combined_plots/
+     - Test error handling for invalid arguments (e.g., unsupported dataset or architecture)
+     - **Test that code runs correctly on CPU-only (torch.cuda.is_available() should be False)**
+     - **Test that GPU selection logic is robust to absence of CUDA (should not crash or attempt to use CUDA)**
+     - Test saving and loading of model weights/checkpoints
+     - Test that requirements.txt is sufficient to install all dependencies without errors (including all versions as specified)
+     - Test that matplotlib and seaborn plotting functions work as expected
+     - Test tensorboardX logging integration (if used in codebase)
+     - Test pandas and numpy data handling in data pipeline (if used)
+     - Test that environment.yml (if present) creates a working environment matching requirements.txt
+  4. COMPLETE TODO LIST (ADJUSTED):  
+     1. Install Python 3.7 (verify with `python3 --version`)
+     2. Install pip (verify with `pip --version`)
+     3. (Optional) Set up a virtual environment:
+        - Using virtualenv: `python3 -m venv venv && source venv/bin/activate`
+        - Using conda: `conda create -n lottery python=3.7 && conda activate lottery`
+     4. Clone the repository: `git clone <repo_url> && cd /home/cc/EnvGym/data/Lottory`
+     5. Verify presence of requirements.txt; ensure it matches the provided content and includes all required packages/versions
+     6. Install dependencies:  
+        - **Install CPU-only PyTorch and torchvision:**  
+          ```
+          pip install torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+          ```
+        - Then install other dependencies:  
+          ```
+          pip install -r requirements.txt
+          ```
+     7. **DO NOT install CUDA toolkit or any GPU/CUDA dependencies.**
+     8. Verify torch and torchvision installation:
+        - `python -c "import torch; print(torch.__version__)"` (should be 1.2.0)
+        - `python -c "import torchvision; print(torchvision.__version__)"` (should be 0.4.0)
+        - `python -c "import torch; print(torch.cuda.is_available())"` (should print `False`)
+     9. (Optional) Install Jupyter Notebook if not present: `pip install jupyter`
+     10. Create or update .gitignore with standard Python ignores and project-specific directories (dumps/, saves/, plots/)
+     11. (Optional) Create config.yaml or config.json for experiment parameters
+     12. Create tests/ directory and add test scripts as described above
+     13. (Optional) Create environment.yml for conda environment reproducibility; ensure all versions match requirements.txt and **do not include any CUDA dependencies**
+     14. (Optional) Create setup.sh (Linux/macOS) or setup.bat (Windows) to automate steps 6-9
+     15. (Optional) Set up pre-commit hooks for linting/formatting (if desired)
+     16. Run basic smoke test:  
+         ```
+         python3 main.py --prune_type=lt --arch_type=fc1 --dataset=mnist --prune_percent=10 --prune_iterations=1
+         ```
+         - Verify that training starts and completes without errors
+     17. Run tests for each architecture and dataset combination (see test cases)
+     18. Run combine_plots.py and verify output in /plots/lt/combined_plots/
+     19. Test adding a new architecture and dataset as per README instructions; verify integration
+     20. **Verify that code does NOT attempt to use CUDA or GPU:**  
+         - Run with `--gpu=0` and check that CUDA is not used (`torch.cuda.is_available()` should be False, and code should not crash)
+     21. Test matplotlib and seaborn plotting functions (e.g., generate a sample plot)
+     22. Test tensorboardX logging (if used in codebase)
+     23. Test pandas/numpy/scipy data handling (if used in data pipeline)
+     24. Verify that requirements.txt and (if present) environment.yml are sufficient to install all dependencies without errors
+     25. Document any additional dependencies or setup steps found during testing in README.md
+     26. (Optional) Set up continuous integration (e.g., GitHub Actions) to run tests on push/PR
+     27. (Optional) Set up pre-commit hooks for linting and formatting
+     28. Clean up environment: deactivate virtualenv/conda, remove temporary files
+     29. Final verification: Re-clone repo in a fresh environment, follow setup steps, and confirm everything works as expected
+     **Verification methods (ADJUSTED):**
+     - Check all commands complete without errors
+     - Confirm all tests in tests/ pass
+     - Confirm plots are generated and saved in correct directories
+     - Confirm README instructions are accurate and reproducible, and list all dependencies with correct versions
+     - Confirm models train and prune as expected
+     - Confirm new architectures/datasets can be added per instructions and work correctly
+     - Confirm .gitignore prevents committing unnecessary files
+     - Confirm all package versions match those specified in requirements.txt
+     - Confirm that both requirements.txt and environment.yml (if present) are up to date and consistent
+     - **Confirm that code runs on CPU-only, does not attempt to use CUDA, and handles absence of GPU gracefully**
+     - **Confirm all paths and scripts use `/home/cc/EnvGym/data/Lottory` as the working directory**
+  **NOTES:**  
+  - All instructions and scripts should assume CPU-only operation; remove or comment out any CUDA/GPU-specific logic or documentation.
+  - If using Docker, ensure the Dockerfile uses `WORKDIR /home/cc/EnvGym/data/Lottory`, and base images are amd64-compatible and CPU-only.
+  - If any code attempts to use CUDA (e.g., `torch.cuda.is_available()`), ensure it handles the False case gracefully and does not crash or misbehave.
+  - If memory or storage is limited, consider using smaller datasets for testing and development.
+  - If using continuous integration, ensure runners are CPU-only and do not require GPU resources.
+  **Summary of Key Adjustments:**
+  - NO CUDA or GPU dependencies; install CPU-only PyTorch/torchvision.
+  - Set and use `/home/cc/EnvGym/data/Lottory` as the working directory everywhere.
+  - Use only amd64-compatible base images and tools.
+  - Ensure all test cases and code paths work without a GPU.
+  - Remove or adjust any GPU-specific instructions, flags, or documentation.
+  - Confirm all package and OS compatibility for x86_64/amd64, Ubuntu 22.04 or similar, and Python 3.7.
+NEXT:
+  current progress
+  - Docker image builds and runs successfully using `python:3.7-slim-buster` as the base image.
+  - System dependencies and Python 3.7-compatible pip are installed.
+  - Working directory is correctly set to `/home/cc/EnvGym/data/Lottory`.
+  - requirements.txt is copied and used for dependency installation.
+  - CPU-only versions of PyTorch (1.2.0+cpu) and torchvision (0.4.0+cpu) are installed as specified.
+  - All other Python dependencies from requirements.txt are installed.
+  - Optional development and Jupyter tools are present but commented out.
+  - All repository files are copied into the working directory.
+  - No CUDA or GPU dependencies are present.
+  - Default command is set to `/bin/bash`.
+  - Build and runtime logs indicate success, with no errors.
+  next step
+  - Verify that `.gitignore` is present and includes standard Python and project-specific ignores.
+  - Ensure the presence and correctness of `README.md`, `tests/` directory, and (optionally) `config.yaml`/`config.json`.
+  - (Optional) Add steps to create or copy `environment.yml`, `setup.sh`, or other reproducibility scripts if desired.
+  - (Optional) Uncomment and install development tools (pre-commit, flake8, black) if code linting/formatting is required.
+  - (Optional) Uncomment and install Jupyter if interactive development is needed.
+  - (Optional) Set file permissions if running as non-root is needed.
+  - (Optional) Add a healthcheck or test command (e.g., run a smoke test or print torch version) to validate the environment post-build.
+  - Update Dockerfile comments/documentation as needed to match the latest plan and clarify any project-specific instructions.
+STATUS:
+  SUCCESS
+LOG:
+  === Docker Execution Log - 20250710_032121 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1752117615
+  === Build Log ===
+  Build Status: Success
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.60kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/python:3.7-slim-buster
+  #2 DONE 0.5s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [internal] load build context
+  #4 transferring context: 168.39kB 0.0s done
+  #4 DONE 0.0s
+  #5 [1/9] FROM docker.io/library/python:3.7-slim-buster@sha256:9bd2bfc822a533f99cbe6b1311d5bf0ff136f776ebac9b985407829f17278935
+  #5 resolve docker.io/library/python:3.7-slim-buster@sha256:9bd2bfc822a533f99cbe6b1311d5bf0ff136f776ebac9b985407829f17278935 done
+  #5 sha256:099f4583c7016ad65b83beeeb71690eea37b09ee361eab516e0ac9fd3ceb09e1 7.44kB / 7.44kB done
+  #5 sha256:8b91b88d557765cd8c6802668755a3f6dc4337b6ce15a17e4857139e5fc964f3 6.29MB / 27.14MB 0.1s
+  #5 sha256:824416e234237961c9c5d4f41dfe5b295a3c35a671ee52889bfb08d8e257ec4c 0B / 2.78MB 0.1s
+  #5 sha256:bbe2c2981082ccb4ab0b40b5d5b1552a12c2682f0ca01ca8ecf670a403120155 0B / 10.66MB 0.1s
+  #5 sha256:9bd2bfc822a533f99cbe6b1311d5bf0ff136f776ebac9b985407829f17278935 988B / 988B done
+  #5 sha256:8fc9ba28436be6023760973dc76d32529612b59155a3ea2349bcd59c68aeb76f 1.37kB / 1.37kB done
+  #5 sha256:8b91b88d557765cd8c6802668755a3f6dc4337b6ce15a17e4857139e5fc964f3 27.14MB / 27.14MB 0.2s
+  #5 sha256:824416e234237961c9c5d4f41dfe5b295a3c35a671ee52889bfb08d8e257ec4c 2.78MB / 2.78MB 0.2s done
+  #5 sha256:bbe2c2981082ccb4ab0b40b5d5b1552a12c2682f0ca01ca8ecf670a403120155 4.19MB / 10.66MB 0.2s
+  #5 sha256:7b6b68d15a5c63bcde8e8ffe47233ebde2cfc686259a13e7e7c9aa2ca9db21ed 0B / 244B 0.2s
+  #5 sha256:8b91b88d557765cd8c6802668755a3f6dc4337b6ce15a17e4857139e5fc964f3 27.14MB / 27.14MB 0.3s done
+  #5 sha256:bbe2c2981082ccb4ab0b40b5d5b1552a12c2682f0ca01ca8ecf670a403120155 10.66MB / 10.66MB 0.3s done
+  #5 sha256:7b6b68d15a5c63bcde8e8ffe47233ebde2cfc686259a13e7e7c9aa2ca9db21ed 244B / 244B 0.3s done
+  #5 extracting sha256:8b91b88d557765cd8c6802668755a3f6dc4337b6ce15a17e4857139e5fc964f3 0.1s
+  #5 sha256:71f8f4db541d7f9598b287eecdb86e1c5e095badf528f96e69d0bbee5b84600a 0B / 3.14MB 0.3s
+  #5 sha256:71f8f4db541d7f9598b287eecdb86e1c5e095badf528f96e69d0bbee5b84600a 3.14MB / 3.14MB 0.4s done
+  #5 extracting sha256:8b91b88d557765cd8c6802668755a3f6dc4337b6ce15a17e4857139e5fc964f3 3.5s done
+  #5 extracting sha256:824416e234237961c9c5d4f41dfe5b295a3c35a671ee52889bfb08d8e257ec4c 0.1s
+  #5 extracting sha256:824416e234237961c9c5d4f41dfe5b295a3c35a671ee52889bfb08d8e257ec4c 0.3s done
+  #5 extracting sha256:bbe2c2981082ccb4ab0b40b5d5b1552a12c2682f0ca01ca8ecf670a403120155 0.1s
+  #5 extracting sha256:bbe2c2981082ccb4ab0b40b5d5b1552a12c2682f0ca01ca8ecf670a403120155 1.2s done
+  #5 extracting sha256:7b6b68d15a5c63bcde8e8ffe47233ebde2cfc686259a13e7e7c9aa2ca9db21ed done
+  #5 extracting sha256:71f8f4db541d7f9598b287eecdb86e1c5e095badf528f96e69d0bbee5b84600a 0.1s
+  #5 extracting sha256:71f8f4db541d7f9598b287eecdb86e1c5e095badf528f96e69d0bbee5b84600a 0.5s done
+  #5 DONE 5.9s
+  #6 [2/9] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         build-essential         libglib2.0-0         libsm6         libxrender1         libxext6         ca-certificates         wget         &&     rm -rf /var/lib/apt/lists/*
+  #6 0.260 Get:1 http://deb.debian.org/debian buster InRelease [122 kB]
+  #6 0.272 Get:2 http://deb.debian.org/debian-security buster/updates InRelease [34.8 kB]
+  #6 0.274 Get:3 http://deb.debian.org/debian buster-updates InRelease [56.6 kB]
+  #6 0.374 Get:4 http://deb.debian.org/debian buster/main amd64 Packages [7909 kB]
+  #6 0.502 Get:5 http://deb.debian.org/debian-security buster/updates/main amd64 Packages [610 kB]
+  #6 0.549 Get:6 http://deb.debian.org/debian buster-updates/main amd64 Packages [8788 B]
+  #6 1.656 Fetched 8741 kB in 1s (6168 kB/s)
+  #6 1.656 Reading package lists...
+  #6 2.241 Reading package lists...
+  #6 2.765 Building dependency tree...
+  #6 2.849 Reading state information...
+  #6 2.949 ca-certificates is already the newest version (20200601~deb10u2).
+  #6 2.949 The following additional packages will be installed:
+  #6 2.949   binutils binutils-common binutils-x86-64-linux-gnu bzip2 cpp cpp-8 dpkg-dev
+  #6 2.949   g++ g++-8 gcc gcc-8 git-man libasan5 libatomic1 libbinutils libbsd0
+  #6 2.949   libc-dev-bin libc6 libc6-dev libcc1-0 libcurl3-gnutls libdpkg-perl
+  #6 2.949   liberror-perl libgcc-8-dev libgdbm-compat4 libgomp1 libgssapi-krb5-2 libice6
+  #6 2.949   libisl19 libitm1 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0
+  #6 2.949   libldap-2.4-2 libldap-common liblsan0 libmpc3 libmpfr6 libmpx2 libnghttp2-14
+  #6 2.949   libpcre2-8-0 libperl5.28 libpsl5 libquadmath0 librtmp1 libsasl2-2
+  #6 2.949   libsasl2-modules-db libssh2-1 libstdc++-8-dev libtsan0 libubsan1 libx11-6
+  #6 2.949   libx11-data libxau6 libxcb1 libxdmcp6 linux-libc-dev lsb-base make patch
+  #6 2.949   perl perl-modules-5.28 x11-common xz-utils
+  #6 2.950 Suggested packages:
+  #6 2.950   binutils-doc bzip2-doc cpp-doc gcc-8-locales debian-keyring g++-multilib
+  #6 2.950   g++-8-multilib gcc-8-doc libstdc++6-8-dbg gcc-multilib manpages-dev autoconf
+  #6 2.950   automake libtool flex bison gdb gcc-doc gcc-8-multilib libgcc1-dbg
+  #6 2.950   libgomp1-dbg libitm1-dbg libatomic1-dbg libasan5-dbg liblsan0-dbg
+  #6 2.950   libtsan0-dbg libubsan1-dbg libmpx2-dbg libquadmath0-dbg gettext-base
+  #6 2.950   git-daemon-run | git-daemon-sysvinit git-doc git-el git-email git-gui gitk
+  #6 2.950   gitweb git-cvs git-mediawiki git-svn glibc-doc libc-l10n locales gnupg
+  #6 2.950   | gnupg2 sensible-utils bzr krb5-doc krb5-user libstdc++-8-doc make-doc ed
+  #6 2.950   diffutils-doc perl-doc libterm-readline-gnu-perl
+  #6 2.950   | libterm-readline-perl-perl libb-debug-perl liblocale-codes-perl
+  #6 2.950 Recommended packages:
+  #6 2.950   fakeroot gnupg | gnupg2 libalgorithm-merge-perl less ssh-client manpages
+  #6 2.950   manpages-dev libfile-fcntllock-perl liblocale-gettext-perl libglib2.0-data
+  #6 2.950   shared-mime-info xdg-user-dirs krb5-locales publicsuffix libsasl2-modules
+  #6 3.210 The following NEW packages will be installed:
+  #6 3.210   binutils binutils-common binutils-x86-64-linux-gnu build-essential bzip2 cpp
+  #6 3.210   cpp-8 dpkg-dev g++ g++-8 gcc gcc-8 git git-man libasan5 libatomic1
+  #6 3.210   libbinutils libbsd0 libc-dev-bin libc6-dev libcc1-0 libcurl3-gnutls
+  #6 3.210   libdpkg-perl liberror-perl libgcc-8-dev libgdbm-compat4 libglib2.0-0
+  #6 3.210   libgomp1 libgssapi-krb5-2 libice6 libisl19 libitm1 libk5crypto3 libkeyutils1
+  #6 3.210   libkrb5-3 libkrb5support0 libldap-2.4-2 libldap-common liblsan0 libmpc3
+  #6 3.210   libmpfr6 libmpx2 libnghttp2-14 libpcre2-8-0 libperl5.28 libpsl5 libquadmath0
+  #6 3.210   librtmp1 libsasl2-2 libsasl2-modules-db libsm6 libssh2-1 libstdc++-8-dev
+  #6 3.210   libtsan0 libubsan1 libx11-6 libx11-data libxau6 libxcb1 libxdmcp6 libxext6
+  #6 3.211   libxrender1 linux-libc-dev lsb-base make patch perl perl-modules-5.28 wget
+  #6 3.211   x11-common xz-utils
+  #6 3.211 The following packages will be upgraded:
+  #6 3.211   libc6
+  #6 3.255 1 upgraded, 71 newly installed, 0 to remove and 23 not upgraded.
+  #6 3.255 Need to get 70.8 MB of archives.
+  #6 3.255 After this operation, 284 MB of additional disk space will be used.
+  #6 3.255 Get:1 http://deb.debian.org/debian buster/main amd64 perl-modules-5.28 all 5.28.1-6+deb10u1 [2873 kB]
+  #6 3.305 Get:2 http://deb.debian.org/debian-security buster/updates/main amd64 libc6 amd64 2.28-10+deb10u4 [2869 kB]
+  #6 3.348 Get:3 http://deb.debian.org/debian buster/main amd64 libgdbm-compat4 amd64 1.18.1-4 [44.1 kB]
+  #6 3.348 Get:4 http://deb.debian.org/debian buster/main amd64 libperl5.28 amd64 5.28.1-6+deb10u1 [3894 kB]
+  #6 3.404 Get:5 http://deb.debian.org/debian buster/main amd64 perl amd64 5.28.1-6+deb10u1 [204 kB]
+  #6 3.406 Get:6 http://deb.debian.org/debian-security buster/updates/main amd64 bzip2 amd64 1.0.6-9.2~deb10u2 [48.5 kB]
+  #6 3.407 Get:7 http://deb.debian.org/debian buster/main amd64 libkeyutils1 amd64 1.6-6 [15.0 kB]
+  #6 3.408 Get:8 http://deb.debian.org/debian-security buster/updates/main amd64 libkrb5support0 amd64 1.17-3+deb10u6 [66.1 kB]
+  #6 3.408 Get:9 http://deb.debian.org/debian-security buster/updates/main amd64 libk5crypto3 amd64 1.17-3+deb10u6 [122 kB]
+  #6 3.410 Get:10 http://deb.debian.org/debian-security buster/updates/main amd64 libkrb5-3 amd64 1.17-3+deb10u6 [369 kB]
+  #6 3.415 Get:11 http://deb.debian.org/debian-security buster/updates/main amd64 libgssapi-krb5-2 amd64 1.17-3+deb10u6 [159 kB]
+  #6 3.418 Get:12 http://deb.debian.org/debian-security buster/updates/main amd64 libpcre2-8-0 amd64 10.32-5+deb10u1 [213 kB]
+  #6 3.421 Get:13 http://deb.debian.org/debian buster/main amd64 libpsl5 amd64 0.20.2-2 [53.7 kB]
+  #6 3.421 Get:14 http://deb.debian.org/debian buster/main amd64 wget amd64 1.20.1-1.1 [902 kB]
+  #6 3.434 Get:15 http://deb.debian.org/debian buster/main amd64 xz-utils amd64 5.2.4-1+deb10u1 [183 kB]
+  #6 3.436 Get:16 http://deb.debian.org/debian buster/main amd64 binutils-common amd64 2.31.1-16 [2073 kB]
+  #6 3.464 Get:17 http://deb.debian.org/debian buster/main amd64 libbinutils amd64 2.31.1-16 [478 kB]
+  #6 3.470 Get:18 http://deb.debian.org/debian buster/main amd64 binutils-x86-64-linux-gnu amd64 2.31.1-16 [1823 kB]
+  #6 3.496 Get:19 http://deb.debian.org/debian buster/main amd64 binutils amd64 2.31.1-16 [56.8 kB]
+  #6 3.497 Get:20 http://deb.debian.org/debian-security buster/updates/main amd64 libc-dev-bin amd64 2.28-10+deb10u4 [276 kB]
+  #6 3.501 Get:21 http://deb.debian.org/debian-security buster/updates/main amd64 linux-libc-dev amd64 4.19.316-1 [1625 kB]
+  #6 3.524 Get:22 http://deb.debian.org/debian-security buster/updates/main amd64 libc6-dev amd64 2.28-10+deb10u4 [2694 kB]
+  #6 3.571 Get:23 http://deb.debian.org/debian buster/main amd64 libisl19 amd64 0.20-2 [587 kB]
+  #6 3.582 Get:24 http://deb.debian.org/debian buster/main amd64 libmpfr6 amd64 4.0.2-1 [775 kB]
+  #6 3.596 Get:25 http://deb.debian.org/debian buster/main amd64 libmpc3 amd64 1.1.0-1 [41.3 kB]
+  #6 3.597 Get:26 http://deb.debian.org/debian buster/main amd64 cpp-8 amd64 8.3.0-6 [8914 kB]
+  #6 3.755 Get:27 http://deb.debian.org/debian buster/main amd64 cpp amd64 4:8.3.0-1 [19.4 kB]
+  #6 3.756 Get:28 http://deb.debian.org/debian buster/main amd64 libcc1-0 amd64 8.3.0-6 [46.6 kB]
+  #6 3.759 Get:29 http://deb.debian.org/debian buster/main amd64 libgomp1 amd64 8.3.0-6 [75.8 kB]
+  #6 3.767 Get:30 http://deb.debian.org/debian buster/main amd64 libitm1 amd64 8.3.0-6 [27.7 kB]
+  #6 3.769 Get:31 http://deb.debian.org/debian buster/main amd64 libatomic1 amd64 8.3.0-6 [9032 B]
+  #6 3.773 Get:32 http://deb.debian.org/debian buster/main amd64 libasan5 amd64 8.3.0-6 [362 kB]
+  #6 3.784 Get:33 http://deb.debian.org/debian buster/main amd64 liblsan0 amd64 8.3.0-6 [131 kB]
+  #6 3.787 Get:34 http://deb.debian.org/debian buster/main amd64 libtsan0 amd64 8.3.0-6 [283 kB]
+  #6 3.792 Get:35 http://deb.debian.org/debian buster/main amd64 libubsan1 amd64 8.3.0-6 [120 kB]
+  #6 3.794 Get:36 http://deb.debian.org/debian buster/main amd64 libmpx2 amd64 8.3.0-6 [11.4 kB]
+  #6 3.796 Get:37 http://deb.debian.org/debian buster/main amd64 libquadmath0 amd64 8.3.0-6 [133 kB]
+  #6 3.798 Get:38 http://deb.debian.org/debian buster/main amd64 libgcc-8-dev amd64 8.3.0-6 [2298 kB]
+  #6 3.833 Get:39 http://deb.debian.org/debian buster/main amd64 gcc-8 amd64 8.3.0-6 [9452 kB]
+  #6 4.010 Get:40 http://deb.debian.org/debian buster/main amd64 gcc amd64 4:8.3.0-1 [5196 B]
+  #6 4.010 Get:41 http://deb.debian.org/debian buster/main amd64 libstdc++-8-dev amd64 8.3.0-6 [1532 kB]
+  #6 4.043 Get:42 http://deb.debian.org/debian buster/main amd64 g++-8 amd64 8.3.0-6 [9752 kB]
+  #6 4.265 Get:43 http://deb.debian.org/debian buster/main amd64 g++ amd64 4:8.3.0-1 [1644 B]
+  #6 4.266 Get:44 http://deb.debian.org/debian buster/main amd64 make amd64 4.2.1-1.2 [341 kB]
+  #6 4.272 Get:45 http://deb.debian.org/debian buster/main amd64 libdpkg-perl all 1.19.8 [1415 kB]
+  #6 4.307 Get:46 http://deb.debian.org/debian buster/main amd64 patch amd64 2.7.6-3+deb10u1 [126 kB]
+  #6 4.310 Get:47 http://deb.debian.org/debian buster/main amd64 dpkg-dev all 1.19.8 [1776 kB]
+  #6 4.347 Get:48 http://deb.debian.org/debian buster/main amd64 build-essential amd64 12.6 [7576 B]
+  #6 4.347 Get:49 http://deb.debian.org/debian buster/main amd64 libsasl2-modules-db amd64 2.1.27+dfsg-1+deb10u2 [69.2 kB]
+  #6 4.349 Get:50 http://deb.debian.org/debian buster/main amd64 libsasl2-2 amd64 2.1.27+dfsg-1+deb10u2 [106 kB]
+  #6 4.351 Get:51 http://deb.debian.org/debian buster/main amd64 libldap-common all 2.4.47+dfsg-3+deb10u7 [90.1 kB]
+  #6 4.352 Get:52 http://deb.debian.org/debian buster/main amd64 libldap-2.4-2 amd64 2.4.47+dfsg-3+deb10u7 [224 kB]
+  #6 4.357 Get:53 http://deb.debian.org/debian-security buster/updates/main amd64 libnghttp2-14 amd64 1.36.0-2+deb10u3 [86.1 kB]
+  #6 4.358 Get:54 http://deb.debian.org/debian buster/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2 [60.5 kB]
+  #6 4.360 Get:55 http://deb.debian.org/debian-security buster/updates/main amd64 libssh2-1 amd64 1.8.0-2.1+deb10u1 [141 kB]
+  #6 4.362 Get:56 http://deb.debian.org/debian-security buster/updates/main amd64 libcurl3-gnutls amd64 7.64.0-4+deb10u9 [333 kB]
+  #6 4.369 Get:57 http://deb.debian.org/debian buster/main amd64 liberror-perl all 0.17027-2 [30.9 kB]
+  #6 4.370 Get:58 http://deb.debian.org/debian-security buster/updates/main amd64 git-man all 1:2.20.1-2+deb10u9 [1624 kB]
+  #6 4.401 Get:59 http://deb.debian.org/debian-security buster/updates/main amd64 git amd64 1:2.20.1-2+deb10u9 [5667 kB]
+  #6 4.511 Get:60 http://deb.debian.org/debian buster/main amd64 libbsd0 amd64 0.9.1-2+deb10u1 [99.5 kB]
+  #6 4.513 Get:61 http://deb.debian.org/debian-security buster/updates/main amd64 libglib2.0-0 amd64 2.58.3-2+deb10u6 [1263 kB]
+  #6 4.533 Get:62 http://deb.debian.org/debian buster/main amd64 lsb-base all 10.2019051400 [28.4 kB]
+  #6 4.534 Get:63 http://deb.debian.org/debian buster/main amd64 x11-common all 1:7.7+19 [251 kB]
+  #6 4.539 Get:64 http://deb.debian.org/debian buster/main amd64 libice6 amd64 2:1.0.9-2 [58.7 kB]
+  #6 4.540 Get:65 http://deb.debian.org/debian buster/main amd64 libsm6 amd64 2:1.2.3-1 [35.1 kB]
+  #6 4.541 Get:66 http://deb.debian.org/debian buster/main amd64 libxau6 amd64 1:1.0.8-1+b2 [19.9 kB]
+  #6 4.541 Get:67 http://deb.debian.org/debian buster/main amd64 libxdmcp6 amd64 1:1.1.2-3 [26.3 kB]
+  #6 4.542 Get:68 http://deb.debian.org/debian buster/main amd64 libxcb1 amd64 1.13.1-2 [137 kB]
+  #6 4.545 Get:69 http://deb.debian.org/debian-security buster/updates/main amd64 libx11-data all 2:1.6.7-1+deb10u4 [299 kB]
+  #6 4.552 Get:70 http://deb.debian.org/debian-security buster/updates/main amd64 libx11-6 amd64 2:1.6.7-1+deb10u4 [758 kB]
+  #6 4.568 Get:71 http://deb.debian.org/debian buster/main amd64 libxext6 amd64 2:1.3.3-1+b2 [52.5 kB]
+  #6 4.569 Get:72 http://deb.debian.org/debian buster/main amd64 libxrender1 amd64 1:0.9.10-1 [33.0 kB]
+  #6 4.717 debconf: delaying package configuration, since apt-utils is not installed
+  #6 4.733 Fetched 70.8 MB in 1s (52.5 MB/s)
+  #6 4.750 Selecting previously unselected package perl-modules-5.28.
+  #6 4.750 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6843 files and directories currently installed.)
+  #6 4.754 Preparing to unpack .../perl-modules-5.28_5.28.1-6+deb10u1_all.deb ...
+  #6 4.755 Unpacking perl-modules-5.28 (5.28.1-6+deb10u1) ...
+  #6 5.053 Preparing to unpack .../libc6_2.28-10+deb10u4_amd64.deb ...
+  #6 5.119 debconf: unable to initialize frontend: Dialog
+  #6 5.119 debconf: (TERM is not set, so the dialog frontend is not usable.)
+  #6 5.119 debconf: falling back to frontend: Readline
+  #6 5.185 Unpacking libc6:amd64 (2.28-10+deb10u4) over (2.28-10+deb10u2) ...
+  #6 5.624 Setting up libc6:amd64 (2.28-10+deb10u4) ...
+  #6 5.699 debconf: unable to initialize frontend: Dialog
+  #6 5.699 debconf: (TERM is not set, so the dialog frontend is not usable.)
+  #6 5.699 debconf: falling back to frontend: Readline
+  #6 6.757 Selecting previously unselected package libgdbm-compat4:amd64.
+  #6 6.757 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 8214 files and directories currently installed.)
+  #6 6.760 Preparing to unpack .../00-libgdbm-compat4_1.18.1-4_amd64.deb ...
+  #6 6.761 Unpacking libgdbm-compat4:amd64 (1.18.1-4) ...
+  #6 6.781 Selecting previously unselected package libperl5.28:amd64.
+  #6 6.782 Preparing to unpack .../01-libperl5.28_5.28.1-6+deb10u1_amd64.deb ...
+  #6 6.783 Unpacking libperl5.28:amd64 (5.28.1-6+deb10u1) ...
+  #6 7.170 Selecting previously unselected package perl.
+  #6 7.171 Preparing to unpack .../02-perl_5.28.1-6+deb10u1_amd64.deb ...
+  #6 7.179 Unpacking perl (5.28.1-6+deb10u1) ...
+  #6 7.208 Selecting previously unselected package bzip2.
+  #6 7.209 Preparing to unpack .../03-bzip2_1.0.6-9.2~deb10u2_amd64.deb ...
+  #6 7.210 Unpacking bzip2 (1.0.6-9.2~deb10u2) ...
+  #6 7.228 Selecting previously unselected package libkeyutils1:amd64.
+  #6 7.229 Preparing to unpack .../04-libkeyutils1_1.6-6_amd64.deb ...
+  #6 7.230 Unpacking libkeyutils1:amd64 (1.6-6) ...
+  #6 7.244 Selecting previously unselected package libkrb5support0:amd64.
+  #6 7.245 Preparing to unpack .../05-libkrb5support0_1.17-3+deb10u6_amd64.deb ...
+  #6 7.246 Unpacking libkrb5support0:amd64 (1.17-3+deb10u6) ...
+  #6 7.263 Selecting previously unselected package libk5crypto3:amd64.
+  #6 7.264 Preparing to unpack .../06-libk5crypto3_1.17-3+deb10u6_amd64.deb ...
+  #6 7.265 Unpacking libk5crypto3:amd64 (1.17-3+deb10u6) ...
+  #6 7.287 Selecting previously unselected package libkrb5-3:amd64.
+  #6 7.288 Preparing to unpack .../07-libkrb5-3_1.17-3+deb10u6_amd64.deb ...
+  #6 7.288 Unpacking libkrb5-3:amd64 (1.17-3+deb10u6) ...
+  #6 7.332 Selecting previously unselected package libgssapi-krb5-2:amd64.
+  #6 7.333 Preparing to unpack .../08-libgssapi-krb5-2_1.17-3+deb10u6_amd64.deb ...
+  #6 7.334 Unpacking libgssapi-krb5-2:amd64 (1.17-3+deb10u6) ...
+  #6 7.356 Selecting previously unselected package libpcre2-8-0:amd64.
+  #6 7.357 Preparing to unpack .../09-libpcre2-8-0_10.32-5+deb10u1_amd64.deb ...
+  #6 7.358 Unpacking libpcre2-8-0:amd64 (10.32-5+deb10u1) ...
+  #6 7.385 Selecting previously unselected package libpsl5:amd64.
+  #6 7.386 Preparing to unpack .../10-libpsl5_0.20.2-2_amd64.deb ...
+  #6 7.387 Unpacking libpsl5:amd64 (0.20.2-2) ...
+  #6 7.402 Selecting previously unselected package wget.
+  #6 7.403 Preparing to unpack .../11-wget_1.20.1-1.1_amd64.deb ...
+  #6 7.404 Unpacking wget (1.20.1-1.1) ...
+  #6 7.475 Selecting previously unselected package xz-utils.
+  #6 7.476 Preparing to unpack .../12-xz-utils_5.2.4-1+deb10u1_amd64.deb ...
+  #6 7.477 Unpacking xz-utils (5.2.4-1+deb10u1) ...
+  #6 7.504 Selecting previously unselected package binutils-common:amd64.
+  #6 7.505 Preparing to unpack .../13-binutils-common_2.31.1-16_amd64.deb ...
+  #6 7.505 Unpacking binutils-common:amd64 (2.31.1-16) ...
+  #6 7.688 Selecting previously unselected package libbinutils:amd64.
+  #6 7.689 Preparing to unpack .../14-libbinutils_2.31.1-16_amd64.deb ...
+  #6 7.689 Unpacking libbinutils:amd64 (2.31.1-16) ...
+  #6 7.750 Selecting previously unselected package binutils-x86-64-linux-gnu.
+  #6 7.753 Preparing to unpack .../15-binutils-x86-64-linux-gnu_2.31.1-16_amd64.deb ...
+  #6 7.754 Unpacking binutils-x86-64-linux-gnu (2.31.1-16) ...
+  #6 7.968 Selecting previously unselected package binutils.
+  #6 7.970 Preparing to unpack .../16-binutils_2.31.1-16_amd64.deb ...
+  #6 7.971 Unpacking binutils (2.31.1-16) ...
+  #6 7.991 Selecting previously unselected package libc-dev-bin.
+  #6 7.993 Preparing to unpack .../17-libc-dev-bin_2.28-10+deb10u4_amd64.deb ...
+  #6 7.993 Unpacking libc-dev-bin (2.28-10+deb10u4) ...
+  #6 8.019 Selecting previously unselected package linux-libc-dev:amd64.
+  #6 8.021 Preparing to unpack .../18-linux-libc-dev_4.19.316-1_amd64.deb ...
+  #6 8.022 Unpacking linux-libc-dev:amd64 (4.19.316-1) ...
+  #6 8.156 Selecting previously unselected package libc6-dev:amd64.
+  #6 8.158 Preparing to unpack .../19-libc6-dev_2.28-10+deb10u4_amd64.deb ...
+  #6 8.159 Unpacking libc6-dev:amd64 (2.28-10+deb10u4) ...
+  #6 8.425 Selecting previously unselected package libisl19:amd64.
+  #6 8.427 Preparing to unpack .../20-libisl19_0.20-2_amd64.deb ...
+  #6 8.427 Unpacking libisl19:amd64 (0.20-2) ...
+  #6 8.486 Selecting previously unselected package libmpfr6:amd64.
+  #6 8.488 Preparing to unpack .../21-libmpfr6_4.0.2-1_amd64.deb ...
+  #6 8.488 Unpacking libmpfr6:amd64 (4.0.2-1) ...
+  #6 8.522 Selecting previously unselected package libmpc3:amd64.
+  #6 8.523 Preparing to unpack .../22-libmpc3_1.1.0-1_amd64.deb ...
+  #6 8.524 Unpacking libmpc3:amd64 (1.1.0-1) ...
+  #6 8.540 Selecting previously unselected package cpp-8.
+  #6 8.541 Preparing to unpack .../23-cpp-8_8.3.0-6_amd64.deb ...
+  #6 8.542 Unpacking cpp-8 (8.3.0-6) ...
+  #6 9.286 Selecting previously unselected package cpp.
+  #6 9.290 Preparing to unpack .../24-cpp_4%3a8.3.0-1_amd64.deb ...
+  #6 9.304 Unpacking cpp (4:8.3.0-1) ...
+  #6 9.380 Selecting previously unselected package libcc1-0:amd64.
+  #6 9.383 Preparing to unpack .../25-libcc1-0_8.3.0-6_amd64.deb ...
+  #6 9.407 Unpacking libcc1-0:amd64 (8.3.0-6) ...
+  #6 9.442 Selecting previously unselected package libgomp1:amd64.
+  #6 9.443 Preparing to unpack .../26-libgomp1_8.3.0-6_amd64.deb ...
+  #6 9.444 Unpacking libgomp1:amd64 (8.3.0-6) ...
+  #6 9.465 Selecting previously unselected package libitm1:amd64.
+  #6 9.465 Preparing to unpack .../27-libitm1_8.3.0-6_amd64.deb ...
+  #6 9.466 Unpacking libitm1:amd64 (8.3.0-6) ...
+  #6 9.480 Selecting previously unselected package libatomic1:amd64.
+  #6 9.481 Preparing to unpack .../28-libatomic1_8.3.0-6_amd64.deb ...
+  #6 9.482 Unpacking libatomic1:amd64 (8.3.0-6) ...
+  #6 9.493 Selecting previously unselected package libasan5:amd64.
+  #6 9.494 Preparing to unpack .../29-libasan5_8.3.0-6_amd64.deb ...
+  #6 9.495 Unpacking libasan5:amd64 (8.3.0-6) ...
+  #6 9.537 Selecting previously unselected package liblsan0:amd64.
+  #6 9.538 Preparing to unpack .../30-liblsan0_8.3.0-6_amd64.deb ...
+  #6 9.538 Unpacking liblsan0:amd64 (8.3.0-6) ...
+  #6 9.561 Selecting previously unselected package libtsan0:amd64.
+  #6 9.562 Preparing to unpack .../31-libtsan0_8.3.0-6_amd64.deb ...
+  #6 9.563 Unpacking libtsan0:amd64 (8.3.0-6) ...
+  #6 9.596 Selecting previously unselected package libubsan1:amd64.
+  #6 9.597 Preparing to unpack .../32-libubsan1_8.3.0-6_amd64.deb ...
+  #6 9.597 Unpacking libubsan1:amd64 (8.3.0-6) ...
+  #6 9.618 Selecting previously unselected package libmpx2:amd64.
+  #6 9.619 Preparing to unpack .../33-libmpx2_8.3.0-6_amd64.deb ...
+  #6 9.620 Unpacking libmpx2:amd64 (8.3.0-6) ...
+  #6 9.632 Selecting previously unselected package libquadmath0:amd64.
+  #6 9.632 Preparing to unpack .../34-libquadmath0_8.3.0-6_amd64.deb ...
+  #6 9.633 Unpacking libquadmath0:amd64 (8.3.0-6) ...
+  #6 9.655 Selecting previously unselected package libgcc-8-dev:amd64.
+  #6 9.656 Preparing to unpack .../35-libgcc-8-dev_8.3.0-6_amd64.deb ...
+  #6 9.656 Unpacking libgcc-8-dev:amd64 (8.3.0-6) ...
+  #6 9.856 Selecting previously unselected package gcc-8.
+  #6 9.858 Preparing to unpack .../36-gcc-8_8.3.0-6_amd64.deb ...
+  #6 9.859 Unpacking gcc-8 (8.3.0-6) ...
+  #6 10.60 Selecting previously unselected package gcc.
+  #6 10.60 Preparing to unpack .../37-gcc_4%3a8.3.0-1_amd64.deb ...
+  #6 10.60 Unpacking gcc (4:8.3.0-1) ...
+  #6 10.61 Selecting previously unselected package libstdc++-8-dev:amd64.
+  #6 10.61 Preparing to unpack .../38-libstdc++-8-dev_8.3.0-6_amd64.deb ...
+  #6 10.61 Unpacking libstdc++-8-dev:amd64 (8.3.0-6) ...
+  #6 10.81 Selecting previously unselected package g++-8.
+  #6 10.81 Preparing to unpack .../39-g++-8_8.3.0-6_amd64.deb ...
+  #6 10.81 Unpacking g++-8 (8.3.0-6) ...
+  #6 11.55 Selecting previously unselected package g++.
+  #6 11.55 Preparing to unpack .../40-g++_4%3a8.3.0-1_amd64.deb ...
+  #6 11.56 Unpacking g++ (4:8.3.0-1) ...
+  #6 11.57 Selecting previously unselected package make.
+  #6 11.57 Preparing to unpack .../41-make_4.2.1-1.2_amd64.deb ...
+  #6 11.57 Unpacking make (4.2.1-1.2) ...
+  #6 11.62 Selecting previously unselected package libdpkg-perl.
+  #6 11.62 Preparing to unpack .../42-libdpkg-perl_1.19.8_all.deb ...
+  #6 11.62 Unpacking libdpkg-perl (1.19.8) ...
+  #6 11.67 Selecting previously unselected package patch.
+  #6 11.67 Preparing to unpack .../43-patch_2.7.6-3+deb10u1_amd64.deb ...
+  #6 11.68 Unpacking patch (2.7.6-3+deb10u1) ...
+  #6 11.70 Selecting previously unselected package dpkg-dev.
+  #6 11.70 Preparing to unpack .../44-dpkg-dev_1.19.8_all.deb ...
+  #6 11.70 Unpacking dpkg-dev (1.19.8) ...
+  #6 11.78 Selecting previously unselected package build-essential.
+  #6 11.78 Preparing to unpack .../45-build-essential_12.6_amd64.deb ...
+  #6 11.78 Unpacking build-essential (12.6) ...
+  #6 11.79 Selecting previously unselected package libsasl2-modules-db:amd64.
+  #6 11.79 Preparing to unpack .../46-libsasl2-modules-db_2.1.27+dfsg-1+deb10u2_amd64.deb ...
+  #6 11.79 Unpacking libsasl2-modules-db:amd64 (2.1.27+dfsg-1+deb10u2) ...
+  #6 11.81 Selecting previously unselected package libsasl2-2:amd64.
+  #6 11.81 Preparing to unpack .../47-libsasl2-2_2.1.27+dfsg-1+deb10u2_amd64.deb ...
+  #6 11.81 Unpacking libsasl2-2:amd64 (2.1.27+dfsg-1+deb10u2) ...
+  #6 11.83 Selecting previously unselected package libldap-common.
+  #6 11.83 Preparing to unpack .../48-libldap-common_2.4.47+dfsg-3+deb10u7_all.deb ...
+  #6 11.83 Unpacking libldap-common (2.4.47+dfsg-3+deb10u7) ...
+  #6 11.85 Selecting previously unselected package libldap-2.4-2:amd64.
+  #6 11.85 Preparing to unpack .../49-libldap-2.4-2_2.4.47+dfsg-3+deb10u7_amd64.deb ...
+  #6 11.85 Unpacking libldap-2.4-2:amd64 (2.4.47+dfsg-3+deb10u7) ...
+  #6 11.88 Selecting previously unselected package libnghttp2-14:amd64.
+  #6 11.88 Preparing to unpack .../50-libnghttp2-14_1.36.0-2+deb10u3_amd64.deb ...
+  #6 11.88 Unpacking libnghttp2-14:amd64 (1.36.0-2+deb10u3) ...
+  #6 11.90 Selecting previously unselected package librtmp1:amd64.
+  #6 11.90 Preparing to unpack .../51-librtmp1_2.4+20151223.gitfa8646d.1-2_amd64.deb ...
+  #6 11.90 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2) ...
+  #6 11.93 Selecting previously unselected package libssh2-1:amd64.
+  #6 11.93 Preparing to unpack .../52-libssh2-1_1.8.0-2.1+deb10u1_amd64.deb ...
+  #6 11.93 Unpacking libssh2-1:amd64 (1.8.0-2.1+deb10u1) ...
+  #6 11.95 Selecting previously unselected package libcurl3-gnutls:amd64.
+  #6 11.95 Preparing to unpack .../53-libcurl3-gnutls_7.64.0-4+deb10u9_amd64.deb ...
+  #6 11.95 Unpacking libcurl3-gnutls:amd64 (7.64.0-4+deb10u9) ...
+  #6 11.99 Selecting previously unselected package liberror-perl.
+  #6 11.99 Preparing to unpack .../54-liberror-perl_0.17027-2_all.deb ...
+  #6 11.99 Unpacking liberror-perl (0.17027-2) ...
+  #6 12.00 Selecting previously unselected package git-man.
+  #6 12.01 Preparing to unpack .../55-git-man_1%3a2.20.1-2+deb10u9_all.deb ...
+  #6 12.01 Unpacking git-man (1:2.20.1-2+deb10u9) ...
+  #6 12.09 Selecting previously unselected package git.
+  #6 12.10 Preparing to unpack .../56-git_1%3a2.20.1-2+deb10u9_amd64.deb ...
+  #6 12.11 Unpacking git (1:2.20.1-2+deb10u9) ...
+  #6 12.61 Selecting previously unselected package libbsd0:amd64.
+  #6 12.61 Preparing to unpack .../57-libbsd0_0.9.1-2+deb10u1_amd64.deb ...
+  #6 12.61 Unpacking libbsd0:amd64 (0.9.1-2+deb10u1) ...
+  #6 12.64 Selecting previously unselected package libglib2.0-0:amd64.
+  #6 12.64 Preparing to unpack .../58-libglib2.0-0_2.58.3-2+deb10u6_amd64.deb ...
+  #6 12.64 Unpacking libglib2.0-0:amd64 (2.58.3-2+deb10u6) ...
+  #6 12.74 Selecting previously unselected package lsb-base.
+  #6 12.74 Preparing to unpack .../59-lsb-base_10.2019051400_all.deb ...
+  #6 12.74 Unpacking lsb-base (10.2019051400) ...
+  #6 12.76 Selecting previously unselected package x11-common.
+  #6 12.76 Preparing to unpack .../60-x11-common_1%3a7.7+19_all.deb ...
+  #6 12.76 Unpacking x11-common (1:7.7+19) ...
+  #6 12.78 Selecting previously unselected package libice6:amd64.
+  #6 12.78 Preparing to unpack .../61-libice6_2%3a1.0.9-2_amd64.deb ...
+  #6 12.78 Unpacking libice6:amd64 (2:1.0.9-2) ...
+  #6 12.80 Selecting previously unselected package libsm6:amd64.
+  #6 12.80 Preparing to unpack .../62-libsm6_2%3a1.2.3-1_amd64.deb ...
+  #6 12.80 Unpacking libsm6:amd64 (2:1.2.3-1) ...
+  #6 12.81 Selecting previously unselected package libxau6:amd64.
+  #6 12.81 Preparing to unpack .../63-libxau6_1%3a1.0.8-1+b2_amd64.deb ...
+  #6 12.81 Unpacking libxau6:amd64 (1:1.0.8-1+b2) ...
+  #6 12.83 Selecting previously unselected package libxdmcp6:amd64.
+  #6 12.83 Preparing to unpack .../64-libxdmcp6_1%3a1.1.2-3_amd64.deb ...
+  #6 12.83 Unpacking libxdmcp6:amd64 (1:1.1.2-3) ...
+  #6 12.84 Selecting previously unselected package libxcb1:amd64.
+  #6 12.84 Preparing to unpack .../65-libxcb1_1.13.1-2_amd64.deb ...
+  #6 12.84 Unpacking libxcb1:amd64 (1.13.1-2) ...
+  #6 12.86 Selecting previously unselected package libx11-data.
+  #6 12.86 Preparing to unpack .../66-libx11-data_2%3a1.6.7-1+deb10u4_all.deb ...
+  #6 12.86 Unpacking libx11-data (2:1.6.7-1+deb10u4) ...
+  #6 12.90 Selecting previously unselected package libx11-6:amd64.
+  #6 12.90 Preparing to unpack .../67-libx11-6_2%3a1.6.7-1+deb10u4_amd64.deb ...
+  #6 12.90 Unpacking libx11-6:amd64 (2:1.6.7-1+deb10u4) ...
+  #6 12.97 Selecting previously unselected package libxext6:amd64.
+  #6 12.97 Preparing to unpack .../68-libxext6_2%3a1.3.3-1+b2_amd64.deb ...
+  #6 12.97 Unpacking libxext6:amd64 (2:1.3.3-1+b2) ...
+  #6 12.99 Selecting previously unselected package libxrender1:amd64.
+  #6 12.99 Preparing to unpack .../69-libxrender1_1%3a0.9.10-1_amd64.deb ...
+  #6 12.99 Unpacking libxrender1:amd64 (1:0.9.10-1) ...
+  #6 13.01 Setting up perl-modules-5.28 (5.28.1-6+deb10u1) ...
+  #6 13.02 Setting up lsb-base (10.2019051400) ...
+  #6 13.02 Setting up libxau6:amd64 (1:1.0.8-1+b2) ...
+  #6 13.02 Setting up libkeyutils1:amd64 (1.6-6) ...
+  #6 13.02 Setting up libpsl5:amd64 (0.20.2-2) ...
+  #6 13.02 Setting up libglib2.0-0:amd64 (2.58.3-2+deb10u6) ...
+  #6 13.03 No schema files found: doing nothing.
+  #6 13.04 Setting up binutils-common:amd64 (2.31.1-16) ...
+  #6 13.04 Setting up x11-common (1:7.7+19) ...
+  #6 13.11 debconf: unable to initialize frontend: Dialog
+  #6 13.11 debconf: (TERM is not set, so the dialog frontend is not usable.)
+  #6 13.11 debconf: falling back to frontend: Readline
+  #6 13.13 update-rc.d: warning: start and stop actions are no longer supported; falling back to defaults
+  #6 13.13 invoke-rc.d: could not determine current runlevel
+  #6 13.13 invoke-rc.d: policy-rc.d denied execution of start.
+  #6 13.14 Setting up libnghttp2-14:amd64 (1.36.0-2+deb10u3) ...
+  #6 13.14 Setting up linux-libc-dev:amd64 (4.19.316-1) ...
+  #6 13.14 Setting up libgomp1:amd64 (8.3.0-6) ...
+  #6 13.14 Setting up bzip2 (1.0.6-9.2~deb10u2) ...
+  #6 13.14 Setting up libldap-common (2.4.47+dfsg-3+deb10u7) ...
+  #6 13.15 Setting up libkrb5support0:amd64 (1.17-3+deb10u6) ...
+  #6 13.15 Setting up libsasl2-modules-db:amd64 (2.1.27+dfsg-1+deb10u2) ...
+  #6 13.15 Setting up libasan5:amd64 (8.3.0-6) ...
+  #6 13.15 Setting up libx11-data (2:1.6.7-1+deb10u4) ...
+  #6 13.15 Setting up make (4.2.1-1.2) ...
+  #6 13.16 Setting up libmpfr6:amd64 (4.0.2-1) ...
+  #6 13.16 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2) ...
+  #6 13.16 Setting up xz-utils (5.2.4-1+deb10u1) ...
+  #6 13.16 update-alternatives: using /usr/bin/xz to provide /usr/bin/lzma (lzma) in auto mode
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzma.1.gz because associated file /usr/share/man/man1/xz.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/unlzma.1.gz because associated file /usr/share/man/man1/unxz.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcat.1.gz because associated file /usr/share/man/man1/xzcat.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzmore.1.gz because associated file /usr/share/man/man1/xzmore.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzless.1.gz because associated file /usr/share/man/man1/xzless.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzdiff.1.gz because associated file /usr/share/man/man1/xzdiff.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcmp.1.gz because associated file /usr/share/man/man1/xzcmp.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzgrep.1.gz because associated file /usr/share/man/man1/xzgrep.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzegrep.1.gz because associated file /usr/share/man/man1/xzegrep.1.gz (of link group lzma) doesn't exist
+  #6 13.16 update-alternatives: warning: skip creation of /usr/share/man/man1/lzfgrep.1.gz because associated file /usr/share/man/man1/xzfgrep.1.gz (of link group lzma) doesn't exist
+  #6 13.17 Setting up libquadmath0:amd64 (8.3.0-6) ...
+  #6 13.17 Setting up libmpc3:amd64 (1.1.0-1) ...
+  #6 13.17 Setting up libatomic1:amd64 (8.3.0-6) ...
+  #6 13.17 Setting up patch (2.7.6-3+deb10u1) ...
+  #6 13.17 Setting up libgdbm-compat4:amd64 (1.18.1-4) ...
+  #6 13.18 Setting up libpcre2-8-0:amd64 (10.32-5+deb10u1) ...
+  #6 13.18 Setting up libk5crypto3:amd64 (1.17-3+deb10u6) ...
+  #6 13.18 Setting up libsasl2-2:amd64 (2.1.27+dfsg-1+deb10u2) ...
+  #6 13.18 Setting up libperl5.28:amd64 (5.28.1-6+deb10u1) ...
+  #6 13.18 Setting up libmpx2:amd64 (8.3.0-6) ...
+  #6 13.19 Setting up libubsan1:amd64 (8.3.0-6) ...
+  #6 13.19 Setting up libisl19:amd64 (0.20-2) ...
+  #6 13.19 Setting up git-man (1:2.20.1-2+deb10u9) ...
+  #6 13.19 Setting up libssh2-1:amd64 (1.8.0-2.1+deb10u1) ...
+  #6 13.19 Setting up libkrb5-3:amd64 (1.17-3+deb10u6) ...
+  #6 13.20 Setting up libbinutils:amd64 (2.31.1-16) ...
+  #6 13.20 Setting up cpp-8 (8.3.0-6) ...
+  #6 13.20 Setting up libc-dev-bin (2.28-10+deb10u4) ...
+  #6 13.20 Setting up libbsd0:amd64 (0.9.1-2+deb10u1) ...
+  #6 13.20 Setting up libcc1-0:amd64 (8.3.0-6) ...
+  #6 13.21 Setting up liblsan0:amd64 (8.3.0-6) ...
+  #6 13.21 Setting up libitm1:amd64 (8.3.0-6) ...
+  #6 13.21 Setting up binutils-x86-64-linux-gnu (2.31.1-16) ...
+  #6 13.21 Setting up libtsan0:amd64 (8.3.0-6) ...
+  #6 13.21 Setting up libice6:amd64 (2:1.0.9-2) ...
+  #6 13.21 Setting up libxdmcp6:amd64 (1:1.1.2-3) ...
+  #6 13.22 Setting up libxcb1:amd64 (1.13.1-2) ...
+  #6 13.22 Setting up wget (1.20.1-1.1) ...
+  #6 13.22 Setting up libldap-2.4-2:amd64 (2.4.47+dfsg-3+deb10u7) ...
+  #6 13.22 Setting up binutils (2.31.1-16) ...
+  #6 13.22 Setting up perl (5.28.1-6+deb10u1) ...
+  #6 13.23 Setting up libgssapi-krb5-2:amd64 (1.17-3+deb10u6) ...
+  #6 13.24 Setting up libdpkg-perl (1.19.8) ...
+  #6 13.24 Setting up libgcc-8-dev:amd64 (8.3.0-6) ...
+  #6 13.24 Setting up cpp (4:8.3.0-1) ...
+  #6 13.25 Setting up libc6-dev:amd64 (2.28-10+deb10u4) ...
+  #6 13.25 Setting up libx11-6:amd64 (2:1.6.7-1+deb10u4) ...
+  #6 13.25 Setting up libsm6:amd64 (2:1.2.3-1) ...
+  #6 13.25 Setting up libstdc++-8-dev:amd64 (8.3.0-6) ...
+  #6 13.25 Setting up gcc-8 (8.3.0-6) ...
+  #6 13.25 Setting up libxrender1:amd64 (1:0.9.10-1) ...
+  #6 13.26 Setting up libxext6:amd64 (2:1.3.3-1+b2) ...
+  #6 13.26 Setting up libcurl3-gnutls:amd64 (7.64.0-4+deb10u9) ...
+  #6 13.26 Setting up gcc (4:8.3.0-1) ...
+  #6 13.27 Setting up dpkg-dev (1.19.8) ...
+  #6 13.27 Setting up liberror-perl (0.17027-2) ...
+  #6 13.27 Setting up git (1:2.20.1-2+deb10u9) ...
+  #6 13.29 Setting up g++-8 (8.3.0-6) ...
+  #6 13.30 Setting up g++ (4:8.3.0-1) ...
+  #6 13.31 update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode
+  #6 13.32 Setting up build-essential (12.6) ...
+  #6 13.32 Processing triggers for libc-bin (2.28-10+deb10u2) ...
+  #6 DONE 14.0s
+  #7 [3/9] RUN mkdir -p /home/cc/EnvGym/data/Lottory
+  #7 DONE 0.2s
+  #8 [4/9] WORKDIR /home/cc/EnvGym/data/Lottory
+  #8 DONE 0.0s
+  #9 [5/9] COPY requirements.txt .
+  #9 DONE 0.0s
+  #10 [6/9] RUN pip install --upgrade "pip<22.0"
+  #10 1.736 Collecting pip<22.0
+  #10 1.793   Downloading pip-21.3.1-py3-none-any.whl (1.7 MB)
+  #10 1.821      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 66.6 MB/s eta 0:00:00
+  #10 1.867 Installing collected packages: pip
+  #10 1.867   Attempting uninstall: pip
+  #10 1.868     Found existing installation: pip 23.0.1
+  #10 1.992     Uninstalling pip-23.0.1:
+  #10 2.125       Successfully uninstalled pip-23.0.1
+  #10 2.923 Successfully installed pip-21.3.1
+  #10 2.923 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+  #10 DONE 3.1s
+  #11 [7/9] RUN pip install torch==1.2.0+cpu torchvision==0.4.0+cpu     -f https://download.pytorch.org/whl/torch_stable.html
+  #11 0.616 Looking in links: https://download.pytorch.org/whl/torch_stable.html
+  #11 2.108 Collecting torch==1.2.0+cpu
+  #11 2.301   Downloading https://download.pytorch.org/whl/cpu/torch-1.2.0%2Bcpu-cp37-cp37m-manylinux1_x86_64.whl (103.9 MB)
+  #11 4.357 Collecting torchvision==0.4.0+cpu
+  #11 4.539   Downloading https://download.pytorch.org/whl/cpu/torchvision-0.4.0%2Bcpu-cp37-cp37m-manylinux1_x86_64.whl (12.2 MB)
+  #11 6.010 Collecting numpy
+  #11 6.055   Downloading numpy-1.21.6-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (15.7 MB)
+  #11 7.410 Collecting pillow>=4.1.1
+  #11 7.417   Downloading Pillow-9.5.0-cp37-cp37m-manylinux_2_28_x86_64.whl (3.4 MB)
+  #11 7.680 Collecting six
+  #11 7.685   Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+  #11 7.783 Installing collected packages: numpy, torch, six, pillow, torchvision
+  #11 13.60 Successfully installed numpy-1.21.6 pillow-9.5.0 six-1.17.0 torch-1.2.0+cpu torchvision-0.4.0+cpu
+  #11 13.60 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+  #11 13.60 WARNING: You are using pip version 21.3.1; however, version 24.0 is available.
+  #11 13.60 You should consider upgrading via the '/usr/local/bin/python -m pip install --upgrade pip' command.
+  #11 DONE 14.8s
+  #12 [8/9] RUN pip install -r requirements.txt
+  #12 0.548 Collecting cycler==0.10.0
+  #12 0.592   Downloading cycler-0.10.0-py2.py3-none-any.whl (6.5 kB)
+  #12 0.872 Collecting kiwisolver==1.1.0
+  #12 0.877   Downloading kiwisolver-1.1.0-cp37-cp37m-manylinux1_x86_64.whl (90 kB)
+  #12 1.578 Collecting matplotlib==3.1.1
+  #12 1.584   Downloading matplotlib-3.1.1-cp37-cp37m-manylinux1_x86_64.whl (13.1 MB)
+  #12 2.772 Collecting numpy==1.17.2
+  #12 2.779   Downloading numpy-1.17.2-cp37-cp37m-manylinux1_x86_64.whl (20.3 MB)
+  #12 4.006 Collecting pandas==0.25.1
+  #12 4.019   Downloading pandas-0.25.1-cp37-cp37m-manylinux1_x86_64.whl (10.4 MB)
+  #12 5.490 Collecting Pillow==6.2.0
+  #12 5.498   Downloading Pillow-6.2.0-cp37-cp37m-manylinux1_x86_64.whl (2.1 MB)
+  #12 6.386 Collecting protobuf==3.9.2
+  #12 6.394   Downloading protobuf-3.9.2-cp37-cp37m-manylinux1_x86_64.whl (1.2 MB)
+  #12 6.538 Collecting pyparsing==2.4.2
+  #12 6.549   Downloading pyparsing-2.4.2-py2.py3-none-any.whl (65 kB)
+  #12 6.586 Collecting python-dateutil==2.8.0
+  #12 6.592   Downloading python_dateutil-2.8.0-py2.py3-none-any.whl (226 kB)
+  #12 6.739 Collecting pytz==2019.2
+  #12 6.747   Downloading pytz-2019.2-py2.py3-none-any.whl (508 kB)
+  #12 7.448 Collecting scipy==1.3.1
+  #12 7.455   Downloading scipy-1.3.1-cp37-cp37m-manylinux1_x86_64.whl (25.2 MB)
+  #12 8.660 Collecting seaborn==0.9.0
+  #12 8.667   Downloading seaborn-0.9.0-py3-none-any.whl (208 kB)
+  #12 8.704 Collecting six==1.12.0
+  #12 8.711   Downloading six-1.12.0-py2.py3-none-any.whl (10 kB)
+  #12 8.741 Collecting tensorboardX==1.8
+  #12 8.750   Downloading tensorboardX-1.8-py2.py3-none-any.whl (216 kB)
+  #12 8.759 Requirement already satisfied: torch==1.2.0 in /usr/local/lib/python3.7/site-packages (from -r requirements.txt (line 15)) (1.2.0+cpu)
+  #12 8.759 Requirement already satisfied: torchvision==0.4.0 in /usr/local/lib/python3.7/site-packages (from -r requirements.txt (line 16)) (0.4.0+cpu)
+  #12 8.884 Collecting tqdm==4.36.1
+  #12 8.891   Downloading tqdm-4.36.1-py2.py3-none-any.whl (52 kB)
+  #12 8.897 Requirement already satisfied: setuptools in /usr/local/lib/python3.7/site-packages (from kiwisolver==1.1.0->-r requirements.txt (line 2)) (57.5.0)
+  #12 9.164 Installing collected packages: six, pytz, python-dateutil, pyparsing, numpy, kiwisolver, cycler, scipy, protobuf, Pillow, pandas, matplotlib, tqdm, tensorboardX, seaborn
+  #12 9.164   Attempting uninstall: six
+  #12 9.164     Found existing installation: six 1.17.0
+  #12 9.166     Uninstalling six-1.17.0:
+  #12 9.200       Successfully uninstalled six-1.17.0
+  #12 9.410   Attempting uninstall: numpy
+  #12 9.410     Found existing installation: numpy 1.21.6
+  #12 9.568     Uninstalling numpy-1.21.6:
+  #12 9.780       Successfully uninstalled numpy-1.21.6
+  #12 13.78   Attempting uninstall: Pillow
+  #12 13.78     Found existing installation: Pillow 9.5.0
+  #12 13.81     Uninstalling Pillow-9.5.0:
+  #12 13.85       Successfully uninstalled Pillow-9.5.0
+  #12 17.70 Successfully installed Pillow-6.2.0 cycler-0.10.0 kiwisolver-1.1.0 matplotlib-3.1.1 numpy-1.17.2 pandas-0.25.1 protobuf-3.9.2 pyparsing-2.4.2 python-dateutil-2.8.0 pytz-2019.2 scipy-1.3.1 seaborn-0.9.0 six-1.12.0 tensorboardX-1.8 tqdm-4.36.1
+  #12 17.70 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+  #12 17.70 WARNING: You are using pip version 21.3.1; however, version 24.0 is available.
+  #12 17.70 You should consider upgrading via the '/usr/local/bin/python -m pip install --upgrade pip' command.
+  #12 DONE 18.5s
+  #13 [9/9] COPY . .
+  #13 DONE 0.0s
+  #14 exporting to image
+  #14 exporting layers
+  #14 exporting layers 7.7s done
+  #14 writing image sha256:d62ea68edc608409086871693bd3f1de2d6ce7313921561ffe4943ed7cdab848 done
+  #14 naming to docker.io/library/envgym_test_1752117615 done
+  #14 DONE 7.7s
+  === Runtime Log ===  
+  Runtime Status: Success
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM python:3.7-slim-buster
+  # Set environment variables to avoid Python buffering and set locale
+  ENV PYTHONUNBUFFERED=1 \
+      LANG=C.UTF-8 \
+      LC_ALL=C.UTF-8
+  # Install system dependencies
+  RUN apt-get update && \
+      apt-get install -y --no-install-recommends \
+          git \
+          build-essential \
+          libglib2.0-0 \
+          libsm6 \
+          libxrender1 \
+          libxext6 \
+          ca-certificates \
+          wget \
+          && \
+      rm -rf /var/lib/apt/lists/*
+  # Create the working directory
+  RUN mkdir -p /home/cc/EnvGym/data/Lottory
+  WORKDIR /home/cc/EnvGym/data/Lottory
+  # Copy requirements.txt first for Docker cache efficiency
+  COPY requirements.txt .
+  # Upgrade pip to latest version compatible with Python 3.7
+  RUN pip install --upgrade "pip<22.0"
+  # Install CPU-only PyTorch and torchvision
+  RUN pip install torch==1.2.0+cpu torchvision==0.4.0+cpu \
+      -f https://download.pytorch.org/whl/torch_stable.html
+  # Install other Python dependencies
+  RUN pip install -r requirements.txt
+  # (Optional) Install Jupyter Notebook for interactive development
+  # Uncomment the following line if you want Jupyter installed by default
+  # RUN pip install jupyter
+  # (Optional) Install development tools for linting/formatting
+  # Uncomment the following lines if you want these tools installed
+  # RUN pip install pre-commit flake8 black
+  # Copy the rest of the repository files
+  COPY . .
+  # Set permissions (optional, useful if running as non-root)
+  # RUN chown -R 1000:1000 /home/cc/EnvGym/data/Lottory
+  # Default command (can be overridden)
+  CMD ["/bin/bash"]
+--- End of Iteration 1 ---
+

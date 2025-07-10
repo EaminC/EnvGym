@@ -1,0 +1,179 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64 Linux, /home/cc/EnvGym/data/SymMC) ===
+
+**Hardware/OS Context**  
+- CPU: x86_64 (amd64) – all downloads and builds must target this architecture  
+- OS: Linux (Ubuntu 22.04 or similar recommended)  
+- No GPU: No CUDA or GPU dependencies; ignore any GPU-related instructions  
+- Docker: Version 28.3.1, BuildKit supported  
+- Working Directory: /home/cc/EnvGym/data/SymMC  
+- Multi-core builds are possible  
+- All instructions assume standard Linux environment; no Windows/macOS-specific steps needed unless for cross-platform testing  
+- Storage: Ensure sufficient space for build artifacts and dependencies (recommend at least 5GB free)  
+- Memory: Ensure at least 2GB RAM for builds; more recommended for large Alloy specs
+
+---
+
+**1. DOWNLOADS NEEDED (All x86_64/Linux compatible):**  
+- OpenJDK 8 (jdk1.8)  
+  - Version: 1.8.x  
+  - Download: `sudo apt-get install openjdk-8-jdk`  
+- Apache Ant  
+  - Version: 1.9.x or newer  
+  - Download: `sudo apt-get install ant`  
+- MiniSat SAT Solver (with GMP and Zlib dependencies)  
+  - Version: Latest stable  
+  - Requires: g++ (from build-essential), GMP (`libgmp-dev`), Zlib (`zlib1g-dev`)  
+- CMake  
+  - Version: 3.10 or newer  
+  - Download: `sudo apt-get install cmake`  
+- Git  
+  - Version: Any recent stable version  
+  - Download: `sudo apt-get install git`  
+- (Optional) Python 3.x  
+  - Download: `sudo apt-get install python3`  
+- Build-essential tools  
+  - Download: `sudo apt-get install build-essential`  
+- Java libraries for Enhanced_Kodkod  
+  - Place all `.jar` dependencies in `Enhanced_Kodkod/lib/`, especially `org.alloytools.alloy.dist.jar` (download from https://alloytools.org/download.html)  
+- (Optional) Editor or IDE with Ant and Java support (e.g., IntelliJ IDEA, Eclipse)  
+- (Optional) Additional CMake dependencies for static/shared builds (ensure static linking is supported on your platform; Ubuntu 22.04 supports both)
+
+**NOT NEEDED:**  
+- No CUDA, nvidia/cuda, or GPU-related packages  
+- No Windows/macOS-specific tools (unless cross-platform testing is explicitly required)
+
+---
+
+**2. FILES TO CREATE (with Linux/x86_64 paths):**  
+- All scripts and configuration files remain as in the original plan, with the following adjustments:  
+  - All paths and scripts should use `/home/cc/EnvGym/data/SymMC` as the project root if absolute paths are needed  
+  - Ensure that any hardcoded paths in scripts or configs (e.g., JAVA_HOME, output directories) are set to this working directory  
+  - All scripts (`build.sh`, `run.sh`) must have Unix line endings (`\n`) and be executable (`chmod +x`)  
+  - If using Docker, set `WORKDIR /home/cc/EnvGym/data/SymMC` in the Dockerfile
+
+**Example `.env` or `config.env`:**  
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+```
+- Adjust `JAVA_HOME` if OpenJDK is installed in a different location (check with `update-alternatives --config java`)
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**  
+- All test cases remain as in the original plan  
+- Cross-platform tests:  
+  - Linux is the primary target; macOS/Windows steps are optional and can be skipped unless specifically testing portability  
+- Static/shared linking:  
+  - Ubuntu 22.04 supports both; test both if needed  
+- Performance:  
+  - Ensure sufficient RAM and disk space for large input files
+
+---
+
+**4. COMPLETE TODO LIST (Linux/x86_64 focus):**  
+1. **Install OpenJDK 8 (jdk1.8):**  
+   - `sudo apt-get update && sudo apt-get install openjdk-8-jdk`  
+   - Verify: `java -version` outputs 1.8.x  
+2. **Install Apache Ant:**  
+   - `sudo apt-get install ant`  
+   - Verify: `ant -version`  
+3. **Install Git:**  
+   - `sudo apt-get install git`  
+   - Verify: `git --version`  
+4. **Clone or download the SymMC repository:**  
+   - `git clone <repo_url> /home/cc/EnvGym/data/SymMC`  
+   - Verify: Directory structure matches README  
+5. **Set JAVA_HOME and update PATH:**  
+   - Add to `.env` or system profile  
+   - Verify: `echo $JAVA_HOME`  
+6. **Install CMake and C++ compiler:**  
+   - `sudo apt-get install cmake build-essential`  
+   - Verify: `cmake --version`, `g++ --version`  
+7. **Install GMP and Zlib development libraries:**  
+   - `sudo apt-get install libgmp-dev zlib1g-dev`  
+   - Verify: `ldconfig -p | grep gmp`, `ldconfig -p | grep zlib`  
+8. **Prepare Enhanced_Kodkod module:**  
+   - Ensure all required files and directories exist as per plan  
+   - All scripts must be executable  
+9. **Build Enhanced_Kodkod module:**  
+   - `cd Enhanced_Kodkod`  
+   - `./build.sh`  
+   - Verify: Build output in `bin/`  
+10. **Prepare Enumerator_Estimator module:**  
+    - Ensure all required files and directories exist as per plan  
+    - All scripts must be executable  
+11. **Build Enumerator_Estimator module:**  
+    - `cd Enumerator_Estimator`  
+    - `./build.sh`  
+    - Verify: `cmake-build-release/` contains built binaries  
+12. **Set up environment variables for MiniSat and build outputs:**  
+    - Update `.env` or `config.env` as needed  
+    - Source the file: `source .env`  
+    - Ensure `LD_LIBRARY_PATH` includes any custom library paths if needed  
+13. **Test Enhanced_Kodkod functionality:**  
+    - Use provided or sample Alloy spec  
+    - Run: `./run.sh $path_to_spec_file $path_to_sat_file $path_to_sym_file`  
+    - Verify: Output files are created  
+14. **Test Enumerator_Estimator functionality:**  
+    - Use generated SAT and symmetry files  
+    - Run estimation commands as per README  
+    - Verify: Outputs are correct  
+    - Check binary linking: `ldd cmake-build-release/minisat_core`  
+15. **Run integration tests:**  
+    - Use samples from `Datasets/specs`, `cnfs_NSB`, `cnfs_PSB`, `syms`  
+    - Compare outputs to known results  
+16. **Write and run automated test scripts in `test/`:**  
+    - Include positive, negative, and edge cases  
+    - Verify: All tests pass  
+17. **Document setup and troubleshooting in `README_SETUP.md`:**  
+    - Focus on Linux-specific issues (e.g., library paths, permissions)  
+    - Remove or minimize Windows/macOS troubleshooting unless cross-platform support is required  
+18. **(Optional) Set up CI/CD pipeline:**  
+    - Use GitHub Actions or similar with Ubuntu runners  
+    - No GPU runners needed  
+19. **(Optional) Package environment with Docker:**  
+    - Use `FROM ubuntu:22.04` or similar  
+    - Set `WORKDIR /home/cc/EnvGym/data/SymMC`  
+    - No CUDA/GPU instructions  
+    - Install all dependencies as above  
+20. **Clean up and verify final environment:**  
+    - Remove temporary files  
+    - Run all modules and tests one final time  
+    - Document any Linux/x86_64-specific notes
+
+---
+
+**Verification methods:**  
+- All as in the original plan, with these specifics:  
+  - All software must be x86_64/amd64 Linux compatible  
+  - All scripts must work in `/home/cc/EnvGym/data/SymMC`  
+  - No GPU/CUDA checks or dependencies  
+  - Use `ldd` to check for correct linking on Linux  
+  - Use `uname -m` to verify architecture (`x86_64`)  
+  - Docker builds should specify `--platform=linux/amd64` if needed  
+  - All environment variables and paths must be Linux-style (no Windows drive letters or backslashes)
+
+---
+
+**NOTES:**  
+- All instructions, scripts, and Dockerfiles must avoid any GPU/CUDA-specific content  
+- All build and runtime steps assume a Linux/x86_64 environment  
+- If cross-platform support is not required, you may remove all Windows/macOS-specific instructions from documentation and scripts  
+- If using Docker, always set `WORKDIR /home/cc/EnvGym/data/SymMC` and use only amd64-compatible base images  
+- If using CI/CD, select Ubuntu runners and do not request GPU resources
+
+---
+
+**Summary of Key Adjustments:**  
+- All instructions, scripts, and Dockerfiles are now Linux/x86_64-only  
+- No CUDA/GPU dependencies or instructions  
+- All paths and environment variables are Linux-style and use the correct working directory  
+- All package installs use `apt-get` (Ubuntu/Debian)  
+- All test and verification steps are focused on Linux/x86_64  
+- Cross-platform steps are optional and can be omitted unless required
+
+---
+
+**End of Adjusted Plan**

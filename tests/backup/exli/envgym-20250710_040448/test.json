@@ -1,0 +1,7 @@
+[
+  "data/teco-projects-2022-01-01-unit-tests-jacoco-randoop.json",
+  "java/raninline/src/test/java/org/raninline/ConstructTest.java",
+  "java/raninline/src/test/java/org/raninline/InstrumentTest.java",
+  "java/raninline/src/test/java/org/raninline/UtilsTest.java",
+  "java/raninline/src/test/resources/integration/run_tests.sh"
+]

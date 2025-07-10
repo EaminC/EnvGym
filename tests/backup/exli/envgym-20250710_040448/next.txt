@@ -1,0 +1,27 @@
+current progress
+
+- Dockerfile has been created and is located at the project root (/home/cc/EnvGym/data/exli).
+- Docker image builds successfully and runs without errors.
+- System dependencies (apt packages) are installed for Ubuntu 22.04 amd64.
+- Locale is set to en_US.UTF-8.
+- Miniconda (latest x86_64) is installed at /opt/conda, Python 3.9 environment ("exli") is created.
+- setup.py and prepare-conda-env.sh are copied into the image.
+- SDKMAN is installed for Java/Maven management, and Java 8.0.302 (OpenJDK) and Maven 3.9.6 are installed via SDKMAN.
+- MAVEN_HOME is set and made writable.
+- Geckodriver v0.31.0 (x86_64) is downloaded and installed.
+- Optional tools (UniversalMutator, EvoSuite, Randoop, itest, Jacoco extension) are not yet installed (commented out).
+- Permissions for MAVEN_HOME/lib/ext are set.
+- Default shell and entrypoint are set to bash.
+- No CUDA/NVIDIA/GPU dependencies are present.
+- All paths and tools are x86_64/amd64 compatible and use the correct working directory.
+
+next step
+
+1. Uncomment and adjust the Dockerfile lines to download/install any required optional tools (UniversalMutator, EvoSuite, Randoop, itest framework) as needed, ensuring x86_64 compatibility.
+2. If using the Jacoco Maven Extension, copy the jacoco-extension directory and build it from source in the Dockerfile.
+3. Ensure python/prepare-conda-env.sh and python/environment.yml or requirements.txt are present and referenced correctly for full Python environment setup.
+4. Add any additional COPY or RUN commands needed for project-specific scripts, configuration files, or dependencies.
+5. Test that all installed binaries (e.g., geckodriver, java, maven, firefox) are x86_64 using `file` in a running container.
+6. Verify that no CUDA/NVIDIA tools are present in the image.
+7. Document any manual steps or caveats in README.md, emphasizing x86_64-only support and the use of /home/cc/EnvGym/data/exli as the root.
+8. (Optional) Add/adjust scripts or Makefile for batch execution, Jacoco, or other tooling as needed.

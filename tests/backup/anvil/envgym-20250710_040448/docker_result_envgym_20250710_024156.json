@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250710_024156",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752115315",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.98kB done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.3s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:3c61d3759c2639d4b836d32a2d3c83fa0214e36f195a3421018dbaaf79cbe37f\n#4 CACHED\n\n#5 [2/6] WORKDIR /home/cc/EnvGym/data/anvil/anvil\n#5 DONE 0.0s\n\n#6 [internal] load build context\n#6 transferring context: 2B 0.0s done\n#6 DONE 0.0s\n\n#7 [4/6] RUN python3 -m pip install --upgrade pip setuptools wheel\n#7 CACHED\n\n#8 [5/6] COPY anvil/ ./\n#8 ERROR: failed to calculate checksum of ref 5eeea680-c455-4d17-a425-08efb16a18b7::yoseh85r2vo5dhaqeo6eip2oh: \"/anvil\": not found\n\n#9 [3/6] RUN apt-get update &&     apt-get install -y --no-install-recommends         python3         python3-pip         python3-venv         python3-dev         build-essential         git         curl         ca-certificates         pkg-config         libssl-dev         libffi-dev         libgmp-dev         libtool         automake         autoconf         make         wget         unzip         sudo     && rm -rf /var/lib/apt/lists/*\n#9 CANCELED\n------\n > [5/6] COPY anvil/ ./:\n------\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\nenvgym.dockerfile:37\n--------------------\n  35 |     \n  36 |     # Copy project source code from build context (assumes context is /home/cc/EnvGym/data/anvil)\n  37 | >>> COPY anvil/ ./\n  38 |     \n  39 |     # (Optional) Copy local dependencies if any, e.g.:\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 5eeea680-c455-4d17-a425-08efb16a18b7::yoseh85r2vo5dhaqeo6eip2oh: \"/anvil\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

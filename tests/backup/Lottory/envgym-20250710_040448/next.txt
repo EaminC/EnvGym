@@ -1,0 +1,22 @@
+current progress
+- Docker image builds and runs successfully using `python:3.7-slim-buster` as the base image.
+- System dependencies and Python 3.7-compatible pip are installed.
+- Working directory is correctly set to `/home/cc/EnvGym/data/Lottory`.
+- requirements.txt is copied and used for dependency installation.
+- CPU-only versions of PyTorch (1.2.0+cpu) and torchvision (0.4.0+cpu) are installed as specified.
+- All other Python dependencies from requirements.txt are installed.
+- Optional development and Jupyter tools are present but commented out.
+- All repository files are copied into the working directory.
+- No CUDA or GPU dependencies are present.
+- Default command is set to `/bin/bash`.
+- Build and runtime logs indicate success, with no errors.
+
+next step
+- Verify that `.gitignore` is present and includes standard Python and project-specific ignores.
+- Ensure the presence and correctness of `README.md`, `tests/` directory, and (optionally) `config.yaml`/`config.json`.
+- (Optional) Add steps to create or copy `environment.yml`, `setup.sh`, or other reproducibility scripts if desired.
+- (Optional) Uncomment and install development tools (pre-commit, flake8, black) if code linting/formatting is required.
+- (Optional) Uncomment and install Jupyter if interactive development is needed.
+- (Optional) Set file permissions if running as non-root is needed.
+- (Optional) Add a healthcheck or test command (e.g., run a smoke test or print torch version) to validate the environment post-build.
+- Update Dockerfile comments/documentation as needed to match the latest plan and clarify any project-specific instructions.

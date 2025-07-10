@@ -1,0 +1,18 @@
+current progress
+- Docker image builds and runs successfully using the provided Dockerfile.
+- The Dockerfile uses `python:3.12-slim` as the base image and sets up the working directory to `/home/cc/EnvGym/data/acto`.
+- All required system dependencies (git, make, curl, wget, etc.) are installed for Ubuntu 22.04/amd64.
+- Go (amd64), Kind, kubectl, Helm, and Kustomize are installed as specified.
+- Python virtual environment is created and activated; pip, setuptools, wheel, pip-tools, build, virtualenv, project dependencies, and pre-commit are installed.
+- Ansible-core==2.17.5 and yq are installed in the venv.
+- The Dockerfile ensures the venv is used by default via the PATH.
+- No GPU, CUDA, ARM64, or Apple Silicon instructions or dependencies are present.
+- The image is ready for further project-specific steps (e.g., code, tests, Kind cluster setup).
+
+next step
+- Verify that all project files (source code, Makefile, etc.) are copied into the image if you intend to run builds/tests inside the container (add `COPY . .` after setting WORKDIR).
+- Optionally, add commands to build shared objects inside the image (e.g., `RUN make -j$(nproc)`) if you want Docker to handle the build step.
+- Optionally, add Kind cluster setup and operator deployment steps as needed for CI/CD or integration testing.
+- Ensure `.env` and any other required configuration files are copied or created in the image if needed for runtime.
+- Review and clean up any optional tool installations (Helm, Kustomize) if not required.
+- Document any manual steps that must be performed after container startup, or automate them in the Dockerfile/entrypoint as appropriate.

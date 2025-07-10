@@ -1,0 +1,19 @@
+current progress
+- Docker image builds successfully and runs without errors.
+- All required system and Python dependencies are installed (per plan).
+- User `cc` and required directories (`/home/cc/EnvGym/data/CrossPrefetch`, `/home/cc/ssd`) are created.
+- The `crossprefetch-asplos24-artifacts` repository is cloned into `$BASE`.
+- `install_packages.sh` and `setvars.sh` are copied and executed.
+- Python requirements are installed if `requirements.txt` exists.
+- The shared library `simple_prefetcher` is compiled.
+- All application workloads (rocksdb-ycsb, rocksdb, snappy-c, mmap_exp, scalability, multi_read) are compiled.
+- `.bashrc` is configured to source environment variables.
+- Dockerfile does NOT attempt kernel compilation or installation (correct for Docker).
+- No GPU-related packages or steps are present (correct per plan).
+
+next step
+- Modify the Dockerfile to enable mounting and access to the NVMe SSD device and `/home/cc/ssd` as a Docker volume (requires host/container runtime configuration, not just Dockerfile changes; document this in usage instructions).
+- (Optional) Add instructions or an entrypoint script to check for NVMe device presence and mount `/dev/nvme0n1` to `/home/cc/ssd` if running with `--privileged` and `--device` flags.
+- (Optional) Add logic to re-clone the repo and recompile workloads if `/home/cc/ssd` is formatted or remounted (for F2FS experiments).
+- (Optional) Add a healthcheck or test script to verify all compiled binaries and environment setup at container start.
+- Ensure documentation clearly states that kernel compilation and installation must be done on the host, not in Docker.
