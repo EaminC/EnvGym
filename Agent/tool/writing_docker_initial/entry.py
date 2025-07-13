@@ -122,24 +122,19 @@ Please write a detailed dockerfile to configure this repository based on the pla
 You should only return the dockerfile content, no other content.
 
 IMPORTANT: 
-**AVOID SILENT CONTAINERS**: Do NOT use `CMD ["/bin/bash"]` or `ENTRYPOINT ["/bin/bash"]` as these will cause the container to exit immediately without producing any output in non-interactive mode.
+**AVOID SILENT CONTAINERS**: Do NOT use `CMD ["/bin/bash"]` or `ENTRYPOINT ["/bin/bash"]` as these will cause the container to exit immediately without producing any output in non-interactive mode.Please write some test files to run in the container to verify the environment setup.You can add some tests as follow to the end of the dockerfile:
 
-REQUIRED FINAL COMMAND:
-Instead of `CMD ["/bin/bash"]`, use a command that produces useful output to verify the environment setup,you should write command to verify the environment setup. For example:
-
-```dockerfile
-# ✅ GOOD: Use CMD with environment verification
-CMD bash -c 'echo "=== Environment Verification ==="; \
-echo "Timestamp: $(date)"; \
-echo "OS: $(cat /etc/os-release | head -1)"; \
-echo "Python: $(python3 --version 2>&1 || echo "Not installed")"; \
-echo "Java: $(java -version 2>&1 | head -1 || echo "Not installed")"; \
-echo "Working Directory: $(pwd)"; \
-echo "Directory Contents:"; ls -la; \
-echo "=== Verification Complete ==="'
+```at the end of the dockerfile
+RUN printf '#!/bin/bash\n\
+set -e\n\
+echo "=== Environment Verification ==="\n\
+echo "Running  test 1 ..."\n\
+python3 python/test_calculator.py\n\
+echo
+...
+echo "All tests passed"\n' > /workspace/verify.sh && chmod +x /workspace/verify.sh
+CMD ["/workspace/verify.sh"]
 ```
-
-Please write the dockerfile content based on the plan,also including necessary test cases in the end of the dockerfile according to format required, ensuring it produces useful output when run.
 
 Return ONLY the dockerfile content, no explanations, no markdown formatting, no additional text."""
         
