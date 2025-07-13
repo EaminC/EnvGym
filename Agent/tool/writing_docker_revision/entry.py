@@ -235,8 +235,51 @@ class WritingDockerRevisionTool:
     def revise_dockerfile(self, dockerfile_content: str, log_content: str, next_content: str, directory_tree: str, is_json_format: bool = False) -> str:
         """Revise dockerfile based on current dockerfile, failure log, next steps, and directory structure using AI"""
         
-        # Import the prompt from write_docker.py
-        from prompt.write_docker import write_docker_instruction
+        # Define the prompt directly in the code
+        write_docker_instruction = """
+This is the current working directory structure:
+{directory_tree}
+
+This is the current dockerfile:
+{dockerfile_content}
+
+This is the previous failure log:
+{log_content}
+
+This is the summary and next steps:
+{next_content}
+
+Please modify the dockerfile based on the failure log and next steps recommendations. 
+
+IMPORTANT REQUIREMENTS:
+1. ONLY reference files and directories that exist in the directory tree shown above
+2. Do NOT add COPY or ADD commands for files that don't exist
+3. Verify all file paths against the directory structure
+4. Return ONLY the revised dockerfile content, no explanations, no markdown formatting, no additional text
+
+
+**AVOID SILENT CONTAINERS**: Do NOT use `CMD ["/bin/bash"]` or `ENTRYPOINT ["/bin/bash"]` as these will cause the container to exit immediately without producing any output in non-interactive mode.
+
+REQUIRED FINAL COMMAND:
+Instead of `CMD ["/bin/bash"]`, use a command that produces useful output to verify the environment setup,you should write command to verify the environment setup. For example:
+
+```dockerfile
+# ✅ GOOD: Use CMD with environment verification
+CMD bash -c 'echo "=== Environment Verification ==="; \
+echo "Timestamp: $(date)"; \
+echo "OS: $(cat /etc/os-release | head -1)"; \
+echo "Python: $(python3 --version 2>&1 || echo "Not installed")"; \
+echo "Java: $(java -version 2>&1 | head -1 || echo "Not installed")"; \
+echo "Working Directory: $(pwd)"; \
+echo "Directory Contents:"; ls -la; \
+echo "=== Verification Complete ==="'
+```
+
+Please write the dockerfile content based on the plan,also including necessary test cases in the end of the dockerfile according to format required, ensuring it produces useful output when run.
+
+
+Only return the new dockerfile content, nothing else.
+"""
         
         # Add format information to the prompt
         if is_json_format:

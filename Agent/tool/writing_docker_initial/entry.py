@@ -121,7 +121,27 @@ class WritingDockerInitialTool:
 Please write a detailed dockerfile to configure this repository based on the plan.
 You should only return the dockerfile content, no other content.
 
-IMPORTANT: Return ONLY the dockerfile content, no explanations, no markdown formatting, no additional text."""
+IMPORTANT: 
+**AVOID SILENT CONTAINERS**: Do NOT use `CMD ["/bin/bash"]` or `ENTRYPOINT ["/bin/bash"]` as these will cause the container to exit immediately without producing any output in non-interactive mode.
+
+REQUIRED FINAL COMMAND:
+Instead of `CMD ["/bin/bash"]`, use a command that produces useful output to verify the environment setup,you should write command to verify the environment setup. For example:
+
+```dockerfile
+# ✅ GOOD: Use CMD with environment verification
+CMD bash -c 'echo "=== Environment Verification ==="; \
+echo "Timestamp: $(date)"; \
+echo "OS: $(cat /etc/os-release | head -1)"; \
+echo "Python: $(python3 --version 2>&1 || echo "Not installed")"; \
+echo "Java: $(java -version 2>&1 | head -1 || echo "Not installed")"; \
+echo "Working Directory: $(pwd)"; \
+echo "Directory Contents:"; ls -la; \
+echo "=== Verification Complete ==="'
+```
+
+Please write the dockerfile content based on the plan,also including necessary test cases in the end of the dockerfile according to format required, ensuring it produces useful output when run.
+
+Return ONLY the dockerfile content, no explanations, no markdown formatting, no additional text."""
         
         # Prepare system message based on language setting
         if self.system_language.lower() in ['chinese', 'zh', '中文']:
