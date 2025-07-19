@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Task Tree Editor</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1><i class="fas fa-sitemap"></i> JSON Task Tree Editor</h1>
+        <div class="header-controls">
+          <button id="newFile" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New
+          </button>
+          <button id="openFile" class="btn btn-secondary">
+            <i class="fas fa-folder-open"></i> Open
+          </button>
+          <button id="saveFile" class="btn btn-success">
+            <i class="fas fa-save"></i> Save
+          </button>
+          <input
+            type="file"
+            id="fileInput"
+            accept=".json"
+            style="display: none"
+          />
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="sidebar">
+          <div class="sidebar-header">
+            <h3>JSON Structure</h3>
+            <div class="sidebar-controls">
+              <button id="undoMove" class="btn btn-sm btn-secondary" disabled>
+                <i class="fas fa-undo"></i> Undo
+              </button>
+              <button id="addRoot" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus"></i> Add Root
+              </button>
+            </div>
+          </div>
+          <div id="jsonTree" class="json-tree"></div>
+        </div>
+
+        <div class="editor-panel">
+          <div class="editor-header">
+            <h3>Node Editor</h3>
+            <div class="node-info" id="nodeInfo">
+              <span>Please select a node to edit</span>
+            </div>
+          </div>
+          <div class="editor-content" id="editorContent">
+            <div class="placeholder">
+              <i class="fas fa-mouse-pointer"></i>
+              <p>Click on a node in the tree structure to edit its content</p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div class="json-viewer">
+        <div class="viewer-header">
+          <h3>JSON Preview</h3>
+          <button id="copyJson" class="btn btn-sm btn-secondary">
+            <i class="fas fa-copy"></i> Copy
+          </button>
+        </div>
+        <pre id="jsonOutput" class="json-output"></pre>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Add Node</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="nodeForm">
+            <div class="form-group">
+              <label for="taskName">Task Name:</label>
+              <input type="text" id="taskName" required />
+            </div>
+            <div class="form-group">
+              <label for="taskWeight">Weight (0-100):</label>
+              <input
+                type="number"
+                id="taskWeight"
+                min="0"
+                max="100"
+                value="50"
+              />
+            </div>
+            <div class="form-group">
+              <label for="taskType">Type:</label>
+              <select id="taskType">
+                <option value="Development">Development</option>
+                <option value="Testing">Testing</option>
+                <option value="Design">Design</option>
+                <option value="Documentation">Documentation</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="modalCancel" class="btn btn-secondary">Cancel</button>
+          <button id="modalConfirm" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
