@@ -35,7 +35,15 @@ class StatsTool:
         
         # Get configuration from environment
         self.api_key = os.getenv("FORGE_API_KEY", "").strip('"').strip("'")
-        self.base_url = os.getenv("FORGE_BASE_URL", "https://api.forge.tensorblock.co").strip('"').strip("'")
+        self.base_url = os.getenv("FORGE_BASE_URL", "https://api.forge.tensorblock.co/v1").strip('"').strip("'")
+        
+        # Parse MODEL to get provider and model
+        model_config = os.getenv("MODEL", "OpenAI/gpt-4.1").strip('"').strip("'")
+        if '/' in model_config:
+            self.provider, self.model = model_config.split('/', 1)
+        else:
+            self.provider = "OpenAI"
+            self.model = model_config
         
         if not self.api_key or self.api_key == "your-forge-api-key-here":
             print("Warning: FORGE_API_KEY not found or not set properly")
@@ -50,7 +58,7 @@ class StatsTool:
             # 构建API请求URL
             # 确保base_url不以/结尾，避免重复的/
             base_url = self.base_url.rstrip('/')
-            stats_url = f"{base_url}/stats/?provider=OpenAI&model=gpt-4.1"
+            stats_url = f"{base_url}/stats/?provider={self.provider}&model={self.model}"
             
             headers = {
                 "Authorization": f"Bearer {self.api_key}"

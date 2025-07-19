@@ -122,19 +122,6 @@ Please write a detailed dockerfile to configure this repository based on the pla
 You should only return the dockerfile content, no other content.
 
 IMPORTANT: 
-**AVOID SILENT CONTAINERS**: Do NOT use `CMD ["/bin/bash"]` or `ENTRYPOINT ["/bin/bash"]` as these will cause the container to exit immediately without producing any output in non-interactive mode.Please write some test files to run in the container to verify the environment setup.You can add some tests as follow to the end of the dockerfile:
-
-```at the end of the dockerfile
-RUN printf '#!/bin/bash\n\
-set -e\n\
-echo "=== Environment Verification ==="\n\
-echo "Running  test 1 ..."\n\
-python3 python/test_calculator.py\n\
-echo
-...
-echo "All tests passed"\n' > /workspace/verify.sh && chmod +x /workspace/verify.sh
-CMD ["/workspace/verify.sh"]
-```
 
 Return ONLY the dockerfile content, no explanations, no markdown formatting, no additional text."""
         
