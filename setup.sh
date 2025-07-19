@@ -169,6 +169,70 @@ install_python_command() {
     log_success "Python command installed successfully"
 }
 
+# Install Docker
+install_docker() {
+    log_info "Installing Docker..."
+    
+    detect_system
+    
+    if [[ "$OS" == "linux" ]]; then
+        # Detect package manager
+        if command_exists apt-get; then
+            # Update package index
+            sudo apt-get update
+            
+            # Install prerequisites
+            sudo apt-get install -y ca-certificates curl gnupg lsb-release
+            
+            # Add Docker's official GPG key
+            sudo mkdir -p /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            
+            # Set up the repository
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            
+            # Update package index again
+            sudo apt-get update
+            
+            # Install Docker Engine
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            
+            # Add user to docker group
+            sudo usermod -aG docker $USER
+            
+        elif command_exists yum; then
+            # Install Docker on CentOS/RHEL
+            sudo yum install -y yum-utils
+            sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+            sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo usermod -aG docker $USER
+            
+        elif command_exists dnf; then
+            # Install Docker on Fedora
+            sudo dnf -y install dnf-plugins-core
+            sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+            sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo usermod -aG docker $USER
+            
+        else
+            log_error "No supported package manager found. Please install Docker manually."
+            exit 1
+        fi
+        
+        log_success "Docker installed successfully"
+        log_warning "You may need to log out and back in for Docker group permissions to take effect."
+        
+    elif [[ "$OS" == "macos" ]]; then
+        log_info "For macOS, please install Docker Desktop manually from: https://www.docker.com/products/docker-desktop"
+        log_warning "Docker Desktop installation requires manual intervention."
+        return 0
+    fi
+}
+
 # Main setup function
 main() {
     log_info "Starting EnvGym setup..."
@@ -237,6 +301,21 @@ check_prerequisites() {
     if ! command_exists python; then
         log_warning "Python command is not available. Installing python-is-python3..."
         install_python_command
+    fi
+    
+    # Check if Docker is available
+    if ! command_exists docker; then
+        log_warning "Docker is not installed. Installing Docker automatically..."
+        install_docker
+    else
+        # Test if Docker daemon is running
+        if ! docker info >/dev/null 2>&1; then
+            log_warning "Docker is installed but daemon is not running. Starting Docker..."
+            if command_exists systemctl; then
+                sudo systemctl start docker
+                sudo systemctl enable docker
+            fi
+        fi
     fi
     
     # Check if we're in the right directory
