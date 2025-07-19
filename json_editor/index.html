@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Node Modal -->
     <div id="modal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
@@ -114,6 +114,44 @@
         <div class="modal-footer">
           <button id="modalCancel" class="btn btn-secondary">Cancel</button>
           <button id="modalConfirm" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Modal -->
+    <div id="saveModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Save File</h3>
+          <span class="close" onclick="jsonEditor.closeSaveModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="saveForm">
+            <div class="form-group">
+              <label for="saveFileName">File Name:</label>
+              <input type="text" id="saveFileName" value="task-tree.json" required />
+            </div>
+            <div class="form-group">
+              <label>Save Location:</label>
+              <div class="path-selector">
+                <input type="text" id="savePath" placeholder="Click 'Choose Folder' to select location" readonly />
+                <button type="button" id="chooseFolder" class="btn btn-sm btn-secondary">
+                  <i class="fas fa-folder-open"></i> Choose Folder
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="overwriteFile" />
+                <span class="checkmark"></span>
+                Overwrite existing file if it exists
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button onclick="jsonEditor.closeSaveModal()" class="btn btn-secondary">Cancel</button>
+          <button onclick="jsonEditor.confirmSave()" class="btn btn-primary">Save</button>
         </div>
       </div>
     </div>

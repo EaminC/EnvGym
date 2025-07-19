@@ -26,7 +26,7 @@ class JSONTreeEditor {
       .addEventListener("click", () => this.openFile());
     document
       .getElementById("saveFile")
-      .addEventListener("click", () => this.saveFile());
+      .addEventListener("click", () => this.showSaveModal());
     document
       .getElementById("fileInput")
       .addEventListener("change", (e) => this.handleFileSelect(e));
@@ -58,13 +58,23 @@ class JSONTreeEditor {
       if (e.target.id === "modal") this.closeModal();
     });
 
+    // Save modal
+    document.getElementById("saveModal").addEventListener("click", (e) => {
+      if (e.target.id === "saveModal") this.closeSaveModal();
+    });
+
+    // Choose folder button
+    document
+      .getElementById("chooseFolder")
+      .addEventListener("click", () => this.chooseFolder());
+
     // Keyboard shortcuts
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey || e.metaKey) {
         switch (e.key) {
           case "s":
             e.preventDefault();
-            this.saveFile();
+            this.showSaveModal();
             break;
           case "o":
             e.preventDefault();
@@ -328,7 +338,7 @@ class JSONTreeEditor {
       console.log("Drag over node:", node.id, node.task);
       this.dragTarget = node;
       e.currentTarget.classList.add("drag-over");
-      
+
       // Auto-expand if node has children and is not expanded
       if (node.children && node.children.length > 0 && !node.expanded) {
         node.expanded = true;
@@ -1036,6 +1046,146 @@ class JSONTreeEditor {
       document.body.removeChild(this.dragPreview);
       this.dragPreview = null;
     }
+  }
+
+  // 保存模态框相关方法
+  showSaveModal() {
+    const saveModal = document.getElementById("saveModal");
+    const fileNameInput = document.getElementById("saveFileName");
+    const savePathInput = document.getElementById("savePath");
+    const overwriteCheckbox = document.getElementById("overwriteFile");
+
+    // 设置默认文件名
+    fileNameInput.value = "task-tree.json";
+    savePathInput.value = "";
+    overwriteCheckbox.checked = false;
+
+    // 重置文件夹选择器
+    this.selectedFolder = null;
+
+    saveModal.style.display = "block";
+    fileNameInput.focus();
+  }
+
+  closeSaveModal() {
+    document.getElementById("saveModal").style.display = "none";
+  }
+
+  chooseFolder() {
+    // 检查浏览器是否支持文件夹选择
+    if ('showDirectoryPicker' in window) {
+      window.showDirectoryPicker()
+        .then(handle => {
+          this.selectedFolder = handle;
+          const savePathInput = document.getElementById('savePath');
+          savePathInput.value = handle.name;
+          this.showNotification('Folder selected: ' + handle.name, 'success');
+        })
+        .catch(err => {
+          if (err.name !== 'AbortError') {
+            this.showNotification('Failed to select folder: ' + err.message, 'error');
+          }
+        });
+    } else {
+      // 降级方案：使用文件选择器
+      this.showNotification('Folder selection not supported in this browser. Using default download location.', 'info');
+      const savePathInput = document.getElementById('savePath');
+      savePathInput.value = 'Downloads folder';
+    }
+  }
+
+  confirmSave() {
+    const fileName = document.getElementById("saveFileName").value.trim();
+    const savePath = document.getElementById("savePath").value.trim();
+    const overwrite = document.getElementById("overwriteFile").checked;
+
+    if (!fileName) {
+      this.showNotification("Please enter a file name", "error");
+      return;
+    }
+
+    // 确保文件名有.json扩展名
+    const finalFileName = fileName.endsWith(".json")
+      ? fileName
+      : fileName + ".json";
+
+    // 如果有选择的文件夹，使用File System Access API保存
+    if (this.selectedFolder) {
+      this.saveToSelectedFolder(finalFileName, overwrite);
+    } else {
+      // 降级到默认下载
+      this.saveFileWithPath(finalFileName, overwrite);
+    }
+
+    this.closeSaveModal();
+  }
+
+  async saveToSelectedFolder(fileName, overwrite = false) {
+    try {
+      // 检查文件是否已存在
+      let fileHandle;
+      try {
+        fileHandle = await this.selectedFolder.getFileHandle(fileName);
+        if (!overwrite) {
+          this.showNotification('File already exists. Check "Overwrite" to replace it.', 'error');
+          return;
+        }
+      } catch (err) {
+        // 文件不存在，创建新文件
+        fileHandle = await this.selectedFolder.getFileHandle(fileName, { create: true });
+      }
+      
+      // 创建可写流
+      const writable = await fileHandle.createWritable();
+      
+      // 准备数据
+      const cleanData = this.removeExpandedProperty(JSON.parse(JSON.stringify(this.data)));
+      const dataStr = JSON.stringify(cleanData, null, 2);
+      
+      // 写入文件
+      await writable.write(dataStr);
+      await writable.close();
+      
+      const message = overwrite ? 
+        `File saved as ${fileName} in selected folder (overwritten)` : 
+        `File saved as ${fileName} in selected folder`;
+      this.showNotification(message, 'success');
+      
+    } catch (err) {
+      this.showNotification('Failed to save file: ' + err.message, 'error');
+    }
+  }
+
+  saveFileWithPath(filePath, overwrite = false) {
+    const cleanData = this.removeExpandedProperty(
+      JSON.parse(JSON.stringify(this.data))
+    );
+    const dataStr = JSON.stringify(cleanData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filePath.split("/").pop(); // 只取文件名部分
+
+    // 添加自定义属性来传递路径信息
+    link.setAttribute("data-filepath", filePath);
+    link.setAttribute("data-overwrite", overwrite);
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    const message = overwrite
+      ? `File saved as ${filePath} (overwrite enabled)`
+      : `File saved as ${filePath}`;
+    this.showNotification(message, "success");
+  }
+
+  // 保留原有的saveFile方法作为默认保存
+  saveFile() {
+    this.saveFileWithPath("task-tree.json", false);
   }
 }
 

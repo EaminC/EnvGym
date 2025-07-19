@@ -190,51 +190,51 @@ body {
 
 /* 拖拽样式 */
 .node-content.dragging {
-    opacity: 0.5;
-    transform: rotate(5deg) scale(0.95);
-    z-index: 1000;
-    pointer-events: none;
+  opacity: 0.5;
+  transform: rotate(5deg) scale(0.95);
+  z-index: 1000;
+  pointer-events: none;
 }
 
 .node-content.drag-over {
-    border-color: #48bb78;
-    background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
-    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.2);
+  border-color: #48bb78;
+  background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+  box-shadow: 0 8px 25px rgba(72, 187, 120, 0.2);
 }
 
 /* 拖拽预览 */
 .drag-preview {
-    position: fixed;
-    z-index: 10000;
-    pointer-events: none;
-    background: rgba(102, 126, 234, 0.95);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  background: rgba(102, 126, 234, 0.95);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .drag-preview-content {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .drag-preview-content i {
-    font-size: 10px;
-    opacity: 0.8;
+  font-size: 10px;
+  opacity: 0.8;
 }
 
 .drag-preview-content span {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .drag-preview-content small {
-    opacity: 0.7;
-    font-size: 10px;
+  opacity: 0.7;
+  font-size: 10px;
 }
 
 .node-header {
@@ -475,6 +475,84 @@ body {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 复选框样式 */
+.checkbox-label {
+  display: flex !important;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  height: 18px;
+  width: 18px;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.checkbox-label:hover input ~ .checkmark {
+  border-color: #667eea;
+}
+
+.checkbox-label input:checked ~ .checkmark {
+  background-color: #667eea;
+  border-color: #667eea;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* 路径选择器样式 */
+.path-selector {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.path-selector input {
+  flex: 1;
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+.path-selector input:focus {
+  background-color: #f8f9fa;
+  border-color: #ddd;
+  box-shadow: none;
+}
+
+.path-selector .btn {
+  white-space: nowrap;
+  min-width: 120px;
 }
 
 .form-group textarea {
