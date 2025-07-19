@@ -224,7 +224,15 @@ install_docker() {
         fi
         
         log_success "Docker installed successfully"
-        log_warning "You may need to log out and back in for Docker group permissions to take effect."
+        
+        # Apply Docker group permissions immediately
+        if groups $USER | grep -q docker; then
+            log_info "User already in docker group"
+        else
+            log_info "Adding user to docker group..."
+            sudo usermod -aG docker $USER
+            log_info "Docker group permissions will be applied in the next shell session"
+        fi
         
     elif [[ "$OS" == "macos" ]]; then
         log_info "For macOS, please install Docker Desktop manually from: https://www.docker.com/products/docker-desktop"
@@ -263,7 +271,10 @@ main() {
     log_info "2. Then activate the environment:"
     log_info "   conda activate envgym"
     log_info ""
-    log_info "3. Test the installation:"
+    log_info "3. If Docker was installed, you may need to log out and back in for Docker permissions:"
+    log_info "   Or run: newgrp docker"
+    log_info ""
+    log_info "4. Test the installation:"
     log_info "   cd data/exli && python ../../Agent/agent.py"
     log_info ""
     log_info "Or, you can use the full path directly:"
