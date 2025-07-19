@@ -19,6 +19,7 @@ from tool.hardware_adjustment.entry import HardwareAdjustmentTool
 from tool.writing_docker_initial.entry import WritingDockerInitialTool
 from tool.writing_docker_revision.entry import WritingDockerRevisionTool
 from tool.summarize.entry import SummarizeTool
+from tool.stats.entry import StatsTool
 
 
 
@@ -29,6 +30,9 @@ if __name__ == "__main__":
 
     start_time = time.time()
     print("Starting envgym execution...")
+
+    print("Recording session start stats...")
+    StatsTool(verbose=verbose).run("start")
 
     print("Initializing envgym directory")
     create_envgym_directory()
@@ -72,6 +76,9 @@ if __name__ == "__main__":
         if check_success_status():
             break
     
+
+    print("Recording session end stats...")
+    StatsTool(verbose=verbose).run("end")
 
     end_time = time.time()
     print_execution_summary(start_time, end_time)
