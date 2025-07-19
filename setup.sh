@@ -132,6 +132,40 @@ install_git() {
     log_success "Git installed successfully"
 }
 
+# Install Python command
+install_python_command() {
+    log_info "Installing python command..."
+    
+    detect_system
+    
+    if [[ "$OS" == "linux" ]]; then
+        # Detect package manager
+        if command_exists apt-get; then
+            sudo apt-get update && sudo apt-get install -y python-is-python3
+        elif command_exists yum; then
+            sudo yum install -y python3
+            sudo ln -sf /usr/bin/python3 /usr/bin/python
+        elif command_exists dnf; then
+            sudo dnf install -y python3
+            sudo ln -sf /usr/bin/python3 /usr/bin/python
+        elif command_exists pacman; then
+            sudo pacman -S --noconfirm python
+        else
+            log_error "No supported package manager found. Please install Python manually."
+            exit 1
+        fi
+    elif [[ "$OS" == "macos" ]]; then
+        if command_exists brew; then
+            brew install python
+        else
+            log_error "Homebrew not found. Please install Python manually or install Homebrew first."
+            exit 1
+        fi
+    fi
+    
+    log_success "Python command installed successfully"
+}
+
 # Main setup function
 main() {
     log_info "Starting EnvGym setup..."
@@ -180,6 +214,12 @@ check_prerequisites() {
     if ! command_exists git; then
         log_warning "Git is not installed. Installing Git automatically..."
         install_git
+    fi
+    
+    # Check if python command is available
+    if ! command_exists python; then
+        log_warning "Python command is not available. Installing python-is-python3..."
+        install_python_command
     fi
     
     # Check if we're in the right directory
