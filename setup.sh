@@ -34,6 +34,104 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Detect OS and architecture
+detect_system() {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        OS="linux"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        OS="macos"
+    else
+        log_error "Unsupported operating system: $OSTYPE"
+        exit 1
+    fi
+    
+    ARCH=$(uname -m)
+    if [[ "$ARCH" == "x86_64" ]]; then
+        ARCH="x86_64"
+    elif [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "arm64" ]]; then
+        ARCH="aarch64"
+    else
+        log_error "Unsupported architecture: $ARCH"
+        exit 1
+    fi
+}
+
+# Install Miniconda
+install_miniconda() {
+    log_info "Installing Miniconda..."
+    
+    detect_system
+    
+    # Download URL for Miniconda
+    if [[ "$OS" == "linux" ]]; then
+        if [[ "$ARCH" == "x86_64" ]]; then
+            MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+        else
+            MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh"
+        fi
+    elif [[ "$OS" == "macos" ]]; then
+        if [[ "$ARCH" == "x86_64" ]]; then
+            MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh"
+        else
+            MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh"
+        fi
+    fi
+    
+    # Download and install Miniconda
+    log_info "Downloading Miniconda..."
+    wget -O miniconda.sh "$MINICONDA_URL" || curl -o miniconda.sh "$MINICONDA_URL"
+    
+    log_info "Installing Miniconda..."
+    bash miniconda.sh -b -p "$HOME/miniconda3"
+    
+    # Add conda to PATH
+    export PATH="$HOME/miniconda3/bin:$PATH"
+    
+    # Initialize conda for bash
+    "$HOME/miniconda3/bin/conda" init bash
+    
+    # Accept conda terms of service
+    "$HOME/miniconda3/bin/conda" tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+    "$HOME/miniconda3/bin/conda" tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+    
+    # Clean up
+    rm miniconda.sh
+    
+    log_success "Miniconda installed successfully"
+}
+
+# Install Git
+install_git() {
+    log_info "Installing Git..."
+    
+    detect_system
+    
+    if [[ "$OS" == "linux" ]]; then
+        # Detect package manager
+        if command_exists apt-get; then
+            sudo apt-get update && sudo apt-get install -y git
+        elif command_exists yum; then
+            sudo yum install -y git
+        elif command_exists dnf; then
+            sudo dnf install -y git
+        elif command_exists pacman; then
+            sudo pacman -S --noconfirm git
+        else
+            log_error "No supported package manager found. Please install Git manually."
+            exit 1
+        fi
+    elif [[ "$OS" == "macos" ]]; then
+        if command_exists brew; then
+            brew install git
+        else
+            log_error "Homebrew not found. Please install Git manually or install Homebrew first."
+            exit 1
+        fi
+    fi
+    
+    log_success "Git installed successfully"
+}
+
 # Main setup function
 main() {
     log_info "Starting EnvGym setup..."
@@ -63,15 +161,25 @@ check_prerequisites() {
     
     # Check if conda is installed
     if ! command_exists conda; then
-        log_error "Conda is not installed. Please install Miniconda or Anaconda first."
-        log_info "Download from: https://docs.conda.io/en/latest/miniconda.html"
-        exit 1
+        # Check if miniconda is already installed but not in PATH
+        if [[ -d "$HOME/miniconda3" ]]; then
+            log_info "Miniconda found but not in PATH. Adding to PATH..."
+            export PATH="$HOME/miniconda3/bin:$PATH"
+            eval "$(conda shell.bash hook)"
+        else
+            log_warning "Conda is not installed. Installing Miniconda automatically..."
+            install_miniconda
+            
+            # Reload shell environment to make conda available
+            export PATH="$HOME/miniconda3/bin:$PATH"
+            eval "$(conda shell.bash hook)"
+        fi
     fi
     
     # Check if git is installed
     if ! command_exists git; then
-        log_error "Git is not installed. Please install Git first."
-        exit 1
+        log_warning "Git is not installed. Installing Git automatically..."
+        install_git
     fi
     
     # Check if we're in the right directory
@@ -86,6 +194,12 @@ check_prerequisites() {
 setup_conda_environment() {
     log_info "Setting up conda environment..."
     
+    # Ensure conda is available in PATH
+    if [[ -d "$HOME/miniconda3" ]]; then
+        export PATH="$HOME/miniconda3/bin:$PATH"
+        eval "$(conda shell.bash hook)"
+    fi
+    
     # Check if environment already exists
     if conda env list | grep -q "envgym"; then
         log_warning "Environment 'envgym' already exists. Skipping creation."
@@ -98,6 +212,11 @@ setup_conda_environment() {
 
 install_python_dependencies() {
     log_info "Installing Python dependencies..."
+    
+    # Ensure conda is available in PATH
+    if [[ -d "$HOME/miniconda3" ]]; then
+        export PATH="$HOME/miniconda3/bin:$PATH"
+    fi
     
     # Activate conda environment and install dependencies
     eval "$(conda shell.bash hook)"
