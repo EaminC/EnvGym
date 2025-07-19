@@ -97,6 +97,9 @@ install_miniconda() {
     # Clean up
     rm miniconda.sh
     
+    # Source bashrc to make conda available immediately
+    source ~/.bashrc
+    
     log_success "Miniconda installed successfully"
 }
 
@@ -186,8 +189,22 @@ main() {
     download_data_repositories
     
     log_success "EnvGym setup completed successfully!"
-    log_info "To activate the environment, run: conda activate envgym"
-    log_info "To test the setup, run: cd data/exli && python ../../Agent/agent.py"
+    log_info ""
+    log_info "=== Important Notes ==="
+    log_info "Since conda is installed to $HOME/miniconda3, you need to:"
+    log_info ""
+    log_info "1. Reopen your terminal, or run the following command to reload the environment:"
+    log_info "   source ~/.bashrc"
+    log_info ""
+    log_info "2. Then activate the environment:"
+    log_info "   conda activate envgym"
+    log_info ""
+    log_info "3. Test the installation:"
+    log_info "   cd data/exli && python ../../Agent/agent.py"
+    log_info ""
+    log_info "Or, you can use the full path directly:"
+    log_info "   $HOME/miniconda3/bin/conda activate envgym"
+    log_info "   cd data/exli && python ../../Agent/agent.py"
 }
 
 check_prerequisites() {
