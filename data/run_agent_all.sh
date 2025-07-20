@@ -2,7 +2,7 @@
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-AGENT_SCRIPT="$SCRIPT_DIR/../../Agent/agent.py"
+AGENT_SCRIPT="$SCRIPT_DIR/../Agent/agent.py"
 
 # Check if agent.py exists
 if [ ! -f "$AGENT_SCRIPT" ]; then
