@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# 项目列表（格式：项目名|GitHub链接）
+# Project list (format: project_name|GitHub_link)
 repos=(
 "exli|https://github.com/EngineeringSoftware/exli"
 )
 
-# 克隆函数
+# Clone function
 for entry in "${repos[@]}"; do
   name=$(echo "$entry" | cut -d '|' -f 1)
   url=$(echo "$entry" | cut -d '|' -f 2)
 
   if [ -d "$name" ]; then
-    echo "[跳过] $name 已存在"
+    echo "[SKIP] $name already exists"
   else
-    echo "[克隆] $name ..."
+    echo "[CLONE] $name ..."
     git clone "$url" "$name"
   fi
 done
