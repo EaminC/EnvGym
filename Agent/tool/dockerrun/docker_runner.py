@@ -227,6 +227,9 @@ Build Status: {'Success' if build_result[0] else 'Failed'}
                         # 寻找ERROR关键字或Dockerfile行号
                         if 'ERROR:' in line or 'failed to solve:' in line or '--------------------' in line:
                             in_error_section = True
+                        # 也查找包含具体错误信息的行
+                        if any(keyword in line for keyword in ['Please install', 'Not found', 'command failed', 'exit code', 'zip', 'unzip']):
+                            in_error_section = True
                         if in_error_section:
                             if line.strip():  # 非空行
                                 error_lines.append(line.strip())
@@ -239,9 +242,32 @@ Build Status: {'Success' if build_result[0] else 'Failed'}
                                 if len(error_lines) >= 5:  # 最多显示5行
                                     break
                     
+                    # 如果没有找到ERROR信息，尝试从stdout中查找错误信息
+                    if not error_lines and build_result[1]:
+                        stdout_lines = build_result[1].split('\n')
+                        for line in stdout_lines:
+                            # 查找包含错误信息的行
+                            if any(keyword in line for keyword in ['error', 'Error', 'ERROR', 'failed', 'Failed', 'FAILED', 'exit code']):
+                                if line.strip() and '...........' not in line:
+                                    error_lines.append(line.strip())
+                    
                     # 限制错误信息长度
-                    clean_error = '\n'.join(error_lines[:10])  # 最多显示10行关键错误
-                    log_summary_content += f"Build Error:\n{clean_error}\n"
+                    clean_error = '\n'.join(error_lines[:15])  # 增加到15行关键错误
+                    
+                    # 尝试提取Dockerfile中出错的行
+                    dockerfile_error_line = ""
+                    for line in error_lines:
+                        if "envgym.dockerfile:" in line and ">>>" in line:
+                            # 提取Dockerfile行号和内容
+                            parts = line.split(">>>")
+                            if len(parts) >= 2:
+                                dockerfile_error_line = f"Dockerfile错误行: {parts[0].strip()} >>> {parts[1].strip()}"
+                                break
+                    
+                    log_summary_content += f"Build Error:\n"
+                    if dockerfile_error_line:
+                        log_summary_content += f"{dockerfile_error_line}\n\n"
+                    log_summary_content += f"{clean_error}\n"
                 
                 log_summary_content += f"""
 === Runtime Log ===  
