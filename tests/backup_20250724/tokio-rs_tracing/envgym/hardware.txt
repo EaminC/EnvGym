@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/tokio-rs_tracing; likely a Rust project ("tokio-rs_tracing"); place Dockerfile in project root.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use x86_64/amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, rust:latest, python:3.10); no ARM support needed.
+- GPU: No NVIDIA GPU available; CUDA images not supported/recommended.
+- Instruction Notes: No GPU-related instructions (no --gpus, no nvidia/cuda base images, no NVIDIA drivers/tools); multi-core builds possible; set WORKDIR to /home/cc/EnvGym/data/tokio-rs_tracing.
+- Docker Version: 28.3.2; supports BuildKit and modern Dockerfile syntax; --gpus not enabled/required.

@@ -1,0 +1,137 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64, LINUX, EXTFS, NO GPU) ===
+
+**Key Adjustments Made:**
+- Assumes Linux/x86_64 (amd64) as the primary platform for all instructions and CI examples.
+- No GPU/CUDA instructions or dependencies are needed or allowed.
+- Base images, tool versions, and platform flags are clarified for compatibility with the provided hardware/software.
+- Storage and memory: No explicit bottleneck, but encourage checks for large Rust builds/caches.
+- All paths are Linux-style; no Windows/macOS-specific default paths are assumed.
+- All file/directory references are rooted at `/home/cc/EnvGym/data/tokio-rs_tokio` or relative.
+- Docker: BuildKit, Docker Compose v2, `--platform=linux/amd64` are supported and recommended for any containerized steps.
+- No ARM or other non-x86_64 architectures; cross-compilation for i686 (32-bit x86) and FreeBSD is still included as per upstream requirements.
+- All optional items for macOS or Windows are clearly marked as such and not required for this environment.
+- CI and build commands are written for Linux, not Windows/macOS.
+
+---
+
+1. DOWNLOADS NEEDED (ADJUSTED):
+
+   - **Rust toolchain** (Rust 1.70 or newer; verify with `rustc --version`)
+       - Use rustup to install stable and nightly (for Netlify, custom target spec, CI, FreeBSD docs).
+       - Nightly toolchain: `rustup toolchain install nightly` and `rustup toolchain install nightly-2025-01-25` for FreeBSD docs.
+   - **Cargo** (included with Rust toolchain).
+   - **Git** (latest stable; install via apt/yum/dnf/pacman as appropriate).
+   - **cargo-deny**, **cross**, **trybuild**: Install with `cargo install ...`.
+   - **Unix utilities:** Ensure `sed` and `grep` are installed (already present on most Linux distros).
+   - **Spellchecking tool:** e.g., `cargo-spellcheck`. Ensure Hunspell backend is supported and that the tool can read/write in extfs directories.
+   - **C compiler/build tools:** Install `build-essential` (on Ubuntu/Debian), or equivalent for other distros. For FreeBSD cross-compilation, `pkg` is handled in CI only.
+   - **bash**, **curl**: Should already be present on most Linux systems; install via package manager if not.
+   - **Visual Studio Code**: Optional; install only if using GUI/IDE.
+   - **Docker/Compose:** For any containerized builds, use `--platform=linux/amd64` for images (e.g., `ubuntu:22.04`, `debian:bullseye`, `rust:1.70-buster`).
+   - **No GPU dependencies:** Do not install CUDA, nvidia-docker, or any GPU-specific packages.
+   - **All other Rust crates/dependencies**: As listed, managed via Cargo, compatible with x86_64 Linux.
+   - **Other optional tools** (e.g., `netcat`): install via package manager as needed.
+
+2. FILES TO CREATE (ADJUSTED):
+
+   - **All file paths and references are valid on Linux/extfs.**
+   - **No Windows/macOS-specific config or paths are required by default.**
+   - **All CI, Netlify, and Cirrus configs should use Linux-style paths and avoid references to Windows/macOS-specific tooling (unless testing cross-platform, in which case those steps are skipped locally).**
+   - **All references to `/home/cc/EnvGym/data/tokio-rs_tokio` are to be interpreted as the workspace root.**
+   - **No case-insensitive path issues (as on Windows/macOS) exist.**
+   - **All spellcheck, deny, cross, and target-spec files are created as described, relative to the workspace root.**
+   - **.gitignore**: Use Linux-style paths/globs.
+   - **README.md**: Document Linux/x86_64 as the primary development environment. Make it clear how to run CI/build/test locally on Linux.
+   - **.github workflows:** CI files should use Ubuntu runners for Linux validation (e.g., `ubuntu-latest`).
+   - **All commands (`cargo`, `rustup`, `git`, `bash`, etc.) assume a Linux shell.**
+   - **Optional macOS/Windows steps are documented as optional only.**
+   - **All FreeBSD-specific setup is for CI only (not local development); Cirrus CI handles FreeBSD test environment.**
+
+3. NECESSARY TEST CASES IN THE CODEBASE (ADJUSTED):
+
+   - **All main tests, benchmarks, spellcheck, CI jobs, and platform checks remain as in the original plan.**
+   - **Windows/macOS-specific tests/examples are only run in CI in those platforms; they are not required or expected to pass locally.**
+   - **All tests, including cross-compilation to i686 and FreeBSD, are run in CI or with `cross`, not required to pass locally unless explicitly desired.**
+   - **All file/directory references are case-sensitive and must exist as specified.**
+   - **No GPU/CUDA-specific tests are run or required.**
+   - **Docker-based tests (if used): Always use `--platform=linux/amd64`.**
+   - **Storage/memory-intensive tests:** No explicit adjustments, but recommend ensuring sufficient disk space and RAM for large builds (Rust builds can require >4GB RAM and several GB storage for debug/release/target caches).
+   - **Local test commands:** All are Linux shell-friendly (e.g., `cargo test`, `cargo run`, etc.).
+   - **No Windows path issues (i.e., `\` vs `/`, drive letters) are present.**
+
+4. COMPLETE TODO LIST (ADJUSTED):
+
+   1. [ ] **Install Rust toolchain (1.70 or newer):**
+       - `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+       - `rustup install stable`
+       - `rustc --version` (>= 1.70)
+   2. [ ] **Install Nightly Rust toolchain:**
+       - `rustup toolchain install nightly`
+       - For FreeBSD docs build: `rustup toolchain install nightly-2025-01-25`
+   3. [ ] **Install Cargo:** Installed with Rust.
+   4. [ ] **Install Git:** `sudo apt-get install git` or equivalent.
+   5. [ ] **Install `cargo-deny`:** `cargo install cargo-deny`
+   6. [ ] **Install `cross`:** `cargo install cross`
+   7. [ ] **(Optional) Install IDE:** Install VS Code if desired for GUI editing.
+   8. [ ] **(Optional) Install build tools:** `sudo apt-get install build-essential`
+   9. [ ] **(Optional) Install network testing utilities:** `sudo apt-get install netcat`
+   10. [ ] **Ensure Unix tools are available:** `sed`, `grep` (verify with `which sed` and `which grep`)
+   11. [ ] **Install spellchecking tool:** `cargo install cargo-spellcheck`
+   12. [ ] **(Optional) Install `trybuild` if running compile-fail tests manually:** `cargo install trybuild`
+   13. [ ] **(Optional) Install `doc-comment` if running doc tests manually.**
+   14. [ ] **Clone/init repository:** `git clone ...`
+   15. [ ] **Create workspace files:** As specified, using Linux paths and case sensitivity.
+   16. [ ] **Create/update all workspace members:** As specified, using Linux file paths.
+   17. [ ] **In each crate's `Cargo.toml`:** Adjust only for path correctness and Linux compatibility.
+   18. [ ] **Create spellcheck.toml and spellcheck.dic:** As specified.
+   19. [ ] **Document workspace lint configuration.**
+   20. [ ] **Create main application code in `tokio/src/lib.rs` or `tokio/src/main.rs`.**
+   21. [ ] **Create and document all examples.**
+   22. [ ] **Create and document all stress tests.**
+   23. [ ] **Create and document all compile-fail UI tests.**
+   24. [ ] **Create and document all integration tests.**
+   25. [ ] **Create `.gitignore` (Linux paths).**
+   26. [ ] **Update `README.md`:** Document Linux/x86_64 as main platform; clarify any Windows/macOS steps are optional/CI only.
+   27. [ ] **Create/verify documentation and source files for all workspace members as specified.**
+   28. [ ] **Create/verify `deny.toml`.**
+   29. [ ] **Create/verify `Cross.toml`.**
+   30. [ ] **Create `target-specs/README.md` and `target-specs/i686-unknown-linux-gnu.json`.**
+   31. [ ] **Create `LICENSE` (MIT).**
+   32. [ ] **Create/verify `netlify.toml`.**
+   33. [ ] **Create/verify `.cirrus.yml` for FreeBSD CI (for CI only).**
+   34. [ ] **Create/verify `.github/ISSUE_TEMPLATE/config.yml`.**
+   35. [ ] **Create/verify `.github/FUNDING.yml`.**
+   36. [ ] **Create/verify `.github/labeler.yml`.**
+   37. [ ] **Create/verify `.github/buildomat/config.toml`.**
+   38. [ ] **Ensure CI configuration includes:**
+       - All jobs run on Linux/x86_64 as main, with FreeBSD handled via Cirrus, and Windows/macOS as optional in CI matrix.
+       - Docker-based jobs always use `--platform=linux/amd64`.
+       - No GPU/CUDA jobs are present.
+   39. [ ] **Build and verify project setup.**
+   40. [ ] **Run main application and verify.**
+   41. [ ] **Run all examples and verify.**
+   42. [ ] **Run all stress tests and verify.**
+   43. [ ] **Run all compile-fail UI tests and verify.**
+   44. [ ] **Run all integration tests and verify.**
+   45. [ ] **Write and run all automated tests.**
+   46. [ ] **Run license/dependency policy check.**
+   47. [ ] **(Optional) Run Clippy and Rustfmt.**
+   48. [ ] **(Optional) Benchmark performance and scalability.**
+   49. [ ] **(Optional) Document setup, usage, troubleshooting in `README.md`.**
+   50. [ ] **(Optional) Join Tokio Discord.**
+
+**Verification methods:**  
+Unchanged except tests are expected to run on Linux/x86_64 as the local development environment. All other platform coverage (Windows/macOS/FreeBSD/i686) is validated in CI or via `cross` as cross-compilation targets. No GPU/CUDA/ARM/Apple Silicon coverage required.
+
+---
+
+**Summary of Adjustments:**
+
+- All steps and files are now explicitly compatible with Linux/x86_64/extfs, and all instructions are tailored for this environment.
+- No CUDA, GPU, or ARM-specific setup is present.
+- All references to build, test, run, and CI are for Linux/x86_64; cross-platform steps remain in CI, not required locally.
+- Use `--platform=linux/amd64` with Docker as needed.
+- All file and directory paths are case-sensitive and use Linux conventions.
+- Optional steps for Windows/macOS are only for contributors or CI and need not be set up locally.
+
+**End of adjusted plan.**

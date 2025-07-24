@@ -1,0 +1,24 @@
+current progress
+
+- The Docker image builds and runs successfully on Ubuntu 22.04, targeting Linux/x86_64 (amd64).
+- All core system dependencies for Rust, build tools, spellchecking (Hunspell), and CI compatibility are installed.
+- Locale is set to en_US.UTF-8 to prevent warnings.
+- A non-root user (`cc`) is created with correct permissions and home directory.
+- Rust toolchains (stable, nightly, and nightly-2025-01-25) are installed and verified (`rustc --version`).
+- Cargo utilities (`cargo-deny`, `cross`, `cargo-spellcheck`) are installed, with explicit build log diagnostics for failures.
+- Project files are copied into the image at `/home/cc/EnvGym/data/tokio-rs_tokio`.
+- Cargo version and environment are printed for diagnostics.
+- All Rust dependencies are pre-fetched with `cargo fetch`.
+- Cargo manifest (`Cargo.toml`) is checked for presence and printed.
+- Workspace is pre-built with `cargo test --workspace --no-run --verbose` to catch build errors early.
+- The image defaults to the workspace root and launches with bash.
+- No GPU, ARM, or non-Linux/x86_64 dependencies are present.
+- No Windows/macOS specific steps are included.
+
+next step
+
+- Review and update the Dockerfile to ensure all workspace files, configuration files (e.g., `deny.toml`, `Cross.toml`, `spellcheck.toml`, etc.), and documentation (`README.md`, `.gitignore`, etc.) are correctly present and up-to-date in the build context before the `COPY` instruction.
+- Add or verify steps to build, test, and validate all crates, examples, and integration tests as specified in the plan (e.g., run `cargo build --workspace`, `cargo test --workspace`, etc.), and ensure logs are captured for diagnostics.
+- Optionally, include additional verification steps for CI configuration files (e.g., `.github/workflows`, `.cirrus.yml`, `netlify.toml`) to confirm Linux/x86_64 compatibility and absence of Windows/macOS/GPU-specific logic.
+- Ensure all optional tools and checks (Clippy, Rustfmt, benchmarks) are documented or included as desired.
+- Finalize the Dockerfile with any remaining project-specific setup or verification required by the adjusted environment plan.

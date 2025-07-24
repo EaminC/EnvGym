@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/facebook_zstd; project appears to be under EnvGym/data; set WORKDIR accordingly in Dockerfile.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use official amd64 images (e.g., ubuntu:22.04, python:3.x, etc.); no GPU-specific image required.
+- GPU: No NVIDIA GPU detected (NVIDIA-SMI failed); do not use CUDA base images; no --gpus support needed.
+- Instruction Notes: No special hardware-based adjustments required; can leverage multi-core CPU optimizations in multi-stage builds if compiling; ensure files are copied relative to project structure.
+- Docker Version: 28.3.2; supports BuildKit, multi-stage builds, and Compose; no GPU runtime features available.

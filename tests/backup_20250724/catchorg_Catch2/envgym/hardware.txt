@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/catchorg_Catch2; project appears to reside in a subdirectory; adjust Dockerfile context accordingly.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, alpine:latest)
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not recommended
+- Instruction Notes: No GPU-related instructions (e.g., no need for nvidia/cuda images or RUN nvidia-smi); use standard Linux instructions; large number of CPU cores and high memory may allow for parallel build steps (e.g., make -j)
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag available but not applicable due to lack of NVIDIA GPU

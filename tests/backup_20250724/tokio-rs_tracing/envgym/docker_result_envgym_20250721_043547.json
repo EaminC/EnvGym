@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_043547",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753072539",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.00kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/rust:1.65\n#2 DONE 0.2s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/10] FROM docker.io/library/rust:1.65@sha256:891bc3b252c43a1c2667083e3861f26e6f571dcc3bc98dcc151d6ff6edc62cb9\n#4 DONE 0.0s\n\n#5 [ 6/10] RUN cargo install cargo-hack --locked --verbose || (cat ~/.cargo/registry/index/*/*/config.json || true)\n#5 CACHED\n\n#6 [ 4/10] RUN rustup update &&     rustup component add clippy rustfmt\n#6 CACHED\n\n#7 [ 5/10] RUN cargo install cargo-nextest --locked --verbose || (cat ~/.cargo/registry/index/*/*/config.json || true)\n#7 CACHED\n\n#8 [ 2/10] WORKDIR /home/cc/EnvGym/data/tokio-rs_tracing\n#8 CACHED\n\n#9 [ 3/10] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         pkg-config         libssl-dev         systemd         ca-certificates         clang         curl         build-essential         libclang-dev         perl     && rm -rf /var/lib/apt/lists/*\n#9 CACHED\n\n#10 [ 7/10] RUN cargo install cargo-audit --locked --verbose || (cat ~/.cargo/registry/index/*/*/config.json || true)\n#10 CACHED\n\n#11 [ 8/10] RUN cargo install cargo-minimal-versions --locked --verbose || (cat ~/.cargo/registry/index/*/*/config.json || true)\n#11 CACHED\n\n#12 [ 9/10] RUN cargo install inferno --verbose || true\n#12 CACHED\n\n#13 [10/10] RUN cargo install --list\n#13 DONE 0.3s\n\n#14 exporting to image\n#14 exporting layers\n#14 exporting layers 6.6s done\n#14 writing image sha256:a4afcf17b6a17587d7b51eb13d8ba9a89e060fd6e5256c9886f6266172d3f15c done\n#14 naming to docker.io/library/envgym_test_1753072539 done\n#14 DONE 6.6s\n"
+  },
+  "run": {
+    "success": true,
+    "stdout": "",
+    "stderr": ""
+  }
+}

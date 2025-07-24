@@ -1,0 +1,151 @@
+=== Docker Execution Log - 20250720_232903 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753054098
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 3.14kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/20] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 546.38kB 0.0s done
+#5 DONE 0.0s
+
+#6 [ 2/20] RUN apt-get update &&     apt-get install -y --no-install-recommends         ca-certificates         curl         git         build-essential         pkg-config         musl-tools         libpcre2-dev         binutils         python3         dpkg-dev         grep         silversearcher-ag         sift         ugrep         bash-completion         zsh         fish         sudo         locales         cmake         libssl-dev         pkg-config         openssl     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 3/20] RUN ARCH=amd64 &&     PT_VERSION=2.2.0 &&     curl -sSL -o /tmp/pt_linux.tar.gz https://github.com/monochromegane/the_platinum_searcher/releases/download/v${PT_VERSION}/pt_linux_${ARCH}.tar.gz &&     tar -xzf /tmp/pt_linux.tar.gz -C /tmp &&     sudo mv /tmp/pt_linux_${ARCH}/pt /usr/local/bin/pt &&     sudo chmod +x /usr/local/bin/pt &&     rm -rf /tmp/pt_linux*
+#7 CACHED
+
+#8 [ 4/20] RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
+#8 CACHED
+
+#9 [ 8/20] RUN mkdir -p /home/cc/.cargo
+#9 CACHED
+
+#10 [10/20] RUN /home/cc/.cargo/bin/rustup update && /home/cc/.cargo/bin/cargo --version
+#10 CACHED
+
+#11 [ 5/20] RUN useradd -ms /bin/bash cc &&     usermod -aG sudo cc &&     echo "cc ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+#11 CACHED
+
+#12 [ 6/20] WORKDIR /home/cc
+#12 CACHED
+
+#13 [ 7/20] RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable &&     /home/cc/.cargo/bin/rustup update stable &&     /home/cc/.cargo/bin/rustup toolchain install 1.72.0 &&     /home/cc/.cargo/bin/rustup default 1.72.0 &&     /home/cc/.cargo/bin/rustup component add rustfmt
+#13 CACHED
+
+#14 [ 9/20] RUN if [ ! -f /home/cc/.cargo/config.toml ]; then         echo '[target.x86_64-unknown-linux-musl]' >> /home/cc/.cargo/config.toml &&         echo 'rustflags = ["-C", "target-feature=-crt-static"]' >> /home/cc/.cargo/config.toml;     fi
+#14 CACHED
+
+#15 [11/20] RUN which cargo && cargo --version
+#15 CACHED
+
+#16 [12/20] COPY --chown=cc:cc . /home/cc/ripgrep
+#16 DONE 0.1s
+
+#17 [13/20] WORKDIR /home/cc/ripgrep
+#17 DONE 0.0s
+
+#18 [14/20] RUN which cargo && cargo --version
+#18 0.181 /home/cc/.cargo/bin/cargo
+#18 0.221 cargo 1.72.0 (103a7ff2e 2023-08-15)
+#18 DONE 0.2s
+
+#19 [15/20] RUN cat /home/cc/.cargo/env
+#19 0.584 #!/bin/sh
+#19 0.584 # rustup shell setup
+#19 0.584 # affix colons on either side of $PATH to simplify matching
+#19 0.584 case ":${PATH}:" in
+#19 0.584     *:"$HOME/.cargo/bin":*)
+#19 0.584         ;;
+#19 0.584     *)
+#19 0.584         # Prepending path in case a system-installed rustc needs to be overridden
+#19 0.584         export PATH="$HOME/.cargo/bin:$PATH"
+#19 0.584         ;;
+#19 0.584 esac
+#19 DONE 0.6s
+
+#20 [16/20] RUN echo /home/cc/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#20 0.400 /home/cc/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#20 DONE 0.4s
+
+#21 [17/20] RUN source /home/cc/.cargo/env && cargo install cargo-deb -v || cat /home/cc/.cargo/.cargo-deb-install-log || true
+#21 0.392 /bin/sh: 1: source: not found
+#21 0.393 cat: /home/cc/.cargo/.cargo-deb-install-log: No such file or directory
+#21 DONE 0.4s
+
+#22 [18/20] RUN mkdir -p /home/cc/.config/ripgrep &&     echo '# Example ripgrep config' > /home/cc/.config/ripgrep/config
+#22 DONE 0.5s
+
+#23 [19/20] RUN cargo build --release &&     mkdir -p /usr/share/bash-completion/completions &&     mkdir -p /usr/share/zsh/vendor-completions &&     mkdir -p /usr/share/fish/vendor_completions.d &&     ./target/release/rg --completion bash > /usr/share/bash-completion/completions/rg &&     ./target/release/rg --completion zsh > /usr/share/zsh/vendor-completions/_rg &&     ./target/release/rg --completion fish > /usr/share/fish/vendor_completions.d/rg.fish || true
+#23 0.484     Updating crates.io index
+#23 0.995  Downloading crates ...
+#23 1.076   Downloaded cfg-if v1.0.1
+#23 1.083   Downloaded serde_json v1.0.140
+#23 1.110   Downloaded walkdir v2.5.0
+#23 1.124   Downloaded termcolor v1.4.1
+#23 1.127   Downloaded serde v1.0.219
+#23 1.133   Downloaded ryu v1.0.20
+#23 1.138   Downloaded regex-syntax v0.8.5
+#23 1.153   Downloaded regex-automata v0.4.9
+#23 1.177   Downloaded memchr v2.7.5
+#23 1.183   Downloaded libc v0.2.174
+#23 1.217   Downloaded lexopt v0.3.1
+#23 1.218   Downloaded encoding_rs v0.8.35
+#23 1.249   Downloaded bstr v1.12.0
+#23 1.261   Downloaded textwrap v0.16.2
+#23 1.264   Downloaded same-file v1.0.6
+#23 1.265   Downloaded memmap2 v0.9.5
+#23 1.267   Downloaded log v0.4.27
+#23 1.270   Downloaded itoa v1.0.15
+#23 1.271   Downloaded encoding_rs_io v0.1.7
+#23 1.272   Downloaded anyhow v1.0.98
+#23 1.277   Downloaded crossbeam-utils v0.8.21
+#23 1.280   Downloaded crossbeam-epoch v0.9.18
+#23 1.282   Downloaded crossbeam-deque v0.8.6
+#23 1.284   Downloaded aho-corasick v1.1.3
+#23 1.311 error: package `bstr v1.12.0` cannot be built because it requires rustc 1.73 or newer, while the currently active rustc version is 1.72.0
+#23 1.311 Either upgrade to rustc 1.73 or newer, or use
+#23 1.311 cargo update -p bstr@1.12.0 --precise ver
+#23 1.311 where `ver` is the latest version of `bstr` supporting rustc 1.72.0
+#23 DONE 1.4s
+
+#24 [20/20] WORKDIR /home/cc/ripgrep
+#24 DONE 0.0s
+
+#25 exporting to image
+#25 exporting layers
+#25 exporting layers 40.3s done
+#25 writing image sha256:974c2f2bd47043070a2c5ae65849724577409a2f90da3357f196b0d9467227e8 done
+#25 naming to docker.io/library/envgym_test_1753054098 done
+#25 DONE 40.3s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

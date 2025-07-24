@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/nlohmann_json; project located within nested directories under 'EnvGym/data'
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, python:3.11-slim)
+- GPU: No NVIDIA GPU detected; no CUDA base image required
+- Instruction Notes: No GPU-specific instructions (e.g., no need for nvidia/cuda or RUN nvidia-smi); default to CPU-only builds; ample system resources for multistage builds or parallel compilation
+- Docker Version: 28.3.2; supports BuildKit, buildx, Docker Compose v2; GPU features not applicable

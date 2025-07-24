@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/cli_cli (project is under EnvGym/data, directory name: cli_cli)
+- Architecture: x86_64 (recommended --platform=linux/amd64)
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim); no GPU base image required
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda images
+- Instruction Notes: No GPU-specific Dockerfile instructions; multi-core CPU optimizations possible (e.g., build parallelization if supported); file paths should use /home/cc/EnvGym/data/cli_cli as context
+- Docker Version: 28.3.2 (supports BuildKit, multi-stage builds, and --platform flag; --gpus flag not applicable)

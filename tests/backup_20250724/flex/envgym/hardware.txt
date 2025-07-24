@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/flex; nested within data directory, typical for project data or experiments
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64 images; Ubuntu, Debian, or other x86_64-compatible tags (e.g., ubuntu:22.04)
+- GPU: No NVIDIA GPU available; no CUDA or NVIDIA base image required
+- Instruction Notes: No GPU-specific instructions (no nvidia/cuda, no --gpus, no NVIDIA libraries); standard multi-core builds possible; use WORKDIR /home/cc/EnvGym/data/flex for reproducibility
+- Docker Version: 28.3.2; BuildKit and buildx supported; --gpus not applicable

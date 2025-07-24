@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/mockito_mockito; project likely in Python or Java; directory name: mockito_mockito
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.X, openjdk:XX-jdk)
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No special hardware instructions needed; multi-core builds supported; GPU-related Dockerfile instructions not applicable; use standard RUN, COPY, CMD, etc.
+- Docker Version: 28.3.2; BuildKit and buildx supported; --gpus flag not applicable

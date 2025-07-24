@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/mui_material-ui; project likely in subdirectory, context path should be set accordingly
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, node:alpine, python:3.10-bullseye)
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (e.g., no --gpus, no CUDA installs); standard x86_64 instructions supported; leverage multiple CPU cores for build optimizations if needed
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag available but not usable without NVIDIA GPU/driver

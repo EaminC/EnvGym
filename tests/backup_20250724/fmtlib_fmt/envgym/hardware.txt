@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/fmtlib_fmt; project under /home/cc/EnvGym/data, directory name fmtlib_fmt
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: ubuntu:22.04, debian:bullseye, or other amd64-compatible images
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: Do not include GPU/CUDA-specific instructions or NVIDIA runtime requirements; can leverage high parallelism for build tools if desired; use WORKDIR /home/cc/EnvGym/data/fmtlib_fmt in Dockerfile
+- Docker Version: 28.3.2; supports BuildKit, multi-stage builds, and modern Dockerfile features

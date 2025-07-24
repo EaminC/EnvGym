@@ -1,0 +1,209 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR HARDWARE) ===
+
+**Hardware/OS Context:**  
+- Architecture: x86_64 (amd64)  
+- OS: Ubuntu/Debian or other Linux x86_64 (base images like ubuntu:22.04)  
+- GPU: None (no CUDA/NVIDIA support needed)  
+- Docker: 28.3.2, BuildKit/buildx supported  
+- Working directory: /home/cc/EnvGym/data/flex  
+- Assume no ARM/Mac/Windows-specific constraints  
+- Assume sufficient RAM/disk for scientific Python/R workloads  
+- Standard system-level build tools and compilers available or can be installed
+
+---
+
+**1. DOWNLOADS NEEDED:**
+
+- **Miniconda or Anaconda:**  
+  - Download latest Linux x86_64 installer.
+  - Do not use ARM or Mac-specific installers.
+- **Python:**  
+  - Python 3.6, 3.7, or 3.8 (prefer 3.8 if all dependencies compatible; no >3.8).
+  - Confirm conda-forge has Python 3.8 packages for all dependencies on Linux/amd64.
+- **R:**  
+  - Install via conda (`r-base` from conda-forge, Linux x86_64 build).
+- **R package eva:**  
+  - Install via conda-forge (`r-eva`).
+- **Python dependencies:**  
+  - As listed in requirements.txt; all have Linux x86_64 wheels/source.
+- **System-level build tools:**  
+  - **Ubuntu/Debian:** Ensure `build-essential`, `gcc`, `make`, `g++` installed.
+  - No Mac/Windows instructions needed.
+- **Git:**  
+  - Install latest stable version via apt or conda as needed.
+- **Optional:**  
+  - `sudo` privileges not required inside Docker unless explicitly needed.
+- **No GPU/NVIDIA:**  
+  - Do not add CUDA, cuDNN, or any NVIDIA-specific packages or instructions.
+- **Other:**  
+  - All downloads/installations are for Linux x86_64.
+
+---
+
+**2. FILES TO CREATE:**
+
+- **environment.yml** (in /home/cc/EnvGym/data/flex):  
+  - Ensure all dependencies are available on Linux x86_64.
+  - Use `python=3.8` unless a lower version is required for compatibility.
+  - Path is correct for project structure.
+- **requirements.txt** (in /home/cc/EnvGym/data/flex):  
+  - Specify only dependencies compatible with Python ≤3.8.
+- **projects/** (in /home/cc/EnvGym/data/flex):  
+  - Directory created under the provided working directory.
+- **tool/config/local.env** (optional):  
+  - Local environment variable overrides (custom paths, conda env names).
+  - Path: `/home/cc/EnvGym/data/flex/tool/config/local.env`
+- **.gitignore** (in /home/cc/EnvGym/data/flex):  
+  - Ensure it ignores `/projects/` and `/tool/logs/` under the correct root.
+- **tool/logs/** (in /home/cc/EnvGym/data/flex):  
+  - Directory for logs.
+- **No Windows/Mac-specific files or instructions.**
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**
+
+- **Test Linux x86_64 environment only.**  
+- **No Mac/Windows test cases required.**
+- **Test correct installation/import of all dependencies as before.**
+- **Test system-level build tools presence on Ubuntu/Debian:**  
+  - Use `dpkg -l build-essential` or `gcc --version` for validation.
+- **Test scripts and paths with `/home/cc/EnvGym/data/flex` as the working directory.**
+- **No GPU detection or CUDA test cases.**
+
+---
+
+**4. COMPLETE TODO LIST (ADJUSTED):**
+
+1. **Install Miniconda or Anaconda**  
+   - Use the latest Linux x86_64 installer.
+   - Install to a user-owned location (e.g., `/home/cc/miniconda3`).
+   - Verify: `conda --version` works in terminal.
+2. **Clone the FLEX repository**  
+   - Clone into `/home/cc/EnvGym/data/flex`.
+   - Verify `README.md`, `requirements.txt`, `tool/` present.
+3. **Create/update `requirements.txt`**  
+   ```
+   arviz==0.6.1
+   astunparse
+   rpy2==3.2.0
+   scipy==1.5.4
+   numpy
+   statsmodels
+   hyperopt
+   tabulate
+   pandas
+   diff-match-patch
+   ```
+   - Ensure all packages are available for Linux x86_64 and Python 3.8 (or lower if needed).
+4. **Create the `projects/` directory**  
+   - Path: `/home/cc/EnvGym/data/flex/projects/`
+   - Verify: Directory exists, correct permissions.
+5. **Create/update `environment.yml`**  
+   ```
+   name: flex-env
+   channels:
+     - conda-forge
+     - defaults
+   dependencies:
+     - python=3.8
+     - r-base
+     - r-eva
+     - pip
+     - pip:
+         - arviz==0.6.1
+         - astunparse
+         - rpy2==3.2.0
+         - scipy==1.5.4
+         - numpy
+         - statsmodels
+         - hyperopt
+         - tabulate
+         - pandas
+         - diff-match-patch
+   ```
+   - Adjust Python version only if compatibility problems found.
+   - Verify syntax: `conda env create -f environment.yml`
+6. **Create `.gitignore`**  
+   ```
+   __pycache__/
+   *.pyc
+   .env/
+   .venv/
+   flex-env/
+   tool/logs/
+   projects/
+   *.log
+   ```
+   - Adjust/add exclusions as per Linux conventions.
+7. **Create `tool/logs/` directory**  
+   - Path: `/home/cc/EnvGym/data/flex/tool/logs/`
+   - Verify: Directory exists, correct permissions.
+8. **(Optional) Create `tool/config/local.env`**  
+   - Path: `/home/cc/EnvGym/data/flex/tool/config/local.env`
+   - Content: Key-value pairs for environment customization.
+9. **Create and activate the conda environment**  
+   - `conda env create -f environment.yml`
+   - `conda activate flex-env`
+   - Verify:
+     - `python --version` = 3.8.x (or selected version)
+     - `R --version` shows R installed
+     - `conda list | grep eva` shows R eva package installed
+     - All Python dependencies installed (`pip list`)
+10. **Verify installation of system-level build tools**  
+    - On Ubuntu/Debian:
+      - `sudo apt-get update && sudo apt-get install -y build-essential`
+      - Or, if not root, instruct user to install via admin.
+      - Verify: `gcc --version` and `make --version` output.
+11. **Install Python dependencies (if not already via conda)**  
+    - `pip install -r requirements.txt`
+    - Verify: No errors on Linux x86_64.
+12. **Verify R installation and eva package**  
+    - Run `R` then `library(eva)`
+    - Verify: No errors loading eva.
+13. **Test rpy2 integration**  
+    - In Python:
+      ```python
+      import rpy2.robjects as robjects
+      robjects.r('library(eva)')
+      ```
+    - Verify: No errors.
+14. **Run `python --version`**  
+    - Confirm Python 3.6–3.8 active.
+15. **Run FLEX help test**  
+    - `cd /home/cc/EnvGym/data/flex/tool/`
+    - `python boundschecker.py --help`
+    - Verify: Help message, no errors.
+16. **Verify shell script permissions**  
+    - `chmod +x tool/scripts/general_setup.sh`
+    - `bash tool/scripts/general_setup.sh ../../projects test-slug local`
+    - Verify: Script runs, handles invalid slug gracefully.
+17. **Set up a sample flaky test project**  
+    - Use `newbugs.csv` as before.
+    - Install under `/home/cc/EnvGym/data/flex/projects/`
+18. **Run FLEX on sample project**  
+    - Use working directory `/home/cc/EnvGym/data/flex`
+    - Verify output as per README.
+19. **Write and run test cases**  
+    - Focus on Linux x86_64 environment.
+    - Dependency checks, boundschecker, import/version tests.
+    - Ensure tests pass, errors handled.
+20. **Document any Linux/Ubuntu-specific issues**  
+    - Especially for `build-essential`, R, or conda package issues.
+    - Add notes to `SETUP.md` or `README.md`.
+21. **Commit environment files and instructions**  
+    - Do not commit `/projects/` or `/tool/logs/`
+    - Ensure paths correct for `/home/cc/EnvGym/data/flex`
+
+---
+
+**NOTES/CHANGES FOR HARDWARE CONTEXT:**
+
+- All instructions and paths assume Linux x86_64, no ARM/M1/Mac/Windows.
+- No CUDA, NVIDIA, or GPU instructions/packages.
+- All paths, scripts, and generated files are under `/home/cc/EnvGym/data/flex`.
+- All system-level tools reference Linux (install via apt; no Xcode or Visual Studio instructions).
+- All package versions chosen for compatibility with Python ≤3.8 and Linux x86_64 wheels or source builds.
+- If running inside Docker, use `WORKDIR /home/cc/EnvGym/data/flex` and ensure volumes map accordingly.
+
+[End of Adjusted Plan]

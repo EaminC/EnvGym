@@ -1,0 +1,38 @@
+{
+  "session_start": "2025-07-20T08:38:45.985924",
+  "session_end": "2025-07-20T09:45:25.569252",
+  "start_stats": [
+    {
+      "provider_name": "OpenAI",
+      "model": "gpt-4.1",
+      "input_tokens": 24206041,
+      "output_tokens": 3336649,
+      "total_tokens": 27542690,
+      "requests_count": 2000,
+      "cost": 0.0
+    }
+  ],
+  "end_stats": [
+    {
+      "provider_name": "OpenAI",
+      "model": "gpt-4.1",
+      "input_tokens": 24931626,
+      "output_tokens": 3688941,
+      "total_tokens": 28620567,
+      "requests_count": 2055,
+      "cost": 0.0
+    }
+  ],
+  "usage_delta": {
+    "input_tokens": 725585,
+    "output_tokens": 352292,
+    "total_tokens": 1077877,
+    "requests_count": 55,
+    "cost": 0.0
+  },
+  "execution_info": {},
+  "api_info": {
+    "provider_name": "OpenAI",
+    "model": "gpt-4.1"
+  }
+}

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/Fairify; project root appears to be "Fairify" within a deep directory structure—set WORKDIR accordingly.
+- Architecture: x86_64; use --platform=linux/amd64
+- Base Image: Use amd64/ubuntu:22.04, python:3.10-slim, or other x86_64-compatible images; no GPU-specific images needed.
+- GPU: No NVIDIA GPU detected; CUDA or GPU base images not applicable.
+- Instruction Notes: No GPU instructions (no nvidia/cuda); optimize for multi-core CPU if parallel builds or processes are relevant; ensure WORKDIR aligns with /home/cc/EnvGym/data/Fairify; no ARM or cross-arch instructions needed.
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag not applicable; Docker Compose v2 available.

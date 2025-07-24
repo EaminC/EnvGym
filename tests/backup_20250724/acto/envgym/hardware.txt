@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/acto; project located in "acto" subdirectory under "data"; no special context required.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Official amd64 images (e.g., ubuntu:22.04, python:3.x-slim); no ARM or GPU-specific images required.
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA images not applicable; do not use nvidia/cuda base images.
+- Instruction Notes: No GPU-specific instructions (e.g., no RUN nvidia-smi or CUDA installs); multi-core CPU optimizations allowed; normal Linux file system paths; Cgroup v2 supported.
+- Docker Version: 28.3.2; supports BuildKit, Docker Compose v2, Cgroup v2, no native --gpus support required.

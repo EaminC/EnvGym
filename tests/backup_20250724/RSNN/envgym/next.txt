@@ -1,0 +1,29 @@
+current progress
+
+- Docker image builds and runs successfully using `python:3.10-slim-bullseye` as the base.
+- All apt dependencies for CPU-only scientific computing and development are installed (no GPU/CUDA packages).
+- Python 3.10, pip, setuptools, and wheel are upgraded.
+- requirements.txt is present and preprocessed to handle the stork git dependency.
+- CPU-only torch, torchaudio, and torchvision are installed from the correct index.
+- All additional Python packages from requirements.txt are installed.
+- Jupyter Notebook is installed.
+- Project directory structure is created according to plan.
+- Project code is copied into the correct location with executable permissions for Python files.
+- No CUDA, GPU, or NVIDIA-specific steps are present.
+- WORKDIR and all paths are set to `/home/cc/EnvGym/data/RSNN`.
+- Docker build and runtime logs show SUCCESS.
+
+next step
+
+- Confirm that requirements.txt does not specify any GPU/CUDA packages or versions for torch/torchaudio/torchvision (should not use `+cuXXX`).
+- Verify that the Dockerfile does not reference or install any CUDA, nvidia, or GPU tools (already appears correct, but double-check).
+- Ensure README.md and all documentation in the build context have been updated:
+  - State CPU-only, x86_64/amd64 requirement.
+  - Remove any GPU/CUDA install or troubleshooting instructions.
+- Optionally:
+  - Add multi-core build flags to any custom build steps if compiling code (not present now, add if needed).
+  - If using conda, add environment.yml (optional per plan).
+- Build and run container; test entrypoint scripts (train/evaluate) to confirm they do not attempt to use CUDA.
+- Run basic import and smoke tests to verify torch, torchaudio, torchvision, and snntorch run CPU-only.
+- Update .gitignore and all config paths if not already matching the required base path.
+- Final check: all code, configs, and scripts reference `/home/cc/EnvGym/data/RSNN` as the project root.

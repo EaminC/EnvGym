@@ -1,0 +1,18 @@
+current progress
+
+- Docker image is built successfully using a Dockerfile based on `node:20-bullseye` for `linux/amd64`.
+- All required system dependencies (including Playwright browser dependencies and git) are installed via apt.
+- Global install of `pnpm@10.4.0` is complete.
+- Project files are copied into the container.
+- Executable permissions are set on scripts in `packages/svelte/scripts` if that directory exists.
+- All dependencies are installed using `pnpm install`.
+- Playwright browsers are installed via `npx playwright install`.
+- Port 5173 is exposed.
+- The container CMD is set to start a shell (`/bin/sh`) for manual investigation/debugging (not yet running the app).
+
+next step
+
+- Change the Dockerfile `CMD` from `["/bin/sh"]` to `["pnpm", "run", "dev"]` to start the Svelte app automatically when the container runs.
+- (Optional) If you want to keep shell access for debugging, create a separate Docker Compose service or use `docker run -it --entrypoint /bin/sh ...` as needed.
+- Ensure documentation is updated to reflect that the Dockerfile now starts the app by default.
+- (Optional) Test the container by running it and verifying that the app starts and is accessible on port 5173.

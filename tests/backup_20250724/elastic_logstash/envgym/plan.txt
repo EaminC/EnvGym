@@ -1,0 +1,157 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu/Debian, No GPU, /home/cc/EnvGym/data/elastic_logstash) ===
+
+**Key Adjustments Summary:**
+- All instructions, dependencies, and images/platforms set for x86_64 (amd64) architecture
+- No actions or dependencies related to GPUs (CUDA, NVIDIA, etc.)
+- Base images, Docker, and scripts must use `--platform=linux/amd64` if building/running containers
+- Use only Ubuntu 22.04 or Debian Bullseye (or compatible) for OS-level instructions
+- All paths are relative to `/home/cc/EnvGym/data/elastic_logstash`
+- Docker version is recent (28.3.2); BuildKit is supported
+- Multi-core build optimizations are allowed
+- No ARM/Mac-specific instructions or binaries
+- Memory/storage: General advice, but no hardcoded limits (monitor during build/tests as needed)
+
+---
+
+1. DOWNLOADS NEEDED:
+
+   - **Java Development Kit (JDK)**
+     - Version: 11 or 17 (main builds and Logstash runtime); Java 8 for legacy checks
+     - Platform: Download Linux x86_64/amd64 builds only (from Adoptium/Oracle)
+   - **Gradle**
+     - Linux x86_64/amd64 binary only; wrapper (`./gradlew`) preferred
+   - **JRuby**
+     - Version: 9.2.x, for Linux x86_64/amd64
+     - Install via RVM/rbenv or direct download for Linux x86_64
+   - **RubyGems Tools**
+     - `rake`, `bundler`, `rspec`—install via gem for Linux x86_64
+   - **Git**
+     - Standard install for Ubuntu/Debian (`apt-get install git`)
+   - **Drip** (Optional)
+     - Linux x86_64 only
+   - **FPM** (Optional)
+     - As a Ruby gem; compatible with Linux x86_64
+   - **Perl** (for docs)
+     - Install via `apt-get install perl` on Ubuntu/Debian
+   - **Elasticsearch Instance**
+     - Download and use x86_64/amd64 builds only (from Elastic)
+   - **Docker**
+     - Already installed (version 28.3.2); fully supports BuildKit and `--platform=linux/amd64`
+     - All Dockerfiles/scripts must be set to build/run with `--platform=linux/amd64` (explicitly if needed)
+   - **Other Tools** (Benchmark CLI, Dependency Audit Tool, JVM Options Parser, Docgen, Paquet, Vault, etc.)
+     - All Java/Ruby tools are compatible with x86_64 Linux; download/build for this platform only
+     - OS virtualization/provisioning: Use Docker (x86_64/amd64 base images), or optionally Vagrant/VMs for Ubuntu/Debian x86_64
+
+   **Version Compatibility Requirements:**
+   - As above; all tools must be for Linux x86_64/amd64, no ARM/Mac/Windows-only versions
+
+2. FILES TO CREATE:
+
+   - All file paths must be within `/home/cc/EnvGym/data/elastic_logstash` (project root) or its subdirectories
+   - Example: `.ruby-version` at `/home/cc/EnvGym/data/elastic_logstash/.ruby-version`
+   - All scripts/configs must use Linux path conventions (`/home/cc/EnvGym/data/elastic_logstash/...`)
+   - No Windows-specific (`setenv.bat`) files needed unless cross-platform is required
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+
+   - All tests to be run on Linux x86_64/amd64
+   - Platform compatibility tests should focus on Ubuntu 22.04 and Debian Bullseye (and compatible derivatives)
+   - No need to test on ARM, MacOS, or Windows unless explicitly required
+   - Docker integration/serverless/integration tests: ensure all containers run with `--platform=linux/amd64` if using multi-arch images
+
+4. COMPLETE TODO LIST:
+
+   1. **Install Required Tools**
+      - All package/tool installs should use `apt-get` (for Ubuntu/Debian x86_64), or binaries for Linux x86_64
+      - Docker: Use only `--platform=linux/amd64` for image pulls/builds
+      - Elasticsearch: Use only x86_64/amd64 builds
+      - Drip/FPM: Install only if needed, as x86_64 binaries/gems
+      - Perl: `apt-get install perl`
+      - JRuby: install via RVM/rbenv or download Linux x86_64 tarball
+      - RubyGems: install for Linux x86_64
+      - Vault: Download and install Linux x86_64 binary or use package manager
+
+      **Verification:**  
+      - All version checks (`java -version`, `jruby -v`, etc.) must report Linux x86_64/amd64 builds
+      - For Docker: `docker version` confirms version 28.3.2, `docker info` shows BuildKit enabled
+      - For Docker builds/runs: always use `--platform=linux/amd64` if not default
+
+   2. **Set Environment Variables**
+      - All paths set with Linux conventions
+      - `JAVA_HOME`, `BUILD_JAVA_HOME`, etc., should point to directories under `/usr/lib/jvm/`, `/home/cc/EnvGym/data/elastic_logstash`, or similar
+      - No Windows drive letters or path separators
+
+      **Verification:**  
+      - All `env`/`echo` checks show correct Linux-style paths
+
+   3. **Clone Repositories**
+      - Clone into `/home/cc/EnvGym/data/elastic_logstash` or subdirectories as needed
+
+      **Verification:**  
+      - Use `git status` in `/home/cc/EnvGym/data/elastic_logstash`
+
+   4. **Create/Verify `.ruby-version` File**
+      - Location: `/home/cc/EnvGym/data/elastic_logstash/.ruby-version`
+
+   5. **Configure X-Pack and OSS Mode**
+      - Edit `/home/cc/EnvGym/data/elastic_logstash/config/logstash.yml`
+      - All config paths should use Linux conventions
+
+   6. **Install Development Dependencies**
+      - Use `./gradlew` or system Gradle (Linux x86_64); all commands to be run in `/home/cc/EnvGym/data/elastic_logstash`
+
+   7. **Build and Verify Logstash**
+   8. **Build JVM Options Parser**
+   9. **Integrate JVM Options Parser with Logstash Startup**
+   10. **Build Benchmark CLI**
+   11. **Run Benchmark CLI**
+   12. **Build and Run Dependency Audit Tool**
+   13. **Build and Run Plugin Documentation Generation**
+   14. **Configure and Run Paquet for Gem Dependency Bundling**
+   15. **Set Up and Run QA Acceptance Test Framework**
+   16. **Set Up and Run QA Integration Test Framework**
+   17. **Set Up and Run Serverless Elasticsearch Test Framework**
+   18. **Run Tests**
+
+      - All build, test, and run commands must execute on Linux x86_64
+      - For any Docker-based tests, ensure `docker build/run` commands include `--platform=linux/amd64` if images are multi-arch
+      - If OS virtualization is used, use only Ubuntu 22.04 or Debian Bullseye (x86_64) base images/VMs
+
+   19. **Build Artifacts (Optional)**
+      - Any built tarballs, zips, debs, rpms, etc., must be for Linux x86_64/amd64
+      - Paquet tarballs/gem bundles: Linux x86_64 only
+
+   20. **Build Documentation (Optional)**
+      - All doc build tools/scripts (`build_docs.pl`, `docbldls`, etc.) must be run for Linux x86_64; ensure Perl/Python are installed from `apt-get` or compatible sources
+
+   21. **Error Handling & Compatibility Checks**
+      - Platform compatibility: Only Ubuntu 22.04, Debian Bullseye, and compatible x86_64 Linuxes
+      - No ARM/Mac/Windows specific checks needed unless explicit cross-platform support
+      - Memory/storage: Monitor during build/tests; recommend at least 8GB RAM and 10GB free disk, adjust as needed
+
+   22. **Documentation and Final Review**
+      - All documentation references, file paths, and setup guides must use Linux x86_64 conventions and absolute or project-relative paths based on `/home/cc/EnvGym/data/elastic_logstash`
+      - Any screenshots, sample commands, or environment variable examples should reflect Linux x86_64 usage
+      - All instructions for Docker must specify `--platform=linux/amd64` where ambiguity could arise
+
+---
+
+**Additional Recommendations (based on hardware):**
+
+- **No GPU instructions:** Remove or ignore any reference to CUDA, NVIDIA, or GPU-based builds. Do not include nvidia/cuda images or `RUN nvidia-smi` in Dockerfiles.
+- **Docker:** Docker is installed and recent; use BuildKit features for faster/more reliable builds. Use multi-core flags for parallel builds where possible (e.g., `make -j$(nproc)` if applicable).
+- **Base Images:** For all custom Dockerfiles, specify `FROM ubuntu:22.04` or `FROM debian:bullseye` and `--platform=linux/amd64` as needed.
+- **Resource Monitoring:** If issues arise during build or test (out-of-memory, disk full), consider increasing swap or freeing disk space. Otherwise, standard requirements apply.
+- **No ARM/Mac/Windows:** Do not include instructions or download links for ARM or Mac/Windows-specific binaries, nor for cross-compiling to those platforms.
+
+---
+
+**Short Checklist for Project Root (`/home/cc/EnvGym/data/elastic_logstash`):**
+- All setup, configs, and artifacts must be within this directory or subfolders.
+- All paths, scripts, and configs use Linux x86_64 conventions.
+- All Docker and OS-level commands use Ubuntu/Debian x86_64 base images and `--platform=linux/amd64` where relevant.
+- No GPU/NVIDIA/CUDA instructions, packages, or Dockerfile lines.
+
+---
+
+**This plan is now tailored for your x86_64 (amd64), Ubuntu/Debian, non-GPU environment, with explicit path and compatibility corrections.**

@@ -1,0 +1,390 @@
+=== Docker Execution Log - 20250720_094518 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753004675
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.99kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/15] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [ 2/15] RUN set -ex &&     apt-get update &&     apt-get install -y --no-install-recommends         build-essential         g++         gcc         cmake         git         python3.10         python3.10-venv         python3-pip         pkg-config         make         valgrind         lcov         cppcheck         gdb         wget         unzip         zeal         ca-certificates         libssl-dev         locales         libffi-dev         curl         zip &&     ln -sf /usr/bin/python3.10 /usr/local/bin/python3 &&     python3 -m pip install --upgrade pip &&     rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [ 3/15] RUN locale-gen en_US.UTF-8
+#6 CACHED
+
+#7 [ 4/15] RUN mkdir -p /home/cc/EnvGym/data/nlohmann_json
+#7 CACHED
+
+#8 [ 5/15] WORKDIR /home/cc/EnvGym/data/nlohmann_json
+#8 CACHED
+
+#9 [ 6/15] RUN set -ex &&     wget -O /tmp/mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64 &&     chmod +x /tmp/mkcert &&     mv /tmp/mkcert /usr/local/bin/mkcert &&     mkcert -install
+#9 CACHED
+
+#10 [ 7/15] RUN set -ex &&     git clone --depth 1 https://github.com/microsoft/vcpkg.git /opt/vcpkg &&     ls -l /opt/vcpkg/ &&     test -x /opt/vcpkg/bootstrap-vcpkg.sh &&     /opt/vcpkg/bootstrap-vcpkg.sh || (ls -l /opt/vcpkg/; cat /opt/vcpkg/bootstrap*.log || true; exit 1)
+#10 0.180 + git clone --depth 1 https://github.com/microsoft/vcpkg.git /opt/vcpkg
+#10 0.181 Cloning into '/opt/vcpkg'...
+#10 1.327 + ls -l /opt/vcpkg/
+#10 1.329 total 144
+#10 1.329 -rw-r--r--    1 root root   102 Jul 20 09:44 bootstrap-vcpkg.bat
+#10 1.329 -rwxr-xr-x    1 root root   109 Jul 20 09:44 bootstrap-vcpkg.sh
+#10 1.329 -rw-r--r--    1 root root   105 Jul 20 09:44 CodeQL.yml
+#10 1.329 -rw-r--r--    1 root root  2432 Jul 20 09:44 CONTRIBUTING.md
+#10 1.329 -rw-r--r--    1 root root  2785 Jul 20 09:44 CONTRIBUTING_pt.md
+#10 1.329 -rw-r--r--    1 root root  2186 Jul 20 09:44 CONTRIBUTING_zh.md
+#10 1.329 drwxr-xr-x    4 root root  4096 Jul 20 09:44 docs
+#10 1.329 -rw-r--r--    1 root root  1073 Jul 20 09:44 LICENSE.txt
+#10 1.329 -rw-r--r--    1 root root  2538 Jul 20 09:44 NOTICE_pt.txt
+#10 1.329 -rw-r--r--    1 root root  2334 Jul 20 09:44 NOTICE.txt
+#10 1.329 drwxr-xr-x 2650 root root 69632 Jul 20 09:44 ports
+#10 1.329 -rw-r--r--    1 root root  6999 Jul 20 09:44 README.md
+#10 1.329 drwxr-xr-x   14 root root  4096 Jul 20 09:44 scripts
+#10 1.329 -rw-r--r--    1 root root  2757 Jul 20 09:44 SECURITY.md
+#10 1.329 -rw-r--r--    1 root root   924 Jul 20 09:44 shell.nix
+#10 1.329 drwxr-xr-x    2 root root  4096 Jul 20 09:44 toolsrc
+#10 1.329 drwxr-xr-x    3 root root  4096 Jul 20 09:44 triplets
+#10 1.329 drwxr-xr-x   30 root root  4096 Jul 20 09:44 versions
+#10 1.329 + test -x /opt/vcpkg/bootstrap-vcpkg.sh
+#10 1.329 + /opt/vcpkg/bootstrap-vcpkg.sh
+#10 1.336 Downloading vcpkg-glibc...
+#10 1.811 vcpkg package management program version 2025-07-16-d6c019e723df46cb8c36360e4174b111455567d3
+#10 1.811 
+#10 1.811 See LICENSE.txt for license information.
+#10 1.811 Telemetry
+#10 1.811 ---------
+#10 1.811 vcpkg collects usage data in order to help us improve your experience.
+#10 1.811 The data collected by Microsoft is anonymous.
+#10 1.811 You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
+#10 1.811 passing --disable-metrics to vcpkg on the command line,
+#10 1.811 or by setting the VCPKG_DISABLE_METRICS environment variable.
+#10 1.811 
+#10 1.811 Read more about vcpkg telemetry at docs/about/privacy.md
+#10 DONE 2.1s
+
+#11 [ 8/15] RUN python3 -m pip install conan
+#11 0.616 Collecting conan
+#11 0.657   Downloading conan-2.18.1.tar.gz (521 kB)
+#11 0.793   Installing build dependencies: started
+#11 1.653   Installing build dependencies: finished with status 'done'
+#11 1.656   Getting requirements to build wheel: started
+#11 1.990   Getting requirements to build wheel: finished with status 'done'
+#11 1.992   Preparing metadata (pyproject.toml): started
+#11 2.193   Preparing metadata (pyproject.toml): finished with status 'done'
+#11 2.307 Collecting requests<3.0.0,>=2.25 (from conan)
+#11 2.313   Downloading requests-2.32.4-py3-none-any.whl.metadata (4.9 kB)
+#11 2.353 Collecting urllib3<2.1,>=1.26.6 (from conan)
+#11 2.358   Downloading urllib3-2.0.7-py3-none-any.whl.metadata (6.6 kB)
+#11 2.384 Collecting colorama<0.5.0,>=0.4.3 (from conan)
+#11 2.390   Downloading colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+#11 2.439 Collecting PyYAML<7.0,>=6.0 (from conan)
+#11 2.444   Downloading PyYAML-6.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB)
+#11 2.454 Collecting patch-ng<1.19,>=1.18.0 (from conan)
+#11 2.460   Downloading patch-ng-1.18.1.tar.gz (17 kB)
+#11 2.468   Installing build dependencies: started
+#11 3.227   Installing build dependencies: finished with status 'done'
+#11 3.229   Getting requirements to build wheel: started
+#11 3.531   Getting requirements to build wheel: finished with status 'done'
+#11 3.533   Preparing metadata (pyproject.toml): started
+#11 3.702   Preparing metadata (pyproject.toml): finished with status 'done'
+#11 3.737 Collecting fasteners>=0.15 (from conan)
+#11 3.744   Downloading fasteners-0.19-py3-none-any.whl.metadata (4.9 kB)
+#11 3.775 Collecting distro<=1.8.0,>=1.4.0 (from conan)
+#11 3.783   Downloading distro-1.8.0-py3-none-any.whl.metadata (6.9 kB)
+#11 3.815 Collecting Jinja2<4.0.0,>=3.0 (from conan)
+#11 3.821   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#11 3.843 Collecting python-dateutil<3,>=2.8.0 (from conan)
+#11 3.848   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+#11 3.925 Collecting MarkupSafe>=2.0 (from Jinja2<4.0.0,>=3.0->conan)
+#11 3.930   Downloading MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.0 kB)
+#11 3.947 Collecting six>=1.5 (from python-dateutil<3,>=2.8.0->conan)
+#11 3.952   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+#11 4.039 Collecting charset_normalizer<4,>=2 (from requests<3.0.0,>=2.25->conan)
+#11 4.045   Downloading charset_normalizer-3.4.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (35 kB)
+#11 4.062 Collecting idna<4,>=2.5 (from requests<3.0.0,>=2.25->conan)
+#11 4.066   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#11 4.100 Collecting certifi>=2017.4.17 (from requests<3.0.0,>=2.25->conan)
+#11 4.105   Downloading certifi-2025.7.14-py3-none-any.whl.metadata (2.4 kB)
+#11 4.119 Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+#11 4.125 Downloading distro-1.8.0-py3-none-any.whl (20 kB)
+#11 4.132 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#11 4.139 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#11 4.147 Downloading PyYAML-6.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (751 kB)
+#11 4.158    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 751.2/751.2 kB 78.7 MB/s eta 0:00:00
+#11 4.163 Downloading requests-2.32.4-py3-none-any.whl (64 kB)
+#11 4.169 Downloading charset_normalizer-3.4.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (149 kB)
+#11 4.177 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#11 4.183 Downloading urllib3-2.0.7-py3-none-any.whl (124 kB)
+#11 4.191 Downloading certifi-2025.7.14-py3-none-any.whl (162 kB)
+#11 4.198 Downloading fasteners-0.19-py3-none-any.whl (18 kB)
+#11 4.205 Downloading MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20 kB)
+#11 4.212 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+#11 4.231 Building wheels for collected packages: conan, patch-ng
+#11 4.232   Building wheel for conan (pyproject.toml): started
+#11 4.711   Building wheel for conan (pyproject.toml): finished with status 'done'
+#11 4.715   Created wheel for conan: filename=conan-2.18.1-py3-none-any.whl size=659504 sha256=3776491a43aa08df98b10562a67ec28d8616fdfa6daf1bc6fe538b435b8fda05
+#11 4.715   Stored in directory: /root/.cache/pip/wheels/af/97/5b/27c4d90384c80fff0f53e8a90f0f199826b7bc7c716a2e2a1b
+#11 4.723   Building wheel for patch-ng (pyproject.toml): started
+#11 4.916   Building wheel for patch-ng (pyproject.toml): finished with status 'done'
+#11 4.917   Created wheel for patch-ng: filename=patch_ng-1.18.1-py3-none-any.whl size=17001 sha256=2ec347d664c3ee61acb256bfbcc4bd11579e3cc07cc72caeb34da8cfa2d7cdb1
+#11 4.917   Stored in directory: /root/.cache/pip/wheels/53/a5/02/63091224b3ec485b12bfc3f57356f73d8f4a66a60fb1d44479
+#11 4.920 Successfully built conan patch-ng
+#11 4.963 Installing collected packages: urllib3, six, PyYAML, patch-ng, MarkupSafe, idna, fasteners, distro, colorama, charset_normalizer, certifi, requests, python-dateutil, Jinja2, conan
+#11 5.809 
+#11 5.811 Successfully installed Jinja2-3.1.6 MarkupSafe-3.0.2 PyYAML-6.0.2 certifi-2025.7.14 charset_normalizer-3.4.2 colorama-0.4.6 conan-2.18.1 distro-1.8.0 fasteners-0.19 idna-3.10 patch-ng-1.18.1 python-dateutil-2.9.0.post0 requests-2.32.4 six-1.17.0 urllib3-2.0.7
+#11 5.812 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#11 DONE 6.0s
+
+#12 [ 9/15] RUN set -ex && /opt/vcpkg/vcpkg install doctest
+#12 0.438 + /opt/vcpkg/vcpkg install doctest
+#12 0.439 Computing installation plan...
+#12 0.460 A suitable version of cmake was not found (required v3.30.1).
+#12 0.460 Downloading https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-linux-x86_64.tar.gz -> cmake-3.30.1-linux-x86_64.tar.gz
+#12 3.528 Successfully downloaded cmake-3.30.1-linux-x86_64.tar.gz
+#12 3.528 Extracting cmake...
+#12 4.735 The following packages will be built and installed:
+#12 4.735     doctest:x64-linux@2.4.12
+#12 4.735   * vcpkg-cmake:x64-linux@2024-04-23
+#12 4.735   * vcpkg-cmake-config:x64-linux@2024-05-23
+#12 4.735 Additional packages (*) will be modified to complete this operation.
+#12 4.735 Detecting compiler hash for triplet x64-linux...
+#12 5.582 Compiler found: /usr/bin/c++
+#12 5.590 Restored 0 package(s) from /root/.cache/vcpkg/archives in 20.1 us. Use --debug to see more details.
+#12 5.590 Installing 1/3 vcpkg-cmake:x64-linux@2024-04-23...
+#12 5.590 Building vcpkg-cmake:x64-linux@2024-04-23...
+#12 5.605 -- Installing: /opt/vcpkg/packages/vcpkg-cmake_x64-linux/share/vcpkg-cmake/vcpkg_cmake_configure.cmake
+#12 5.605 -- Installing: /opt/vcpkg/packages/vcpkg-cmake_x64-linux/share/vcpkg-cmake/vcpkg_cmake_build.cmake
+#12 5.605 -- Installing: /opt/vcpkg/packages/vcpkg-cmake_x64-linux/share/vcpkg-cmake/vcpkg_cmake_install.cmake
+#12 5.605 -- Installing: /opt/vcpkg/packages/vcpkg-cmake_x64-linux/share/vcpkg-cmake/vcpkg-port-config.cmake
+#12 5.606 -- Installing: /opt/vcpkg/packages/vcpkg-cmake_x64-linux/share/vcpkg-cmake/copyright
+#12 5.608 -- Performing post-build validation
+#12 5.609 Starting submission of vcpkg-cmake:x64-linux@2024-04-23 to 1 binary cache(s) in the background
+#12 5.609 Elapsed time to handle vcpkg-cmake:x64-linux: 18.6 ms
+#12 5.609 vcpkg-cmake:x64-linux package ABI: 5cc17585dc09dc39adc55ee52d9faed147c995d1b9181012aa47b16a0003aafd
+#12 5.609 Installing 2/3 vcpkg-cmake-config:x64-linux@2024-05-23...
+#12 5.609 Building vcpkg-cmake-config:x64-linux@2024-05-23...
+#12 5.624 -- Installing: /opt/vcpkg/packages/vcpkg-cmake-config_x64-linux/share/vcpkg-cmake-config/vcpkg_cmake_config_fixup.cmake
+#12 5.624 -- Installing: /opt/vcpkg/packages/vcpkg-cmake-config_x64-linux/share/vcpkg-cmake-config/vcpkg-port-config.cmake
+#12 5.624 -- Installing: /opt/vcpkg/packages/vcpkg-cmake-config_x64-linux/share/vcpkg-cmake-config/copyright
+#12 5.626 -- Skipping post-build validation due to VCPKG_POLICY_EMPTY_PACKAGE
+#12 5.626 Starting submission of vcpkg-cmake-config:x64-linux@2024-05-23 to 1 binary cache(s) in the background
+#12 5.626 Elapsed time to handle vcpkg-cmake-config:x64-linux: 17.6 ms
+#12 5.626 vcpkg-cmake-config:x64-linux package ABI: 3205a9d3a6fe4ea4741bd9811b6add91ae804de418b9cf6a30327796cdfd18c1
+#12 5.626 Completed submission of vcpkg-cmake:x64-linux@2024-04-23 to 1 binary cache(s) in 5.41 ms
+#12 5.626 Installing 3/3 doctest:x64-linux@2.4.12...
+#12 5.626 Building doctest:x64-linux@2.4.12...
+#12 5.645 Downloading https://github.com/doctest/doctest/archive/v2.4.12.tar.gz -> doctest-doctest-v2.4.12.tar.gz
+#12 6.186 Successfully downloaded doctest-doctest-v2.4.12.tar.gz
+#12 6.439 -- Extracting source /opt/vcpkg/downloads/doctest-doctest-v2.4.12.tar.gz
+#12 6.467 -- Using source at /opt/vcpkg/buildtrees/doctest/src/v2.4.12-79a6643325.clean
+#12 6.474 -- Configuring x64-linux-dbg
+#12 6.667 -- Configuring x64-linux-rel
+#12 6.861 -- Building x64-linux-dbg
+#12 6.876 -- Building x64-linux-rel
+#12 6.905 -- Installing: /opt/vcpkg/packages/doctest_x64-linux/share/doctest/copyright
+#12 6.911 -- Performing post-build validation
+#12 6.917 Starting submission of doctest:x64-linux@2.4.12 to 1 binary cache(s) in the background
+#12 6.917 Elapsed time to handle doctest:x64-linux: 1.3 s
+#12 6.917 doctest:x64-linux package ABI: f8a195d4fafecee569c8dcbb98b73bd6b94fb22cf4cd10defd09695d27ad0dbd
+#12 6.917 Total install time: 1.3 s
+#12 6.917 Installed contents are licensed to you by owners. Microsoft is not responsible for, nor does it grant any licenses to, third-party packages.
+#12 6.917 Packages installed in this vcpkg installation declare the following licenses:
+#12 6.917 MIT
+#12 6.918 doctest provides CMake targets:
+#12 6.918 
+#12 6.918   # this is heuristically generated, and may not be correct
+#12 6.918   find_package(doctest CONFIG REQUIRED)
+#12 6.918   target_link_libraries(main PRIVATE doctest::doctest)
+#12 6.918 
+#12 6.918 Completed submission of vcpkg-cmake-config:x64-linux@2024-05-23 to 1 binary cache(s) in 4.19 ms
+#12 6.918 Waiting for 1 remaining binary cache submissions...
+#12 6.931 Completed submission of doctest:x64-linux@2.4.12 to 1 binary cache(s) in 14.2 ms (1/1)
+#12 6.931 All requested installations completed successfully in: 1.3 s
+#12 DONE 7.4s
+
+#13 [10/15] RUN set -ex && /opt/vcpkg/vcpkg install nlohmann-json
+#13 0.202 + /opt/vcpkg/vcpkg install nlohmann-json
+#13 0.203 Computing installation plan...
+#13 0.213 The following packages will be built and installed:
+#13 0.213     nlohmann-json:x64-linux@3.12.0
+#13 0.213 Detecting compiler hash for triplet x64-linux...
+#13 0.560 Compiler found: /usr/bin/c++
+#13 0.569 Restored 0 package(s) from /root/.cache/vcpkg/archives in 42.5 us. Use --debug to see more details.
+#13 0.569 Installing 1/1 nlohmann-json:x64-linux@3.12.0...
+#13 0.569 Building nlohmann-json:x64-linux@3.12.0...
+#13 0.587 Downloading https://github.com/nlohmann/json/archive/v3.12.0.tar.gz -> nlohmann-json-v3.12.0.tar.gz
+#13 1.311 Successfully downloaded nlohmann-json-v3.12.0.tar.gz
+#13 1.532 -- Extracting source /opt/vcpkg/downloads/nlohmann-json-v3.12.0.tar.gz
+#13 1.631 -- Using source at /opt/vcpkg/buildtrees/nlohmann-json/src/v3.12.0-1a1eb3c42a.clean
+#13 1.638 -- Configuring x64-linux
+#13 1.859 -- Building x64-linux-dbg
+#13 1.876 -- Building x64-linux-rel
+#13 1.905 -- Fixing pkgconfig file: /opt/vcpkg/packages/nlohmann-json_x64-linux/share/pkgconfig/nlohmann_json.pc
+#13 1.911 -- Fixing pkgconfig file: /opt/vcpkg/packages/nlohmann-json_x64-linux/debug/share/pkgconfig/nlohmann_json.pc
+#13 1.921 -- Installing: /opt/vcpkg/packages/nlohmann-json_x64-linux/share/nlohmann-json/copyright
+#13 1.930 Downloading https://github.com/NixOS/patchelf/releases/download/0.14.5/patchelf-0.14.5-x86_64.tar.gz -> patchelf-0.14.5-x86_64.tar.gz
+#13 2.269 Successfully downloaded patchelf-0.14.5-x86_64.tar.gz
+#13 2.448 -- Performing post-build validation
+#13 2.460 Starting submission of nlohmann-json:x64-linux@3.12.0 to 1 binary cache(s) in the background
+#13 2.460 Elapsed time to handle nlohmann-json:x64-linux: 1.9 s
+#13 2.460 nlohmann-json:x64-linux package ABI: 4154ecf4b7b4bcc1df7b980c3a3c885b2f9dd0cd34768a4528eda27b972f1c8c
+#13 2.460 Total install time: 1.9 s
+#13 2.460 Installed contents are licensed to you by owners. Microsoft is not responsible for, nor does it grant any licenses to, third-party packages.
+#13 2.460 Packages installed in this vcpkg installation declare the following licenses:
+#13 2.460 MIT
+#13 2.460 The package nlohmann-json provides CMake targets:
+#13 2.460 
+#13 2.460     find_package(nlohmann_json CONFIG REQUIRED)
+#13 2.460     target_link_libraries(main PRIVATE nlohmann_json::nlohmann_json)
+#13 2.460 
+#13 2.460 The package nlohmann-json can be configured to not provide implicit conversions via a custom triplet file:
+#13 2.460 
+#13 2.460     set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
+#13 2.460 
+#13 2.460 For more information, see the docs here:
+#13 2.460     
+#13 2.460     https://json.nlohmann.me/api/macros/json_use_implicit_conversions/
+#13 2.460 
+#13 2.460 Waiting for 1 remaining binary cache submissions...
+#13 2.484 Completed submission of nlohmann-json:x64-linux@3.12.0 to 1 binary cache(s) in 24.1 ms (1/1)
+#13 2.484 All requested installations completed successfully in: 1.9 s
+#13 DONE 2.6s
+
+#14 [11/15] RUN python3 -m pip install meson &&     git clone --depth 1 https://github.com/spack/spack.git /opt/spack
+#14 0.721 Collecting meson
+#14 0.759   Downloading meson-1.8.2-py3-none-any.whl.metadata (1.8 kB)
+#14 0.768 Downloading meson-1.8.2-py3-none-any.whl (1.0 MB)
+#14 0.789    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 73.1 MB/s eta 0:00:00
+#14 0.824 Installing collected packages: meson
+#14 1.446 Successfully installed meson-1.8.2
+#14 1.447 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#14 1.495 Cloning into '/opt/spack'...
+#14 DONE 2.6s
+
+#15 [12/15] RUN python3 -m pip install mkdocs mkdocs-material
+#15 0.631 Collecting mkdocs
+#15 0.670   Downloading mkdocs-1.6.1-py3-none-any.whl.metadata (6.0 kB)
+#15 0.781 Collecting mkdocs-material
+#15 0.786   Downloading mkdocs_material-9.6.15-py3-none-any.whl.metadata (19 kB)
+#15 0.813 Collecting click>=7.0 (from mkdocs)
+#15 0.818   Downloading click-8.2.1-py3-none-any.whl.metadata (2.5 kB)
+#15 0.830 Collecting ghp-import>=1.0 (from mkdocs)
+#15 0.835   Downloading ghp_import-2.1.0-py3-none-any.whl.metadata (7.2 kB)
+#15 0.839 Requirement already satisfied: jinja2>=2.11.1 in /usr/local/lib/python3.10/dist-packages (from mkdocs) (3.1.6)
+#15 0.855 Collecting markdown>=3.3.6 (from mkdocs)
+#15 0.860   Downloading markdown-3.8.2-py3-none-any.whl.metadata (5.1 kB)
+#15 0.865 Requirement already satisfied: markupsafe>=2.0.1 in /usr/local/lib/python3.10/dist-packages (from mkdocs) (3.0.2)
+#15 0.875 Collecting mergedeep>=1.3.4 (from mkdocs)
+#15 0.879   Downloading mergedeep-1.3.4-py3-none-any.whl.metadata (4.3 kB)
+#15 0.891 Collecting mkdocs-get-deps>=0.2.0 (from mkdocs)
+#15 0.896   Downloading mkdocs_get_deps-0.2.0-py3-none-any.whl.metadata (4.0 kB)
+#15 0.915 Collecting packaging>=20.5 (from mkdocs)
+#15 0.919   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#15 0.933 Collecting pathspec>=0.11.1 (from mkdocs)
+#15 0.937   Downloading pathspec-0.12.1-py3-none-any.whl.metadata (21 kB)
+#15 0.949 Collecting pyyaml-env-tag>=0.1 (from mkdocs)
+#15 0.953   Downloading pyyaml_env_tag-1.1-py3-none-any.whl.metadata (5.5 kB)
+#15 0.962 Requirement already satisfied: pyyaml>=5.1 in /usr/local/lib/python3.10/dist-packages (from mkdocs) (6.0.2)
+#15 1.014 Collecting watchdog>=2.0 (from mkdocs)
+#15 1.018   Downloading watchdog-6.0.0-py3-none-manylinux2014_x86_64.whl.metadata (44 kB)
+#15 1.039 Collecting babel~=2.10 (from mkdocs-material)
+#15 1.044   Downloading babel-2.17.0-py3-none-any.whl.metadata (2.0 kB)
+#15 1.066 Collecting backrefs~=5.7.post1 (from mkdocs-material)
+#15 1.072   Downloading backrefs-5.9-py310-none-any.whl.metadata (3.2 kB)
+#15 1.075 Requirement already satisfied: colorama~=0.4 in /usr/local/lib/python3.10/dist-packages (from mkdocs-material) (0.4.6)
+#15 1.094 Collecting mkdocs-material-extensions~=1.3 (from mkdocs-material)
+#15 1.098   Downloading mkdocs_material_extensions-1.3.1-py3-none-any.whl.metadata (6.9 kB)
+#15 1.115 Collecting paginate~=0.5 (from mkdocs-material)
+#15 1.120   Downloading paginate-0.5.7-py2.py3-none-any.whl.metadata (11 kB)
+#15 1.143 Collecting pygments~=2.16 (from mkdocs-material)
+#15 1.147   Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+#15 1.179 Collecting pymdown-extensions~=10.2 (from mkdocs-material)
+#15 1.185   Downloading pymdown_extensions-10.16-py3-none-any.whl.metadata (3.0 kB)
+#15 1.189 Requirement already satisfied: requests~=2.26 in /usr/local/lib/python3.10/dist-packages (from mkdocs-material) (2.32.4)
+#15 1.202 Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.10/dist-packages (from requests~=2.26->mkdocs-material) (3.4.2)
+#15 1.202 Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.10/dist-packages (from requests~=2.26->mkdocs-material) (3.10)
+#15 1.203 Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests~=2.26->mkdocs-material) (2.0.7)
+#15 1.204 Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests~=2.26->mkdocs-material) (2025.7.14)
+#15 1.211 Requirement already satisfied: python-dateutil>=2.8.1 in /usr/local/lib/python3.10/dist-packages (from ghp-import>=1.0->mkdocs) (2.9.0.post0)
+#15 1.231 Collecting platformdirs>=2.2.0 (from mkdocs-get-deps>=0.2.0->mkdocs)
+#15 1.237   Downloading platformdirs-4.3.8-py3-none-any.whl.metadata (12 kB)
+#15 1.245 Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.10/dist-packages (from python-dateutil>=2.8.1->ghp-import>=1.0->mkdocs) (1.17.0)
+#15 1.253 Downloading mkdocs-1.6.1-py3-none-any.whl (3.9 MB)
+#15 1.494    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 16.2 MB/s eta 0:00:00
+#15 1.501 Downloading mkdocs_material-9.6.15-py3-none-any.whl (8.7 MB)
+#15 1.933    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 20.6 MB/s eta 0:00:00
+#15 1.938 Downloading babel-2.17.0-py3-none-any.whl (10.2 MB)
+#15 2.325    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 26.2 MB/s eta 0:00:00
+#15 2.331 Downloading backrefs-5.9-py310-none-any.whl (380 kB)
+#15 2.356 Downloading markdown-3.8.2-py3-none-any.whl (106 kB)
+#15 2.367 Downloading mkdocs_material_extensions-1.3.1-py3-none-any.whl (8.7 kB)
+#15 2.374 Downloading paginate-0.5.7-py2.py3-none-any.whl (13 kB)
+#15 2.380 Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+#15 2.434    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 23.1 MB/s eta 0:00:00
+#15 2.440 Downloading pymdown_extensions-10.16-py3-none-any.whl (266 kB)
+#15 2.455 Downloading click-8.2.1-py3-none-any.whl (102 kB)
+#15 2.464 Downloading ghp_import-2.1.0-py3-none-any.whl (11 kB)
+#15 2.471 Downloading mergedeep-1.3.4-py3-none-any.whl (6.4 kB)
+#15 2.477 Downloading mkdocs_get_deps-0.2.0-py3-none-any.whl (9.5 kB)
+#15 2.483 Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#15 2.490 Downloading pathspec-0.12.1-py3-none-any.whl (31 kB)
+#15 2.497 Downloading platformdirs-4.3.8-py3-none-any.whl (18 kB)
+#15 2.503 Downloading pyyaml_env_tag-1.1-py3-none-any.whl (4.7 kB)
+#15 2.510 Downloading watchdog-6.0.0-py3-none-manylinux2014_x86_64.whl (79 kB)
+#15 2.840 Installing collected packages: paginate, watchdog, pyyaml-env-tag, pygments, platformdirs, pathspec, packaging, mkdocs-material-extensions, mergedeep, markdown, click, backrefs, babel, pymdown-extensions, mkdocs-get-deps, ghp-import, mkdocs, mkdocs-material
+#15 2.889   Attempting uninstall: pygments
+#15 2.890     Found existing installation: Pygments 2.11.2
+#15 2.891     Uninstalling Pygments-2.11.2:
+#15 2.959       Successfully uninstalled Pygments-2.11.2
+#15 6.637 
+#15 6.642 Successfully installed babel-2.17.0 backrefs-5.9 click-8.2.1 ghp-import-2.1.0 markdown-3.8.2 mergedeep-1.3.4 mkdocs-1.6.1 mkdocs-get-deps-0.2.0 mkdocs-material-9.6.15 mkdocs-material-extensions-1.3.1 packaging-25.0 paginate-0.5.7 pathspec-0.12.1 platformdirs-4.3.8 pygments-2.19.2 pymdown-extensions-10.16 pyyaml-env-tag-1.1 watchdog-6.0.0
+#15 6.642 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#15 DONE 8.1s
+
+#16 [13/15] RUN python3 -m pip install PyYAML watchdog
+#16 0.621 Requirement already satisfied: PyYAML in /usr/local/lib/python3.10/dist-packages (6.0.2)
+#16 0.621 Requirement already satisfied: watchdog in /usr/local/lib/python3.10/dist-packages (6.0.0)
+#16 0.662 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#16 DONE 0.8s
+
+#17 [14/15] RUN mkdir -p /root/.gdbinit.d
+#17 DONE 0.3s
+
+#18 [15/15] WORKDIR /home/cc/EnvGym/data/nlohmann_json
+#18 DONE 0.0s
+
+#19 exporting to image
+#19 exporting layers
+#19 exporting layers 13.0s done
+#19 writing image sha256:eaabce323f74bc6d94f4ba34e44da331aa007362188c9119d0d08bad8d260f58 done
+#19 naming to docker.io/library/envgym_test_1753004675 done
+#19 DONE 13.0s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_172424",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753030749",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 600B done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/node:18-bullseye\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/9] FROM docker.io/library/node:18-bullseye@sha256:0d9e9a8dcd5a83ea737ed92227a6591a31ad70c8bb722b0c51aff7ae23a88b6a\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 81.83kB 0.0s done\n#5 DONE 0.0s\n\n#6 [4/9] RUN corepack enable && corepack prepare yarn@stable --activate\n#6 CACHED\n\n#7 [5/9] RUN npm install -g vercel\n#7 CACHED\n\n#8 [2/9] WORKDIR /home/cc/EnvGym/data/anuraghazra_github-readme-stats\n#8 CACHED\n\n#9 [3/9] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         vim         nano     && rm -rf /var/lib/apt/lists/*\n#9 CACHED\n\n#10 [6/9] COPY package.json package-lock.json* yarn.lock* ./\n#10 CACHED\n\n#11 [7/9] RUN npm install express --save\n#11 5.704 \n#11 5.704 added 645 packages, and audited 646 packages in 5s\n#11 5.704 \n#11 5.704 103 packages are looking for funding\n#11 5.704   run `npm fund` for details\n#11 5.708 \n#11 5.708 4 vulnerabilities (1 low, 2 moderate, 1 high)\n#11 5.708 \n#11 5.708 To address all issues, run:\n#11 5.708   npm audit fix\n#11 5.708 \n#11 5.708 Run `npm audit` for details.\n#11 DONE 6.1s\n\n#12 [8/9] RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi\n#12 3.305 \n#12 3.305 > github-readme-stats@1.0.0 prepare\n#12 3.305 > husky\n#12 3.305 \n#12 3.355 .git can't be found\n#12 3.369 added 645 packages, and audited 646 packages in 3s\n#12 3.369 \n#12 3.369 103 packages are looking for funding\n#12 3.369   run `npm fund` for details\n#12 3.375 \n#12 3.375 4 vulnerabilities (1 low, 2 moderate, 1 high)\n#12 3.375 \n#12 3.375 To address all issues, run:\n#12 3.375   npm audit fix\n#12 3.375 \n#12 3.375 Run `npm audit` for details.\n#12 DONE 3.8s\n\n#13 [9/9] COPY . .\n#13 DONE 0.1s\n\n#14 exporting to image\n#14 exporting layers\n#14 exporting layers 3.9s done\n#14 writing image sha256:9be012988ff7db1c8a3fc9f985b870d94cf4de341a1533ad8f42acc17a82da1e done\n#14 naming to docker.io/library/envgym_test_1753030749 done\n#14 DONE 3.9s\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": "Container runtime timeout (1500 seconds)"
+  }
+}

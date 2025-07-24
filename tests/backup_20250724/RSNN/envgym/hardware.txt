@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/RSNN; project likely uses Python, ML, or scientific stack; context directory should be set accordingly.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images, e.g., ubuntu:22.04, python:3.x-slim, or similar; do not use ARM images.
+- GPU: No NVIDIA GPU detected; CUDA or GPU images not recommended; use CPU-only images.
+- Instruction Notes: No GPU-specific instructions (no nvidia/cuda, no --gpus); can utilize multi-core build optimizations; set WORKDIR to /home/cc/EnvGym/data/RSNN as needed.
+- Docker Version: 28.3.2; BuildKit supported; GPU features (--gpus) not required.

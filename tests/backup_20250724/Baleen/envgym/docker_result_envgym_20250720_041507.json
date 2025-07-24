@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_041507",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752984906",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.91kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/python:3.11-slim\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/13] FROM docker.io/library/python:3.11-slim@sha256:139020233cc412efe4c8135b0efe1c7569dc8b28ddd88bddb109b764f8977e30\n#4 DONE 0.0s\n\n#5 [ 5/13] WORKDIR /home/cc/EnvGym/data/Baleen\n#5 CACHED\n\n#6 [ 2/13] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         curl         ca-certificates         bash         build-essential         wget         bzip2         libglib2.0-0         libxext6         libsm6         libxrender1         locales         tzdata &&     rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [ 3/13] RUN echo \"en_US.UTF-8 UTF-8\" > /etc/locale.gen &&     locale-gen\n#7 CACHED\n\n#8 [ 4/13] RUN mkdir -p /home/cc/EnvGym/data/Baleen\n#8 CACHED\n\n#9 [ 6/13] RUN curl -Ls https://micro.mamba.pm/install.sh | bash -x -s -- -b -p /opt/conda\n#9 CACHED\n\n#10 [internal] load build context\n#10 transferring context: 243.63kB 0.0s done\n#10 DONE 0.0s\n\n#11 [ 7/13] RUN /opt/conda/bin/micromamba shell init -s bash -p /opt/conda\n#11 0.204 /bin/sh: 1: /opt/conda/bin/micromamba: not found\n#11 ERROR: process \"/bin/sh -c /opt/conda/bin/micromamba shell init -s bash -p /opt/conda\" did not complete successfully: exit code: 127\n------\n > [ 7/13] RUN /opt/conda/bin/micromamba shell init -s bash -p /opt/conda:\n0.204 /bin/sh: 1: /opt/conda/bin/micromamba: not found\n------\nenvgym.dockerfile:36\n--------------------\n  34 |     ENV MAMBA_ROOT_PREFIX=/opt/conda\n  35 |     RUN curl -Ls https://micro.mamba.pm/install.sh | bash -x -s -- -b -p /opt/conda\n  36 | >>> RUN /opt/conda/bin/micromamba shell init -s bash -p /opt/conda\n  37 |     ENV PATH=\"/opt/conda/bin:${PATH}\"\n  38 |     RUN ls -al /opt/conda && ls -al /opt/conda/bin || (cat /opt/conda/.messages.txt || true)\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c /opt/conda/bin/micromamba shell init -s bash -p /opt/conda\" did not complete successfully: exit code: 127\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

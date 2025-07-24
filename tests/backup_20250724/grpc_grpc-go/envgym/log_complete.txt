@@ -1,0 +1,76 @@
+=== Docker Execution Log - 20250720_122813 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753014453
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.20kB done
+#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/golang:1.24-bullseye
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/9] FROM docker.io/library/golang:1.24-bullseye@sha256:254c0d1f13aad57bb210caa9e049deaee17ab7b8a976dba755cba1adf3fbe291
+#4 DONE 0.0s
+
+#5 [3/9] RUN apt-get update &&     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       git       make       build-essential       openssl       ca-certificates       libssl-dev       unzip       curl       wget &&     rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [4/9] RUN wget -q https://github.com/protocolbuffers/protobuf/releases/download/v25.3/protoc-25.3-linux-x86_64.zip -O /tmp/protoc.zip &&     unzip -d /tmp/protoc /tmp/protoc.zip &&     mv /tmp/protoc/bin/protoc /usr/local/bin/protoc &&     chmod +x /usr/local/bin/protoc &&     cp -r /tmp/protoc/include/* /usr/local/include/ &&     rm -rf /tmp/protoc*
+#6 CACHED
+
+#7 [2/9] WORKDIR /home/cc/EnvGym/data/grpc_grpc-go
+#7 CACHED
+
+#8 [5/9] RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest &&     go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest &&     go install github.com/golang/mock/mockgen@latest &&     go install github.com/mattn/goveralls@latest &&     go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest &&     go install github.com/securego/gosec/v2/cmd/gosec@latest
+#8 CACHED
+
+#9 [internal] load build context
+#9 transferring context: 202.33kB 0.1s done
+#9 DONE 0.1s
+
+#10 [6/9] COPY . .
+#10 DONE 0.4s
+
+#11 [7/9] RUN go mod download
+#11 DONE 2.8s
+
+#12 [8/9] RUN if [ -f examples/go.mod ]; then cd examples && go mod download; fi
+#12 DONE 11.0s
+
+#13 [9/9] RUN if [ -f gcp/observability/go.mod ]; then cd gcp/observability && go mod download; fi
+#13 DONE 0.3s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 24.9s done
+#14 writing image sha256:8d4ffb83829b33f0415ef0980a286533700053fb569649c1a7396b96722a8d81 done
+#14 naming to docker.io/library/envgym_test_1753014453 done
+#14 DONE 24.9s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

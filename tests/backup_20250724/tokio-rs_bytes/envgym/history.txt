@@ -1,0 +1,687 @@
+=== Iteration 1 - [2025-07-21 02:31:59] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN ===
+  **[Summary of Adjustments based on Hardware Information]**
+  - Architecture is x86_64 (amd64); all requirements and base images should target this architecture.
+  - No GPU or CUDA; ignore any GPU or CUDA-specific options.
+  - Use Linux (Ubuntu/Debian preferred) for development and CI, as per base image suggestion.
+  - Docker version is modern (28.3.2, BuildKit supported).
+  - Project is in /home/cc/EnvGym/data/tokio-rs_bytes, possibly in a nested directory; ensure all relative paths in scripts/configs are correct.
+  - Multi-core CPU optimizations are possible, but memory and storage are not specified—excessively large tests or builds should be avoided unless hardware specs are confirmed.
+  ---
+  1. **DOWNLOADS NEEDED:**
+     - **Rust toolchain**: Use stable, latest version, but pin at least 1.57 (enforced via `rust-version` in Cargo.toml and `msrv` in clippy.toml).
+         - For x86_64-unknown-linux-gnu (default for Linux on amd64).
+         - `rustup` and `cargo` to be installed via official channels or base image (e.g., rust:latest or via rustup on Ubuntu/Debian).
+     - **Clippy and Rustfmt:** Install via `rustup component add clippy rustfmt`.
+     - **Nightly toolchain:** For documentation build with docsrs flag (`rustup toolchain install nightly`).
+     - **Git:** Install latest stable (`apt-get install git` or via base image).
+     - **Make (optional):** Install if scripting is required (`apt-get install make`); skip for minimal setups.
+     - **Visual Studio Build Tools:** Not required for Linux (ignore all Windows-specific instructions).
+     - **Documentation tools:** `rustdoc` included with Rust.
+     - **Crates/Tools:** As listed; all are Linux/x86_64 compatible.
+     - **CI tools:** Use GitHub Actions or local runners; ensure runners are x86_64 Linux (as per base image).
+     - **Bytes 1.x compatibility:** Confirmed for x86_64 Linux.
+  2. **FILES TO CREATE:**
+     - **Cargo.toml:** All metadata and feature sections as listed; ensure `[package]` paths (readme, license, etc.) match `/home/cc/EnvGym/data/tokio-rs_bytes` or correct subdirectory.
+     - **src/lib.rs or src/main.rs:** Ensure location is `/home/cc/EnvGym/data/tokio-rs_bytes/src/`.
+     - **.gitignore:** Standard Rust patterns.
+     - **rust-toolchain.toml:** Pin to stable and nightly; use x86_64-unknown-linux-gnu target.
+     - **tests/** directory: At `/home/cc/EnvGym/data/tokio-rs_bytes/tests/`.
+     - **LICENSE, README.md, CHANGELOG.md, clippy.toml:** At project root.
+     - **.cargo/config.toml, .github/workflows/ci.yml:** Optional, but ensure any path references are correct for the nested directory.
+     - **[lints.rust] and [package.metadata.docs.rs]:** As previously described.
+  3. **NECESSARY TEST CASES IN THE CODEBASE:**
+     - All code/tests should target x86_64-unknown-linux-gnu.
+     - No need for Windows, macOS, or ARM-specific tests—focus on Linux/amd64 compatibility.
+     - No CUDA/GPU-specific code or tests.
+     - For cross-platform testing, restrict the matrix to Linux; optionally include macOS/Windows if remote CI runners are available, but not required by hardware.
+     - Memory-intensive and large tests should be avoided if RAM is limited (assume standard developer workstation/server unless more info is provided).
+  4. **COMPLETE TODO LIST (ADJUSTED):**
+     1. **Install Rust** (using rustup), ensuring version >= 1.57 for x86_64-unknown-linux-gnu.
+         - Verify: `rustc --version`, `cargo --version`
+     2. **Install components:** `rustup component add clippy rustfmt`
+     3. **Install nightly toolchain:** `rustup toolchain install nightly`
+     4. **Install Git:** `apt-get install git` or ensure present in base image.
+     5. **Initialize/clone repo:** In `/home/cc/EnvGym/data/tokio-rs_bytes`; verify with `git status`
+     6. **Create/update Cargo.toml:** Ensure correct metadata; paths to README, LICENSE, etc., are relative to project root.
+     7. **Create src/lib.rs or src/main.rs:** In `/home/cc/EnvGym/data/tokio-rs_bytes/src/`; include example code.
+     8. **Create .gitignore:** At project root.
+     9. **Create LICENSE:** MIT license at project root.
+     10. **Create README.md:** At project root; document features, usage, and environment-specific notes (e.g., "Tested on x86_64 Linux").
+     11. **Create CHANGELOG.md:** At project root.
+     12. **Create tests/** directory:** At project root.
+     13. **Create clippy.toml:** At project root with `msrv = "1.57"`.
+     14. **Create rust-toolchain.toml:** Pin stable and nightly for x86_64-unknown-linux-gnu.
+     15. **.cargo/config.toml (optional):** Use for custom settings; ensure target is x86_64-unknown-linux-gnu if specified.
+     16. **.github/workflows/ci.yml (optional):** If used, set up jobs for Linux/amd64 only; use Ubuntu runners.
+     17. **Test documentation build:** `RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc`
+     18. **Test no_std mode:** `cargo build --no-default-features`
+     19. **Test with feature flags:** `cargo test --features "serde"`, `cargo test --features "extra-platforms"`
+     20. **Test dev-dependency scenarios:** `cargo test --all-features`
+     21. **Test lint configuration:** `cargo clippy`
+     22. **Test cross-platform builds:** Only Linux/amd64 required; macOS/Windows optional if remote CI is configured.
+     23. **Run clippy and rustfmt:** `cargo clippy`, `cargo fmt -- --check`
+     24. **Commit and push:** Use Git; verify paths are correct from `/home/cc/EnvGym/data/tokio-rs_bytes`
+     25. **Tag and publish release:** `cargo publish --dry-run`
+     26. **Document environment-specific notes:** In README, note x86_64 Linux focus, Docker 28.3.2 support, and any path specifics (project lives in a nested directory).
+  **NOTES:**
+  - All instructions, CI config, and scripts should assume an x86_64 Linux environment.
+  - No GPU, CUDA, or Windows-specific instructions are needed.
+  - Paths in configs/scripts must be adjusted if the project is not at the filesystem root.
+  - If Docker is used, base images should be `rust:latest`, `ubuntu:22.04`, or `debian:bullseye` (amd64 tags).
+  - If using Docker, set the build context to `/home/cc/EnvGym/data/tokio-rs_bytes`.
+  - If memory or storage limitations are encountered, reduce test/build parallelism and avoid large test datasets.
+  ---
+NEXT:
+  current progress
+  - The Dockerfile is set up for a Rust project in a nested directory, installing all required system dependencies and Rust toolchains (stable and nightly, x86_64-unknown-linux-gnu).
+  - All necessary files and directories (`Cargo.toml`, `rust-toolchain.toml`, `clippy.toml`, `src/`, `tests/`, `README.md`, `LICENSE`, `CHANGELOG.md`, `.gitignore`) are being copied.
+  - The build failed at the `COPY .cargo ./.cargo` step because the `.cargo` directory does not exist in the build context.
+  - No runtime steps were executed due to build failure.
+  next step
+  - Ensure that the `.cargo` directory exists in `/home/cc/EnvGym/data/tokio-rs_bytes` before building the Docker image.
+      - If `.cargo` is not required, remove or comment out the `COPY .cargo ./.cargo` line from the Dockerfile.
+      - If `.cargo` is required (for config files), create the directory and add the necessary files (e.g., `config.toml`) before building.
+  - Re-run the Docker build after addressing the missing `.cargo` directory or removing the line.
+LOG:
+  === Docker Execution Log - 20250721_023155 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1753065114
+  === Build Log ===
+  Build Status: Failed
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.54kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/rust:latest
+  #2 DONE 0.3s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [ 1/12] FROM docker.io/library/rust:latest@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e
+  #4 CACHED
+  #5 [internal] load build context
+  #5 transferring context: 378.90kB 0.0s done
+  #5 DONE 0.0s
+  #6 [ 3/12] WORKDIR /home/cc/EnvGym/data/tokio-rs_bytes
+  #6 CACHED
+  #7 [ 4/12] COPY Cargo.toml rust-toolchain.toml clippy.toml ./
+  #7 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::66dw45tv7ztxd47gz78te7w2a: "/rust-toolchain.toml": not found
+  #8 [ 5/12] COPY src ./src
+  #8 CACHED
+  #9 [ 6/12] COPY tests ./tests
+  #9 CACHED
+  #10 [ 7/12] COPY .cargo ./.cargo
+  #10 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::66dw45tv7ztxd47gz78te7w2a: "/.cargo": not found
+  #11 [ 2/12] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         ca-certificates         build-essential         curl         make     && rm -rf /var/lib/apt/lists/*
+  #11 CANCELED
+  ------
+   > [ 4/12] COPY Cargo.toml rust-toolchain.toml clippy.toml ./:
+  ------
+  ------
+   > [ 7/12] COPY .cargo ./.cargo:
+  ------
+  envgym.dockerfile:26
+  --------------------
+    24 |     COPY src ./src
+    25 |     COPY tests ./tests
+    26 | >>> COPY .cargo ./.cargo
+    27 |     COPY README.md LICENSE CHANGELOG.md ./
+    28 |     COPY .gitignore ./
+  --------------------
+  ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::66dw45tv7ztxd47gz78te7w2a: "/.cargo": not found
+  === Runtime Log ===  
+  Runtime Status: Failed
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM rust:latest
+  # Set environment variables for non-interactive apt and locale
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV LANG=C.UTF-8
+  ENV LC_ALL=C.UTF-8
+  # Install system dependencies and tools
+  RUN apt-get update && \
+      apt-get install -y --no-install-recommends \
+          git \
+          ca-certificates \
+          build-essential \
+          curl \
+          # Optional: install make if needed for scripting
+          make \
+      && rm -rf /var/lib/apt/lists/*
+  # Set work directory to the project root (nested directory)
+  WORKDIR /home/cc/EnvGym/data/tokio-rs_bytes
+  # Copy only the minimal files needed for dependency fetching and toolchain setup
+  COPY Cargo.toml rust-toolchain.toml clippy.toml ./
+  COPY src ./src
+  COPY tests ./tests
+  COPY .cargo ./.cargo
+  COPY README.md LICENSE CHANGELOG.md ./
+  COPY .gitignore ./
+  # Install stable Rust toolchain, ensure msrv >= 1.57, and set default target
+  RUN rustup update stable && \
+      rustup default stable && \
+      rustup component add clippy rustfmt --toolchain stable-x86_64-unknown-linux-gnu && \
+      rustup toolchain install nightly-x86_64-unknown-linux-gnu && \
+      rustup target add x86_64-unknown-linux-gnu && \
+      rustup component add clippy rustfmt --toolchain nightly-x86_64-unknown-linux-gnu
+  # Verify Rust, Cargo, and Clippy versions
+  RUN rustc --version && cargo --version && cargo clippy --version
+  # Fetch and cache dependencies for faster builds
+  RUN cargo fetch
+  # Set the default command to just run bash (customize as needed)
+  CMD ["/bin/bash"]
+--- End of Iteration 1 ---
+
+=== Iteration 2 - [2025-07-21 02:32:06] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN ===
+  **[Summary of Adjustments based on Hardware Information]**
+  - Architecture is x86_64 (amd64); all requirements and base images should target this architecture.
+  - No GPU or CUDA; ignore any GPU or CUDA-specific options.
+  - Use Linux (Ubuntu/Debian preferred) for development and CI, as per base image suggestion.
+  - Docker version is modern (28.3.2, BuildKit supported).
+  - Project is in /home/cc/EnvGym/data/tokio-rs_bytes, possibly in a nested directory; ensure all relative paths in scripts/configs are correct.
+  - Multi-core CPU optimizations are possible, but memory and storage are not specified—excessively large tests or builds should be avoided unless hardware specs are confirmed.
+  ---
+  1. **DOWNLOADS NEEDED:**
+     - **Rust toolchain**: Use stable, latest version, but pin at least 1.57 (enforced via `rust-version` in Cargo.toml and `msrv` in clippy.toml).
+         - For x86_64-unknown-linux-gnu (default for Linux on amd64).
+         - `rustup` and `cargo` to be installed via official channels or base image (e.g., rust:latest or via rustup on Ubuntu/Debian).
+     - **Clippy and Rustfmt:** Install via `rustup component add clippy rustfmt`.
+     - **Nightly toolchain:** For documentation build with docsrs flag (`rustup toolchain install nightly`).
+     - **Git:** Install latest stable (`apt-get install git` or via base image).
+     - **Make (optional):** Install if scripting is required (`apt-get install make`); skip for minimal setups.
+     - **Visual Studio Build Tools:** Not required for Linux (ignore all Windows-specific instructions).
+     - **Documentation tools:** `rustdoc` included with Rust.
+     - **Crates/Tools:** As listed; all are Linux/x86_64 compatible.
+     - **CI tools:** Use GitHub Actions or local runners; ensure runners are x86_64 Linux (as per base image).
+     - **Bytes 1.x compatibility:** Confirmed for x86_64 Linux.
+  2. **FILES TO CREATE:**
+     - **Cargo.toml:** All metadata and feature sections as listed; ensure `[package]` paths (readme, license, etc.) match `/home/cc/EnvGym/data/tokio-rs_bytes` or correct subdirectory.
+     - **src/lib.rs or src/main.rs:** Ensure location is `/home/cc/EnvGym/data/tokio-rs_bytes/src/`.
+     - **.gitignore:** Standard Rust patterns.
+     - **rust-toolchain.toml:** Pin to stable and nightly; use x86_64-unknown-linux-gnu target.
+     - **tests/** directory: At `/home/cc/EnvGym/data/tokio-rs_bytes/tests/`.
+     - **LICENSE, README.md, CHANGELOG.md, clippy.toml:** At project root.
+     - **.cargo/config.toml, .github/workflows/ci.yml:** Optional, but ensure any path references are correct for the nested directory.
+     - **[lints.rust] and [package.metadata.docs.rs]:** As previously described.
+  3. **NECESSARY TEST CASES IN THE CODEBASE:**
+     - All code/tests should target x86_64-unknown-linux-gnu.
+     - No need for Windows, macOS, or ARM-specific tests—focus on Linux/amd64 compatibility.
+     - No CUDA/GPU-specific code or tests.
+     - For cross-platform testing, restrict the matrix to Linux; optionally include macOS/Windows if remote CI runners are available, but not required by hardware.
+     - Memory-intensive and large tests should be avoided if RAM is limited (assume standard developer workstation/server unless more info is provided).
+  4. **COMPLETE TODO LIST (ADJUSTED):**
+     1. **Install Rust** (using rustup), ensuring version >= 1.57 for x86_64-unknown-linux-gnu.
+         - Verify: `rustc --version`, `cargo --version`
+     2. **Install components:** `rustup component add clippy rustfmt`
+     3. **Install nightly toolchain:** `rustup toolchain install nightly`
+     4. **Install Git:** `apt-get install git` or ensure present in base image.
+     5. **Initialize/clone repo:** In `/home/cc/EnvGym/data/tokio-rs_bytes`; verify with `git status`
+     6. **Create/update Cargo.toml:** Ensure correct metadata; paths to README, LICENSE, etc., are relative to project root.
+     7. **Create src/lib.rs or src/main.rs:** In `/home/cc/EnvGym/data/tokio-rs_bytes/src/`; include example code.
+     8. **Create .gitignore:** At project root.
+     9. **Create LICENSE:** MIT license at project root.
+     10. **Create README.md:** At project root; document features, usage, and environment-specific notes (e.g., "Tested on x86_64 Linux").
+     11. **Create CHANGELOG.md:** At project root.
+     12. **Create tests/** directory:** At project root.
+     13. **Create clippy.toml:** At project root with `msrv = "1.57"`.
+     14. **Create rust-toolchain.toml:** Pin stable and nightly for x86_64-unknown-linux-gnu.
+     15. **.cargo/config.toml (optional):** Use for custom settings; ensure target is x86_64-unknown-linux-gnu if specified.
+     16. **.github/workflows/ci.yml (optional):** If used, set up jobs for Linux/amd64 only; use Ubuntu runners.
+     17. **Test documentation build:** `RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc`
+     18. **Test no_std mode:** `cargo build --no-default-features`
+     19. **Test with feature flags:** `cargo test --features "serde"`, `cargo test --features "extra-platforms"`
+     20. **Test dev-dependency scenarios:** `cargo test --all-features`
+     21. **Test lint configuration:** `cargo clippy`
+     22. **Test cross-platform builds:** Only Linux/amd64 required; macOS/Windows optional if remote CI is configured.
+     23. **Run clippy and rustfmt:** `cargo clippy`, `cargo fmt -- --check`
+     24. **Commit and push:** Use Git; verify paths are correct from `/home/cc/EnvGym/data/tokio-rs_bytes`
+     25. **Tag and publish release:** `cargo publish --dry-run`
+     26. **Document environment-specific notes:** In README, note x86_64 Linux focus, Docker 28.3.2 support, and any path specifics (project lives in a nested directory).
+  **NOTES:**
+  - All instructions, CI config, and scripts should assume an x86_64 Linux environment.
+  - No GPU, CUDA, or Windows-specific instructions are needed.
+  - Paths in configs/scripts must be adjusted if the project is not at the filesystem root.
+  - If Docker is used, base images should be `rust:latest`, `ubuntu:22.04`, or `debian:bullseye` (amd64 tags).
+  - If using Docker, set the build context to `/home/cc/EnvGym/data/tokio-rs_bytes`.
+  - If memory or storage limitations are encountered, reduce test/build parallelism and avoid large test datasets.
+  ---
+NEXT:
+  current progress
+  - Dockerfile is written and uses `rust:latest` as the base image.
+  - System dependencies (git, ca-certificates, build-essential, curl, make) are installed.
+  - Working directory is set to `/home/cc/EnvGym/data/tokio-rs_bytes`.
+  - Dockerfile attempts to copy project files: `Cargo.toml`, `rust-toolchain.toml`, `clippy.toml`, `src/`, `tests/`, `README.md`, `LICENSE`, `CHANGELOG.md`, `.gitignore`.
+  - Rust stable and nightly toolchains are installed and configured for x86_64-unknown-linux-gnu.
+  - Clippy and rustfmt are installed for both toolchains.
+  - Verification of tool versions and cargo fetch are included.
+  - Build failed because `rust-toolchain.toml` was missing in the build context (COPY failed).
+  next step
+  - Ensure `rust-toolchain.toml` exists in `/home/cc/EnvGym/data/tokio-rs_bytes` before building the Docker image.
+  - If the file does not exist, create it with the required toolchain settings (pin stable and nightly for x86_64-unknown-linux-gnu).
+  - Verify all other files listed in the `COPY` commands are present in the build context directory.
+  - After confirming file presence, re-run the Docker build.
+LOG:
+  === Docker Execution Log - 20250721_023202 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1753065122
+  === Build Log ===
+  Build Status: Failed
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.52kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/rust:latest
+  #2 DONE 0.1s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [ 1/11] FROM docker.io/library/rust:latest@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e
+  #4 CACHED
+  #5 [internal] load build context
+  #5 transferring context: 1.45kB done
+  #5 DONE 0.0s
+  #6 [ 3/11] WORKDIR /home/cc/EnvGym/data/tokio-rs_bytes
+  #6 CACHED
+  #7 [ 4/11] COPY Cargo.toml rust-toolchain.toml clippy.toml ./
+  #7 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::cs8nevyo3f3r6yv4kaswdbqre: "/rust-toolchain.toml": not found
+  #8 [ 2/11] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         ca-certificates         build-essential         curl         make     && rm -rf /var/lib/apt/lists/*
+  #8 0.308 runc run failed: container process is already dead
+  #8 CANCELED
+  ------
+   > [ 4/11] COPY Cargo.toml rust-toolchain.toml clippy.toml ./:
+  ------
+  envgym.dockerfile:23
+  --------------------
+    21 |     
+    22 |     # Copy only the minimal files needed for dependency fetching and toolchain setup
+    23 | >>> COPY Cargo.toml rust-toolchain.toml clippy.toml ./
+    24 |     COPY src ./src
+    25 |     COPY tests ./tests
+  --------------------
+  ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::cs8nevyo3f3r6yv4kaswdbqre: "/rust-toolchain.toml": not found
+  === Runtime Log ===  
+  Runtime Status: Failed
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM rust:latest
+  # Set environment variables for non-interactive apt and locale
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV LANG=C.UTF-8
+  ENV LC_ALL=C.UTF-8
+  # Install system dependencies and tools
+  RUN apt-get update && \
+      apt-get install -y --no-install-recommends \
+          git \
+          ca-certificates \
+          build-essential \
+          curl \
+          # Optional: install make if needed for scripting
+          make \
+      && rm -rf /var/lib/apt/lists/*
+  # Set work directory to the project root (nested directory)
+  WORKDIR /home/cc/EnvGym/data/tokio-rs_bytes
+  # Copy only the minimal files needed for dependency fetching and toolchain setup
+  COPY Cargo.toml rust-toolchain.toml clippy.toml ./
+  COPY src ./src
+  COPY tests ./tests
+  COPY README.md LICENSE CHANGELOG.md ./
+  COPY .gitignore ./
+  # Install stable Rust toolchain, ensure msrv >= 1.57, and set default target
+  RUN rustup update stable && \
+      rustup default stable && \
+      rustup component add clippy rustfmt --toolchain stable-x86_64-unknown-linux-gnu && \
+      rustup toolchain install nightly-x86_64-unknown-linux-gnu && \
+      rustup target add x86_64-unknown-linux-gnu && \
+      rustup component add clippy rustfmt --toolchain nightly-x86_64-unknown-linux-gnu
+  # Verify Rust, Cargo, and Clippy versions
+  RUN rustc --version && cargo --version && cargo clippy --version
+  # Fetch and cache dependencies for faster builds
+  RUN cargo fetch
+  # Set the default command to just run bash (customize as needed)
+  CMD ["/bin/bash"]
+--- End of Iteration 2 ---
+
+=== Iteration 3 - [2025-07-21 02:33:06] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN ===
+  **[Summary of Adjustments based on Hardware Information]**
+  - Architecture is x86_64 (amd64); all requirements and base images should target this architecture.
+  - No GPU or CUDA; ignore any GPU or CUDA-specific options.
+  - Use Linux (Ubuntu/Debian preferred) for development and CI, as per base image suggestion.
+  - Docker version is modern (28.3.2, BuildKit supported).
+  - Project is in /home/cc/EnvGym/data/tokio-rs_bytes, possibly in a nested directory; ensure all relative paths in scripts/configs are correct.
+  - Multi-core CPU optimizations are possible, but memory and storage are not specified—excessively large tests or builds should be avoided unless hardware specs are confirmed.
+  ---
+  1. **DOWNLOADS NEEDED:**
+     - **Rust toolchain**: Use stable, latest version, but pin at least 1.57 (enforced via `rust-version` in Cargo.toml and `msrv` in clippy.toml).
+         - For x86_64-unknown-linux-gnu (default for Linux on amd64).
+         - `rustup` and `cargo` to be installed via official channels or base image (e.g., rust:latest or via rustup on Ubuntu/Debian).
+     - **Clippy and Rustfmt:** Install via `rustup component add clippy rustfmt`.
+     - **Nightly toolchain:** For documentation build with docsrs flag (`rustup toolchain install nightly`).
+     - **Git:** Install latest stable (`apt-get install git` or via base image).
+     - **Make (optional):** Install if scripting is required (`apt-get install make`); skip for minimal setups.
+     - **Visual Studio Build Tools:** Not required for Linux (ignore all Windows-specific instructions).
+     - **Documentation tools:** `rustdoc` included with Rust.
+     - **Crates/Tools:** As listed; all are Linux/x86_64 compatible.
+     - **CI tools:** Use GitHub Actions or local runners; ensure runners are x86_64 Linux (as per base image).
+     - **Bytes 1.x compatibility:** Confirmed for x86_64 Linux.
+  2. **FILES TO CREATE:**
+     - **Cargo.toml:** All metadata and feature sections as listed; ensure `[package]` paths (readme, license, etc.) match `/home/cc/EnvGym/data/tokio-rs_bytes` or correct subdirectory.
+     - **src/lib.rs or src/main.rs:** Ensure location is `/home/cc/EnvGym/data/tokio-rs_bytes/src/`.
+     - **.gitignore:** Standard Rust patterns.
+     - **rust-toolchain.toml:** Pin to stable and nightly; use x86_64-unknown-linux-gnu target.
+     - **tests/** directory: At `/home/cc/EnvGym/data/tokio-rs_bytes/tests/`.
+     - **LICENSE, README.md, CHANGELOG.md, clippy.toml:** At project root.
+     - **.cargo/config.toml, .github/workflows/ci.yml:** Optional, but ensure any path references are correct for the nested directory.
+     - **[lints.rust] and [package.metadata.docs.rs]:** As previously described.
+  3. **NECESSARY TEST CASES IN THE CODEBASE:**
+     - All code/tests should target x86_64-unknown-linux-gnu.
+     - No need for Windows, macOS, or ARM-specific tests—focus on Linux/amd64 compatibility.
+     - No CUDA/GPU-specific code or tests.
+     - For cross-platform testing, restrict the matrix to Linux; optionally include macOS/Windows if remote CI runners are available, but not required by hardware.
+     - Memory-intensive and large tests should be avoided if RAM is limited (assume standard developer workstation/server unless more info is provided).
+  4. **COMPLETE TODO LIST (ADJUSTED):**
+     1. **Install Rust** (using rustup), ensuring version >= 1.57 for x86_64-unknown-linux-gnu.
+         - Verify: `rustc --version`, `cargo --version`
+     2. **Install components:** `rustup component add clippy rustfmt`
+     3. **Install nightly toolchain:** `rustup toolchain install nightly`
+     4. **Install Git:** `apt-get install git` or ensure present in base image.
+     5. **Initialize/clone repo:** In `/home/cc/EnvGym/data/tokio-rs_bytes`; verify with `git status`
+     6. **Create/update Cargo.toml:** Ensure correct metadata; paths to README, LICENSE, etc., are relative to project root.
+     7. **Create src/lib.rs or src/main.rs:** In `/home/cc/EnvGym/data/tokio-rs_bytes/src/`; include example code.
+     8. **Create .gitignore:** At project root.
+     9. **Create LICENSE:** MIT license at project root.
+     10. **Create README.md:** At project root; document features, usage, and environment-specific notes (e.g., "Tested on x86_64 Linux").
+     11. **Create CHANGELOG.md:** At project root.
+     12. **Create tests/** directory:** At project root.
+     13. **Create clippy.toml:** At project root with `msrv = "1.57"`.
+     14. **Create rust-toolchain.toml:** Pin stable and nightly for x86_64-unknown-linux-gnu.
+     15. **.cargo/config.toml (optional):** Use for custom settings; ensure target is x86_64-unknown-linux-gnu if specified.
+     16. **.github/workflows/ci.yml (optional):** If used, set up jobs for Linux/amd64 only; use Ubuntu runners.
+     17. **Test documentation build:** `RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc`
+     18. **Test no_std mode:** `cargo build --no-default-features`
+     19. **Test with feature flags:** `cargo test --features "serde"`, `cargo test --features "extra-platforms"`
+     20. **Test dev-dependency scenarios:** `cargo test --all-features`
+     21. **Test lint configuration:** `cargo clippy`
+     22. **Test cross-platform builds:** Only Linux/amd64 required; macOS/Windows optional if remote CI is configured.
+     23. **Run clippy and rustfmt:** `cargo clippy`, `cargo fmt -- --check`
+     24. **Commit and push:** Use Git; verify paths are correct from `/home/cc/EnvGym/data/tokio-rs_bytes`
+     25. **Tag and publish release:** `cargo publish --dry-run`
+     26. **Document environment-specific notes:** In README, note x86_64 Linux focus, Docker 28.3.2 support, and any path specifics (project lives in a nested directory).
+  **NOTES:**
+  - All instructions, CI config, and scripts should assume an x86_64 Linux environment.
+  - No GPU, CUDA, or Windows-specific instructions are needed.
+  - Paths in configs/scripts must be adjusted if the project is not at the filesystem root.
+  - If Docker is used, base images should be `rust:latest`, `ubuntu:22.04`, or `debian:bullseye` (amd64 tags).
+  - If using Docker, set the build context to `/home/cc/EnvGym/data/tokio-rs_bytes`.
+  - If memory or storage limitations are encountered, reduce test/build parallelism and avoid large test datasets.
+  ---
+NEXT:
+  current progress
+  - Docker image builds and runs successfully on x86_64 Linux, targeting the correct architecture and OS.
+  - Base image is rust:latest, suitable for Linux/amd64.
+  - All required system dependencies (git, ca-certificates, build-essential, curl, make) are installed.
+  - Working directory is set correctly to the nested project path: /home/cc/EnvGym/data/tokio-rs_bytes.
+  - Cargo.toml, clippy.toml, src/, tests/, README.md, LICENSE, CHANGELOG.md, and .gitignore are copied into the image.
+  - Rust stable toolchain (>=1.57) and nightly toolchain for x86_64-unknown-linux-gnu are installed.
+  - Clippy and rustfmt are installed for both stable and nightly toolchains.
+  - Rust, Cargo, and Clippy versions are verified.
+  - Dependencies are fetched and cached.
+  - The default CMD is set to bash.
+  next step
+  - Add steps to copy any missing configuration files if relevant (e.g., rust-toolchain.toml, .cargo/config.toml, .github/workflows/ci.yml) if they exist.
+  - Optionally, run automated tests, lint checks, and formatting checks as part of the Docker build or as a separate stage (e.g., `RUN cargo test --all-features`, `RUN cargo clippy`, `RUN cargo fmt -- --check`).
+  - If using Docker for CI, consider multi-stage builds to separate build/test artifacts from the final image.
+  - Ensure documentation build is tested (e.g., `RUN RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc`).
+  - Review and optimize the Dockerfile for caching and build speed (e.g., copy only necessary files before dependency fetch, then the rest).
+  - Make sure all paths and features in the Dockerfile align with project structure and plan requirements.
+STATUS:
+  SUCCESS
+LOG:
+  === Docker Execution Log - 20250721_023301 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1753065129
+  === Build Log ===
+  Build Status: Success
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.44kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/rust:latest
+  #2 DONE 0.1s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [ 1/11] FROM docker.io/library/rust:latest@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e
+  #4 CACHED
+  #5 [internal] load build context
+  #5 transferring context: 1.45kB done
+  #5 DONE 0.0s
+  #6 [ 2/11] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         ca-certificates         build-essential         curl         make     && rm -rf /var/lib/apt/lists/*
+  #6 0.235 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+  #6 0.248 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+  #6 0.249 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+  #6 0.312 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+  #6 0.420 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [756 B]
+  #6 0.422 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [272 kB]
+  #6 1.468 Fetched 9320 kB in 1s (7373 kB/s)
+  #6 1.468 Reading package lists...
+  #6 1.953 Reading package lists...
+  #6 2.439 Building dependency tree...
+  #6 2.528 Reading state information...
+  #6 2.657 git is already the newest version (1:2.39.5-0+deb12u2).
+  #6 2.657 ca-certificates is already the newest version (20230311+deb12u1).
+  #6 2.657 curl is already the newest version (7.88.1-10+deb12u12).
+  #6 2.657 make is already the newest version (4.3-4.1).
+  #6 2.657 The following NEW packages will be installed:
+  #6 2.658   build-essential
+  #6 2.690 0 upgraded, 1 newly installed, 0 to remove and 4 not upgraded.
+  #6 2.690 Need to get 7704 B of archives.
+  #6 2.690 After this operation, 20.5 kB of additional disk space will be used.
+  #6 2.690 Get:1 http://deb.debian.org/debian bookworm/main amd64 build-essential amd64 12.9 [7704 B]
+  #6 2.809 debconf: delaying package configuration, since apt-utils is not installed
+  #6 2.828 Fetched 7704 B in 0s (281 kB/s)
+  #6 2.844 Selecting previously unselected package build-essential.
+  #6 2.844 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 23252 files and directories currently installed.)
+  #6 2.857 Preparing to unpack .../build-essential_12.9_amd64.deb ...
+  #6 2.858 Unpacking build-essential (12.9) ...
+  #6 2.880 Setting up build-essential (12.9) ...
+  #6 DONE 2.9s
+  #7 [ 3/11] WORKDIR /home/cc/EnvGym/data/tokio-rs_bytes
+  #7 DONE 0.0s
+  #8 [ 4/11] COPY Cargo.toml clippy.toml ./
+  #8 DONE 0.0s
+  #9 [ 5/11] COPY src ./src
+  #9 DONE 0.1s
+  #10 [ 6/11] COPY tests ./tests
+  #10 DONE 0.0s
+  #11 [ 7/11] COPY README.md LICENSE CHANGELOG.md ./
+  #11 DONE 0.0s
+  #12 [ 8/11] COPY .gitignore ./
+  #12 DONE 0.0s
+  #13 [ 9/11] RUN rustup update stable &&     rustup default stable &&     rustup component add clippy rustfmt --toolchain stable-x86_64-unknown-linux-gnu &&     rustup toolchain install nightly-x86_64-unknown-linux-gnu &&     rustup target add x86_64-unknown-linux-gnu &&     rustup component add clippy rustfmt --toolchain nightly-x86_64-unknown-linux-gnu
+  #13 0.219 info: syncing channel updates for 'stable-x86_64-unknown-linux-gnu'
+  #13 0.371 info: latest update on 2025-06-26, rust version 1.88.0 (6b00bc388 2025-06-23)
+  #13 0.371 info: downloading component 'cargo'
+  #13 0.611 info: downloading component 'rust-std'
+  #13 2.083 info: downloading component 'rustc'
+  #13 6.085 info: installing component 'cargo'
+  #13 6.970 info: installing component 'rust-std'
+  #13 9.608 info: installing component 'rustc'
+  #13 15.80 
+  #13 15.82   stable-x86_64-unknown-linux-gnu installed - rustc 1.88.0 (6b00bc388 2025-06-23)
+  #13 15.82 
+  #13 15.82 info: checking for self-update
+  #13 15.90 info: using existing install for 'stable-x86_64-unknown-linux-gnu'
+  #13 15.94 info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
+  #13 15.94 
+  #13 15.95   stable-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+  #13 15.95 
+  #13 16.08 info: downloading component 'clippy'
+  #13 16.18 info: installing component 'clippy'
+  #13 16.70 info: downloading component 'rustfmt'
+  #13 16.76 info: installing component 'rustfmt'
+  #13 17.11 info: syncing channel updates for 'nightly-x86_64-unknown-linux-gnu'
+  #13 17.21 info: latest update on 2025-07-21, rust version 1.90.0-nightly (9982d6462 2025-07-20)
+  #13 17.21 info: downloading component 'cargo'
+  #13 17.60 info: downloading component 'rust-std'
+  #13 18.52 info: downloading component 'rustc'
+  #13 21.31 info: installing component 'cargo'
+  #13 22.22 info: installing component 'rust-std'
+  #13 24.72 info: installing component 'rustc'
+  #13 31.06 
+  #13 31.07   nightly-x86_64-unknown-linux-gnu installed - rustc 1.90.0-nightly (9982d6462 2025-07-20)
+  #13 31.07 
+  #13 31.07 info: checking for self-update
+  #13 31.23 info: component 'rust-std' for target 'x86_64-unknown-linux-gnu' is up to date
+  #13 31.38 info: downloading component 'clippy'
+  #13 31.47 info: installing component 'clippy'
+  #13 32.13 info: downloading component 'rustfmt'
+  #13 32.20 info: installing component 'rustfmt'
+  #13 DONE 35.1s
+  #14 [10/11] RUN rustc --version && cargo --version && cargo clippy --version
+  #14 0.217 rustc 1.88.0 (6b00bc388 2025-06-23)
+  #14 0.264 cargo 1.88.0 (873a06493 2025-05-10)
+  #14 0.365 clippy 0.1.88 (6b00bc3880 2025-06-23)
+  #14 DONE 0.4s
+  #15 [11/11] RUN cargo fetch
+  #15 0.412     Updating crates.io index
+  #15 0.616      Locking 52 packages to latest compatible versions
+  #15 0.644  Downloading crates ...
+  #15 0.690   Downloaded quote v1.0.40
+  #15 0.696   Downloaded serde_test v1.0.177
+  #15 0.697   Downloaded serde v1.0.219
+  #15 0.701   Downloaded portable-atomic v1.11.1
+  #15 0.709   Downloaded pin-project-lite v0.2.16
+  #15 0.715   Downloaded proc-macro2 v1.0.95
+  #15 0.718   Downloaded cfg-if v1.0.1
+  #15 0.719   Downloaded loom v0.7.2
+  #15 0.725   Downloaded windows-interface v0.59.1
+  #15 0.726   Downloaded matchers v0.1.0
+  #15 0.727   Downloaded smallvec v1.15.1
+  #15 0.730   Downloaded regex v1.11.1
+  #15 0.744   Downloaded windows-core v0.61.2
+  #15 0.747   Downloaded windows-link v0.1.3
+  #15 0.748   Downloaded nu-ansi-term v0.46.0
+  #15 0.750   Downloaded sharded-slab v0.1.7
+  #15 0.753   Downloaded windows-result v0.3.4
+  #15 0.754   Downloaded tracing-log v0.2.0
+  #15 0.756   Downloaded log v0.4.27
+  #15 0.758   Downloaded windows-collections v0.2.0
+  #15 0.759   Downloaded windows-future v0.2.1
+  #15 0.761   Downloaded windows-threading v0.1.0
+  #15 0.762   Downloaded shlex v1.3.0
+  #15 0.763   Downloaded rustversion v1.0.21
+  #15 0.766   Downloaded windows-implement v0.60.0
+  #15 0.767   Downloaded scoped-tls v1.0.1
+  #15 0.768   Downloaded windows-strings v0.4.2
+  #15 0.769   Downloaded overload v0.1.1
+  #15 0.771   Downloaded thread_local v1.1.9
+  #15 0.773   Downloaded valuable v0.1.1
+  #15 0.775   Downloaded windows-numerics v0.2.0
+  #15 0.776   Downloaded memchr v2.7.5
+  #15 0.781   Downloaded generator v0.8.5
+  #15 0.785   Downloaded lazy_static v1.5.0
+  #15 0.787   Downloaded tracing-core v0.1.34
+  #15 0.790   Downloaded syn v2.0.104
+  #15 0.802   Downloaded serde_derive v1.0.219
+  #15 0.805   Downloaded once_cell v1.21.3
+  #15 0.807   Downloaded unicode-ident v1.0.18
+  #15 0.814   Downloaded tracing v0.1.41
+  #15 0.821   Downloaded cc v1.2.30
+  #15 0.825   Downloaded regex-automata v0.1.10
+  #15 0.836   Downloaded aho-corasick v1.1.3
+  #15 0.848   Downloaded tracing-subscriber v0.3.19
+  #15 0.901   Downloaded regex-syntax v0.6.29
+  #15 0.914   Downloaded regex-syntax v0.8.5
+  #15 0.969   Downloaded regex-automata v0.4.9
+  #15 1.049   Downloaded libc v0.2.174
+  #15 1.180   Downloaded winapi v0.3.9
+  #15 1.438   Downloaded winapi-i686-pc-windows-gnu v0.4.0
+  #15 1.601   Downloaded winapi-x86_64-pc-windows-gnu v0.4.0
+  #15 2.014   Downloaded windows v0.61.3
+  #15 DONE 3.1s
+  #16 exporting to image
+  #16 exporting layers
+  #16 exporting layers 9.3s done
+  #16 writing image sha256:5f60908ff69943b3c8aa7fafbf8b71ffcd715cfbd030b5edcde8cc79dbc48b8a done
+  #16 naming to docker.io/library/envgym_test_1753065129 done
+  #16 DONE 9.3s
+  === Runtime Log ===  
+  Runtime Status: Success
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM rust:latest
+  # Set environment variables for non-interactive apt and locale
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV LANG=C.UTF-8
+  ENV LC_ALL=C.UTF-8
+  # Install system dependencies and tools
+  RUN apt-get update && \
+      apt-get install -y --no-install-recommends \
+          git \
+          ca-certificates \
+          build-essential \
+          curl \
+          make \
+      && rm -rf /var/lib/apt/lists/*
+  # Set work directory to the project root (nested directory)
+  WORKDIR /home/cc/EnvGym/data/tokio-rs_bytes
+  # Copy only the minimal files needed for dependency fetching and toolchain setup
+  COPY Cargo.toml clippy.toml ./
+  COPY src ./src
+  COPY tests ./tests
+  COPY README.md LICENSE CHANGELOG.md ./
+  COPY .gitignore ./
+  # Install stable Rust toolchain, ensure msrv >= 1.57, and set default target
+  RUN rustup update stable && \
+      rustup default stable && \
+      rustup component add clippy rustfmt --toolchain stable-x86_64-unknown-linux-gnu && \
+      rustup toolchain install nightly-x86_64-unknown-linux-gnu && \
+      rustup target add x86_64-unknown-linux-gnu && \
+      rustup component add clippy rustfmt --toolchain nightly-x86_64-unknown-linux-gnu
+  # Verify Rust, Cargo, and Clippy versions
+  RUN rustc --version && cargo --version && cargo clippy --version
+  # Fetch and cache dependencies for faster builds
+  RUN cargo fetch
+  # Set the default command to just run bash (customize as needed)
+  CMD ["/bin/bash"]
+--- End of Iteration 3 ---
+

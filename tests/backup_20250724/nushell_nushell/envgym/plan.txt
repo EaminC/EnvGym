@@ -1,0 +1,135 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN FOR /home/cc/EnvGym/data/nushell_nushell (x86_64, Ubuntu 22.04, Docker 28.3.2, NO GPU, AMD64 ONLY) ===
+
+1. DOWNLOADS NEEDED (ADJUSTED):  
+   - **Nushell (latest stable or needed version):**
+     - **Recommended install methods for this environment:**
+       - Homebrew is NOT recommended, as this is Ubuntu; use `apt` or download release binaries for Linux x86_64.
+       - Use Docker images tagged for x86_64/amd64.  
+         - Use Debian- or Ubuntu-based images, NOT Alpine unless explicitly required and tested, due to possible musl/gcc/openssl issues.
+         - Docker tag: `nushell:latest-debian` or similar, ensuring `amd64` is used.
+       - If using Dockerfiles, set base images to `debian:buster`, `debian:bullseye`, or `ubuntu:22.04` (NOT arm images).
+         - E.g., in Dockerfiles:  
+           ```
+           FROM ubuntu:22.04
+           # or
+           FROM debian:bullseye
+           ```
+       - **DO NOT use ARM or ARM64 images or binaries.**
+       - **Do NOT use nvidia/cuda or any CUDA-specific images or dependencies.**
+       - For direct system install:  
+         ```
+         sudo apt update && sudo apt install nushell
+         ```
+         or follow [Nushell Linux install instructions](https://www.nushell.sh/book/installation.html) for x86_64.
+   - **Rust toolchain**
+     - Version: 1.86.0 (as specified).
+     - Install via rustup:  
+       ```
+       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+       rustup toolchain install 1.86.0
+       ```
+     - No GPU-specific flags; x86_64 only.
+   - **Git (latest stable)**
+     - Install via `apt`:
+       ```
+       sudo apt update && sudo apt install git
+       ```
+   - **Docker**
+     - Already present: Docker 28.3.2, BuildKit supported.
+     - Do NOT use `--gpus` or nvidia runtime.
+     - Multi-arch images: ONLY build for `linux/amd64`.
+     - In Dockerfiles, add:
+       ```
+       # For Docker build
+       # syntax=docker/dockerfile:1.4
+       ```
+       and use:
+       ```
+       docker build --platform=linux/amd64 ...
+       ```
+   - **wget**
+     - Install via `apt`:
+       ```
+       sudo apt update && sudo apt install wget
+       ```
+   - **cross-rs (`cross`)**
+     - Install via cargo:  
+       ```
+       cargo install cross
+       ```
+     - Only needed for cross-compilation, but as you are on x86_64 and targeting amd64, this is optional unless building for other platforms.
+   - **typos (typos-cli)**
+     - Install via cargo or `apt` if available.
+   - **All internal Nushell crates and plugins** (as listed; no architecture-specific adjustment needed—Rust will build x86_64 by default).
+   - **Shells/Runtimes for Script Execution:**
+     - Bash/sh: Already present on Ubuntu.
+     - PowerShell: Optional; available as `pwsh` via Microsoft repository if needed.
+     - Nushell: Must be installed as above.
+   - **[NEW] Permissions:**
+     - `.sh` scripts: Ensure `chmod +x` is run after cloning or copying scripts.
+   - **Build dependencies for Rust (x86_64/amd64 only):**
+     - Install via `apt`:
+       ```
+       sudo apt update && sudo apt install build-essential libssl-dev pkg-config perl clang dpkg
+       ```
+     - No ARM or musl-specific installs.
+   - **[Optional] Third-party tools**:  
+     - Install only if needed, via `apt` or cargo as appropriate (zoxide, starship, etc.).
+   - **All workspace dependencies**:  
+     - No change; Rust will resolve correct arch.
+   - **Node**:  
+     - Only if building scripts that require Node.js; install via `apt` or nvm if needed.
+   - **Benchmark/dev dependencies**:  
+     - No change.
+   - **Version compatibility**:  
+     - Ensure all crates build and run on x86_64; no ARM, no GPU, no CUDA.
+
+2. FILES TO CREATE (ADJUSTED):  
+   - **NO changes to file list, but note on paths:**
+     - Working directory: `/home/cc/EnvGym/data/nushell_nushell`
+     - All config, build, and artifact paths should be relative to this directory.
+     - For Docker builds, set context to `/home/cc/EnvGym/data/nushell_nushell` or the appropriate subdirectory.
+     - For scripts, ensure `./scripts` and all referenced paths exist relative to the working/project directory.
+   - **Dockerfiles:**
+     - Use only `FROM debian:buster`/`bullseye` or `ubuntu:22.04` for `amd64`.
+     - Set `ARCH` or platform explicitly to `amd64` or `x86_64` in build scripts.
+     - Do NOT reference CUDA/nvidia images or install GPU libraries.
+   - **No ARM, aarch64, or musl-specific files needed.**
+   - All other documentation, LICENSE, and README files: no changes required.
+
+3. NECESSARY TEST CASES IN THE CODEBASE (ADJUSTED):  
+   - **Drop all ARM/aarch64/musl/ARMv7-specific tests** (not required; not supported by hardware).
+   - **Do NOT run GPU, CUDA, or nvidia-specific test cases**.
+   - **Test all binaries, plugins, and scripts ONLY on x86_64 (linux/amd64)**.
+   - Docker image build/test:  
+     - Test only for `linux/amd64` platform.
+     - Ensure all build and runtime scripts execute correctly inside amd64 containers.
+     - No multi-arch or ARM cross-image testing is required.
+   - Script execution:
+     - Validate scripts run under bash/sh, Nushell, and optionally PowerShell (if installed).
+     - All scripts must be executable and invokable from `/home/cc/EnvGym/data/nushell_nushell/scripts` or as documented.
+   - **No need to test for low memory or storage edge cases**—no constraints indicated.
+   - All other functional, plugin, and documentation tests: no change.
+
+4. COMPLETE TODO LIST (ADJUSTED):  
+   1. Confirm operating system: **Ubuntu 22.04**, x86_64/amd64 only.
+   2. Use apt, cargo, or x86_64-specific binaries for all installations.
+   3. In Docker builds, use only `--platform=linux/amd64` and amd64-compatible base images.
+   4. Do NOT attempt ARM, ARM64, or musl cross-compilation.
+   5. **Skip all GPU/CUDA/nvidia steps**—no GPU present/available.
+   6. Set Docker context to `/home/cc/EnvGym/data/nushell_nushell` or appropriate path for all builds.
+   7. **All other steps unchanged.**
+   8. When running or referencing scripts, use absolute or correct project-relative paths (e.g., `/home/cc/EnvGym/data/nushell_nushell/scripts/your_script.sh`).
+   9. When building plugins or binaries, use x86_64 toolchain (no cross-compilation needed).
+   10. All documentation, test, licensing, and developer workflow steps remain the same, with platform-specific notes as above.
+   11. If PowerShell scripts are needed, install PowerShell Core (`pwsh`) from Microsoft repos for Ubuntu as needed.
+   12. For any Docker `ENTRYPOINT` or `CMD` involving shell, always use `/bin/bash`, `/bin/sh`, or `/usr/bin/nu` for Debian/Ubuntu-based images.
+
+**Summary of all adjustments:**
+- No ARM/ARM64/musl/cross-builds or tests; x86_64/amd64 only.
+- No GPU, CUDA, or nvidia-specific dependencies or tests.
+- All Docker builds/images/scripts must target amd64 (`--platform=linux/amd64`).
+- Use only Debian/Ubuntu (amd64) base images and packages.
+- All paths and scripts must be compatible with `/home/cc/EnvGym/data/nushell_nushell` as project root.
+- No changes are needed to documentation, LICENSE, or README content except to clarify that only x86_64/amd64 is supported in this environment.
+- All other plan details remain as originally specified.

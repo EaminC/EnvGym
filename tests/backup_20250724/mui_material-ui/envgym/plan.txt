@@ -1,0 +1,52 @@
+**Adjusted Environment Setup Plan**
+
+1. **Base Image Selection**
+   - Use amd64-compatible base images only. Examples:
+     - For Ubuntu: `ubuntu:22.04`
+     - For Node.js: `node:alpine` (ensure it's amd64)
+     - For Python: `python:3.10-bullseye`
+   - Add `--platform=linux/amd64` to `docker build` commands for explicit architecture targeting.
+
+2. **GPU and CUDA**
+   - Omit all GPU- or CUDA-related steps and dependencies.
+   - Remove any use of `nvidia/cuda` images.
+   - Do not use `--gpus` flag in Docker or any CUDA-related arguments or libraries.
+
+3. **CPU Optimization**
+   - Enable multi-core build optimizations where applicable (e.g., `make -j$(nproc)` or equivalent for parallel builds).
+   - No ARM- or Apple Silicon-specific flags or considerations are needed.
+
+4. **Docker Instructions**
+   - Use Docker version 28.3.2 features, including BuildKit.
+   - No need to configure GPU support in Docker.
+
+5. **Directory and Context**
+   - Set build context directory to `/home/cc/EnvGym/data/mui_material-ui`.
+   - Ensure all relative paths in Dockerfile and build scripts are correct for this context.
+   - If the project is in a subdirectory, specify the Docker build context accordingly (e.g., `docker build -f subdir/Dockerfile subdir/`).
+
+6. **Memory and Storage**
+   - Ensure no steps assume excessive RAM or disk; all operations should work on standard workstation/server hardware.
+   - Avoid memory-intensive build steps where possible, or document RAM requirements.
+
+7. **Operating System Compatibility**
+   - Use Linux-compatible tools and dependencies only.
+   - Avoid MacOS or Windows-specific tools, scripts, or path styles.
+
+8. **Development Tools**
+   - Use only standard, widely available development tools (e.g., gcc, make, python3, nodejs, npm/yarn).
+   - Specify tool versions compatible with Ubuntu 22.04 or the chosen base image.
+
+9. **Other Adjustments**
+   - Do not install or configure GPU drivers, CUDA, or related libraries.
+   - Document the absence of GPU acceleration in the project’s README if relevant.
+   - If using Docker Compose or similar, verify all services use `platform: linux/amd64` as needed.
+
+**Summary of Key Adjustments:**
+- Enforce amd64 architecture in all images and builds.
+- Remove all GPU- and CUDA-related steps.
+- Set Docker build context to `/home/cc/EnvGym/data/mui_material-ui` or appropriate subdirectory.
+- Use Linux/Ubuntu-compatible tools and images only.
+- Avoid resource-intensive steps unless hardware is confirmed to support them.
+
+**End of Adjusted Plan**

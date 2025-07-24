@@ -1,0 +1,183 @@
+=== Docker Execution Log - 20250720_224404 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753051398
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 781B done
+#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:20-bullseye
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/library/node:20-bullseye@sha256:a8417d405dfd2f7c748b32fcdaa9ed844d00e18d78b3a88e73fc2c16126afae7
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.17MB 0.5s done
+#5 DONE 0.5s
+
+#6 [2/8] WORKDIR /home/cc/EnvGym/data/sveltejs_svelte
+#6 CACHED
+
+#7 [3/8] RUN apt-get update &&     apt-get install -y --no-install-recommends       git wget ca-certificates       fonts-liberation libappindicator3-1 libasound2       libatk-bridge2.0-0 libatk1.0-0 libcups2       libdbus-1-3 libdrm2 libgbm1 libnspr4 libnss3       libxcomposite1 libxdamage1 libxrandr2 xdg-utils     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [4/8] RUN npm install -g pnpm@10.4.0
+#8 CACHED
+
+#9 [5/8] COPY . .
+#9 DONE 1.6s
+
+#10 [6/8] RUN if [ -d "packages/svelte/scripts" ]; then chmod +x packages/svelte/scripts/* || true; fi
+#10 DONE 0.2s
+
+#11 [7/8] RUN pnpm install
+#11 2.936 Scope: all 3 workspace projects
+#11 3.050 Lockfile is up to date, resolution step is skipped
+#11 3.106 Progress: resolved 1, reused 0, downloaded 0, added 0
+#11 3.184 Packages: +457
+#11 3.184 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#11 4.132 Progress: resolved 457, reused 0, downloaded 174, added 150
+#11 4.519 
+#11 4.519    ╭───────────────────────────────────────────────────────────────────╮
+#11 4.519    │                                                                   │
+#11 4.519    │                Update available! 10.4.0 → 10.13.1.                │
+#11 4.519    │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v10.13.1   │
+#11 4.519    │                 Run "pnpm add -g pnpm" to update.                 │
+#11 4.519    │                                                                   │
+#11 4.519    ╰───────────────────────────────────────────────────────────────────╯
+#11 4.519 
+#11 4.599 Progress: resolved 457, reused 0, downloaded 455, added 457, done
+#11 4.873 
+#11 4.873 devDependencies:
+#11 4.873 + @changesets/cli 2.27.8
+#11 4.873 + @sveltejs/eslint-config 8.3.3
+#11 4.873 + @svitejs/changesets-changelog-github-compact 1.1.0
+#11 4.873 + @types/node 20.12.7
+#11 4.873 + @vitest/coverage-v8 2.1.9
+#11 4.873 + eslint 9.9.1
+#11 4.873 + eslint-plugin-lube 0.4.3
+#11 4.873 + eslint-plugin-svelte 3.11.0
+#11 4.873 + jsdom 25.0.1
+#11 4.873 + playwright 1.46.1
+#11 4.873 + prettier 3.2.4
+#11 4.873 + prettier-plugin-svelte 3.4.0
+#11 4.873 + svelte 5.36.10 <- packages/svelte
+#11 4.873 + typescript 5.5.4
+#11 4.873 + typescript-eslint 8.26.0
+#11 4.873 + v8-natives 1.2.5
+#11 4.873 + vitest 2.1.9
+#11 4.873 
+#11 4.873 ╭ Warning ─────────────────────────────────────────────────────────────────────╮│                                                                              ││   Ignored build scripts: esbuild.                                            ││   Run "pnpm approve-builds" to pick which dependencies should be allowed     ││   to run scripts.                                                            ││                                                                              │╰──────────────────────────────────────────────────────────────────────────────╯
+#11 4.873 
+#11 4.888 playgrounds/sandbox prepare$ node scripts/create-app-svelte.js
+#11 4.946 playgrounds/sandbox prepare: Done
+#11 4.948 Done in 4.5s
+#11 DONE 5.9s
+
+#12 [8/8] RUN npx playwright install
+#12 0.921 Downloading Chromium 128.0.6613.18 (playwright build v1129) from https://playwright.azureedge.net/builds/chromium/1129/chromium-linux.zip
+#12 1.146 |                                                                                |   0% of 162.8 MiB
+#12 1.556 |■■■■■■■■                                                                        |  10% of 162.8 MiB
+#12 1.777 |■■■■■■■■■■■■■■■■                                                                |  20% of 162.8 MiB
+#12 2.119 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 162.8 MiB
+#12 2.405 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 162.8 MiB
+#12 2.660 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 162.8 MiB
+#12 2.914 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 162.8 MiB
+#12 3.150 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 162.8 MiB
+#12 3.366 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 162.8 MiB
+#12 3.570 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 162.8 MiB
+#12 3.720 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 162.8 MiB
+#12 8.708 Chromium 128.0.6613.18 (playwright build v1129) downloaded to /root/.cache/ms-playwright/chromium-1129
+#12 8.709 Downloading FFMPEG playwright build v1009 from https://playwright.azureedge.net/builds/ffmpeg/1009/ffmpeg-linux.zip
+#12 8.899 |                                                                                |   0% of 2.6 MiB
+#12 8.909 |■■■■■■■■                                                                        |  10% of 2.6 MiB
+#12 8.913 |■■■■■■■■■■■■■■■■                                                                |  20% of 2.6 MiB
+#12 8.916 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.6 MiB
+#12 8.918 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.6 MiB
+#12 8.920 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.6 MiB
+#12 8.922 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.6 MiB
+#12 8.923 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.6 MiB
+#12 8.925 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.6 MiB
+#12 8.926 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.6 MiB
+#12 8.928 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.6 MiB
+#12 9.039 FFMPEG playwright build v1009 downloaded to /root/.cache/ms-playwright/ffmpeg-1009
+#12 9.042 Downloading Firefox 128.0 (playwright build v1458) from https://playwright.azureedge.net/builds/firefox/1458/firefox-debian-11.zip
+#12 9.329 |                                                                                |   0% of 85.6 MiB
+#12 9.545 |■■■■■■■■                                                                        |  10% of 85.6 MiB
+#12 9.655 |■■■■■■■■■■■■■■■■                                                                |  20% of 85.6 MiB
+#12 9.807 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 85.6 MiB
+#12 9.950 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 85.6 MiB
+#12 10.15 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 85.6 MiB
+#12 10.31 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 85.6 MiB
+#12 10.60 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 85.6 MiB
+#12 10.84 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 85.6 MiB
+#12 11.03 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 85.6 MiB
+#12 11.22 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 85.6 MiB
+#12 14.32 Firefox 128.0 (playwright build v1458) downloaded to /root/.cache/ms-playwright/firefox-1458
+#12 14.32 Downloading Webkit 18.0 (playwright build v2051) from https://playwright.azureedge.net/builds/webkit/2051/webkit-debian-11.zip
+#12 14.55 |                                                                                |   0% of 133.8 MiB
+#12 15.02 |■■■■■■■■                                                                        |  10% of 133.8 MiB
+#12 15.66 |■■■■■■■■■■■■■■■■                                                                |  20% of 133.8 MiB
+#12 15.97 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 133.8 MiB
+#12 16.26 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 133.8 MiB
+#12 16.61 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 133.8 MiB
+#12 16.91 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 133.8 MiB
+#12 17.18 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 133.8 MiB
+#12 17.60 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 133.8 MiB
+#12 17.90 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 133.8 MiB
+#12 18.14 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 133.8 MiB
+#12 22.87 Webkit 18.0 (playwright build v2051) downloaded to /root/.cache/ms-playwright/webkit-2051
+#12 23.03 Playwright Host validation warning: 
+#12 23.03 ╔══════════════════════════════════════════════════════╗
+#12 23.03 ║ Host system is missing dependencies to run browsers. ║
+#12 23.03 ║ Please install them with the following command:      ║
+#12 23.03 ║                                                      ║
+#12 23.03 ║     npx playwright install-deps                      ║
+#12 23.03 ║                                                      ║
+#12 23.03 ║ Alternatively, use apt:                              ║
+#12 23.03 ║     apt-get install libx11-xcb1                      ║
+#12 23.03 ║                                                      ║
+#12 23.03 ║ <3 Playwright Team                                   ║
+#12 23.03 ╚══════════════════════════════════════════════════════╝
+#12 23.03     at validateDependenciesLinux (/home/cc/EnvGym/data/sveltejs_svelte/node_modules/.pnpm/playwright-core@1.46.1/node_modules/playwright-core/lib/server/registry/dependencies.js:216:9)
+#12 23.03     at async Registry._validateHostRequirements (/home/cc/EnvGym/data/sveltejs_svelte/node_modules/.pnpm/playwright-core@1.46.1/node_modules/playwright-core/lib/server/registry/index.js:575:43)
+#12 23.03     at async Registry._validateHostRequirementsForExecutableIfNeeded (/home/cc/EnvGym/data/sveltejs_svelte/node_modules/.pnpm/playwright-core@1.46.1/node_modules/playwright-core/lib/server/registry/index.js:673:7)
+#12 23.03     at async Registry.validateHostRequirementsForExecutablesIfNeeded (/home/cc/EnvGym/data/sveltejs_svelte/node_modules/.pnpm/playwright-core@1.46.1/node_modules/playwright-core/lib/server/registry/index.js:662:43)
+#12 23.03     at async t.<anonymous> (/home/cc/EnvGym/data/sveltejs_svelte/node_modules/.pnpm/playwright-core@1.46.1/node_modules/playwright-core/lib/cli/program.js:119:7)
+#12 DONE 24.6s
+
+#13 exporting to image
+#13 exporting layers
+#13 exporting layers 12.6s done
+#13 writing image sha256:89b9b58931f4d942bdbb6fc24a12b112f4a0511532335ab4d6d50f3a9aa3a462 done
+#13 naming to docker.io/library/envgym_test_1753051398 done
+#13 DONE 12.6s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

@@ -1,0 +1,23 @@
+[
+  "README.md",
+  "requirements.txt",
+  "data/adult/README.md",
+  "data/bank/README.md",
+  "data/german/README.md",
+  "relaxed/AC/res/readme.md",
+  "relaxed/BM/res/readme.md",
+  "relaxed/GC/res/readme.md",
+  "src/AC/res-race/readme.md",
+  "src/AC/res-sex/readme.md",
+  "src/BM/res/readme.md",
+  "src/GC/res-sex/readme.md",
+  "stress/AC/res/readme.md",
+  "stress/BM/res/readme.md",
+  "stress/GC/res/readme.md",
+  "targeted/AC/res/readme.md",
+  "targeted/BM/res/readme.md",
+  "targeted/GC/res/readme.md",
+  "targeted2/AC/res/readme.md",
+  "targeted2/BM/res/readme.md",
+  "targeted2/GC/res/readme.md"
+]

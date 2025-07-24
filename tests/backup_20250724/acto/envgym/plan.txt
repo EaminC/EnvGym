@@ -1,0 +1,111 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR HARDWARE INFO) ===
+
+**Hardware Context Summary (for this plan):**
+- x86_64 architecture (amd64); no ARM/M1 support needed.
+- No NVIDIA GPU; CUDA/nvidia images/tools not required.
+- Linux OS (e.g., Ubuntu 22.04); normal file system paths.
+- Docker 28.3.2 (BuildKit, Compose v2, Cgroup v2 supported).
+- Project root: /home/cc/EnvGym/data/acto (subdir: "acto").
+- No known storage/memory constraints (ensure ample disk for Docker images and build artifacts).
+
+---
+
+1. DOWNLOADS NEEDED (all tools/deps compatible with x86_64/amd64):
+
+   - **Docker (latest stable, x86_64/amd64):**
+     - [https://docs.docker.com/engine/install/]
+     - **Do NOT use nvidia/cuda or GPU images.**
+     - Use official `amd64` images (e.g., `ubuntu:22.04`, `python:3.x-slim`).
+     - If using Dockerfiles, specify `--platform=linux/amd64` where relevant.
+   - **Golang (v1.21+ for x86_64):**
+     - [https://go.dev/doc/install]
+     - Download Linux x86_64 binaries.
+   - **Kind (Kubernetes in Docker) (v0.20.0, x86_64):**
+     - `go install sigs.k8s.io/kind@v0.20.0`
+   - **Python (>=3.12 preferred, >=3.10 minimum, x86_64):**
+     - [https://www.python.org/downloads/]
+     - Use Linux x86_64 builds.
+     - If system Python is <3.10, Ansible playbook will create venv with compatible version.
+   - **Python pip, venv/virtualenv, pip-tools, pre-commit, ansible-core, ansible.posix, community.general, jinja2, black, isort, mypy, pylint, pytest, pytest-cov, tabulate, build, wheel, coverage, etc.**
+     - All packages: use versions pinned in `requirements.txt` and `requirements-dev.txt`.
+     - Install via pip; ensure wheels are available for x86_64/amd64.
+   - **kubectl (latest stable, x86_64):**
+     - [https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/]
+   - **[Optional] Helm (latest, x86_64)**
+     - [https://helm.sh/docs/intro/install/]
+   - **[Optional] Minikube, K3d (x86_64):**
+     - Only if not using Kind.
+   - **Other Python/Go/Dev tools:**
+     - All as per original plan, but no GPU- or ARM-only packages.
+   - **Operator Manifests/Images:**
+     - Ensure all Docker images used (including custom Redis operator) are built for `amd64`; add `--platform=linux/amd64` if building on a multi-arch host.
+     - No GPU, no ARM, no Windows-specific images.
+
+2. FILES TO CREATE/ENSURE (paths and OS-specifics adjusted):
+
+   - All paths should use standard Linux forward slashes.
+   - Root: `/home/cc/EnvGym/data/acto` (use relative paths in documentation as needed).
+   - All file locations as in original plan, under the "acto" directory.
+   - No special Windows/WSL/ARM/GPU instructions or configs.
+   - Adjust any hardcoded path examples in documentation/scripts to `/home/cc/EnvGym/data/acto` or use variables (e.g., `$HOME/EnvGym/data/acto`) for portability.
+   - No `.bat`/`.ps1`/Windows scripts required.
+   - Dockerfiles (if any): use `FROM python:3.x-slim`, `FROM ubuntu:22.04`, etc., and add `--platform=linux/amd64` to `docker build` commands if host is multi-arch.
+   - No nvidia/cuda references, no ARM base images, no ARM64-specific instructions.
+   - All Ansible playbooks, inventory, and scripts should use Linux-style absolute or relative paths.
+   - Examples:
+     - Python venv: `$HOME/EnvGym/data/acto/venv`
+     - Project files: `/home/cc/EnvGym/data/acto/requirements.txt`, etc.
+
+3. NECESSARY TEST CASES IN THE CODEBASE (compatibility notes):
+
+   - **Remove/ignore all ARM, M1, Windows (outside WSL2) and GPU-specific test cases or checks.**
+   - All tests should target x86_64/amd64 Linux.
+   - Ensure Kind, Docker, Python, Go, and all tools are tested in Linux x86_64 environments.
+   - No CUDA/nvidia-smi/detect-GPU logic/tests needed.
+   - If testing Docker builds, always specify `--platform=linux/amd64` if building on mixed-arch hosts.
+   - No special handling for Mac/ARM or Windows (except optional note for WSL2 if needed).
+   - Storage/memory: Ensure test clusters and images fit in available disk/RAM (standard for modern dev workstations; warn if building large multi-GB Docker images).
+   - All paths/files in tests should use Linux path conventions.
+
+4. COMPLETE TODO LIST (adjustments):
+
+   - **All installation and configuration steps assume Linux x86_64/amd64.**
+   - **Docker:**
+     - Always use official x86_64 images.
+     - For Docker image builds (especially for operator custom images), use `docker build --platform=linux/amd64 ...` if on a multi-arch host.
+     - No steps for GPU, CUDA, ARM, or nvidia-docker.
+   - **Golang/Kind/kubectl/Helm:**
+     - Download x86_64 binaries or use package manager for x86_64.
+   - **Python:**
+     - Use x86_64 releases.
+     - Venvs created should be in `/home/cc/EnvGym/data/acto/venv`, or as managed by Ansible.
+   - **Ansible playbooks:**
+     - Paths and tasks assume Linux targets.
+     - Inventory and SSH access as per standard Linux SSH conventions.
+   - **Documentation:**
+     - All example paths and code snippets should use Linux-style paths and `/home/cc/EnvGym/data/acto` as the root.
+     - **No instructions for nvidia/cuda, ARM, or Windows.**
+   - **Operator image builds:**
+     - For Redis operator, ensure build command includes `--platform=linux/amd64` if needed.
+     - All manifests/deployment YAMLs must refer to `amd64` images/tags.
+   - **No GPU, ARM, or OS-specific (non-Linux) build/installation steps or troubleshooting included.**
+   - **No need to check for nvidia-smi, CUDA availability, or install GPU drivers.**
+   - **No need for multi-arch images unless specifically requested for portability (not required here).**
+   - **Cgroup v2 supported by Docker—no action needed, but if using advanced container runtime features, ensure they are compatible with cgroup v2.**
+   - **If using Docker Compose, version 2.x is supported.**
+   - **If scripting any OS-specific commands in Makefile/scripts, use Linux shell syntax.**
+
+---
+
+**Summary of Adjustments:**
+- All steps, images, and tools are x86_64/amd64 only.  
+- Remove all GPU/CUDA/nvidia/ARM/Windows-specific references, images, and instructions.
+- All Docker images, custom builds, and runtime containers must use official amd64 images.
+- All scripts and documentation use Linux paths and conventions.
+- Emphasize `--platform=linux/amd64` for Docker builds if the host might be multi-arch.
+- No need to check for or accommodate GPU, ARM, or Windows-specific differences.
+- No need for special drivers or platform hacks.
+
+---
+
+**Proceed with the original plan, with the above architecture/OS/GPU restrictions in mind. All content and dependencies remain as specified, but are strictly for x86_64/amd64 Linux with no GPU/ARM/Windows-specific code or instructions.**

@@ -1,0 +1,19 @@
+current progress
+
+- Docker image is built successfully from a Dockerfile based on `ubuntu:22.04` with `--platform=linux/amd64`.
+- Working directory is correctly set to `/home/cc/EnvGym/data/Silhouette`.
+- All necessary base system packages for amd64/x86_64 are installed via apt.
+- Python 3.10 is installed and set as the default python3.
+- Required directories (`qemu_imgs`, `fs_conf`) are created.
+- A placeholder SSH key file is created with correct permissions.
+- `install_dep.sh`, `prepare.sh`, and `README.md` are copied into the image.
+- No project source code or large files (e.g., Silhouette/PMFS repos or VM image) are included in the image at build time (as intended).
+- No custom kernel, VM image, or project-specific build steps occur in the Dockerfile.
+
+next step
+
+- Add steps in the Dockerfile or a post-build script to clone required repositories (Silhouette, PMFS) into `/home/cc/EnvGym/data/Silhouette` at container runtime, if not already handled externally.
+- (Optional) Add comments or a script to guide the user to download the guest VM image (`silhouette_guest_vm.qcow2`) into `qemu_imgs` after container startup.
+- Ensure that `install_dep.sh` and `prepare.sh` are executable and clarify their runtime execution order in the README or via entrypoint script.
+- (Optional) Make the Python venv setup and pip install steps explicit, either by adding them as commented Dockerfile instructions or suggesting them in the README/post-build script.
+- (Optional) If further automation is desired, include an entrypoint or setup script to streamline environment preparation after launching the container.

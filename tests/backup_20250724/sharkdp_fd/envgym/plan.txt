@@ -1,0 +1,211 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED for x86_64, Linux, No GPU) ===
+
+**Summary of Adjustments:**
+- All cross-compilation/test targets and build tools will default to x86_64 (amd64) Linux.
+- No ARM/aarch64-specific steps are required for default builds or testing (retained as optional).
+- GPU/CUDA steps and packages are not needed (none were present).
+- Use standard Linux development tools—ensure compatibility with Ubuntu 22.04/Debian Bullseye base.
+- All paths assume Linux filesystem conventions.
+- Use multi-core build optimizations if desired.
+- Ensure all system tool invocations and installation steps use Linux-compatible commands.
+- Docker-specific: If using containers, use only amd64 base images; do not use --gpus flag.
+
+---
+
+**1. DOWNLOADS NEEDED:**  
+  - **Rust toolchain** (rustc and cargo), version **1.77.2 or later** (use rustup for installation).
+  - **make** utility (**required** for Makefile targets).
+  - **Git**
+  - **Install** utility (`install` command, part of coreutils; required by Makefile).
+  - **mkdir** and **cp** utilities (coreutils, default on Linux).
+  - (Optional, for testing command integration) **bash** or compatible shell (bash installed by default on most Linux distros).
+  - (Optional, for color output) **dircolors** or **vivid** (for LS_COLORS management).
+  - (Optional, for integration testing) **fzf, rofi, tree, xargs, parallel, emacs**.
+  - (Optional, for PDF open test) **xdg-open** (Linux).
+  - **System package managers:** Use **apt** (Ubuntu/Debian), as the base image is Ubuntu/Debian.
+    - Ignore Windows/macOS package managers (Homebrew, MacPorts, Scoop, Chocolatey, Winget).
+    - Optional: **dnf, apk, pacman, emerge, zypper, xbps-install, eopkg, guix, nix-env** (if running in non-Debian/Ubuntu containers—omit unless needed).
+  - (Optional, for building documentation) **mdbook**.
+  - **cross** (for cross-compilation; required due to Cross.toml).
+  - **All dependencies in Cargo.toml/Cargo.lock** (managed by cargo).
+    - No changes needed for x86_64 builds.
+  - **GNU coreutils** for `install`, `mkdir`, `cp` (standard in Ubuntu/Debian).
+  - **rustfmt** comes with Rust toolchain.
+  - **NO GPU-related downloads** (e.g., nvidia/cuda images, GPU toolchains).
+
+**2. FILES TO CREATE:**  
+  - **Paths assume standard Linux directory structure.**
+  - **Makefile**
+  - **Cross.toml**
+    - Retain aarch64 targets only if cross-compiling; default build is for x86_64-unknown-linux-gnu.
+    - If not cross-compiling, a minimal Cross.toml is sufficient.
+  - **~/.fdignore**
+  - **~/.config/fd/ignore**
+  - **$HOME/.local/bin/fd** (symlink, if needed)
+  - **.gitignore** (Optional)
+  - **LS_COLORS environment variable definition** (Optional)
+  - **Shell aliases/functions** (Optional)
+  - **README.md**
+  - **build.rs**
+  - **src/main.rs**
+  - **Cargo.toml**
+  - **Cargo.lock**
+  - **autocomplete/fd.bash**
+  - **autocomplete/fd.fish**
+  - **autocomplete/fd.ps1**
+  - **autocomplete/_fd**
+  - **contrib/completion/_fd**
+  - **doc/fd.1**
+  - **Documentation files** (Optional)
+  - **Integration test files** (Optional)
+  - **rustfmt.toml**
+  - **No Windows/macOS-specific files or paths required.**
+  - **No GPU-specific files required.**
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**  
+  - All test cases remain, with emphasis on x86_64-unknown-linux-gnu as the main platform.
+  - Cross-compilation for aarch64-unknown-linux-gnu and aarch64-unknown-linux-musl is OPTIONAL (retain for completeness if you want to verify ARM builds).
+  - All paths and command invocations (e.g., /usr/local/bin, /usr/local/share) assume Linux conventions.
+  - No GPU/CUDA-related tests needed.
+  - No Windows/macOS-specific tests needed.
+
+**4. COMPLETE TODO LIST:**  
+1. **Install system prerequisites:**
+   - Ensure `apt` is the package manager (since Ubuntu/Debian base).
+   - Install tools via:
+     ```
+     sudo apt update
+     sudo apt install -y build-essential git coreutils bash tree fzf parallel emacs xargs xdg-utils
+     ```
+     - Omit emacs/rofi/fzf/etc. if not needed for your workflow.
+   - Install Rust via rustup:
+     ```
+     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+     source $HOME/.cargo/env
+     rustup default stable
+     rustup update
+     rustup component add rustfmt
+     ```
+   - Install `cross`:
+     ```
+     cargo install cross
+     ```
+   - [Verification] Run:
+     ```
+     rustc --version
+     cargo --version
+     make --version
+     install --version
+     cross --version
+     ```
+     Ensure all tools are present and at correct versions.
+2. **Clone the project repository:**
+   ```
+   git clone https://github.com/sharkdp/fd
+   cd fd
+   ```
+3. **Check and prepare required files:**
+   - Ensure all required files are present in the repo root.
+   - `Cross.toml`: Retain ARM targets only if cross-compiling; for default x86_64 builds, minimal config is fine.
+   - `rustfmt.toml` should be present and use defaults.
+4. **Verify dependency locking:**
+   ```
+   cargo fetch
+   ```
+   Ensure `Cargo.lock` matches dependency versions.
+5. **Verify code formatting:**
+   ```
+   cargo fmt -- --check
+   ```
+6. **Build the project (using Makefile):**
+   ```
+   make
+   ```
+   - Optionally use all CPU cores: `make -j$(nproc)`
+   - Binary appears in `target/release/fd`
+7. **(Optional) Build with feature flags:**
+   ```
+   cargo build --no-default-features
+   cargo build --features use-jemalloc
+   cargo build --features completions
+   ```
+8. **Run test suite:**
+   ```
+   cargo test
+   ```
+9. **Generate shell completions:**
+   ```
+   make completions
+   ```
+10. **Install the fd binary and completion scripts:**
+    ```
+    sudo make install
+    ```
+    - Installs to `/usr/local/bin/fd` and `/usr/local/share`
+    - All paths Linux-standard.
+11. **(Linux/Debian/Ubuntu) If system package installs `fdfind`, create symlink:**
+    ```
+    ln -s $(which fdfind) ~/.local/bin/fd
+    ```
+    Ensure `~/.local/bin` is in your `$PATH`.
+12. **Configure .fdignore for project or user:**
+    - Create `~/.fdignore` as needed.
+13. **(Optional) Configure global ignore:**
+    - Create `~/.config/fd/ignore`.
+14. **(Optional) Set LS_COLORS for colorized output:**
+    - Use `dircolors` or `vivid` as needed.
+15. **(Optional) Configure shell aliases/functions:**
+    - Add to `.bashrc` or `.zshrc`.
+16. **(Optional) Install integration tools:**
+    - `fzf`, `tree`, `parallel`, `emacs`, etc. (already handled in apt install above).
+17. **Validate command execution feature:**
+    - Test `fd -x` and `fd -X` with Linux commands.
+18. **Validate environment variable handling:**
+    - Set/unset `NO_COLOR` and test output.
+19. **Error handling checks:**
+    - Test invalid options/patterns.
+20. **(Optional) Build and view documentation:**
+    - Use `mdbook` if desired.
+21. **(Optional) Continuous integration checks:**
+    - CI configuration should target Linux x86_64 runners.
+22. **(Optional) Test release build:**
+    ```
+    cargo build --release
+    ```
+23. **Cross-compilation for target architectures:** *(Optional)*
+    - If needed:
+      ```
+      cross build --target aarch64-unknown-linux-gnu
+      cross build --target aarch64-unknown-linux-musl
+      ```
+      - Only if you want to test ARM builds.
+      - Otherwise, omit this step.
+24. **Dependency update and regression check:**
+    ```
+    cargo update
+    cargo build
+    cargo test
+    ```
+25. **Maintain and verify rustfmt.toml:**
+    - Ensure it exists at project root.
+    - Run `cargo fmt -- --check`.
+
+**[Final Verification]**
+- Run representative searches and commands as in README.
+- Ensure all tests pass and binary works as expected on x86_64 Linux.
+- Validate installed completion scripts for bash, fish, zsh.
+- Confirm manpage is accessible via `man fd`.
+- Code formatting should follow rustfmt.toml (defaults).
+- Document any unresolved issues.
+- Ensure `Cargo.lock`, `Cross.toml`, `Makefile`, and `rustfmt.toml` are version controlled.
+
+---
+
+**Notes:**
+- All steps assume Linux/x86_64; no Windows/macOS/GPU/ARM-specific steps unless explicitly cross-compiling.
+- All paths/files/commands are Linux-native.
+- Use `apt` for installing prerequisites.
+- Multi-core builds (`make -j$(nproc)`) are supported due to multi-core CPU.
+- No GPU/CUDA steps or dependencies.
+
+**This plan is now fully compatible and optimized for your x86_64 Linux environment (Ubuntu/Debian base, no GPU).**

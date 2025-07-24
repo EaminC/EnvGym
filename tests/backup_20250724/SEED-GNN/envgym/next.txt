@@ -1,0 +1,28 @@
+current progress
+- The Docker image builds and runs successfully.
+- Python 3.9 and pip are installed and up to date.
+- System dependencies (git, wget, bash, build-essential, ca-certificates) are installed.
+- Working directory is correctly set to /home/cc/EnvGym/data/SEED-GNN.
+- requirements.txt is copied and used to install project dependencies.
+- PyTorch 2.0.0 (CPU-only) is installed from the official CPU wheel index.
+- PyG CPU-only extensions (torch-scatter, torch-cluster, torch-spline-conv, torch-sparse) are installed from the correct CPU wheel index.
+- All additional Python dependencies from requirements.txt are installed.
+- Source code and scripts are copied into the image.
+- All .sh scripts in scripts/ are made executable.
+- The container runs a command to verify Python, PyTorch version, and that CUDA is not available (CPU-only).
+- No GPU/CUDA components are present in the image.
+- The base image is x86_64 compatible (python:3.9-slim-bullseye).
+- No CUDA Toolkit or +cu* wheels are used.
+- The build and runtime logs confirm correct versions and CPU-only operation.
+
+next step
+- Verify that torch-geometric==2.3.1, torchvision==0.15.1, torchaudio==2.0.1, numpy==1.24.4, pandas==2.0.3, and ogb==1.3.6 are present in requirements.txt (and not torch, torch-scatter, torch-cluster, torch-sparse).
+- Ensure torch-spline-conv is not installed redundantly (remove from requirements.txt if present, since it is installed explicitly).
+- Add validation/test steps to the Dockerfile or as part of CI to:
+  - Import all major packages (torch, torch_geometric, torchvision, torchaudio, ogb, etc.) and check for import errors.
+  - Run a minimal script to ensure torch.cuda.is_available() returns False.
+  - Optionally, run a minimal pretraining or editing script to confirm end-to-end functionality.
+- Ensure that config files and shell scripts referenced in the plan exist in the correct locations and are valid (e.g., JSON validity).
+- Update README.md in the repo to highlight CPU-only setup, correct PyG install instructions, and explicitly state no CUDA/GPU is required.
+- Optionally, add tests for version mismatches, duplicate installations, and error handling as described in the plan.
+- (If not already done) Document the full environment setup for reproducibility as per the plan.

@@ -1,0 +1,75 @@
+=== Docker Execution Log - 20250720_212241 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753046561
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 674B done
+#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+#1 WARN: JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 24)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:20-bullseye
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/library/node:20-bullseye@sha256:a8417d405dfd2f7c748b32fcdaa9ed844d00e18d78b3a88e73fc2c16126afae7
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 80.24kB 0.0s done
+#5 DONE 0.0s
+
+#6 [4/8] RUN npm install -g express-generator@4
+#6 CACHED
+
+#7 [5/8] COPY .npmrc package.json ./
+#7 CACHED
+
+#8 [2/8] WORKDIR /home/cc/EnvGym/data/expressjs_express
+#8 CACHED
+
+#9 [6/8] RUN node -e "let p=require('./package.json');p.scripts=p.scripts||{};p.scripts.start='node index.js';require('fs').writeFileSync('package.json',JSON.stringify(p,null,2));"
+#9 CACHED
+
+#10 [3/8] RUN apt-get update &&     apt-get install -y --no-install-recommends       git       redis-server     && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [7/8] RUN npm install
+#11 CACHED
+
+#12 [8/8] COPY . .
+#12 DONE 0.1s
+
+#13 exporting to image
+#13 exporting layers 0.1s done
+#13 writing image sha256:9bdb6dc35d568d29f0964613da9a785d8929eb1024630d59eec0b404c668352d done
+#13 naming to docker.io/library/envgym_test_1753046561 done
+#13 DONE 0.1s
+
+ [33m2 warnings found (use docker --debug to expand):
+[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+ - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 24)
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+Starting redis-server: redis-server.
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

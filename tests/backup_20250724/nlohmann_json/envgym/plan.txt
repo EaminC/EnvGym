@@ -1,0 +1,183 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64 CPU, Linux, CPU-only, Project under /home/cc/EnvGym/data/nlohmann_json) ===
+
+1. DOWNLOADS NEEDED:
+   - C++ Compiler (supporting C++11 or later):
+     - GCC (version 4.8 - 14.2 or later) **[RECOMMENDED: GCC 11+ on Ubuntu 22.04]**
+     - Clang (version 3.4 - 21.0 or later)
+     - MSVC, Apple Clang, Intel C++, CUDA: **NOT applicable** (Linux x86_64, no Windows/macOS/GPU)
+   - Xcode: **Not applicable on Linux**
+   - CMake (version 3.1+; 3.11+ for FetchContent): **Ensure version ≥ 3.16 for best C++20/23 support on Ubuntu 22.04**
+   - nlohmann/json library (version 3.12.0+ recommended)
+   - Package Manager (optional): vcpkg, Conan, Homebrew, Spack, Meson, Bazel, NuGet, Conda, MacPorts, CPM.cmake, xmake, cget, SwiftPM, Hunter
+     - **Homebrew, MacPorts, NuGet, SwiftPM:** not applicable on Linux
+     - **vcpkg, Conan, Spack, Meson:** supported on Linux
+   - doctest (for unit tests)
+   - Valgrind (for memory checks, Linux supported)
+   - lcov (for coverage reports, optional)
+   - Git (for source code management)
+   - Python 3 (for scripts/tooling)
+     - **Ensure Python 3.9+ is available for GDB pretty printer**
+   - pip (to install Python dependencies)
+   - pkg-config (for Makefile builds, optional)
+   - MkDocs (for documentation generation and CI publishing)
+   - Make (for docs, scripts, etc.)
+   - JetBrains IDE (optional, e.g., CLion), or VSCode (recommended for Linux); Visual Studio: **not applicable**
+   - OSS-Fuzz and CIFuzz GitHub Action integration (optional)
+   - Dash/Zeal/Velocity (optional, for docsets: Zeal recommended for Linux)
+   - mkcert (for HTTPS certificates, used by serve_header.py for Compiler Explorer)
+   - [amalgamate.py] (Python 3 recommended)
+   - [GDB Pretty Printer Script] (requires GDB 12.1+, Python 3.9+)
+   - [generate_natvis.py] (Python 3) **Visual Studio/Natvis: not applicable unless debugging on Windows via cross-compilation**
+   - [serve_header.py] (Python 3, with PyYAML, watchdog)
+   - **No CUDA/NVIDIA toolchain required** (No GPU)
+   - **No need to install Windows/macOS-specific tools or configs.**
+
+2. FILES TO CREATE:
+   - All as listed.  
+   - **Omit macOS/Windows-specific configs/files if not cross-compiling or not required for local development.**
+   - All .github/* workflows and configs remain for CI.
+   - docset/ support: Zeal is recommended for Linux.
+   - Paths: Use `/home/cc/EnvGym/data/nlohmann_json` as project root.
+   - **Ensure all scripts and configs use POSIX-style paths for Linux.**
+   - **Avoid backslashes or Windows drive letters.**
+   - **If using Docker, mount project at `/home/cc/EnvGym/data/nlohmann_json` for build/test.**
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+   - All as listed.
+   - **Omit or skip tests that are Windows- or macOS-specific if not cross-compiling. E.g., Natvis (Windows), Xcode matrix (macOS), Visual Studio/MSVC-only tests.**
+   - AppVeyor/Windows tests: **not required for local runs, but keep configs for CI if collaborating with Windows developers.**
+   - macOS/Xcode tests: **not required locally.**
+   - Docset tests: test with Zeal (Linux) instead of Dash (macOS).
+   - Memory/coverage: Valgrind/lcov available on Linux.
+   - GDB pretty printer: Test with GDB 12.1+ and Python 3.9+.
+   - **No CUDA-related test cases.**
+   - **For CMake, confirm all Linux targets and flags are correct (no msvc/xcodebuild, etc.).**
+
+4. COMPLETE TODO LIST:  
+   (Adapted for x86_64 Linux, no GPU, project in /home/cc/EnvGym/data/nlohmann_json)
+
+   1. Install a C++11+ compatible compiler:
+      - Recommended: `sudo apt update && sudo apt install build-essential g++`
+      - Check: `g++ --version` (aim for GCC ≥ 11 for modern C++)
+   2. Install CMake:
+      - `sudo apt install cmake`
+      - Check: `cmake --version` (≥ 3.16 recommended)
+   3. (Optional) Install package manager: vcpkg, Conan, Spack, Meson as desired.
+   4. Obtain nlohmann/json library:
+      - Option 1: Download `json.hpp`/`json_fwd.hpp` to `include/nlohmann/`
+      - Option 2: Use `vcpkg install nlohmann-json` or `conan install nlohmann_json/3.12.0@`
+      - Option 3: Add via CMake FetchContent
+   5. Create project root structure under `/home/cc/EnvGym/data/nlohmann_json` using only POSIX paths.
+   6. Create `CMakeLists.txt` at project root:
+      - Set minimum CMake version, project name, language.
+      - Set C++ standard to 11 or later.
+      - Avoid any Windows-specific logic unless cross-compiling.
+   7. (If using tests) Install doctest via download, vcpkg, or Conan.
+   8. Create example `src/main.cpp` and `test/test_json.cpp`.
+   9. Create `.gitignore` with Linux/Unix focus:
+      - Ignore `build/`, binaries, test data, docset output, Natvis outputs, `.pem` files, `.orig` files, fuzz artifacts (`out/artifacts`), `docs/mkdocs/site/`, Zeal docsets, etc.
+   10. (Optional) Create package manager configs for vcpkg, Conan, etc.
+   11. (Optional) Add pkg-config support.
+   12. (Optional) Set up REUSE compliance files.
+   13. Configure CMake options as needed.
+   14. Build the project:
+       ```
+       mkdir build && cd build && cmake .. && cmake --build .
+       ```
+   15. Run tests:
+       ```
+       ctest --output-on-failure
+       ```
+   16. (Optional) Memory check:
+       ```
+       valgrind ./test_json
+       ```
+   17. (Optional) Code coverage:
+       ```
+       lcov --capture --directory . --output-file coverage.info
+       ```
+   18. (Optional) Static analysis:
+       ```
+       cppcheck src/ include/
+       ```
+   19. (Optional) Configure CI: All GitHub Actions/AppVeyor configs remain in codebase, but local runs focus on GitHub Actions Linux jobs.
+   20. (Optional) Install Zeal for docset usage on Linux:
+       ```
+       sudo apt install zeal
+       ```
+   21. (Optional) Test binary format support.
+   22. (Optional) Integrate with other build systems as needed.
+   23. (Optional) Fuzz testing: Use OSS-Fuzz/CIFuzz (runs on CPU).
+   24. (Optional) Android/MinGW: Not relevant for standard Linux x86_64.
+   25. Document any Linux-specific instructions in README.md or docs.
+   26. Generate/view local documentation:
+       ```
+       cd docs/mkdocs
+       make install_venv
+       make serve
+       # or:
+       python3 -m venv .venv && source .venv/bin/activate
+       pip install -r requirements.txt
+       mkdocs serve
+       ```
+       # Access at http://127.0.0.1:8000/
+   27. Build/use docset (Zeal):
+       ```
+       make nlohmann_json.docset -C docs/docset
+       # Open in Zeal
+       zeal docs/docset/nlohmann_json.docset
+       ```
+   28. Use `amalgamate.py` for amalgamation as described.
+   29. Use GDB pretty printer:
+       - Install GDB 12.1+ and Python 3.9+:
+         ```
+         sudo apt install gdb python3.9
+         gdb -ex "python import sys; print(sys.version)" --batch
+         ```
+       - Add to `~/.gdbinit`:
+         ```
+         source /home/cc/EnvGym/data/nlohmann_json/tools/gdb_pretty_printer/nlohmann-json.py
+         ```
+   30. Generate Natvis file (optional; only needed for Windows/Visual Studio debugging).
+   31. Use `serve_header.py`:
+       - Install Python 3, pip, mkcert:
+         ```
+         sudo apt install python3 python3-pip
+         python3 -m pip install -r tools/serve_header/requirements.txt
+         wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64
+         chmod +x mkcert-v1.4.4-linux-amd64 && sudo mv mkcert-v1.4.4-linux-amd64 /usr/local/bin/mkcert
+         mkcert -install
+         mkcert localhost
+         mv localhost.pem localhost-key.pem /home/cc/EnvGym/data/nlohmann_json/
+         ```
+       - Run:
+         ```
+         python3 tools/serve_header/serve_header.py
+         ```
+   32-44. All GitHub Actions, CI/CD, labeling, security, documentation publishing, etc.:
+       - **All workflows and configs should remain in the codebase for CI, but local runs focus on Linux (no macOS/Windows runners required locally).**
+       - **If testing workflows in Docker, use ubuntu:22.04 or python:3.11-slim as base images with platform=linux/amd64.**
+   45. Final verification:
+       - Clean build/test under `/home/cc/EnvGym/data/nlohmann_json`
+       - All scripts and paths use POSIX/Linux style
+       - Confirm no Windows/macOS/CUDA-specific steps are needed
+       - Confirm documentation, amalgamation, GDB pretty printer, serve_header, and Zeal docset all work under Linux x86_64.
+
+**Additional Hardware/OS-Specific Guidance:**
+- **CPU Architecture:** All builds and tests should target x86_64 (amd64). No ARM/M1/POWER support needed.
+- **GPU:** No NVIDIA/CUDA tools or flags. All builds/tests are CPU-only.
+- **Memory/Storage:** Ample for parallel builds; can set `-j$(nproc)` for CMake/Make.
+- **Docker:** If containerizing, use `--platform=linux/amd64` and compatible base images (ubuntu:22.04, debian:bullseye, python:3.11-slim).
+- **Paths:** All absolute/relative paths should be compatible with `/home/cc/EnvGym/data/nlohmann_json`.
+- **IDE:** VSCode, CLion, or other Linux editors recommended; Visual Studio/Xcode not applicable.
+
+**Summary of Adjustments:**
+- Omit/skip Windows/macOS/CUDA-specific tooling/tests for local builds.
+- Use Zeal for docset on Linux.
+- All configs/scripts use POSIX paths.
+- All builds/tests target x86_64 Linux CPU, no GPU/CUDA.
+- Keep all CI/CD configs for cross-platform CI, but local focus is pure Linux/x86_64.
+- Docker base images and paths should be set for Linux/amd64 as per hardware info.
+- No changes to CI/CD workflow files, but clarify that local developers need not run Windows/macOS/CUDA-specific steps.
+
+=== END OF ADJUSTED PLAN ===

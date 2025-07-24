@@ -1,0 +1,19 @@
+current progress
+- Dockerfile uses Ubuntu 22.04 x86_64 (amd64) as base image, matching plan requirements.
+- Sets WORKDIR to /home/cc/EnvGym/data/Fairify as specified.
+- Installs all necessary system dependencies (including libgomp1, libc++1, wget, git, curl, bash).
+- Downloads and installs Miniconda (Python 3.7 variant) for environment isolation.
+- Initializes conda and sets up conda-forge channel with strict priority.
+- Copies requirements.txt and creates a conda environment named "fairify" with Python 3.7.
+- Installs Python dependencies from requirements.txt in the "fairify" environment.
+- Copies the entire project context to the correct WORKDIR.
+- Entry point activates the "fairify" conda environment and drops to bash.
+- Last Docker build and runtime logs both indicate SUCCESS (no errors).
+
+next step
+- Add/verify explicit comments or warnings in the Dockerfile (if needed) noting x86_64/CPU-only support and lack of GPU/CUDA.
+- Optionally add test_environment.py execution in the Dockerfile or as a test step to verify architecture, OS, and that TensorFlow does not detect a GPU.
+- Ensure .gitignore, INSTALL.md, and other documentation files are present and updated (if not already copied).
+- Confirm Dockerfile does not reference or install any GPU/CUDA/NVIDIA components (already correct, just verify).
+- Optionally, clean up image further by removing unneeded files or caches if image size is a concern.
+- No further critical changes needed for Dockerfile unless additional plan items or tests/scripts require integration.

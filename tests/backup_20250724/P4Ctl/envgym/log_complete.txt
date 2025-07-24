@@ -1,0 +1,229 @@
+=== Docker Execution Log - 20250720_014656 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1752975996
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 3.53kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/30] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [ 9/30] RUN apt-get install -y --no-install-recommends     build-essential     make     git     wget     curl     ca-certificates
+#5 CACHED
+
+#6 [ 2/30] RUN apt-get update &&     apt-get install -y --no-install-recommends software-properties-common gnupg2
+#6 CACHED
+
+#7 [ 5/30] RUN add-apt-repository multiverse
+#7 CACHED
+
+#8 [ 4/30] RUN add-apt-repository universe
+#8 CACHED
+
+#9 [16/30] RUN apt-get install -y --no-install-recommends ubuntu-cloud-keyring || true
+#9 CACHED
+
+#10 [ 8/30] RUN apt-get update --allow-releaseinfo-change
+#10 CACHED
+
+#11 [14/30] RUN apt-get update &&     apt-cache policy python3-bcc bpfcc-tools libbpfcc-dev
+#11 CACHED
+
+#12 [15/30] RUN cat /etc/apt/sources.list && ls /etc/apt/sources.list.d && apt-get update
+#12 CACHED
+
+#13 [ 6/30] RUN add-apt-repository restricted
+#13 CACHED
+
+#14 [ 3/30] RUN add-apt-repository main
+#14 CACHED
+
+#15 [10/30] RUN apt-get install -y --no-install-recommends     clang     llvm     libelf-dev
+#15 CACHED
+
+#16 [12/30] RUN apt-get install -y --no-install-recommends ncat
+#16 CACHED
+
+#17 [17/30] RUN apt-get update &&     (apt-get install -y --no-install-recommends     python3-bcc     bpfcc-tools     libbpfcc-dev ||     (echo "WARNING: BCC packages not available in this build environment." && true)) &&     rm -rf /var/lib/apt/lists/*
+#17 CACHED
+
+#18 [11/30] RUN apt-get install -y --no-install-recommends     flex     bison
+#18 CACHED
+
+#19 [13/30] RUN apt-get install -y --no-install-recommends linux-headers-generic &&     apt-get install -y --no-install-recommends linux-headers-$(uname -r) || true
+#19 CACHED
+
+#20 [ 7/30] RUN add-apt-repository ppa:deadsnakes/ppa
+#20 CACHED
+
+#21 [18/30] RUN apt-get update &&     apt-get install -y --no-install-recommends       python3.7       python3.7-venv       python3.7-distutils &&     rm -rf /var/lib/apt/lists/*
+#21 CACHED
+
+#22 [internal] load build context
+#22 transferring context: 881B done
+#22 DONE 0.0s
+
+#23 [19/30] RUN wget https://bootstrap.pypa.io/pip/3.7/get-pip.py &&     python3.7 get-pip.py &&     rm get-pip.py
+#23 0.190 --2025-07-20 01:46:37--  https://bootstrap.pypa.io/pip/3.7/get-pip.py
+#23 0.193 Resolving bootstrap.pypa.io (bootstrap.pypa.io)... 151.101.192.175, 151.101.0.175, 151.101.64.175, ...
+#23 0.217 Connecting to bootstrap.pypa.io (bootstrap.pypa.io)|151.101.192.175|:443... connected.
+#23 0.230 HTTP request sent, awaiting response... 200 OK
+#23 0.258 Length: 2636033 (2.5M) [text/x-python]
+#23 0.259 Saving to: ‘get-pip.py’
+#23 0.259 
+#23 0.259      0K .......... .......... .......... .......... ..........  1% 17.1M 0s
+#23 0.261     50K .......... .......... .......... .......... ..........  3% 18.0M 0s
+#23 0.264    100K .......... .......... .......... .......... ..........  5% 34.5M 0s
+#23 0.266    150K .......... .......... .......... .......... ..........  7%  335M 0s
+#23 0.266    200K .......... .......... .......... .......... ..........  9% 16.3M 0s
+#23 0.269    250K .......... .......... .......... .......... .......... 11%  312M 0s
+#23 0.269    300K .......... .......... .......... .......... .......... 13%  372M 0s
+#23 0.269    350K .......... .......... .......... .......... .......... 15%  380M 0s
+#23 0.269    400K .......... .......... .......... .......... .......... 17%  295M 0s
+#23 0.269    450K .......... .......... .......... .......... .......... 19%  332M 0s
+#23 0.269    500K .......... .......... .......... .......... .......... 21% 34.2M 0s
+#23 0.271    550K .......... .......... .......... .......... .......... 23%  214M 0s
+#23 0.271    600K .......... .......... .......... .......... .......... 25%  112M 0s
+#23 0.272    650K .......... .......... .......... .......... .......... 27% 27.4M 0s
+#23 0.273    700K .......... .......... .......... .......... .......... 29%  185M 0s
+#23 0.274    750K .......... .......... .......... .......... .......... 31%  167M 0s
+#23 0.274    800K .......... .......... .......... .......... .......... 33% 78.1M 0s
+#23 0.274    850K .......... .......... .......... .......... .......... 34% 30.6M 0s
+#23 0.276    900K .......... .......... .......... .......... .......... 36% 90.7M 0s
+#23 0.277    950K .......... .......... .......... .......... .......... 38%  105M 0s
+#23 0.277   1000K .......... .......... .......... .......... .......... 40%  347M 0s
+#23 0.277   1050K .......... .......... .......... .......... .......... 42% 30.7M 0s
+#23 0.279   1100K .......... .......... .......... .......... .......... 44% 93.1M 0s
+#23 0.279   1150K .......... .......... .......... .......... .......... 46%  108M 0s
+#23 0.280   1200K .......... .......... .......... .......... .......... 48%  219M 0s
+#23 0.280   1250K .......... .......... .......... .......... .......... 50% 15.2M 0s
+#23 0.283   1300K .......... .......... .......... .......... .......... 52%  355M 0s
+#23 0.283   1350K .......... .......... .......... .......... .......... 54% 23.5M 0s
+#23 0.286   1400K .......... .......... .......... .......... .......... 56%  224M 0s
+#23 0.286   1450K .......... .......... .......... .......... .......... 58%  307M 0s
+#23 0.286   1500K .......... .......... .......... .......... .......... 60%  311M 0s
+#23 0.286   1550K .......... .......... .......... .......... .......... 62% 65.1M 0s
+#23 0.287   1600K .......... .......... .......... .......... .......... 64% 41.0M 0s
+#23 0.288   1650K .......... .......... .......... .......... .......... 66% 25.2M 0s
+#23 0.290   1700K .......... .......... .......... .......... .......... 67%  331M 0s
+#23 0.290   1750K .......... .......... .......... .......... .......... 69% 52.6M 0s
+#23 0.291   1800K .......... .......... .......... .......... .......... 71% 30.4M 0s
+#23 0.293   1850K .......... .......... .......... .......... .......... 73% 43.5M 0s
+#23 0.294   1900K .......... .......... .......... .......... .......... 75%  340M 0s
+#23 0.294   1950K .......... .......... .......... .......... .......... 77% 31.5M 0s
+#23 0.295   2000K .......... .......... .......... .......... .......... 79% 45.2M 0s
+#23 0.296   2050K .......... .......... .......... .......... .......... 81% 31.9M 0s
+#23 0.298   2100K .......... .......... .......... .......... .......... 83% 47.8M 0s
+#23 0.299   2150K .......... .......... .......... .......... .......... 85%  198M 0s
+#23 0.299   2200K .......... .......... .......... .......... .......... 87% 29.8M 0s
+#23 0.301   2250K .......... .......... .......... .......... .......... 89% 47.7M 0s
+#23 0.302   2300K .......... .......... .......... .......... .......... 91%  108M 0s
+#23 0.302   2350K .......... .......... .......... .......... .......... 93% 39.8M 0s
+#23 0.304   2400K .......... .......... .......... .......... .......... 95% 40.4M 0s
+#23 0.305   2450K .......... .......... .......... .......... .......... 97% 31.5M 0s
+#23 0.306   2500K .......... .......... .......... .......... .......... 99% 46.9M 0s
+#23 0.307   2550K .......... .......... ....                            100%  254M=0.05s
+#23 0.308 
+#23 0.308 2025-07-20 01:46:37 (51.4 MB/s) - ‘get-pip.py’ saved [2636033/2636033]
+#23 0.308 
+#23 2.142 Collecting pip<24.1
+#23 2.227   Downloading pip-24.0-py3-none-any.whl.metadata (3.6 kB)
+#23 2.503 Collecting setuptools
+#23 2.510   Downloading setuptools-68.0.0-py3-none-any.whl.metadata (6.4 kB)
+#23 2.552 Collecting wheel
+#23 2.558   Downloading wheel-0.42.0-py3-none-any.whl.metadata (2.2 kB)
+#23 2.610 Downloading pip-24.0-py3-none-any.whl (2.1 MB)
+#23 2.759    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 14.5 MB/s eta 0:00:00
+#23 2.765 Downloading setuptools-68.0.0-py3-none-any.whl (804 kB)
+#23 2.838    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 804.0/804.0 kB 11.6 MB/s eta 0:00:00
+#23 2.843 Downloading wheel-0.42.0-py3-none-any.whl (65 kB)
+#23 2.852    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.4/65.4 kB 9.3 MB/s eta 0:00:00
+#23 2.979 Installing collected packages: wheel, setuptools, pip
+#23 4.270 Successfully installed pip-24.0 setuptools-68.0.0 wheel-0.42.0
+#23 4.270 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#23 DONE 4.6s
+
+#24 [20/30] RUN python3.7 -m pip install --no-cache-dir scapy==2.4.5
+#24 0.766 Collecting scapy==2.4.5
+#24 0.853   Downloading scapy-2.4.5.tar.gz (1.1 MB)
+#24 0.928      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 16.3 MB/s eta 0:00:00
+#24 1.093   Preparing metadata (setup.py): started
+#24 1.279   Preparing metadata (setup.py): finished with status 'done'
+#24 1.297 Building wheels for collected packages: scapy
+#24 1.299   Building wheel for scapy (setup.py): started
+#24 1.806   Building wheel for scapy (setup.py): finished with status 'done'
+#24 1.819   Created wheel for scapy: filename=scapy-2.4.5-py2.py3-none-any.whl size=1261536 sha256=88ae315513462711e1d5657a7bfb11dfd760f478e4bd7a71f32168e7d23e416f
+#24 1.820   Stored in directory: /tmp/pip-ephem-wheel-cache-f_pxo79i/wheels/b9/6e/c0/0157e466a5e02d3ff28fc7587dff329b4a967a23b3f9b11385
+#24 1.833 Successfully built scapy
+#24 1.969 Installing collected packages: scapy
+#24 2.710 Successfully installed scapy-2.4.5
+#24 2.710 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#24 DONE 3.0s
+
+#25 [21/30] RUN mkdir -p /home/cc/EnvGym/data/P4Ctl
+#25 DONE 0.4s
+
+#26 [22/30] WORKDIR /home/cc/EnvGym/data/P4Ctl
+#26 DONE 0.0s
+
+#27 [23/30] RUN echo "SDE=/home/cc/bf-sde-9.7.0/" > .env &&     echo "SDE_INSTALL=/home/cc/bf-sde-9.7.0/install" >> .env &&     echo "PYTHONPATH=$SDE_INSTALL/lib/python3.7/site-packages:$PYTHONPATH" >> .env
+#27 DONE 0.5s
+
+#28 [24/30] RUN mkdir -p /home/cc/bf-sde-9.7.0 &&     mkdir -p /home/cc/bf-sde-9.7.0/install
+#28 DONE 0.4s
+
+#29 [25/30] COPY compiler ./compiler
+#29 DONE 0.0s
+
+#30 [26/30] COPY host_agent ./host_agent
+#30 DONE 0.0s
+
+#31 [27/30] COPY switch ./switch
+#31 DONE 0.0s
+
+#32 [28/30] COPY custom-recieve.py .
+#32 DONE 0.1s
+
+#33 [29/30] COPY custom-send.py .
+#33 DONE 0.0s
+
+#34 [30/30] COPY README.md .
+#34 DONE 0.0s
+
+#35 exporting to image
+#35 exporting layers
+#35 exporting layers 9.5s done
+#35 writing image sha256:cdbe3c8efa1a3a5a38159f9fdc2bafd2b1ef3aa597c04f6d18743cd8e0cabd25 done
+#35 naming to docker.io/library/envgym_test_1752975996 done
+#35 DONE 9.5s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - UndefinedVar: Usage of undefined variable '$PYTHONPATH' (line 92)
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

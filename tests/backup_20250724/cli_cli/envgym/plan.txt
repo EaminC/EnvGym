@@ -1,0 +1,186 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Linux, /home/cc/EnvGym/data/cli_cli) ===
+
+**Hardware/OS Context:**  
+- CPU: x86_64 (amd64)  
+- OS: Linux (assumed Ubuntu 22.04 or similar, per base image info)  
+- No GPU (ignore all CUDA/NVIDIA/GPU-specific steps)  
+- Project directory: `/home/cc/EnvGym/data/cli_cli`  
+- Docker: 28.3.2 (BuildKit, --platform supported, no --gpus)
+
+---
+
+### 1. DOWNLOADS NEEDED (ADJUSTED)
+
+- **GitHub CLI (`gh`)**:  
+  - Install via apt, Homebrew (Linux), or direct binary.  
+  - Use x86_64/amd64 Linux releases.  
+  - Example:  
+    ```sh
+    sudo apt update && sudo apt install gh
+    # or for manual:
+    wget https://github.com/cli/cli/releases/download/vX.Y.Z/gh_X.Y.Z_linux_amd64.deb
+    sudo dpkg -i gh_X.Y.Z_linux_amd64.deb
+    ```
+- **Go (Golang) 1.24.x**:  
+  - Required: `go.mod` and `toolchain` specify Go 1.24.  
+  - Use x86_64/amd64 Linux version.  
+  - Example:
+    ```sh
+    wget https://go.dev/dl/go1.24.5.linux-amd64.tar.gz
+    sudo tar -C /usr/local -xzf go1.24.5.linux-amd64.tar.gz
+    export PATH=/usr/local/go/bin:$PATH
+    ```
+  - Confirm with `go version`.
+- **Optional Tools:**  
+  - `git`, `cosign`, `jq`, `curl` (all available via apt or direct download for x86_64/amd64 Linux).
+  - `make`, `tar`, `gzip`, `zip`, `dpkg`, `rpm` as needed for build and packaging (all available on Linux).
+  - **NO GPU TOOLS** are needed.
+- **Goreleaser:**  
+  - Download Goreleaser Linux x86_64 binary or install via Homebrew/Linuxbrew.
+- **PowerShell (`pwsh`):**  
+  - If Windows resource generation/signing is required from Linux, install `pwsh` for Linux x86_64 via Microsoft repositories.
+- **GolangCI-Lint:**  
+  - Install latest Linux x86_64 version; ensure compatibility with Go 1.24.
+- **Node.js/npm:**  
+  - If required for documentation, install Linux x86_64 version.
+- **Devcontainer/Codespaces:**  
+  - If containerizing, use `mcr.microsoft.com/devcontainers/go:1.24` (amd64) as base image.
+- **VS Code Extensions:**  
+  - Documented for developer onboarding only; not installed on server/CI.
+
+**NOTE:**  
+- All tools must be installed for **x86_64/amd64 Linux** only.
+- No ARM/ARM64, no Windows/macOS binaries.
+- No CUDA/CUDA-related steps or libraries.
+
+---
+
+### 2. FILES TO CREATE (ADJUSTED)
+
+- **Paths:**  
+  - Place all project files at `/home/cc/EnvGym/data/cli_cli`.
+  - Any scripts should use absolute or project-relative paths (avoid Windows-style paths).
+- **Setup Scripts:**  
+  - Provide `setup-linux.sh` only (no macOS/Windows scripts required for this environment).
+  - Use Linux-specific installation logic.
+- **Devcontainer:**  
+  - If using Docker/Devcontainer, set `context` to `/home/cc/EnvGym/data/cli_cli`.
+  - In `.devcontainer/devcontainer.json`, specify `"platform": "linux/amd64"` if relevant.
+- **Packaging:**  
+  - Only `.deb` and `.rpm` packages for x86_64/amd64 Linux need to be tested/generated.
+  - No Windows resource or macOS signing scripts are required unless cross-compiling.
+- **CI/CD Files:**  
+  - All workflows should use `runs-on: ubuntu-latest` or a compatible Linux x86_64 runner.
+  - Use Linux shell scripts (`.sh`) for automation.
+- **Documentation:**  
+  - All documentation should reference Linux installation and usage steps first.
+  - Any Windows/macOS steps should be clearly marked as "not applicable to this environment".
+- **Test Data and Output:**  
+  - All test scripts should use Unix line endings and be compatible with Linux shells.
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE (ADJUSTED)
+
+- **Installation & PATH:**  
+  - Confirm installation and PATH setup under Linux x86_64.
+  - No Windows PATH/registry or macOS-specific path checks.
+- **Build & Release:**  
+  - Test Goreleaser for Linux x86_64 targets only.
+  - If cross-compiling for other platforms, use Docker multi-stage builds with `--platform=linux/amd64`.
+- **Acceptance Tests:**  
+  - All acceptance/test scripts should assume Linux environment (no PowerShell, no Windows batch).
+- **Font/Unicode Testing:**  
+  - On Linux, test Unicode support in common terminals (e.g., GNOME Terminal, xterm); Windows font notes can be omitted.
+- **Devcontainer:**  
+  - If using Docker/Codespaces, test under `mcr.microsoft.com/devcontainers/go:1.24` (amd64).
+- **No GPU tests or dependencies.**
+
+---
+
+### 4. COMPLETE TODO LIST (ADJUSTED)
+
+1. **Target OS:** Linux (Ubuntu 22.04 or similar). No macOS or Windows setup needed for this environment.
+2. **Install Required Package Managers:**  
+   - Use `apt` (or optionally Homebrew/Linuxbrew).  
+   - No MacPorts, Scoop, Chocolatey, or Windows-specific managers.
+3. **Install `gh`:**  
+   - Use `apt` or direct `.deb` for Linux x86_64.
+4. **Install Go 1.24.x:**  
+   - Download and install Linux x86_64 version.  
+   - Confirm with `go version`.
+5. **Install `cosign` (Optional):**  
+   - Use Linux x86_64 binary.
+6. **Confirm `gh` Installation:**  
+   - Linux shell only.
+7. **Authenticate GitHub CLI:**  
+   - No OS-specific notes for Windows/macOS.
+8. **Run Basic Commands:**  
+   - All tests in Linux shell.
+9. **Verify Downloaded Release:**  
+   - Use Linux binaries only.
+10. **Build from Source:**  
+    - Ensure Go 1.24.x Linux x86_64 is used.
+    - No Windows/macOS-specific build/test instructions.
+11. **Automate with Linux Scripts:**  
+    - Use Bash/sh scripts only.
+12. **Document Steps:**  
+    - Focus on Linux.  
+    - Mark Windows/macOS steps as N/A for this environment.
+13. **No Windows PATH or Font Steps.**
+14. **Devcontainer:**  
+    - If used, set up for Linux x86_64 only.
+15. **Goreleaser:**  
+    - Only Linux x86_64 targets required.
+    - No Mac/Win resource/signing needed unless cross-compiling.
+16. **Upgrades:**  
+    - Use Linux package manager upgrade instructions.
+17. **Clean Up:**  
+    - Linux file system/commands only.
+18. **Feedback/Issues:**  
+    - As per normal.
+19. **Documentation/Primer:**  
+    - Reference Linux usage.
+20. **Design system/CLI UX:**  
+    - Test in Linux terminals.
+21. **Prototyping & Acceptance Guidance:**  
+    - Linux-focused documentation.  
+    - Image paths should be `/home/cc/EnvGym/data/cli_cli/docs/primer/getting-started/images/` or relative.
+22. **Acceptance Test Setup:**  
+    - All Go commands run under Linux.
+23. **Devcontainer/VS Code:**  
+    - Linux container only.
+24. **CI/Validation:**  
+    - Use Ubuntu runners.
+25. **Linting/Formatting:**  
+    - All tools installed for Linux x86_64.
+26. **Module Maintenance:**  
+    - Linux shell commands.
+27. **Verification:**  
+    - Linux tools and process only.
+
+---
+
+### SPECIAL NOTES
+
+- **CPU/Architecture:**  
+  - All binaries/tools/scripts must target `x86_64`/`amd64` Linux.
+  - If Docker is used for cross-compilation, always specify `--platform=linux/amd64`.
+- **Memory/Storage:**  
+  - No explicit minimums, but ensure at least 4–8GB RAM and >2GB free disk space for Go modules, builds, and test artifacts.
+- **Paths:**  
+  - Use `/home/cc/EnvGym/data/cli_cli` as the working directory in all scripts, Dockerfiles, and documentation.
+- **No GPU/CUDA:**  
+  - Do not install or check for CUDA, nvidia drivers, or GPU dependencies.
+- **OS Compatibility:**  
+  - All steps are for Linux only (Ubuntu 22.04 or compatible).
+  - No Windows/macOS instructions/scripts need to be present unless cross-platform is specifically required for remote builds.
+- **Development Tools:**  
+  - Rely on Linux package manager (`apt`), Linux shell tools, and Linux x86_64 downloads for all dependencies.
+- **CI/CD:**  
+  - All workflows should assume `runs-on: ubuntu-latest` or explicit Linux x86_64 runners.
+
+---
+
+**Summary:**  
+This adjusted plan is streamlined for a Linux (x86_64) environment with the project rooted at `/home/cc/EnvGym/data/cli_cli`. All installation, build, test, and documentation steps should reference Linux, use x86_64/amd64 binaries/tools, and omit any instructions for GPU, Windows, or macOS. Paths in scripts and documentation must reflect the correct context. No GPU or CUDA steps are needed anywhere. If using Docker or devcontainers, always specify the `linux/amd64` platform. All automation (CI, scripts) should use Linux shell scripting and Ubuntu runners.

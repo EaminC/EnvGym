@@ -1,0 +1,62 @@
+=== Docker Execution Log - 20250721_100812 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753092488
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.18kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [2/6] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         cmake         git         curl         wget         python3         python3-pip         python3-venv         python3-setuptools         python3-wheel         pkg-config         libssl-dev         libffi-dev         ca-certificates         && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [3/6] WORKDIR /home/cc/EnvGym/data/rfuse
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 5.26MB 3.2s done
+#7 DONE 3.3s
+
+#8 [4/6] COPY requirements.txt ./
+#8 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::x4gzso8zxziwoq3z3vuolmd0h: "/requirements.txt": not found
+------
+ > [4/6] COPY requirements.txt ./:
+------
+envgym.dockerfile:29
+--------------------
+  27 |     
+  28 |     # Optionally copy requirements and source code; adjust as needed
+  29 | >>> COPY requirements.txt ./
+  30 |     
+  31 |     # Install Python dependencies in a virtual environment for isolation
+--------------------
+ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::x4gzso8zxziwoq3z3vuolmd0h: "/requirements.txt": not found
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

@@ -1,0 +1,816 @@
+=== Iteration 1 - [2025-07-20 12:27:17] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu/Debian, /home/cc/EnvGym/data/grpc_grpc-go) ===
+  **NOTES ON HARDWARE:**
+  - CPU: x86_64 (amd64); do not use ARM64 images or binaries by default; target `linux/amd64` for Docker builds and local binaries.
+  - No GPU: Ignore CUDA/NVIDIA dependencies or flags.
+  - OS: Use Ubuntu 22.04, Debian (bullseye/bullseye-slim), or `golang:1.x-bullseye` base images.
+  - Docker: v28.3.2; supports BuildKit, Compose v2; no experimental features.
+  - Working Directory: `/home/cc/EnvGym/data/grpc_grpc-go`; all absolute paths and Docker contexts must reflect this.
+  - Storage: Ensure sufficient disk for large Go modules and Docker layers; monitor if running CI locally.
+  - RAM: Not specified, but unless system is extremely memory-constrained, no major changes needed. If you know your memory is below 4 GB, consider limiting `make -j` parallelism and Docker resource usage.
+  - Filesystem: extfs/overlay2; no special constraints for Go or Docker.
+  ---
+  1. DOWNLOADS NEEDED (adjusted):
+     - **Go Programming Language**: Download amd64 (x86_64) binaries ONLY. Do not attempt ARM64 Go installations on this machine. Test Go 1.23 and 1.24 for CI compatibility.
+     - **Git**: Latest stable. For Ubuntu/Debian: `apt-get install git`.
+     - **GNU Make**: Latest available via `apt-get install make`.
+     - **protoc** (Protocol Buffers Compiler): Download x86_64/amd64 release. For Ubuntu/Debian, prefer official `.deb` or extract from official zip.
+     - **Protobuf Plugins**:
+       - Install via `go install` using amd64 Go toolchain. Ensure `$GOPATH/bin` or Go 1.17+ `$HOME/go/bin` is in `$PATH`.
+     - **QEMU user-static emulator**: Install only if you need to run/test ARM64 containers. For your x86_64 host, `docker run --platform=linux/arm64` will require QEMU, but normal development is on amd64.
+     - **Docker**: Already present. Ensure you use amd64 base images (see below).
+     - **Build tools**: For Ubuntu: `apt-get install build-essential`.
+     - **VPN Client**: If required, ensure it supports x86_64 Linux.
+     - **Code Editor/IDE**: VSCode, GoLand, etc. (x86_64).
+     - **Code coverage tools, static analysis, shell utilities**: Install for amd64; no ARM-specific binaries.
+     - **Go/OpenTelemetry/Prometheus/AWS/Google Cloud/Other Go Dependencies**: All are architecture-independent Go modules. When building Docker images, ensure Go modules are downloaded for amd64.
+     - **System Packages**: For SSL/TLS, networking: `apt-get install openssl ca-certificates libssl-dev`.
+     - **Codecov CLI, CodeQL CLI**: Download amd64 binaries.
+     - **(NEW)** When pulling container images, always use `--platform=linux/amd64` (e.g., in Dockerfiles or CI).
+     - **(NEW)** When running qemu-based cross-arch tests, be aware performance may be much slower on x86_64 host. If you do not require ARM64 emulation locally, you may skip QEMU installation.
+  2. FILES TO CREATE (adjustments):
+     - **go.mod/go.sum**, **examples/go.mod/go.sum**, **gcp/observability/go.mod/go.sum**: No change; but always operate in `/home/cc/EnvGym/data/grpc_grpc-go` and subdirs.
+     - **.gitignore**: No change, but ensure ignore patterns work in the full path context.
+     - **Makefile**: Default `GOARCH=amd64`. Document that all targets build for amd64 unless explicitly cross-compiling. If adding cross-arch targets, require QEMU.
+     - **Dockerfiles**:
+       - Always specify `FROM ... --platform=linux/amd64` or use amd64 images (e.g., `FROM golang:1.24-bullseye`).
+       - Set `WORKDIR /home/cc/EnvGym/data/grpc_grpc-go` as appropriate.
+       - Avoid use of `--gpus` flag or CUDA/NVIDIA images.
+     - **Workflow files**: In GitHub Actions, always use `runs-on: ubuntu-latest` (amd64) unless testing ARM64 in matrix builds. For local Docker Compose, ensure no ARM64 images are specified unless for QEMU/CI tests.
+     - **README/CONTRIBUTING**:
+       - Document that the default/local development environment is x86_64/amd64.
+       - If users want to test ARM64, instruct them to use QEMU and Docker cross-platform, but note this is optional.
+       - If any references to ARM64 setup exist, mark them as "advanced/optional" for CI or cross-platform validation only.
+     - **Scripts**:
+       - All scripts should assume `GOARCH=amd64` by default.
+       - If supporting cross-arch builds, require explicit flags (e.g., `GOARCH=arm64 make build`).
+       - Use `/home/cc/EnvGym/data/grpc_grpc-go` as working path in scripts if absolute paths are needed.
+  3. NECESSARY TEST CASES (adjustments):
+     - All tests should run on amd64 (default).
+     - For cross-arch (ARM64) tests, mark these as optional/CI-only. If running locally, document the need for QEMU and performance caveats.
+     - In Docker-based tests, always specify `--platform=linux/amd64` unless explicitly testing ARM64.
+     - No GPU-specific cases are needed.
+     - For coverage and analysis, no adjustment needed.
+  4. TODO LIST (adjustments):
+     1. Download and install Go (≥1.23) for amd64. Use official tarball or `apt` if available.
+     2. Install Git, Make, build-essential, openssl, ca-certificates, libssl-dev for x86_64/amd64 via `apt`.
+     3. Download protoc for x86_64/amd64.
+     4. Install all Go tools via Go's amd64 toolchain.
+     5. Install Docker if not present (ensure version ≥28.3.2).
+     6. QEMU user-static: **OPTIONAL** for local ARM64 testing. Document as such. If installed, use `apt-get install qemu-user-static`.
+     7. All Makefile/Dockerfile/CI targets default to amd64 (`GOARCH=amd64`).
+     8. All Docker builds use `--platform=linux/amd64` and compatible base images (`golang:1.x-bullseye`, `ubuntu:22.04`, etc.).
+     9. Paths in scripts/workflows/Makefiles are relative to `/home/cc/EnvGym/data/grpc_grpc-go` as root.
+     10. Documentation (README, CONTRIBUTING) must note that local dev is on amd64, ARM64 support is for CI/optional.
+     11. No CUDA, NVIDIA, or GPU-specific steps, flags, or base images anywhere.
+     12. (Optional) For parallel builds, you may use `make -jN` where N is number of logical CPUs, but be aware of system memory.
+     13. All module and coverage scripts, dependency checks, etc., as before, but assume amd64 unless stated otherwise.
+     14. All workflow YAML files (`.github/workflows/*`) must assume `runs-on: ubuntu-latest` (amd64) for all jobs, unless deliberately testing QEMU/ARM64 in the matrix.
+     15. If disk or memory is tight, suggest users prune unused Docker images/layers and limit parallel jobs in Make/tests.
+  5. VERIFICATION METHODS (adjustments):
+     - When building/running Docker images or containers, always check image architecture: `docker inspect --format '{{.Os}}/{{.Architecture}}'`.
+     - All `go build`, `go test`, etc., default to amd64.
+     - `uname -m` must output `x86_64` or `amd64`. If not, revisit installation steps.
+     - If QEMU/ARM64 tests are run, ensure `qemu-aarch64-static` is present and properly registered.
+     - All scripts and workflows should include checks for `GOARCH` and warn if not equal to `amd64` unless explicitly overridden.
+     - No references to GPU, ARM-only, or CUDA-specific tooling in any documentation or workflows for this environment.
+  ---
+  **SUMMARY OF ADJUSTMENTS:**
+  - All builds, tests, and Docker images are for amd64 (x86_64) by default.
+  - ARM64/QEMU setup marked as optional for CI/cross-arch testing only.
+  - No GPU- or CUDA-related steps or dependencies.
+  - Use Ubuntu/Debian/Go base images for amd64 only.
+  - Document and enforce `/home/cc/EnvGym/data/grpc_grpc-go` as the root for all scripts and Docker contexts.
+  - All scripts, Makefile, workflow steps, and documentation updated to clarify architecture and avoid ARM64/GPU confusion.
+  - Monitor system resources as needed, but normal Go/Docker workflows should be fine for standard RAM/disk.
+  **ALL OTHER PARTS OF THE PLAN REMAIN AS IN THE ORIGINAL, ADJUSTED TO THE ABOVE ARCHITECTURE AND DIRECTORY CONTEXT.**
+NEXT:
+  current progress
+  - The Dockerfile is configured for amd64 as per plan, using `golang:1.24-bullseye` and the specified working directory.
+  - All required system packages and `protoc` are installed for x86_64/amd64.
+  - Go protobuf plugins and other Go tools are installed using `go install`.
+  - Root `go.mod` and `go.sum` are copied and dependencies downloaded.
+  - The Dockerfile attempts to copy and download Go module dependencies for submodules (`examples/` and `gcp/observability/`).
+  - The build fails at the step: `RUN if [ -f ./examples/go.mod ]; then cd ./examples && go mod download; fi` due to a missing file or directory.
+  next step
+  - Ensure that the `examples` directory exists and contains `go.mod` and `go.sum` before the `COPY` command in the Dockerfile.
+  - If the `examples` directory or its `go.mod`/`go.sum` files may not always exist, guard the `COPY` and `RUN` steps with proper checks, or use conditional copying.
+  - Alternatively, move the `COPY . .` line (which copies the full repo) before the submodule `RUN` steps, or merge all `COPY`/`RUN` steps after copying the full repository, so that all referenced files and directories exist for dependency installation.
+  - After adjustment, rebuild the Docker image to verify that the build passes and all module dependencies are downloaded as expected.
+LOG:
+  === Docker Execution Log - 20250720_122709 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1753014316
+  === Build Log ===
+  Build Status: Failed
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 2.43kB done
+  #1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/golang:1.24-bullseye
+  #2 DONE 0.5s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [ 1/12] FROM docker.io/library/golang:1.24-bullseye@sha256:254c0d1f13aad57bb210caa9e049deaee17ab7b8a976dba755cba1adf3fbe291
+  #4 resolve docker.io/library/golang:1.24-bullseye@sha256:254c0d1f13aad57bb210caa9e049deaee17ab7b8a976dba755cba1adf3fbe291 done
+  #4 sha256:254c0d1f13aad57bb210caa9e049deaee17ab7b8a976dba755cba1adf3fbe291 5.24kB / 5.24kB done
+  #4 sha256:221dadcf05f15af3470736fbbe24fdfda2f980669dbffc82c38a63512410317d 2.80kB / 2.80kB done
+  #4 sha256:2d765646d883a37610a09973a079fbba4c7596e54d18d0447bdfff142389d1f7 8.67MB / 53.75MB 0.2s
+  #4 sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 2.10MB / 54.76MB 0.2s
+  #4 sha256:27c568629f8129a3debe4c88d4a5113e0f438dcdfedce42bb5ea7fd31eb7693f 2.32kB / 2.32kB done
+  #4 sha256:06408a499c9b569e198473b636afa8c383e459ee6fe76ba4159b758c84e68f10 5.24MB / 15.77MB 0.2s
+  #4 sha256:2d765646d883a37610a09973a079fbba4c7596e54d18d0447bdfff142389d1f7 28.31MB / 53.75MB 0.3s
+  #4 sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 18.87MB / 54.76MB 0.3s
+  #4 sha256:06408a499c9b569e198473b636afa8c383e459ee6fe76ba4159b758c84e68f10 15.77MB / 15.77MB 0.3s done
+  #4 sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 0B / 86.02MB 0.3s
+  #4 sha256:2d765646d883a37610a09973a079fbba4c7596e54d18d0447bdfff142389d1f7 45.09MB / 53.75MB 0.4s
+  #4 sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 31.46MB / 54.76MB 0.4s
+  #4 sha256:2d765646d883a37610a09973a079fbba4c7596e54d18d0447bdfff142389d1f7 53.65MB / 53.75MB 0.5s
+  #4 sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 41.94MB / 54.76MB 0.5s
+  #4 sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 16.78MB / 86.02MB 0.5s
+  #4 sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 54.76MB / 54.76MB 0.6s
+  #4 sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 28.31MB / 86.02MB 0.6s
+  #4 sha256:2d765646d883a37610a09973a079fbba4c7596e54d18d0447bdfff142389d1f7 53.75MB / 53.75MB 0.6s done
+  #4 sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 34.60MB / 86.02MB 0.7s
+  #4 extracting sha256:2d765646d883a37610a09973a079fbba4c7596e54d18d0447bdfff142389d1f7
+  #4 sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 0B / 78.99MB 0.7s
+  #4 sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 54.76MB / 54.76MB 0.7s done
+  #4 sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 64.26MB / 86.02MB 0.9s
+  #4 sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 17.83MB / 78.99MB 0.9s
+  #4 sha256:056c59815f331bc0d57a8ab235d81cb718eb9d1918c23337f3ed493f7b51e4bb 127B / 127B 0.8s done
+  #4 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0B / 32B 0.9s
+  #4 ...
+  #5 [internal] load build context
+  #5 transferring context: 54.77MB 0.9s done
+  #5 DONE 1.0s
+  #4 [ 1/12] FROM docker.io/library/golang:1.24-bullseye@sha256:254c0d1f13aad57bb210caa9e049deaee17ab7b8a976dba755cba1adf3fbe291
+  #4 sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 78.48MB / 86.02MB 1.0s
+  #4 sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 33.55MB / 78.99MB 1.0s
+  #4 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 32B / 32B 0.9s done
+  #4 sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 86.02MB / 86.02MB 1.2s
+  #4 sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 68.16MB / 78.99MB 1.2s
+  #4 sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 86.02MB / 86.02MB 1.2s done
+  #4 sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 78.99MB / 78.99MB 1.3s
+  #4 sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 78.99MB / 78.99MB 1.4s done
+  #4 extracting sha256:2d765646d883a37610a09973a079fbba4c7596e54d18d0447bdfff142389d1f7 5.1s
+  #4 extracting sha256:2d765646d883a37610a09973a079fbba4c7596e54d18d0447bdfff142389d1f7 5.7s done
+  #4 extracting sha256:06408a499c9b569e198473b636afa8c383e459ee6fe76ba4159b758c84e68f10
+  #4 extracting sha256:06408a499c9b569e198473b636afa8c383e459ee6fe76ba4159b758c84e68f10 1.2s done
+  #4 extracting sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 0.1s
+  #4 extracting sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 5.2s
+  #4 extracting sha256:06772a4eff3df697497bb68b4dcdeb97fdb9338b5e7dde7d1a53579c3203c9ba 6.4s done
+  #4 extracting sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae
+  #4 extracting sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 5.1s
+  #4 extracting sha256:d39e6a48944edf0ac78a7c780634c069fc879c38cb81712022a1ea99320be0ae 7.9s done
+  #4 extracting sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f
+  #4 extracting sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 5.1s
+  #4 extracting sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 10.1s
+  #4 extracting sha256:a3e4aa2eec44b6580a06950b078a57600d112e526d555d23cbf8ffe311ec7f6f 11.6s done
+  #4 extracting sha256:056c59815f331bc0d57a8ab235d81cb718eb9d1918c23337f3ed493f7b51e4bb
+  #4 extracting sha256:056c59815f331bc0d57a8ab235d81cb718eb9d1918c23337f3ed493f7b51e4bb done
+  #4 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 done
+  #4 DONE 34.2s
+  #6 [ 2/12] WORKDIR /home/cc/EnvGym/data/grpc_grpc-go
+  #6 DONE 0.4s
+  #7 [ 3/12] RUN apt-get update &&     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       git       make       build-essential       openssl       ca-certificates       libssl-dev       unzip       curl       wget &&     rm -rf /var/lib/apt/lists/*
+  #7 0.223 Get:1 http://deb.debian.org/debian bullseye InRelease [116 kB]
+  #7 0.235 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.2 kB]
+  #7 0.236 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.0 kB]
+  #7 0.326 Get:4 http://deb.debian.org/debian bullseye/main amd64 Packages [8066 kB]
+  #7 0.485 Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 Packages [384 kB]
+  #7 0.500 Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [18.8 kB]
+  #7 1.472 Fetched 8656 kB in 1s (6843 kB/s)
+  #7 1.472 Reading package lists...
+  #7 1.980 Reading package lists...
+  #7 2.430 Building dependency tree...
+  #7 2.511 Reading state information...
+  #7 2.612 ca-certificates is already the newest version (20210119).
+  #7 2.612 make is already the newest version (4.3-4.1).
+  #7 2.612 curl is already the newest version (7.74.0-1.3+deb11u15).
+  #7 2.612 git is already the newest version (1:2.30.2-1+deb11u4).
+  #7 2.612 openssl is already the newest version (1.1.1w-0+deb11u3).
+  #7 2.612 openssl set to manually installed.
+  #7 2.612 wget is already the newest version (1.21-1+deb11u2).
+  #7 2.612 The following additional packages will be installed:
+  #7 2.613   bzip2 dpkg-dev patch xz-utils
+  #7 2.613 Suggested packages:
+  #7 2.613   bzip2-doc debian-keyring libssl-doc ed diffutils-doc zip
+  #7 2.613 Recommended packages:
+  #7 2.613   fakeroot libalgorithm-merge-perl
+  #7 2.688 The following NEW packages will be installed:
+  #7 2.689   build-essential bzip2 dpkg-dev libssl-dev patch unzip xz-utils
+  #7 2.731 0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.
+  #7 2.731 Need to get 4711 kB of archives.
+  #7 2.731 After this operation, 12.3 MB of additional disk space will be used.
+  #7 2.731 Get:1 http://deb.debian.org/debian bullseye/main amd64 bzip2 amd64 1.0.8-4 [49.3 kB]
+  #7 2.737 Get:2 http://deb.debian.org/debian bullseye/main amd64 xz-utils amd64 5.2.5-2.1~deb11u1 [220 kB]
+  #7 2.741 Get:3 http://deb.debian.org/debian bullseye/main amd64 patch amd64 2.7.6-7 [128 kB]
+  #7 2.744 Get:4 http://deb.debian.org/debian bullseye/main amd64 dpkg-dev all 1.20.13 [2314 kB]
+  #7 2.759 Get:5 http://deb.debian.org/debian bullseye/main amd64 build-essential amd64 12.9 [7704 B]
+  #7 2.759 Get:6 http://deb.debian.org/debian-security bullseye-security/main amd64 libssl-dev amd64 1.1.1w-0+deb11u3 [1821 kB]
+  #7 2.767 Get:7 http://deb.debian.org/debian bullseye/main amd64 unzip amd64 6.0-26+deb11u1 [172 kB]
+  #7 2.866 debconf: delaying package configuration, since apt-utils is not installed
+  #7 2.886 Fetched 4711 kB in 0s (62.4 MB/s)
+  #7 2.900 Selecting previously unselected package bzip2.
+  #7 2.900 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 15728 files and directories currently installed.)
+  #7 2.909 Preparing to unpack .../0-bzip2_1.0.8-4_amd64.deb ...
+  #7 2.910 Unpacking bzip2 (1.0.8-4) ...
+  #7 2.928 Selecting previously unselected package xz-utils.
+  #7 2.930 Preparing to unpack .../1-xz-utils_5.2.5-2.1~deb11u1_amd64.deb ...
+  #7 2.930 Unpacking xz-utils (5.2.5-2.1~deb11u1) ...
+  #7 2.961 Selecting previously unselected package patch.
+  #7 2.962 Preparing to unpack .../2-patch_2.7.6-7_amd64.deb ...
+  #7 2.963 Unpacking patch (2.7.6-7) ...
+  #7 2.988 Selecting previously unselected package dpkg-dev.
+  #7 2.989 Preparing to unpack .../3-dpkg-dev_1.20.13_all.deb ...
+  #7 2.990 Unpacking dpkg-dev (1.20.13) ...
+  #7 3.097 Selecting previously unselected package build-essential.
+  #7 3.099 Preparing to unpack .../4-build-essential_12.9_amd64.deb ...
+  #7 3.100 Unpacking build-essential (12.9) ...
+  #7 3.114 Selecting previously unselected package libssl-dev:amd64.
+  #7 3.116 Preparing to unpack .../5-libssl-dev_1.1.1w-0+deb11u3_amd64.deb ...
+  #7 3.117 Unpacking libssl-dev:amd64 (1.1.1w-0+deb11u3) ...
+  #7 3.263 Selecting previously unselected package unzip.
+  #7 3.264 Preparing to unpack .../6-unzip_6.0-26+deb11u1_amd64.deb ...
+  #7 3.265 Unpacking unzip (6.0-26+deb11u1) ...
+  #7 3.299 Setting up unzip (6.0-26+deb11u1) ...
+  #7 3.304 Setting up bzip2 (1.0.8-4) ...
+  #7 3.306 Setting up xz-utils (5.2.5-2.1~deb11u1) ...
+  #7 3.309 update-alternatives: using /usr/bin/xz to provide /usr/bin/lzma (lzma) in auto mode
+  #7 3.313 Setting up libssl-dev:amd64 (1.1.1w-0+deb11u3) ...
+  #7 3.315 Setting up patch (2.7.6-7) ...
+  #7 3.317 Setting up dpkg-dev (1.20.13) ...
+  #7 3.320 Setting up build-essential (12.9) ...
+  #7 DONE 3.4s
+  #8 [ 4/12] RUN wget -q https://github.com/protocolbuffers/protobuf/releases/download/v25.3/protoc-25.3-linux-x86_64.zip -O /tmp/protoc.zip &&     unzip -d /tmp/protoc /tmp/protoc.zip &&     mv /tmp/protoc/bin/protoc /usr/local/bin/protoc &&     chmod +x /usr/local/bin/protoc &&     cp -r /tmp/protoc/include/* /usr/local/include/ &&     rm -rf /tmp/protoc*
+  #8 0.645 Archive:  /tmp/protoc.zip
+  #8 0.645   inflating: /tmp/protoc/bin/protoc  
+  #8 0.718   inflating: /tmp/protoc/include/google/protobuf/any.proto  
+  #8 0.718   inflating: /tmp/protoc/include/google/protobuf/api.proto  
+  #8 0.718   inflating: /tmp/protoc/include/google/protobuf/compiler/plugin.proto  
+  #8 0.719   inflating: /tmp/protoc/include/google/protobuf/descriptor.proto  
+  #8 0.719   inflating: /tmp/protoc/include/google/protobuf/duration.proto  
+  #8 0.719   inflating: /tmp/protoc/include/google/protobuf/empty.proto  
+  #8 0.719   inflating: /tmp/protoc/include/google/protobuf/field_mask.proto  
+  #8 0.719   inflating: /tmp/protoc/include/google/protobuf/source_context.proto  
+  #8 0.719   inflating: /tmp/protoc/include/google/protobuf/struct.proto  
+  #8 0.719   inflating: /tmp/protoc/include/google/protobuf/timestamp.proto  
+  #8 0.720   inflating: /tmp/protoc/include/google/protobuf/type.proto  
+  #8 0.720   inflating: /tmp/protoc/include/google/protobuf/wrappers.proto  
+  #8 0.720   inflating: /tmp/protoc/readme.txt  
+  #8 DONE 0.8s
+  #9 [ 5/12] RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest &&     go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest &&     go install github.com/golang/mock/mockgen@latest &&     go install github.com/mattn/goveralls@latest &&     go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest &&     go install github.com/securego/gosec/v2/cmd/gosec@latest
+  #9 0.932 go: downloading google.golang.org/protobuf v1.36.6
+  #9 10.28 go: downloading google.golang.org/grpc v1.73.0
+  #9 10.47 go: downloading google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1
+  #9 11.27 go: downloading google.golang.org/protobuf v1.34.1
+  #9 16.32 go: downloading github.com/golang/mock v1.6.0
+  #9 17.95 go: downloading golang.org/x/tools v0.1.1
+  #9 17.95 go: downloading golang.org/x/mod v0.4.2
+  #9 18.07 go: downloading golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
+  #9 19.21 go: downloading golang.org/x/sys v0.0.0-20210510120138-977fb7262007
+  #9 22.53 go: downloading github.com/mattn/goveralls v0.0.12
+  #9 24.77 go: downloading golang.org/x/tools v0.8.0
+  #9 24.77 go: downloading golang.org/x/mod v0.10.0
+  #9 32.67 go: downloading github.com/golangci/golangci-lint v1.64.8
+  #9 33.43 go: downloading github.com/gofrs/flock v0.12.1
+  #9 33.43 go: downloading github.com/fatih/color v1.18.0
+  #9 33.43 go: downloading github.com/nishanths/exhaustive v0.12.0
+  #9 33.43 go: downloading go.uber.org/automaxprocs v1.6.0
+  #9 33.43 go: downloading github.com/spf13/cobra v1.9.1
+  #9 33.43 go: downloading github.com/spf13/viper v1.12.0
+  #9 33.44 go: downloading github.com/spf13/pflag v1.0.6
+  #9 33.44 go: downloading github.com/santhosh-tekuri/jsonschema/v6 v6.0.1
+  #9 33.44 go: downloading honnef.co/go/tools v0.6.1
+  #9 33.44 go: downloading github.com/polyfloyd/go-errorlint v1.7.1
+  #9 33.44 go: downloading github.com/pelletier/go-toml/v2 v2.2.3
+  #9 33.44 go: downloading github.com/stretchr/testify v1.10.0
+  #9 33.44 go: downloading github.com/hashicorp/go-version v1.7.0
+  #9 33.44 go: downloading golang.org/x/tools v0.31.0
+  #9 33.44 go: downloading gopkg.in/yaml.v3 v3.0.1
+  #9 33.44 go: downloading github.com/ldez/exptostd v0.4.2
+  #9 33.44 go: downloading github.com/breml/errchkjson v0.4.0
+  #9 33.44 go: downloading github.com/gostaticanalysis/forcetypeassert v0.2.0
+  #9 33.44 go: downloading github.com/mattn/go-colorable v0.1.14
+  #9 33.44 go: downloading github.com/sirupsen/logrus v1.9.3
+  #9 33.44 go: downloading github.com/go-xmlfmt/xmlfmt v1.1.3
+  #9 33.44 go: downloading github.com/golangci/dupl v0.0.0-20250308024227-f665c8d69b32
+  #9 33.44 go: downloading github.com/breml/bidichk v0.3.2
+  #9 33.44 go: downloading github.com/ldez/grignotin v0.9.0
+  #9 33.44 go: downloading github.com/bkielbasa/cyclop v1.2.3
+  #9 33.44 go: downloading github.com/rogpeppe/go-internal v1.14.1
+  #9 33.44 go: downloading github.com/ashanbrown/forbidigo v1.6.0
+  #9 33.44 go: downloading github.com/lasiar/canonicalheader v1.1.2
+  #9 33.44 go: downloading github.com/Crocmagnon/fatcontext v0.7.1
+  #9 33.44 go: downloading github.com/Antonboom/errname v1.0.0
+  #9 33.44 go: downloading gitlab.com/bosi/decorder v0.4.2
+  #9 33.44 go: downloading github.com/timakin/bodyclose v0.0.0-20241017074812-ed6a65f985e3
+  #9 33.44 go: downloading github.com/karamaru-alpha/copyloopvar v1.2.1
+  #9 33.44 go: downloading github.com/kkHAIKE/contextcheck v1.1.6
+  #9 33.44 go: downloading github.com/alingse/asasalint v0.0.11
+  #9 33.44 go: downloading github.com/kisielk/errcheck v1.9.0
+  #9 33.44 go: downloading github.com/Abirdcfly/dupword v0.1.3
+  #9 33.44 go: downloading github.com/sivchari/containedctx v1.0.3
+  #9 33.44 go: downloading github.com/GaijinEntertainment/go-exhaustruct/v3 v3.3.1
+  #9 33.44 go: downloading github.com/jgautheron/goconst v1.7.1
+  #9 33.44 go: downloading github.com/tdakkota/asciicheck v0.4.1
+  #9 33.44 go: downloading github.com/OpenPeeDeeP/depguard/v2 v2.2.1
+  #9 33.44 go: downloading github.com/nunnatsa/ginkgolinter v0.19.1
+  #9 33.44 go: downloading github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24
+  #9 33.44 go: downloading github.com/fzipp/gocyclo v0.6.0
+  #9 33.44 go: downloading 4d63.com/gocheckcompilerdirectives v1.3.0
+  #9 33.44 go: downloading 4d63.com/gochecknoglobals v0.2.2
+  #9 33.44 go: downloading github.com/tetafro/godot v1.5.0
+  #9 33.44 go: downloading github.com/uudashr/gocognit v1.2.0
+  #9 33.44 go: downloading github.com/go-critic/go-critic v0.12.0
+  #9 33.45 go: downloading github.com/charithe/durationcheck v0.0.10
+  #9 33.45 go: downloading github.com/matoous/godox v1.1.0
+  #9 33.45 go: downloading github.com/golangci/gofmt v0.0.0-20250106114630-d62b90e6713d
+  #9 33.45 go: downloading github.com/ultraware/funlen v0.2.0
+  #9 33.45 go: downloading github.com/alecthomas/go-check-sumtype v0.3.1
+  #9 33.49 go: downloading github.com/daixiang0/gci v0.13.5
+  #9 33.49 go: downloading github.com/go-viper/mapstructure/v2 v2.2.1
+  #9 33.49 go: downloading github.com/mitchellh/go-homedir v1.1.0
+  #9 33.49 go: downloading golang.org/x/mod v0.24.0
+  #9 33.50 go: downloading mvdan.cc/gofumpt v0.7.0
+  #9 33.50 go: downloading github.com/quasilyte/go-ruleguard/dsl v0.3.22
+  #9 33.50 go: downloading github.com/golangci/revgrep v0.8.0
+  #9 33.50 go: downloading github.com/denis-tingaikin/go-header v0.5.0
+  #9 33.53 go: downloading github.com/golangci/plugin-module-register v0.1.1
+  #9 33.53 go: downloading github.com/sourcegraph/go-diff v0.7.0
+  #9 33.53 go: downloading github.com/ryancurrah/gomodguard v1.3.5
+  #9 33.53 go: downloading github.com/ldez/gomoddirectives v0.6.1
+  #9 33.53 go: downloading github.com/golangci/go-printf-func-name v0.1.0
+  #9 33.53 go: downloading github.com/xen0n/gosmopolitan v1.2.2
+  #9 33.53 go: downloading github.com/securego/gosec/v2 v2.22.2
+  #9 33.53 go: downloading github.com/leonklingele/grouper v1.1.2
+  #9 33.98 go: downloading github.com/pelletier/go-toml v1.9.5
+  #9 34.00 go: downloading github.com/uudashr/iface v1.3.1
+  #9 34.00 go: downloading github.com/quasilyte/go-ruleguard v0.4.3-0.20240823090925-0fe6f58b47b1
+  #9 34.04 go: downloading github.com/julz/importas v0.2.0
+  #9 34.05 go: downloading github.com/macabu/inamedparam v0.1.3
+  #9 34.05 go: downloading github.com/gordonklaus/ineffassign v0.1.0
+  #9 34.05 go: downloading github.com/sashamelentyev/interfacebloat v1.1.0
+  #9 34.05 go: downloading github.com/ckaznocha/intrange v0.3.0
+  #9 34.05 go: downloading github.com/butuzov/ireturn v0.3.1
+  #9 34.05 go: downloading github.com/timonwong/loggercheck v0.10.1
+  #9 34.05 go: downloading github.com/yagipy/maintidx v1.0.0
+  #9 34.06 go: downloading github.com/ashanbrown/makezero v1.2.0
+  #9 34.06 go: downloading github.com/butuzov/mirror v1.3.0
+  #9 34.07 go: downloading github.com/golangci/misspell v0.6.0
+  #9 34.07 go: downloading github.com/tommy-muehle/go-mnd/v2 v2.5.1
+  #9 34.07 go: downloading go-simpler.org/musttag v0.13.0
+  #9 34.07 go: downloading github.com/alexkohler/nakedret/v2 v2.0.5
+  #9 34.07 go: downloading github.com/gostaticanalysis/nilerr v0.1.1
+  #9 34.07 go: downloading github.com/alingse/nilnesserr v0.1.2
+  #9 34.07 go: downloading github.com/nakabonne/nestif v0.3.1
+  #9 34.07 go: downloading github.com/Antonboom/nilnil v1.0.1
+  #9 34.08 go: downloading github.com/ssgreg/nlreturn/v2 v2.2.1
+  #9 34.09 go: downloading github.com/sonatard/noctx v0.1.0
+  #9 34.09 go: downloading github.com/firefart/nonamedreturns v1.0.5
+  #9 34.09 go: downloading github.com/stbenjam/no-sprintf-host-port v0.2.0
+  #9 34.10 go: downloading github.com/kunwardeep/paralleltest v1.0.10
+  #9 34.10 go: downloading github.com/catenacyber/perfsprint v0.8.2
+  #9 34.10 go: downloading github.com/alexkohler/prealloc v1.0.0
+  #9 34.11 go: downloading github.com/nishanths/predeclared v0.2.2
+  #9 34.12 go: downloading github.com/yeya24/promlinter v0.3.0
+  #9 34.14 go: downloading github.com/ghostiam/protogetter v0.3.9
+  #9 34.14 go: downloading github.com/raeperd/recvcheck v0.2.0
+  #9 34.14 go: downloading github.com/jingyugao/rowserrcheck v1.1.1
+  #9 34.15 go: downloading go-simpler.org/sloglint v0.9.0
+  #9 34.15 go: downloading github.com/jjti/go-spancheck v0.6.4
+  #9 34.15 go: downloading github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c
+  #9 34.16 go: downloading github.com/ryanrolds/sqlclosecheck v0.5.1
+  #9 34.16 go: downloading github.com/4meepo/tagalign v1.4.2
+  #9 34.17 go: downloading github.com/ldez/tagliatelle v0.7.1
+  #9 34.17 go: downloading github.com/sivchari/tenv v1.12.1
+  #9 34.17 go: downloading github.com/mgechev/revive v1.7.0
+  #9 34.18 go: downloading github.com/maratori/testableexamples v1.0.0
+  #9 34.18 go: downloading github.com/maratori/testpackage v1.1.1
+  #9 34.26 go: downloading github.com/kulti/thelper v0.6.3
+  #9 34.26 go: downloading github.com/moricho/tparallel v0.3.2
+  #9 34.26 go: downloading github.com/golangci/unconvert v0.0.0-20240309020433-c5143eacb3ed
+  #9 34.29 go: downloading mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f
+  #9 34.36 go: downloading github.com/blizzy78/varnamelen v0.8.0
+  #9 34.36 go: downloading github.com/sanposhiho/wastedassign/v2 v2.1.0
+  #9 34.37 go: downloading github.com/ultraware/whitespace v0.2.0
+  #9 34.37 go: downloading github.com/tomarrell/wrapcheck/v2 v2.10.0
+  #9 34.37 go: downloading github.com/bombsimon/wsl/v4 v4.5.0
+  #9 34.38 go: downloading github.com/ykadowak/zerologlint v0.1.5
+  #9 34.38 go: downloading github.com/curioswitch/go-reassign v0.3.0
+  #9 34.38 go: downloading github.com/Antonboom/testifylint v1.5.2
+  #9 34.39 go: downloading github.com/sashamelentyev/usestdlibvars v1.28.0
+  #9 34.39 go: downloading github.com/ldez/usetesting v0.4.2
+  #9 34.44 go: downloading golang.org/x/sys v0.31.0
+  #9 34.44 go: downloading github.com/mattn/go-isatty v0.0.20
+  #9 34.44 go: downloading github.com/gobwas/glob v0.2.3
+  #9 34.45 go: downloading github.com/hexops/gotextdiff v1.0.3
+  #9 34.45 go: downloading golang.org/x/sync v0.12.0
+  #9 34.46 go: downloading go.uber.org/zap v1.24.0
+  #9 34.46 go: downloading github.com/gostaticanalysis/analysisutil v0.7.1
+  #9 34.47 go: downloading github.com/google/go-cmp v0.7.0
+  #9 34.48 go: downloading github.com/davecgh/go-spew v1.1.1
+  #9 34.52 go: downloading github.com/pmezard/go-difflib v1.0.0
+  #9 34.53 go: downloading github.com/stretchr/objx v0.5.2
+  #9 34.54 go: downloading golang.org/x/text v0.22.0
+  #9 34.58 go: downloading gopkg.in/yaml.v2 v2.4.0
+  #9 34.58 go: downloading github.com/fsnotify/fsnotify v1.5.4
+  #9 34.59 go: downloading github.com/mitchellh/mapstructure v1.5.0
+  #9 34.60 go: downloading github.com/spf13/afero v1.12.0
+  #9 34.61 go: downloading github.com/spf13/cast v1.5.0
+  #9 34.61 go: downloading github.com/spf13/jwalterweatherman v1.1.0
+  #9 34.61 go: downloading github.com/Masterminds/semver/v3 v3.3.0
+  #9 34.61 go: downloading github.com/go-toolsmith/astcast v1.1.0
+  #9 34.61 go: downloading github.com/ccojocar/zxcvbn-go v1.0.2
+  #9 34.61 go: downloading github.com/go-toolsmith/astfmt v1.1.0
+  #9 34.61 go: downloading github.com/go-toolsmith/astcopy v1.1.0
+  #9 34.64 go: downloading github.com/go-toolsmith/astequal v1.2.0
+  #9 34.65 go: downloading github.com/go-toolsmith/astp v1.1.0
+  #9 34.67 go: downloading github.com/go-toolsmith/strparse v1.1.0
+  #9 34.67 go: downloading github.com/go-toolsmith/typep v1.1.0
+  #9 34.69 go: downloading github.com/quasilyte/regex/syntax v0.0.0-20210819130434-b3f0c404a727
+  #9 34.70 go: downloading github.com/gostaticanalysis/comment v1.5.0
+  #9 34.70 go: downloading github.com/ettle/strcase v0.2.0
+  #9 34.70 go: downloading github.com/fatih/structtag v1.2.0
+  #9 34.70 go: downloading github.com/hashicorp/go-immutable-radix/v2 v2.1.0
+  #9 34.72 go: downloading github.com/subosito/gotenv v1.4.1
+  #9 34.73 go: downloading github.com/hashicorp/hcl v1.0.0
+  #9 34.73 go: downloading gopkg.in/ini.v1 v1.67.0
+  #9 34.74 go: downloading github.com/magiconair/properties v1.8.6
+  #9 34.74 go: downloading github.com/prometheus/client_golang v1.12.1
+  #9 34.76 go: downloading github.com/prometheus/client_model v0.2.0
+  #9 34.76 go: downloading golang.org/x/exp/typeparams v0.0.0-20250210185358-939b2ce775ac
+  #9 34.80 go: downloading github.com/chavacava/garif v0.1.0
+  #9 34.80 go: downloading github.com/olekukonko/tablewriter v0.0.5
+  #9 34.82 go: downloading github.com/quasilyte/gogrep v0.5.0
+  #9 34.87 go: downloading github.com/quasilyte/stdinfo v0.0.0-20220114132959-f7386bf02567
+  #9 34.91 go: downloading go.uber.org/multierr v1.6.0
+  #9 34.91 go: downloading go.uber.org/atomic v1.7.0
+  #9 34.99 go: downloading golang.org/x/exp v0.0.0-20240909161429-701f63a606c0
+  #9 35.00 go: downloading github.com/hashicorp/golang-lru/v2 v2.0.7
+  #9 35.03 go: downloading github.com/golang/protobuf v1.5.3
+  #9 35.07 go: downloading github.com/mattn/go-runewidth v0.0.16
+  #9 35.14 go: downloading github.com/prometheus/common v0.32.1
+  #9 35.14 go: downloading github.com/beorn7/perks v1.0.1
+  #9 35.14 go: downloading github.com/cespare/xxhash/v2 v2.3.0
+  #9 35.14 go: downloading github.com/prometheus/procfs v0.7.3
+  #9 35.14 go: downloading google.golang.org/protobuf v1.36.5
+  #9 35.31 go: downloading github.com/rivo/uniseg v0.4.7
+  #9 35.50 go: downloading github.com/matttproud/golang_protobuf_extensions v1.0.1
+  #9 47.43 go: downloading github.com/securego/gosec v0.0.0-20200401082031-e946c8c39989
+  #9 47.45 go: downloading github.com/securego/gosec/v2 v2.22.5
+  #9 47.92 go: downloading golang.org/x/tools v0.34.0
+  #9 47.92 go: downloading google.golang.org/api v0.237.0
+  #9 47.92 go: downloading github.com/google/generative-ai-go v0.20.1
+  #9 47.92 go: downloading github.com/google/uuid v1.6.0
+  #9 47.92 go: downloading github.com/ccojocar/zxcvbn-go v1.0.4
+  #9 47.92 go: downloading github.com/gookit/color v1.5.4
+  #9 48.47 go: downloading github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
+  #9 48.89 go: downloading github.com/googleapis/gax-go/v2 v2.14.2
+  #9 48.89 go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20250603155806-513f23925822
+  #9 48.89 go: downloading cloud.google.com/go/ai v0.12.1
+  #9 48.92 go: downloading golang.org/x/sys v0.33.0
+  #9 49.33 go: downloading golang.org/x/net v0.41.0
+  #9 49.53 go: downloading golang.org/x/sync v0.15.0
+  #9 49.53 go: downloading golang.org/x/mod v0.25.0
+  #9 49.60 go: downloading cloud.google.com/go v0.121.2
+  #9 50.12 go: downloading golang.org/x/text v0.26.0
+  #9 50.27 go: downloading cloud.google.com/go/longrunning v0.6.7
+  #9 50.27 go: downloading google.golang.org/genproto/googleapis/api v0.0.0-20250603155806-513f23925822
+  #9 54.73 go: downloading golang.org/x/oauth2 v0.30.0
+  #9 54.73 go: downloading cloud.google.com/go/auth v0.16.2
+  #9 54.73 go: downloading github.com/google/s2a-go v0.1.9
+  #9 54.73 go: downloading cloud.google.com/go/compute/metadata v0.7.0
+  #9 54.73 go: downloading go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.61.0
+  #9 54.73 go: downloading github.com/googleapis/enterprise-certificate-proxy v0.3.6
+  #9 54.73 go: downloading cloud.google.com/go/auth/oauth2adapt v0.2.8
+  #9 54.73 go: downloading go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.61.0
+  #9 54.73 go: downloading golang.org/x/time v0.12.0
+  #9 55.02 go: downloading go.opentelemetry.io/otel/trace v1.36.0
+  #9 55.02 go: downloading go.opentelemetry.io/otel/metric v1.36.0
+  #9 55.02 go: downloading go.opentelemetry.io/otel v1.36.0
+  #9 55.02 go: downloading github.com/felixge/httpsnoop v1.0.4
+  #9 55.46 go: downloading golang.org/x/crypto v0.39.0
+  #9 55.62 go: downloading github.com/go-logr/logr v1.4.3
+  #9 55.62 go: downloading github.com/go-logr/stdr v1.2.2
+  #9 55.62 go: downloading go.opentelemetry.io/auto/sdk v1.1.0
+  #9 DONE 65.5s
+  #10 [ 6/12] COPY go.mod go.sum ./
+  #10 DONE 0.0s
+  #11 [ 7/12] RUN go mod download
+  #11 DONE 3.9s
+  #12 [ 8/12] COPY examples/go.mod examples/go.sum ./examples/
+  #12 DONE 0.0s
+  #13 [ 9/12] RUN if [ -f ./examples/go.mod ]; then cd ./examples && go mod download; fi
+  #13 4.290 go: google.golang.org/grpc/gcp/observability@v1.0.1 (replaced by ../gcp/observability): reading ../gcp/observability/go.mod: open /home/cc/EnvGym/data/grpc_grpc-go/gcp/observability/go.mod: no such file or directory
+  #13 ERROR: process "/bin/sh -c if [ -f ./examples/go.mod ]; then cd ./examples && go mod download; fi" did not complete successfully: exit code: 1
+  ------
+   > [ 9/12] RUN if [ -f ./examples/go.mod ]; then cd ./examples && go mod download; fi:
+  4.290 go: google.golang.org/grpc/gcp/observability@v1.0.1 (replaced by ../gcp/observability): reading ../gcp/observability/go.mod: open /home/cc/EnvGym/data/grpc_grpc-go/gcp/observability/go.mod: no such file or directory
+  ------
+   [33m1 warning found (use docker --debug to expand):
+  [0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+  envgym.dockerfile:52
+  --------------------
+    50 |     # If there are submodule go.mod files (e.g., in examples/ or gcp/observability/), copy and download their deps
+    51 |     COPY examples/go.mod examples/go.sum ./examples/
+    52 | >>> RUN if [ -f ./examples/go.mod ]; then cd ./examples && go mod download; fi
+    53 |     COPY gcp/observability/go.mod gcp/observability/go.sum ./gcp/observability/
+    54 |     RUN if [ -f ./gcp/observability/go.mod ]; then cd ./gcp/observability && go mod download; fi
+  --------------------
+  ERROR: failed to build: failed to solve: process "/bin/sh -c if [ -f ./examples/go.mod ]; then cd ./examples && go mod download; fi" did not complete successfully: exit code: 1
+  === Runtime Log ===  
+  Runtime Status: Failed
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM --platform=linux/amd64 golang:1.24-bullseye
+  # Set environment variables for Go
+  ENV GO111MODULE=on \
+      CGO_ENABLED=1 \
+      GOARCH=amd64 \
+      GOCACHE=/go/cache
+  # Set the working directory as specified
+  WORKDIR /home/cc/EnvGym/data/grpc_grpc-go
+  # Install required system packages (git, make, build-essential, openssl, ca-certificates, libssl-dev, unzip, curl, wget)
+  RUN apt-get update && \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        git \
+        make \
+        build-essential \
+        openssl \
+        ca-certificates \
+        libssl-dev \
+        unzip \
+        curl \
+        wget && \
+      rm -rf /var/lib/apt/lists/*
+  # Install protoc (Protocol Buffers Compiler) for amd64
+  ENV PROTOC_VERSION=25.3
+  RUN wget -q https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip -O /tmp/protoc.zip && \
+      unzip -d /tmp/protoc /tmp/protoc.zip && \
+      mv /tmp/protoc/bin/protoc /usr/local/bin/protoc && \
+      chmod +x /usr/local/bin/protoc && \
+      cp -r /tmp/protoc/include/* /usr/local/include/ && \
+      rm -rf /tmp/protoc*
+  # Add Go bin to PATH (for go install tools)
+  ENV PATH=$PATH:/go/bin:/root/go/bin:/home/cc/go/bin
+  # Install commonly used Go protobuf plugins and tools (for Go 1.17+; will install to /go/bin)
+  RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \
+      go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest && \
+      go install github.com/golang/mock/mockgen@latest && \
+      go install github.com/mattn/goveralls@latest && \
+      go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && \
+      go install github.com/securego/gosec/v2/cmd/gosec@latest
+  # Copy Go module files and download dependencies first for better cache usage
+  COPY go.mod go.sum ./
+  RUN go mod download
+  # If there are submodule go.mod files (e.g., in examples/ or gcp/observability/), copy and download their deps
+  COPY examples/go.mod examples/go.sum ./examples/
+  RUN if [ -f ./examples/go.mod ]; then cd ./examples && go mod download; fi
+  COPY gcp/observability/go.mod gcp/observability/go.sum ./gcp/observability/
+  RUN if [ -f ./gcp/observability/go.mod ]; then cd ./gcp/observability && go mod download; fi
+  # Copy the entire repository (excluding files ignored by .dockerignore)
+  COPY . .
+  # Default command: print Go version and shell
+  CMD ["/bin/bash"]
+--- End of Iteration 1 ---
+
+=== Iteration 2 - [2025-07-20 12:28:21] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu/Debian, /home/cc/EnvGym/data/grpc_grpc-go) ===
+  **NOTES ON HARDWARE:**
+  - CPU: x86_64 (amd64); do not use ARM64 images or binaries by default; target `linux/amd64` for Docker builds and local binaries.
+  - No GPU: Ignore CUDA/NVIDIA dependencies or flags.
+  - OS: Use Ubuntu 22.04, Debian (bullseye/bullseye-slim), or `golang:1.x-bullseye` base images.
+  - Docker: v28.3.2; supports BuildKit, Compose v2; no experimental features.
+  - Working Directory: `/home/cc/EnvGym/data/grpc_grpc-go`; all absolute paths and Docker contexts must reflect this.
+  - Storage: Ensure sufficient disk for large Go modules and Docker layers; monitor if running CI locally.
+  - RAM: Not specified, but unless system is extremely memory-constrained, no major changes needed. If you know your memory is below 4 GB, consider limiting `make -j` parallelism and Docker resource usage.
+  - Filesystem: extfs/overlay2; no special constraints for Go or Docker.
+  ---
+  1. DOWNLOADS NEEDED (adjusted):
+     - **Go Programming Language**: Download amd64 (x86_64) binaries ONLY. Do not attempt ARM64 Go installations on this machine. Test Go 1.23 and 1.24 for CI compatibility.
+     - **Git**: Latest stable. For Ubuntu/Debian: `apt-get install git`.
+     - **GNU Make**: Latest available via `apt-get install make`.
+     - **protoc** (Protocol Buffers Compiler): Download x86_64/amd64 release. For Ubuntu/Debian, prefer official `.deb` or extract from official zip.
+     - **Protobuf Plugins**:
+       - Install via `go install` using amd64 Go toolchain. Ensure `$GOPATH/bin` or Go 1.17+ `$HOME/go/bin` is in `$PATH`.
+     - **QEMU user-static emulator**: Install only if you need to run/test ARM64 containers. For your x86_64 host, `docker run --platform=linux/arm64` will require QEMU, but normal development is on amd64.
+     - **Docker**: Already present. Ensure you use amd64 base images (see below).
+     - **Build tools**: For Ubuntu: `apt-get install build-essential`.
+     - **VPN Client**: If required, ensure it supports x86_64 Linux.
+     - **Code Editor/IDE**: VSCode, GoLand, etc. (x86_64).
+     - **Code coverage tools, static analysis, shell utilities**: Install for amd64; no ARM-specific binaries.
+     - **Go/OpenTelemetry/Prometheus/AWS/Google Cloud/Other Go Dependencies**: All are architecture-independent Go modules. When building Docker images, ensure Go modules are downloaded for amd64.
+     - **System Packages**: For SSL/TLS, networking: `apt-get install openssl ca-certificates libssl-dev`.
+     - **Codecov CLI, CodeQL CLI**: Download amd64 binaries.
+     - **(NEW)** When pulling container images, always use `--platform=linux/amd64` (e.g., in Dockerfiles or CI).
+     - **(NEW)** When running qemu-based cross-arch tests, be aware performance may be much slower on x86_64 host. If you do not require ARM64 emulation locally, you may skip QEMU installation.
+  2. FILES TO CREATE (adjustments):
+     - **go.mod/go.sum**, **examples/go.mod/go.sum**, **gcp/observability/go.mod/go.sum**: No change; but always operate in `/home/cc/EnvGym/data/grpc_grpc-go` and subdirs.
+     - **.gitignore**: No change, but ensure ignore patterns work in the full path context.
+     - **Makefile**: Default `GOARCH=amd64`. Document that all targets build for amd64 unless explicitly cross-compiling. If adding cross-arch targets, require QEMU.
+     - **Dockerfiles**:
+       - Always specify `FROM ... --platform=linux/amd64` or use amd64 images (e.g., `FROM golang:1.24-bullseye`).
+       - Set `WORKDIR /home/cc/EnvGym/data/grpc_grpc-go` as appropriate.
+       - Avoid use of `--gpus` flag or CUDA/NVIDIA images.
+     - **Workflow files**: In GitHub Actions, always use `runs-on: ubuntu-latest` (amd64) unless testing ARM64 in matrix builds. For local Docker Compose, ensure no ARM64 images are specified unless for QEMU/CI tests.
+     - **README/CONTRIBUTING**:
+       - Document that the default/local development environment is x86_64/amd64.
+       - If users want to test ARM64, instruct them to use QEMU and Docker cross-platform, but note this is optional.
+       - If any references to ARM64 setup exist, mark them as "advanced/optional" for CI or cross-platform validation only.
+     - **Scripts**:
+       - All scripts should assume `GOARCH=amd64` by default.
+       - If supporting cross-arch builds, require explicit flags (e.g., `GOARCH=arm64 make build`).
+       - Use `/home/cc/EnvGym/data/grpc_grpc-go` as working path in scripts if absolute paths are needed.
+  3. NECESSARY TEST CASES (adjustments):
+     - All tests should run on amd64 (default).
+     - For cross-arch (ARM64) tests, mark these as optional/CI-only. If running locally, document the need for QEMU and performance caveats.
+     - In Docker-based tests, always specify `--platform=linux/amd64` unless explicitly testing ARM64.
+     - No GPU-specific cases are needed.
+     - For coverage and analysis, no adjustment needed.
+  4. TODO LIST (adjustments):
+     1. Download and install Go (≥1.23) for amd64. Use official tarball or `apt` if available.
+     2. Install Git, Make, build-essential, openssl, ca-certificates, libssl-dev for x86_64/amd64 via `apt`.
+     3. Download protoc for x86_64/amd64.
+     4. Install all Go tools via Go's amd64 toolchain.
+     5. Install Docker if not present (ensure version ≥28.3.2).
+     6. QEMU user-static: **OPTIONAL** for local ARM64 testing. Document as such. If installed, use `apt-get install qemu-user-static`.
+     7. All Makefile/Dockerfile/CI targets default to amd64 (`GOARCH=amd64`).
+     8. All Docker builds use `--platform=linux/amd64` and compatible base images (`golang:1.x-bullseye`, `ubuntu:22.04`, etc.).
+     9. Paths in scripts/workflows/Makefiles are relative to `/home/cc/EnvGym/data/grpc_grpc-go` as root.
+     10. Documentation (README, CONTRIBUTING) must note that local dev is on amd64, ARM64 support is for CI/optional.
+     11. No CUDA, NVIDIA, or GPU-specific steps, flags, or base images anywhere.
+     12. (Optional) For parallel builds, you may use `make -jN` where N is number of logical CPUs, but be aware of system memory.
+     13. All module and coverage scripts, dependency checks, etc., as before, but assume amd64 unless stated otherwise.
+     14. All workflow YAML files (`.github/workflows/*`) must assume `runs-on: ubuntu-latest` (amd64) for all jobs, unless deliberately testing QEMU/ARM64 in the matrix.
+     15. If disk or memory is tight, suggest users prune unused Docker images/layers and limit parallel jobs in Make/tests.
+  5. VERIFICATION METHODS (adjustments):
+     - When building/running Docker images or containers, always check image architecture: `docker inspect --format '{{.Os}}/{{.Architecture}}'`.
+     - All `go build`, `go test`, etc., default to amd64.
+     - `uname -m` must output `x86_64` or `amd64`. If not, revisit installation steps.
+     - If QEMU/ARM64 tests are run, ensure `qemu-aarch64-static` is present and properly registered.
+     - All scripts and workflows should include checks for `GOARCH` and warn if not equal to `amd64` unless explicitly overridden.
+     - No references to GPU, ARM-only, or CUDA-specific tooling in any documentation or workflows for this environment.
+  ---
+  **SUMMARY OF ADJUSTMENTS:**
+  - All builds, tests, and Docker images are for amd64 (x86_64) by default.
+  - ARM64/QEMU setup marked as optional for CI/cross-arch testing only.
+  - No GPU- or CUDA-related steps or dependencies.
+  - Use Ubuntu/Debian/Go base images for amd64 only.
+  - Document and enforce `/home/cc/EnvGym/data/grpc_grpc-go` as the root for all scripts and Docker contexts.
+  - All scripts, Makefile, workflow steps, and documentation updated to clarify architecture and avoid ARM64/GPU confusion.
+  - Monitor system resources as needed, but normal Go/Docker workflows should be fine for standard RAM/disk.
+  **ALL OTHER PARTS OF THE PLAN REMAIN AS IN THE ORIGINAL, ADJUSTED TO THE ABOVE ARCHITECTURE AND DIRECTORY CONTEXT.**
+NEXT:
+  current progress
+  - Docker image is being built from `golang:1.24-bullseye` for `linux/amd64` as required.
+  - All environment variables (`GO111MODULE`, `CGO_ENABLED`, `GOARCH=amd64`, `GOCACHE`) are set correctly.
+  - Working directory is set to `/home/cc/EnvGym/data/grpc_grpc-go` as specified in the plan.
+  - All required system packages (git, make, build-essential, openssl, ca-certificates, libssl-dev, unzip, curl, wget) are installed for amd64.
+  - `protoc` (Protocol Buffers Compiler) for amd64 is installed at the correct version (`25.3`).
+  - Go bin directories are included in `PATH` for tool installation.
+  - Common Go tools and protobuf plugins are installed via `go install` using the amd64 Go toolchain.
+  - The repository is copied into the Docker image context.
+  - Go module dependencies are downloaded for the root module and for submodules if their `go.mod` files exist.
+  - No ARM64, CUDA, or GPU-specific steps are present.
+  - The image build and runtime both succeeded according to the last execution log.
+  next step
+  - Review and update any documentation references in the Dockerfile as comments, if necessary, to clarify that only amd64 is supported and ARM64/QEMU steps are optional/advanced.
+  - Ensure that no references, comments, or commands related to ARM64 or GPU/CUDA remain in the Dockerfile.
+  - Confirm all scripts or build steps invoked from the Dockerfile (if any) assume `GOARCH=amd64` by default.
+  - If workflows or build scripts are triggered within the Dockerfile, verify they use absolute paths relative to `/home/cc/EnvGym/data/grpc_grpc-go`.
+  - Optionally, add a final verification step or comment in the Dockerfile to remind users to check image architecture with `docker inspect`.
+  - No functional changes are required unless new dependencies/tools are needed; otherwise, the Dockerfile is aligned with the current plan.
+STATUS:
+  SUCCESS
+LOG:
+  === Docker Execution Log - 20250720_122813 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1753014453
+  === Build Log ===
+  Build Status: Success
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 2.20kB done
+  #1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/golang:1.24-bullseye
+  #2 DONE 0.1s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [1/9] FROM docker.io/library/golang:1.24-bullseye@sha256:254c0d1f13aad57bb210caa9e049deaee17ab7b8a976dba755cba1adf3fbe291
+  #4 DONE 0.0s
+  #5 [3/9] RUN apt-get update &&     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       git       make       build-essential       openssl       ca-certificates       libssl-dev       unzip       curl       wget &&     rm -rf /var/lib/apt/lists/*
+  #5 CACHED
+  #6 [4/9] RUN wget -q https://github.com/protocolbuffers/protobuf/releases/download/v25.3/protoc-25.3-linux-x86_64.zip -O /tmp/protoc.zip &&     unzip -d /tmp/protoc /tmp/protoc.zip &&     mv /tmp/protoc/bin/protoc /usr/local/bin/protoc &&     chmod +x /usr/local/bin/protoc &&     cp -r /tmp/protoc/include/* /usr/local/include/ &&     rm -rf /tmp/protoc*
+  #6 CACHED
+  #7 [2/9] WORKDIR /home/cc/EnvGym/data/grpc_grpc-go
+  #7 CACHED
+  #8 [5/9] RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest &&     go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest &&     go install github.com/golang/mock/mockgen@latest &&     go install github.com/mattn/goveralls@latest &&     go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest &&     go install github.com/securego/gosec/v2/cmd/gosec@latest
+  #8 CACHED
+  #9 [internal] load build context
+  #9 transferring context: 202.33kB 0.1s done
+  #9 DONE 0.1s
+  #10 [6/9] COPY . .
+  #10 DONE 0.4s
+  #11 [7/9] RUN go mod download
+  #11 DONE 2.8s
+  #12 [8/9] RUN if [ -f examples/go.mod ]; then cd examples && go mod download; fi
+  #12 DONE 11.0s
+  #13 [9/9] RUN if [ -f gcp/observability/go.mod ]; then cd gcp/observability && go mod download; fi
+  #13 DONE 0.3s
+  #14 exporting to image
+  #14 exporting layers
+  #14 exporting layers 24.9s done
+  #14 writing image sha256:8d4ffb83829b33f0415ef0980a286533700053fb569649c1a7396b96722a8d81 done
+  #14 naming to docker.io/library/envgym_test_1753014453 done
+  #14 DONE 24.9s
+   [33m1 warning found (use docker --debug to expand):
+  [0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+  === Runtime Log ===  
+  Runtime Status: Success
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM --platform=linux/amd64 golang:1.24-bullseye
+  # Set environment variables for Go
+  ENV GO111MODULE=on \
+      CGO_ENABLED=1 \
+      GOARCH=amd64 \
+      GOCACHE=/go/cache
+  # Set the working directory as specified
+  WORKDIR /home/cc/EnvGym/data/grpc_grpc-go
+  # Install required system packages (git, make, build-essential, openssl, ca-certificates, libssl-dev, unzip, curl, wget)
+  RUN apt-get update && \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        git \
+        make \
+        build-essential \
+        openssl \
+        ca-certificates \
+        libssl-dev \
+        unzip \
+        curl \
+        wget && \
+      rm -rf /var/lib/apt/lists/*
+  # Install protoc (Protocol Buffers Compiler) for amd64
+  ENV PROTOC_VERSION=25.3
+  RUN wget -q https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip -O /tmp/protoc.zip && \
+      unzip -d /tmp/protoc /tmp/protoc.zip && \
+      mv /tmp/protoc/bin/protoc /usr/local/bin/protoc && \
+      chmod +x /usr/local/bin/protoc && \
+      cp -r /tmp/protoc/include/* /usr/local/include/ && \
+      rm -rf /tmp/protoc*
+  # Add Go bin to PATH (for go install tools)
+  ENV PATH=$PATH:/go/bin:/root/go/bin:/home/cc/go/bin
+  # Install commonly used Go protobuf plugins and tools (for Go 1.17+; will install to /go/bin)
+  RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \
+      go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest && \
+      go install github.com/golang/mock/mockgen@latest && \
+      go install github.com/mattn/goveralls@latest && \
+      go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && \
+      go install github.com/securego/gosec/v2/cmd/gosec@latest
+  # Copy the entire repository (excluding files ignored by .dockerignore)
+  COPY . .
+  # Download dependencies for the root module
+  RUN go mod download
+  # Download dependencies for submodules if their go.mod files exist
+  RUN if [ -f examples/go.mod ]; then cd examples && go mod download; fi
+  RUN if [ -f gcp/observability/go.mod ]; then cd gcp/observability && go mod download; fi
+  # Default command: print Go version and shell
+  CMD ["/bin/bash"]
+--- End of Iteration 2 ---
+

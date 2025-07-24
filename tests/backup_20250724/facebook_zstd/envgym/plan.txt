@@ -1,0 +1,197 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN FOR /home/cc/EnvGym/data/facebook_zstd (x86_64, Ubuntu/Linux, Docker 28.3.2, NO GPU) ===
+
+**Summary of Adjustments:**
+- Architecture is x86_64 (amd64): Use amd64 images and toolchains (no ARM or cross-compilation needed).
+- No NVIDIA GPU: Ignore CUDA, GPU, and related dependencies.
+- Working under /home/cc/EnvGym/data/facebook_zstd; set WORKDIR accordingly in Dockerfile and scripts.
+- Docker is recent (28.3.2), supports BuildKit, multi-stage builds, Compose, and all modern syntax.
+- No special hardware constraints; can use multi-core CPU optimizations.
+- Use only packages, tools, and images compatible with Ubuntu/Linux x86_64.
+- Ensure storage and memory use are reasonable for a typical development VM/server.
+- No macOS or Windows specifics required unless cross-building or for documentation completeness.
+- Confirm all paths and instructions reference the correct working directory and Linux conventions.
+
+---
+
+**1. DOWNLOADS NEEDED:**
+- All listed downloads are compatible with x86_64 Ubuntu/Linux.
+- **Compilers:**  
+  - GCC (>=7.3.0; Ubuntu 22.04 default is 11.x, sufficient).  
+  - G++ for C++ (for `gen_html` etc.).  
+  - Make utility (GNU Make).
+- **CMake:**  
+  - Use Ubuntu 22.04’s or newer: `apt-get install cmake` (>=3.22).  
+  - No iOS or Apple-specific toolchains required.
+- **Ninja:**  
+  - Optional, install via `apt-get install ninja-build`.
+- **Meson, Python 3:**  
+  - Install via pip or `apt-get install meson python3`.
+- **Visual Studio, MSVC, MinGW:**  
+  - Not needed for native Linux builds. Only referenced for documentation or if building for Windows in cross-build scenarios (not required here).
+- **vcpkg, Conan, Buck, Bazel:**  
+  - Optional, but available for Linux x86_64.  
+  - Install with pip or as per docs if needed.
+- **lzbench, zstd source, Docker, Alpine image:**  
+  - All compatible with x86_64; use official images and source.
+  - Use Docker images like `ubuntu:22.04` or `alpine:latest` with `--platform=linux/amd64` if needed.
+- **Datagen, lz4, brotli, zlib, snappy, lzo, lzf:**  
+  - Optional for benchmarking; available as Linux packages.
+- **Git, libc headers:**  
+  - `apt-get install git build-essential`
+- **OSS-Fuzz:**  
+  - Available but optional; requires additional setup.
+- **Docker Compose:**  
+  - Optional, install via `apt-get install docker-compose` or use Compose V2 plugin.
+- **No GPU-specific libraries (CUDA, cuDNN, etc.) required or supported.**
+
+**2. FILES TO CREATE:**
+- **All file paths should be relative to `/home/cc/EnvGym/data/facebook_zstd`.**
+- **Dockerfile:**  
+  - Use `WORKDIR /home/cc/EnvGym/data/facebook_zstd`
+  - Use `FROM ubuntu:22.04` or similar, with `--platform=linux/amd64` if needed.
+  - Do NOT use or reference ARM, Apple, or Windows base images.
+  - Do NOT add CUDA, GPU, or NVIDIA-specific lines.
+- **All other files (Makefiles, scripts, README, etc.):**  
+  - Ensure they reference Linux paths (forward slashes).
+  - Any scripts (e.g., `setup_env.sh`) should be Bash-compatible.
+  - No Windows batch scripts or project files are needed unless for documentation.
+- **No need to create or reference Visual Studio .sln/.vcxproj, or MinGW-specific Makefiles for local native build.**  
+  - Documentation can still mention them for users on other platforms.
+- **All other documentation, build, and test files remain as in the plan; ensure all scripts and paths use Linux conventions.**
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**
+- All tests and build verifications should be run on x86_64/Linux.
+- **No need to test cross-compilation for ARM, i386, or Windows.**
+- **No need to verify macOS or Apple/iOS builds.**
+- **No GPU-specific tests required.**
+- **Docker-related tests:**  
+  - Use `docker build` and `docker run` with images built for `linux/amd64`.
+  - Compose and multi-stage builds are supported.
+  - Test commands and volumes should use Linux paths.
+- **Visual Studio-specific tests and DLL usage:**  
+  - Not required for local Linux build.  
+  - May be skipped or referenced as documentation only.
+- **Memory and storage:**  
+  - No explicit constraints, but ensure intermediate files and build artifacts do not exhaust disk space (typical for build directories).
+- **Other tests (single-file library, kernel integration, etc.):**  
+  - All compatible with Linux/x86_64.
+- **All test scripts should run in Bash or POSIX shell.**
+
+**4. COMPLETE TODO LIST (ADJUSTED):**
+1. **Install Git:**  
+   `sudo apt-get update && sudo apt-get install git`
+2. **Clone zstd source:**  
+   `git clone https://github.com/facebook/zstd.git`  
+   (Directory: `/home/cc/EnvGym/data/facebook_zstd`)
+3. **Install build tools:**  
+   `sudo apt-get install build-essential cmake make g++ python3`  
+   (GCC, G++, Make, CMake, Python 3)
+4. **(Optional) Install Ninja:**  
+   `sudo apt-get install ninja-build`
+5. **(Optional) Install Meson:**  
+   `pip3 install meson` or `sudo apt-get install meson`
+6. **(Optional) Install vcpkg, Conan, Buck, Bazel:**  
+   - vcpkg: `git clone https://github.com/Microsoft/vcpkg.git && ./vcpkg/bootstrap-vcpkg.sh`
+   - Conan: `pip3 install conan`
+   - Buck/Bazel: Follow respective docs (not required for typical builds).
+7. **Install Docker:**  
+   - `sudo apt-get install docker.io` (Ubuntu 22.04 ships with Docker 24.x+, but your version is 28.3.2, which is fine).
+   - Compose: `sudo apt-get install docker-compose` or use `docker compose` (plugin).
+8. **(Optional) Install GoogleTest (gtest):**  
+   - `sudo apt-get install libgtest-dev`  
+   - Or use the local `make googletest` in `contrib/pzstd`
+9. **(Optional) Install lzbench and other libraries for benchmarking:**  
+   - lzbench: Build from source.
+   - lz4, brotli, zlib, snappy, lzo, lzf: `sudo apt-get install liblz4-tool brotli zlib1g-dev libsnappy-dev liblzo2-dev` etc.
+10. **Build zstd (native Linux):**  
+    - `make` (from root or `lib/`)
+    - `cd build/cmake && mkdir builddir && cd builddir && cmake .. && make`
+    - `cd build/meson && meson setup builddir && cd builddir && ninja`
+    - No need for Visual Studio or Windows builds.
+11. **Docker builds:**  
+    - Use `WORKDIR /home/cc/EnvGym/data/facebook_zstd` in Dockerfile.
+    - Use `FROM ubuntu:22.04` or `alpine:latest` as needed with `--platform=linux/amd64`.
+    - All `COPY` commands should use paths relative to `/home/cc/EnvGym/data/facebook_zstd`.
+    - Run Docker build and test commands as per documentation, e.g.:
+      ```
+      docker build -t zstd .
+      docker run --rm zstd --version
+      ```
+12. **Run tests:**  
+    - `make check`
+    - `src/tests/playTest.sh`
+    - All other test suites as described (pzstd, largeNbDicts, seekable_format, etc.)
+13. **Single-file library creation:**  
+    - Ensure Python 3 is available.
+    - Use Linux shell scripts; all paths relative to current working directory.
+14. **Kernel integration (optional):**  
+    - If importing to a kernel tree, confirm that kernel source is present in the Linux filesystem.
+    - All tools/scripts in `contrib/linux-kernel/` are Linux-compatible.
+15. **No VS2005/Visual Studio builds:**  
+    - Skip all steps and tests related to Visual Studio, MSVC, MinGW, or Windows-specific DLL/static library usage.
+    - Only retain documentation for other platform users.
+16. **No Apple/iOS framework builds:**  
+    - All references to iOS-CMake, Apple toolchains, etc., can be omitted for the local environment.
+17. **No ARM-specific steps:**  
+    - Do not use or reference `arm` base images or cross-compilers.
+18. **No GPU/CUDA steps:**  
+    - Do not use CUDA images, libraries, or Docker runtime flags such as `--gpus all`.
+19. **Documentation updates:**  
+    - All documentation and scripts should assume a Linux x86_64 environment.
+    - Docker instructions should use `--platform=linux/amd64` only if running on a machine with mixed-arch support (not necessary for pure x86_64).
+    - If providing sample Docker Compose files, ensure service definitions use Linux/x86_64 images and Linux paths.
+
+---
+
+**NOTES ON COMPATIBILITY AND PATHS:**
+- All build and test paths should use forward slashes (`/`) and be relative to `/home/cc/EnvGym/data/facebook_zstd`.
+- In Dockerfiles, always set: `WORKDIR /home/cc/EnvGym/data/facebook_zstd`
+- In Docker build context, ensure all source and scripts are copied from the correct root (e.g., `COPY . .` from `/home/cc/EnvGym/data/facebook_zstd`).
+- All scripts (`setup_env.sh`, `build.sh`, etc.) should use `#!/bin/bash` and be executable.
+- No Windows `\` path separators or batch files are needed in the local build.
+- If scripts or documentation mention other platforms, clarify that the local setup is for Linux/x86_64.
+
+---
+
+**EXAMPLE DOCKERFILE SNIPPET FOR THIS ENVIRONMENT:**
+```dockerfile
+FROM ubuntu:22.04
+
+# Set to official x86_64 architecture
+# (If needed, use: --platform=linux/amd64)
+
+WORKDIR /home/cc/EnvGym/data/facebook_zstd
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    python3 \
+    python3-pip \
+    ninja-build \
+    git \
+    libgtest-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Optional: Install Meson, lz4, brotli, etc.
+RUN pip3 install meson conan
+
+COPY . .
+
+# Build commands as needed
+RUN make
+
+CMD ["zstd", "--version"]
+```
+
+---
+
+**IN SUMMARY:**
+- All steps and files remain as in the original plan, but restricted to Linux/x86_64 (no Windows, macOS, ARM, or GPU-specific features).
+- All paths, scripts, and Docker instructions must use Linux conventions and correct project working directory.
+- No unsupported or unnecessary steps for this hardware (e.g., Visual Studio, CUDA, ARM).
+- Use only official amd64 Docker images, toolchains, and dependencies.
+- All build and test workflows should execute on x86_64 Ubuntu (or compatible) server/VM or container, with no GPU required.
+
+---
+
+**Proceed with the environment setup and build as per this adjusted plan for your hardware and working directory.**

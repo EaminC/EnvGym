@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_041356",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752984836",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.14kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/python:3.11-slim\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/13] FROM docker.io/library/python:3.11-slim@sha256:139020233cc412efe4c8135b0efe1c7569dc8b28ddd88bddb109b764f8977e30\n#4 DONE 0.0s\n\n#5 [ 5/13] WORKDIR /home/cc/EnvGym/data/Baleen\n#5 CACHED\n\n#6 [ 4/13] RUN mkdir -p /home/cc/EnvGym/data/Baleen\n#6 CACHED\n\n#7 [ 2/13] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         curl         ca-certificates         bash         build-essential         wget         bzip2         libglib2.0-0         libxext6         libsm6         libxrender1         locales         tzdata &&     rm -rf /var/lib/apt/lists/*\n#7 CACHED\n\n#8 [ 3/13] RUN echo \"en_US.UTF-8 UTF-8\" > /etc/locale.gen &&     locale-gen\n#8 CACHED\n\n#9 [ 6/13] RUN curl -Ls https://micro.mamba.pm/install.sh | bash -s -- -b -p /opt/conda\n#9 CACHED\n\n#10 [internal] load build context\n#10 transferring context: 2B done\n#10 DONE 0.0s\n\n#11 [ 8/13] RUN git clone --recurse-submodules https://github.com/wonglkd/Baleen-FAST24.git . &&     git submodule update --init --recursive\n#11 CACHED\n\n#12 [ 9/13] COPY BCacheSim/install/requirements.txt BCacheSim/install/requirements.txt\n#12 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::sq8uaay0yndcfebdb8e7w5yle: \"/BCacheSim/install/requirements.txt\": not found\n\n#13 [ 7/13] RUN which micromamba && micromamba --version && echo \"Micromamba in PATH: /opt/conda/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"\n#13 CANCELED\n------\n > [ 9/13] COPY BCacheSim/install/requirements.txt BCacheSim/install/requirements.txt:\n------\nenvgym.dockerfile:46\n--------------------\n  44 |     \n  45 |     # Ensure correct build cache and availability of requirements file\n  46 | >>> COPY BCacheSim/install/requirements.txt BCacheSim/install/requirements.txt\n  47 |     \n  48 |     # Upgrade pip and install dependencies via pip as fallback\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::sq8uaay0yndcfebdb8e7w5yle: \"/BCacheSim/install/requirements.txt\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

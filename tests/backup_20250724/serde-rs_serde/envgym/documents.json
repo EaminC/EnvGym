@@ -1,0 +1,19 @@
+[
+  "README.md",
+  "serde/README.md",
+  "serde_derive/README.md",
+  "serde_derive_internals/LICENSE-APACHE",
+  "serde_derive_internals/LICENSE-MIT",
+  "serde/LICENSE-APACHE",
+  "serde/LICENSE-MIT",
+  "serde_derive/LICENSE-APACHE",
+  "serde_derive/LICENSE-MIT",
+  "LICENSE-APACHE",
+  "LICENSE-MIT",
+  "Cargo.toml",
+  "serde/Cargo.toml",
+  "serde_derive/Cargo.toml",
+  "serde_derive_internals/Cargo.toml",
+  "test_suite/no_std/Cargo.toml",
+  "test_suite/Cargo.toml"
+]

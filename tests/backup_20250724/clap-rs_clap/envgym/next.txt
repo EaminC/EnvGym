@@ -1,0 +1,22 @@
+current progress
+- Docker image builds and runs successfully using Ubuntu 22.04 (x86_64, no GPU), matching plan requirements.
+- Rust toolchain 1.74, rustfmt, and clippy are installed and verified.
+- Python 3.10.12 and pip are installed and upgraded.
+- Git is installed and configured with `core.filemode = true`.
+- Build tools and all required system libraries (`build-essential`, `pkg-config`, `libssl-dev`, `libsqlite3-dev`, etc.) are installed with Ubuntu package names.
+- Optional shells (`bash`, `zsh`, `fish`, `nushell`), ROFF tools (`groff`, `man`), and locale configuration (`en_US.UTF-8`) are in place.
+- Pre-commit and committed are installed via pip.
+- Project files are copied into the working directory.
+- Rust tools (`cargo-deny`, `typos-cli`, `cargo-release`, `cargo-tarpaulin`) are installed with fallback to pinned versions if needed.
+- Cargo and python versions are checked in build steps.
+- Dockerfile uses correct directories and Unix path conventions.
+- No GPU/CUDA/Alpine/ARM instructions present.
+
+next step
+- Remove redundant or repeated package installs (e.g., duplicate `apt-get install pkg-config libssl-dev libgit2-dev`).
+- Ensure all installed Rust tools (`cargo-deny`, `typos-cli`, `cargo-release`, `cargo-tarpaulin`) are available in `$PATH` for user and CI.
+- Optionally, add steps for running actual project build/tests (`cargo build --all --locked`, `cargo test --all --locked`, etc.) to validate the environment within the Dockerfile or document this as a follow-up CI step.
+- Review and clean up any unnecessary RUN or debug commands (e.g., `cargo search`, `echo $PATH`, `ls -l $CARGO_HOME/bin`) unless required for debugging.
+- Confirm `.git/config` in the working directory has `[core] filemode = true` (not just global), or add a step to ensure this.
+- Document system requirements and main tested environment in `CONTRIBUTING.md` if not already done.
+- Verify all paths and scripts created align with Unix conventions and the plan’s directory structure.

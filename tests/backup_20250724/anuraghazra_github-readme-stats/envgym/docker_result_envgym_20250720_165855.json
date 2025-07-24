@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_165855",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753030725",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.63kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/node:18-bullseye\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/9] FROM docker.io/library/node:18-bullseye@sha256:0d9e9a8dcd5a83ea737ed92227a6591a31ad70c8bb722b0c51aff7ae23a88b6a\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 57.17kB 0.0s done\n#5 DONE 0.0s\n\n#6 [5/9] RUN npm install -g vercel\n#6 CACHED\n\n#7 [2/9] WORKDIR /home/cc/EnvGym/data/anuraghazra_github-readme-stats\n#7 CACHED\n\n#8 [3/9] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         vim         nano     && rm -rf /var/lib/apt/lists/*\n#8 CACHED\n\n#9 [4/9] RUN corepack enable && corepack prepare yarn@stable --activate\n#9 CACHED\n\n#10 [6/9] COPY package.json package-lock.json* yarn.lock* ./\n#10 CACHED\n\n#11 [7/9] RUN node -e \"const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));if(!pkg.scripts)pkg.scripts={};pkg.scripts.start='node express.js';fs.writeFileSync('package.json',JSON.stringify(pkg,null,2));\"\n#11 DONE 0.2s\n\n#12 [8/9] RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi\n#12 4.816 \n#12 4.816 > github-readme-stats@1.0.0 prepare\n#12 4.816 > husky\n#12 4.816 \n#12 4.862 .git can't be found\n#12 4.874 added 581 packages, and audited 582 packages in 4s\n#12 4.874 \n#12 4.874 91 packages are looking for funding\n#12 4.874   run `npm fund` for details\n#12 4.879 \n#12 4.879 4 vulnerabilities (1 low, 2 moderate, 1 high)\n#12 4.879 \n#12 4.879 To address all issues, run:\n#12 4.879   npm audit fix\n#12 4.879 \n#12 4.879 Run `npm audit` for details.\n#12 DONE 5.3s\n\n#13 [9/9] COPY . .\n#13 DONE 0.1s\n\n#14 exporting to image\n#14 exporting layers\n#14 exporting layers 3.6s done\n#14 writing image sha256:4375d01b688fbd30ad8c19bb2321d9b5c08fcdee5f0565b6a87b0929147bd623 done\n#14 naming to docker.io/library/envgym_test_1753030725 done\n#14 DONE 3.6s\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": "npm error Missing script: \"start\"\nnpm error\nnpm error Did you mean one of these?\nnpm error   npm star # Mark your favorite packages\nnpm error   npm stars # View packages marked as favorites\nnpm error\nnpm error To see a list of scripts, run:\nnpm error   npm run\nnpm error A complete log of this run can be found in: /root/.npm/_logs/2025-07-20T16_58_55_169Z-debug-0.log\n"
+  }
+}

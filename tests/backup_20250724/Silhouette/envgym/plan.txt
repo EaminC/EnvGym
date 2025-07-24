@@ -1,0 +1,155 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Hardware Context Applied**  
+- Host architecture: x86_64 (amd64)  
+- No NVIDIA GPU (no CUDA/nvidia support required)  
+- OS: Ubuntu 22.04 (or compatible, as per instructions)  
+- Docker: Version 28.3.2 (BuildKit/buildx supported; --gpus not applicable)  
+- Working directory: /home/cc/EnvGym/data/Silhouette  
+- Storage: Large downloads (e.g., 30GB VM image) require ample free space  
+- No ARM/Mac/other-arch support needed  
+- Multi-core build acceleration encouraged  
+- No need for GPU-related packages or drivers  
+- Use only amd64-compatible base images/software  
+
+---
+
+**1. DOWNLOADS NEEDED:**
+
+- Use only x86-64 (amd64) compatible software and images:
+    - Ubuntu 22.04 (preferred; Ubuntu 22.x is compatible)
+        - Use `ubuntu:22.04` if Dockerizing; do NOT use ARM images.
+    - Linux kernel source **4.15 x86-64** (for PMFS).  
+        - Only x86_64 source/configs are needed.
+    - Python 3.10.x (ensure amd64 build; install with apt or pyenv if not present)
+    - `git` (latest, from Ubuntu 22.04 repos)
+    - QEMU **amd64 build** (qemu-system-x86_64, with KVM support)
+    - `wget`, `make`, `build-essential`, `memcached` (from Ubuntu 22.04 repos)
+    - Guest VM image: ~30GB, ensure `/home/cc/EnvGym/data/Silhouette` or another large-volume path is used
+    - Silhouette, PMFS, Witcher, Giri codebases (as per plan)
+    - LLVM/Clang 15.x (amd64)
+    - Python packages as per `codebase/workload/ace/`
+    - clang-tools, linux-headers-$(uname -r)
+    - pyenv if needed (amd64 install)
+    - No CUDA, nvidia, or GPU-related tools or drivers needed
+    - Use **amd64** platform flags if scripting Docker builds (`--platform=linux/amd64`)
+    - If using Docker, use `WORKDIR /home/cc/EnvGym/data/Silhouette` and adjust COPY commands accordingly
+
+- **Storage considerations:**  
+    - The 30GB VM image and build artifacts require at least 50GB free disk space in `/home/cc/EnvGym/data/Silhouette` or wherever images are stored.  
+    - If using containers, ensure the Docker data root is on a storage volume with sufficient space.
+
+---
+
+**2. FILES TO CREATE:**
+
+- All paths must be created under `/home/cc/EnvGym/data/Silhouette` if possible, especially if working with containers or on a shared host.
+    - e.g., `/home/cc/EnvGym/data/Silhouette/qemu_imgs/silhouette_guest_vm.qcow2`
+    - Update plan to use this path instead of `~/silhouette_ae/` wherever referenced.
+    - If using a Dockerfile, set `WORKDIR /home/cc/EnvGym/data/Silhouette`
+    - All configuration and output files (e.g., SSH keys, output logs, binaries) should reside under this working directory or designated subfolders.
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**
+
+- No ARM/other-arch or GPU-specific tests; all tests assume x86_64 CPU.
+- QEMU commands should use `-machine pc-q35-focal,accel=kvm,...` and `-cpu host` as listed (host supports KVM on x86_64).
+- Test for `/dev/pmem0` after kernel boot as per plan.
+- Ensure all test scripts and tools use the corrected working directory paths.
+- When running QEMU, confirm host supports hardware virtualization (VT-x/AMD-V). If not, KVM can fall back but performance will be reduced.
+- No need to test or support any CUDA, GPU, or ARM-specific features.
+
+---
+
+**4. COMPLETE TODO LIST:**
+
+**All steps should use `/home/cc/EnvGym/data/Silhouette` as the project root** (update all references to `~/silhouette_ae` accordingly):
+
+1. [ ] **Verify OS:** Ubuntu 22.04 (or Ubuntu 22.x)
+    - `lsb_release -a` should output Ubuntu 22.*
+    - If using Docker, base image should be `ubuntu:22.04` or compatible.
+2. [ ] **Install base packages (amd64):**
+    - `sudo apt update && sudo apt install -y git wget python3.10 python3.10-venv python3.10-dev qemu-kvm qemu-utils libvirt-daemon-system libvirt-clients bridge-utils memcached clang clang-tools build-essential make`
+    - (Optional) `sudo apt install -y linux-headers-$(uname -r)`
+    - (Optional) Install LLVM 15.x if not present in Ubuntu 22.04 repos (use apt.llvm.org for amd64).
+    - Use only x86_64/amd64 packages.
+3. [ ] **Download and prepare Linux kernel source (4.15 x86-64):**
+    - Download from kernel.org or Ubuntu sources, ensure x86_64 configs.
+4. [ ] **Configure and build kernel with NVDIMM/DAX support:**
+    - Set `.config` for x86_64, `CONFIG_BLK_DEV_PMEM`, DAX.
+    - Build with `make -j$(nproc)` for multi-core speedup.
+    - Update bootloader, add `memmap=16G!8G` as required.
+    - Reboot, confirm `/dev/pmem0` exists.
+5. [ ] **Install pyenv if Python 3.10.x is unavailable:**
+    - Install for x86_64/amd64 only.
+6. [ ] **Create working directories:**
+    - `mkdir -p /home/cc/EnvGym/data/Silhouette/qemu_imgs`
+7. [ ] **Clone Silhouette and PMFS repositories:**
+    - `cd /home/cc/EnvGym/data/Silhouette && git clone https://github.com/iaoing/Silhouette.git`
+    - `git clone https://github.com/linux-pmfs/pmfs.git /home/cc/EnvGym/data/Silhouette/pmfs`
+8. [ ] **Download guest VM image:**
+    - `cd /home/cc/EnvGym/data/Silhouette/qemu_imgs && wget https://zenodo.org/records/14550794/files/silhouette_guest_vm.qcow2`
+    - Ensure enough disk space is available.
+9. [ ] **Download SSH key for VM:**
+    - Confirm `/home/cc/EnvGym/data/Silhouette/Silhouette/codebase/scripts/fs_conf/sshkey` exists and has 600 perms.
+10. [ ] **Install project dependencies:**
+    - `cd /home/cc/EnvGym/data/Silhouette/Silhouette && bash ./install_dep.sh && bash ./prepare.sh`
+11. [ ] **Configure Python environment:**
+    - (Optional) Create venv at `/home/cc/EnvGym/data/Silhouette/venv`
+    - Install required Python packages for ACE.
+12. [ ] **Build and configure tools in `codebase/tools/`:**
+    - Ensure binaries are built for x86_64.
+13. [ ] **Build and configure trace instrumentation tools in `codebase/trace/`:**
+    - Confirm all builds are for x86_64; reference Witcher/Giri as needed.
+14. [ ] **Build/test ACE workload generator:**
+    - All paths should be under `/home/cc/EnvGym/data/Silhouette`.
+15. [ ] **(NEW) Build PMFS kernel module:**
+    - Confirm build for current running kernel (should be 4.15 x86_64).
+    - If kernel headers/source mismatch, adjust accordingly.
+16. [ ] **(NEW) Ensure kernel is booted with correct features and reserved memory:**
+    - Confirm `/dev/pmem0` on x86_64.
+17. [ ] **(NEW) Set up and mount PMFS:**
+    - Use `/mnt/ramdisk` or another mount point.
+18. [ ] **(NEW) Test and use PMFS helper scripts.**
+19. [ ] **(NEW) For bug reproduction, only test x86_64/amd64.**
+20. [ ] **Test codebase/tools/ functionality (update paths).**
+21. [ ] **Test codebase/trace/ functionality (update paths).**
+22. [ ] **Test QEMU VM startup:**
+    - Use `qemu-system-x86_64 ...` as in plan.
+    - Ensure KVM is available (run `egrep -c '(vmx|svm)' /proc/cpuinfo` > 0); if not, KVM will not work.
+    - If using containers, ensure `--privileged` or device passthrough is set up for KVM/QEMU.
+23. [ ] **SSH into VM after startup.**
+24. [ ] **(Optional) Create VM snapshot.**
+25. [ ] **Run bug reproduction, scalability, and result verification tests (update paths).**
+26. [ ] **Clean up and reset.**
+27. [ ] **Handle errors as per plan.**
+28. [ ] **Document any deviations and environment details.**
+
+---
+
+**General Adjustments Based on Hardware Info:**
+
+- **No ARM/M1/Apple or GPU support required**: Remove any instructions or options related to ARM64, ARMv8, CUDA, nvidia, ROCm, or other non-x86_64/GPU hardware.
+- **All qemu/VM, kernel, and build commands assume x86_64/amd64.**
+- **Ample storage**: The plan and tests will require at least 50GB free in `/home/cc/EnvGym/data/Silhouette` for the VM image, source, and build products.
+- **No GPU/cuda/nvidia drivers or libraries should be installed.**
+- **Paths**: Replace all instances of `~/silhouette_ae/` with `/home/cc/EnvGym/data/Silhouette/` for consistency and compatibility with the working environment.
+- **If using Docker:**  
+    - Add `--platform=linux/amd64` to build/run commands.
+    - Set `WORKDIR /home/cc/EnvGym/data/Silhouette` in the Dockerfile.
+    - Use `COPY . /home/cc/EnvGym/data/Silhouette/` as appropriate.
+    - If running QEMU/KVM inside Docker, ensure host devices are mapped, and container is privileged if needed.
+- **Enable multi-core builds** with `make -j$(nproc)` where appropriate.
+
+---
+
+**Summary:**  
+- **All steps, scripts, and paths are adjusted for x86_64-only, no GPU, and the working directory `/home/cc/EnvGym/data/Silhouette`.**  
+- **No ARM/Apple/GPU/CUDA instructions are present.**  
+- **All package/tool installations use Ubuntu 22.04 amd64 repos.**  
+- **All test and build commands are compatible with the detected hardware and OS.**  
+- **Sufficient storage is required and assumed available.**  
+- **Optional: If using containers, Docker-specific adjustments (platform, workdir, privilege) are included.**
+
+=== END OF ADJUSTED PLAN ===

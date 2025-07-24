@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/clap-rs_clap; project is likely a Rust-based CLI app (clap-rs)
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible base images (e.g., ubuntu:22.04, debian, rust:*, alpine:latest)
+- GPU: No NVIDIA GPU detected; do not use CUDA or GPU-specific base images/tags
+- Instruction Notes: No GPU instructions (e.g., no nvidia/cuda or --gpus required); can leverage multi-core CPU optimizations (e.g., parallel builds); ensure base image matches Ubuntu 22.04 compatibility if leveraging system libraries
+- Docker Version: 28.3.2; BuildKit and buildx supported; --gpus unsupported due to lack of detected NVIDIA GPU

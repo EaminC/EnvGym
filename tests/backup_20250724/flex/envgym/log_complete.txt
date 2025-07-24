@@ -1,0 +1,108 @@
+=== Docker Execution Log - 20250721_090546 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753088732
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.75kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/15] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [ 5/15] RUN rm -rf /home/cc/miniconda3
+#5 CACHED
+
+#6 [ 3/15] RUN apt-get update &&     apt-get install -y --no-install-recommends       wget       curl       git       build-essential       ca-certificates       gcc       g++       make       dpkg       locales       bzip2       libglib2.0-0       libxext6       libsm6       libxrender1       unzip       && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 4/15] RUN locale-gen en_US.UTF-8
+#7 CACHED
+
+#8 [ 2/15] WORKDIR /home/cc/EnvGym/data/flex
+#8 CACHED
+
+#9 [ 6/15] RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh &&     bash /tmp/miniconda.sh -b -p /home/cc/miniconda3 &&     rm /tmp/miniconda.sh &&     /home/cc/miniconda3/bin/conda clean -afy
+#9 CACHED
+
+#10 [internal] load build context
+#10 transferring context: 66B done
+#10 DONE 0.0s
+
+#11 [ 7/15] RUN /home/cc/miniconda3/bin/conda --version
+#11 0.593 conda 25.5.1
+#11 DONE 0.7s
+
+#12 [ 8/15] RUN /home/cc/miniconda3/bin/conda config --add channels conda-forge &&     /home/cc/miniconda3/bin/conda config --set channel_priority strict
+#12 DONE 1.3s
+
+#13 [ 9/15] RUN /home/cc/miniconda3/bin/conda update -n base -c defaults conda --yes || true
+#13 1.335 
+#13 1.335 CondaToSNonInteractiveError: Terms of Service have not been accepted for the following channels. Please accept or remove them before proceeding:
+#13 1.335     • https://repo.anaconda.com/pkgs/main
+#13 1.335     • https://repo.anaconda.com/pkgs/r
+#13 1.335 
+#13 1.335 To accept a channel's Terms of Service, run the following and replace `CHANNEL` with the channel name/URL:
+#13 1.335     ‣ conda tos accept --override-channels --channel CHANNEL
+#13 1.335 
+#13 1.335 To remove channels with rejected Terms of Service, run the following and replace `CHANNEL` with the channel name/URL:
+#13 1.335     ‣ conda config --remove channels CHANNEL
+#13 1.335 
+#13 DONE 1.5s
+
+#14 [10/15] COPY requirements.txt ./
+#14 DONE 0.0s
+
+#15 [11/15] RUN echo ". /home/cc/miniconda3/etc/profile.d/conda.sh" >> /etc/profile &&     echo "conda activate flex-env" >> /etc/profile
+#15 DONE 0.4s
+
+#16 [12/15] RUN mkdir -p /home/cc/EnvGym/data/flex/projects &&     mkdir -p /home/cc/EnvGym/data/flex/tool/logs &&     mkdir -p /home/cc/EnvGym/data/flex/tool/config
+#16 DONE 0.4s
+
+#17 [13/15] COPY .gitignore ./
+#17 DONE 0.0s
+
+#18 [14/15] RUN find tool/scripts/ -type f -name "*.sh" -exec chmod +x {} ; || true
+#18 0.368 find: ‘tool/scripts/’: No such file or directory
+#18 DONE 0.4s
+
+#19 [15/15] WORKDIR /home/cc/EnvGym/data/flex
+#19 DONE 0.0s
+
+#20 exporting to image
+#20 exporting layers
+#20 exporting layers 7.6s done
+#20 writing image sha256:9d0d499e96f94855d3f8ddc073c8817ad1d4000b710b0ef841c886fa4b855ca4 done
+#20 naming to docker.io/library/envgym_test_1753088732 done
+#20 DONE 7.6s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+EnvironmentNameNotFound: Could not find conda environment: flex-env
+You can list all discoverable environments with `conda info --envs`.
+
+
+
+
+=== Execution End ===
+

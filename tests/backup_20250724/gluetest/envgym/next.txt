@@ -1,0 +1,31 @@
+current progress
+
+- The Docker build and run succeeded with the current Dockerfile.
+- The Dockerfile installs all required system dependencies for Ubuntu 22.04 x86_64.
+- GraalVM CE Java 17 (22.3.2) is installed and symlinked, with `JAVA_HOME` and `PATH` set.
+- `gu` is present and executable, and attempts to install the GraalVM Python component (shows error if fails but does not stop build).
+- GraalVM Python (`graalpython`) is checked for existence.
+- `pyenv` is installed, and Python 3.11.4 is built and set as global default.
+- Symlinks for `python3` and `pip3` are created to point to pyenv-managed Python 3.11.4.
+- Python virtual environment is created and `pytest` is installed.
+- All project files are copied to the correct workdir.
+- `run.sh` is made executable if present.
+- The image starts in bash shell in the correct workdir.
+- All instructions in the Dockerfile align with the adjusted environment setup plan for x86_64/Ubuntu 22.04 (no GPU).
+
+next step
+
+- Review and, if necessary, update the Dockerfile to ensure:
+  - All required configuration/example files (`requirements.txt`, `.env.example`, `README.local.md`, `.gitignore`) exist and are up-to-date in the build context prior to `COPY`.
+  - All scripts (`scripts/coverage/cover_local.py`, `scripts/generate_glue.py`, `run.sh`) are present and have correct permissions.
+- After confirming file presence, test running the following inside the container:
+  - `mvn -f commons-cli/pom.xml test -Drat.skip`
+  - `pytest commons-cli-python`
+  - `mvn -f commons-cli-graal/pom.xml test -Drat.skip`
+  - `python scripts/coverage/cover_local.py`
+  - `python scripts/generate_glue.py`
+  - `bash run.sh`
+- If any step fails due to missing files or permissions, adjust the Dockerfile to copy/fix those files or set permissions as needed.
+- Update `README.local.md` with Docker-specific usage notes as appropriate.
+- Optionally, clean up any redundant dependency installs in the Dockerfile (e.g., if Python is always managed via `pyenv`, remove system `python3-venv`, `python3-pip`, etc.).
+- Once all steps pass inside the container, proceed to platform verification and final documentation updates.

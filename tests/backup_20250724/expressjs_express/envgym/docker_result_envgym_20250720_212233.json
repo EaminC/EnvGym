@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_212233",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753046552",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.10kB done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/node:20-bullseye\n#2 DONE 0.2s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/8] FROM docker.io/library/node:20-bullseye@sha256:a8417d405dfd2f7c748b32fcdaa9ed844d00e18d78b3a88e73fc2c16126afae7\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 70.43kB 0.0s done\n#5 DONE 0.0s\n\n#6 [2/8] WORKDIR /home/cc/EnvGym/data/expressjs_express\n#6 CACHED\n\n#7 [3/8] RUN apt-get update &&     apt-get install -y --no-install-recommends       git       redis-server     && rm -rf /var/lib/apt/lists/*\n#7 CACHED\n\n#8 [6/8] RUN node -e \"let p=require('./package.json');p.scripts=p.scripts||{};p.scripts.start='node index.js';require('fs').writeFileSync('package.json',JSON.stringify(p,null,2));\"\n#8 CACHED\n\n#9 [5/8] COPY .npmrc package.json ./\n#9 CACHED\n\n#10 [4/8] RUN npm install -g express-generator@4\n#10 CACHED\n\n#11 [7/8] RUN npm install\n#11 CACHED\n\n#12 [8/8] COPY . .\n#12 DONE 0.1s\n\n#13 exporting to image\n#13 exporting layers 0.1s done\n#13 writing image sha256:24d4265d5f776aefafd2d7e9f80e16be98a03679c46af009ae40b7dee896b555 done\n#13 naming to docker.io/library/envgym_test_1753046552 done\n#13 DONE 0.1s\n\n \u001b[33m2 warnings found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 32)\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "Starting redis-server: redis-server.\n",
+    "stderr": "npm error Missing script: \"start\"\nnpm error\nnpm error Did you mean one of these?\nnpm error   npm star # Mark your favorite packages\nnpm error   npm stars # View packages marked as favorites\nnpm error\nnpm error To see a list of scripts, run:\nnpm error   npm run\nnpm error A complete log of this run can be found in: /root/.npm/_logs/2025-07-20T21_22_32_773Z-debug-0.log\n"
+  }
+}

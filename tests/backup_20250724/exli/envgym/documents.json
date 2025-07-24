@@ -1,0 +1,8 @@
+[
+  "README.md",
+  "Dockerfile",
+  "python/setup.py",
+  "python/prepare-conda-env.sh",
+  "java/raninline/pom.xml",
+  "jacoco-extension/pom.xml"
+]

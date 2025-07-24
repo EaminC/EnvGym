@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/ponylang_ponyc; project likely related to Pony language, located within a nested data directory.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, alpine:latest); avoid ARM images.
+- GPU: No NVIDIA GPU available; do not use CUDA or nvidia/cuda base images.
+- Instruction Notes: No GPU-specific instructions (e.g., no --gpus, no NVIDIA libraries); multi-core builds possible (use parallel build tools if desired); ample RAM and storage—no resource-based limitations.
+- Docker Version: 28.3.2; supports BuildKit and modern Dockerfile features; no GPU build support required.

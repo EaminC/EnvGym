@@ -1,0 +1,204 @@
+=== Docker Execution Log - 20250721_020909 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753063685
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.16kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/rust:latest
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 45.55kB 0.0s done
+#4 DONE 0.0s
+
+#5 [ 1/10] FROM docker.io/library/rust:latest@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e
+#5 resolve docker.io/library/rust:latest@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e done
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 0B / 211.37MB 0.1s
+#5 sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e 7.75kB / 7.75kB done
+#5 sha256:95f6d6956bf8abd7461763ba7ccd243d8964a41c8eb3f41d895490c782628d7c 1.94kB / 1.94kB done
+#5 sha256:a479811b82446e6bf598238bb2fcd3ae41b351a1a7c87e53d8f2333a7bbe001d 4.36kB / 4.36kB done
+#5 sha256:7bbf972c6c2f5b7313ae3cb74e63888ab70931bcd9aefd960f9a38c540dbf2ca 0B / 24.02MB 0.1s
+#5 sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 0B / 64.40MB 0.1s
+#5 sha256:7bbf972c6c2f5b7313ae3cb74e63888ab70931bcd9aefd960f9a38c540dbf2ca 12.58MB / 24.02MB 0.2s
+#5 sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 8.39MB / 64.40MB 0.2s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 16.78MB / 211.37MB 0.4s
+#5 sha256:7bbf972c6c2f5b7313ae3cb74e63888ab70931bcd9aefd960f9a38c540dbf2ca 24.02MB / 24.02MB 0.4s done
+#5 sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 45.09MB / 64.40MB 0.4s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 0B / 205.06MB 0.4s
+#5 sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 57.67MB / 64.40MB 0.5s
+#5 extracting sha256:7bbf972c6c2f5b7313ae3cb74e63888ab70931bcd9aefd960f9a38c540dbf2ca
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 33.55MB / 211.37MB 0.6s
+#5 sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 64.40MB / 64.40MB 0.6s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 11.53MB / 205.06MB 0.6s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 27.26MB / 205.06MB 0.7s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 46.14MB / 211.37MB 0.8s
+#5 sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 64.40MB / 64.40MB 0.7s done
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 46.14MB / 205.06MB 0.9s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 65.01MB / 211.37MB 1.0s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 58.72MB / 205.06MB 1.1s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 91.23MB / 211.37MB 1.3s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 78.64MB / 205.06MB 1.4s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 104.86MB / 211.37MB 1.5s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 90.18MB / 205.06MB 1.6s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 117.38MB / 211.37MB 1.8s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 104.86MB / 205.06MB 1.8s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 142.61MB / 211.37MB 2.1s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 127.93MB / 205.06MB 2.1s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 141.56MB / 205.06MB 2.2s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 158.33MB / 211.37MB 2.3s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 154.14MB / 205.06MB 2.3s
+#5 extracting sha256:7bbf972c6c2f5b7313ae3cb74e63888ab70931bcd9aefd960f9a38c540dbf2ca 1.8s done
+#5 extracting sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 167.77MB / 205.06MB 2.4s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 172.02MB / 211.37MB 2.5s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 183.50MB / 211.37MB 2.6s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 188.74MB / 205.06MB 2.6s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 199.23MB / 211.37MB 2.8s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 205.06MB / 205.06MB 2.8s
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 211.37MB / 211.37MB 3.0s
+#5 sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 205.06MB / 205.06MB 3.4s done
+#5 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 211.37MB / 211.37MB 3.6s done
+#5 extracting sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 5.1s
+#5 extracting sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 7.1s done
+#5 extracting sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c
+#5 extracting sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 5.0s
+#5 extracting sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 10.0s
+#5 extracting sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 15.2s
+#5 extracting sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 20.4s
+#5 extracting sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 21.0s done
+#5 extracting sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8
+#5 extracting sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 5.1s
+#5 extracting sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 10.2s
+#5 extracting sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 15.2s
+#5 extracting sha256:0545d5f3de1a8249849f4342031613d732af87e31f13755f5fac287119ed13e8 19.0s done
+#5 DONE 49.8s
+
+#6 [ 2/10] RUN apt-get update &&     apt-get install -y --no-install-recommends       git       build-essential       ca-certificates       curl       pkg-config       libssl-dev &&     rm -rf /var/lib/apt/lists/*
+#6 0.279 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#6 0.293 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#6 0.295 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+#6 0.358 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+#6 0.463 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [756 B]
+#6 0.464 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [272 kB]
+#6 1.511 Fetched 9320 kB in 1s (7375 kB/s)
+#6 1.511 Reading package lists...
+#6 2.015 Reading package lists...
+#6 2.499 Building dependency tree...
+#6 2.589 Reading state information...
+#6 2.718 git is already the newest version (1:2.39.5-0+deb12u2).
+#6 2.718 ca-certificates is already the newest version (20230311+deb12u1).
+#6 2.718 curl is already the newest version (7.88.1-10+deb12u12).
+#6 2.718 pkg-config is already the newest version (1.8.1-1).
+#6 2.718 pkg-config set to manually installed.
+#6 2.718 libssl-dev is already the newest version (3.0.16-1~deb12u1).
+#6 2.718 The following NEW packages will be installed:
+#6 2.719   build-essential
+#6 2.775 0 upgraded, 1 newly installed, 0 to remove and 4 not upgraded.
+#6 2.775 Need to get 7704 B of archives.
+#6 2.775 After this operation, 20.5 kB of additional disk space will be used.
+#6 2.775 Get:1 http://deb.debian.org/debian bookworm/main amd64 build-essential amd64 12.9 [7704 B]
+#6 2.904 debconf: delaying package configuration, since apt-utils is not installed
+#6 2.925 Fetched 7704 B in 0s (149 kB/s)
+#6 2.940 Selecting previously unselected package build-essential.
+#6 2.940 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 23252 files and directories currently installed.)
+#6 2.953 Preparing to unpack .../build-essential_12.9_amd64.deb ...
+#6 2.954 Unpacking build-essential (12.9) ...
+#6 2.976 Setting up build-essential (12.9) ...
+#6 DONE 4.8s
+
+#7 [ 3/10] WORKDIR /home/cc/EnvGym/data/serde-rs_serde
+#7 DONE 0.0s
+
+#8 [ 4/10] COPY Cargo.toml ./
+#8 DONE 0.0s
+
+#9 [ 5/10] COPY serde_derive/Cargo.toml serde_derive/Cargo.toml
+#9 DONE 0.0s
+
+#10 [ 6/10] COPY serde_derive_internals/Cargo.toml serde_derive_internals/Cargo.toml
+#10 DONE 0.0s
+
+#11 [ 7/10] COPY test_suite/Cargo.toml test_suite/Cargo.toml
+#11 DONE 0.0s
+
+#12 [ 8/10] COPY . .
+#12 DONE 0.1s
+
+#13 [ 9/10] RUN rustup component add clippy rustfmt
+#13 0.362 info: downloading component 'clippy'
+#13 0.460 info: installing component 'clippy'
+#13 0.975 info: downloading component 'rustfmt'
+#13 1.052 info: installing component 'rustfmt'
+#13 DONE 1.5s
+
+#14 [10/10] RUN cargo build --workspace --release
+#14 0.404     Updating crates.io index
+#14 0.603      Locking 38 packages to latest compatible versions
+#14 0.609  Downloading crates ...
+#14 0.714   Downloaded proc-macro2 v1.0.95
+#14 0.719   Downloaded quote v1.0.40
+#14 0.723   Downloaded unicode-ident v1.0.18
+#14 0.731   Downloaded syn v2.0.104
+#14 0.772    Compiling proc-macro2 v1.0.95
+#14 0.772    Compiling unicode-ident v1.0.18
+#14 0.772    Compiling serde v1.0.219 (/home/cc/EnvGym/data/serde-rs_serde/serde)
+#14 0.772    Compiling serde_derive v1.0.219 (/home/cc/EnvGym/data/serde-rs_serde/serde_derive)
+#14 0.772    Compiling serde_derive_internals v0.29.1 (/home/cc/EnvGym/data/serde-rs_serde/serde_derive_internals)
+#14 1.220    Compiling quote v1.0.40
+#14 1.335    Compiling syn v2.0.104
+#14 6.452     Finished `release` profile [optimized] target(s) in 6.08s
+#14 DONE 6.5s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.4s done
+#15 writing image sha256:7a26fb966963f7b4afcb443707508a63dc450a83002ccec731fa3ed48ae19738 done
+#15 naming to docker.io/library/envgym_test_1753063685 done
+#15 DONE 0.4s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

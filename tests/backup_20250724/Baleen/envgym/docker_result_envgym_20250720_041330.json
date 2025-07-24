@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_041330",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752984808",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.99kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/python:3.11-slim\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/14] FROM docker.io/library/python:3.11-slim@sha256:139020233cc412efe4c8135b0efe1c7569dc8b28ddd88bddb109b764f8977e30\n#4 DONE 0.0s\n\n#5 [ 2/14] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         curl         ca-certificates         bash         build-essential         wget         bzip2         libglib2.0-0         libxext6         libsm6         libxrender1         locales         tzdata &&     rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [ 3/14] RUN echo \"en_US.UTF-8 UTF-8\" > /etc/locale.gen &&     locale-gen\n#6 CACHED\n\n#7 [ 4/14] RUN mkdir -p /home/cc/EnvGym/data/Baleen\n#7 CACHED\n\n#8 [ 5/14] WORKDIR /home/cc/EnvGym/data/Baleen\n#8 CACHED\n\n#9 [ 6/14] RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xJ -C /usr/local/bin/ --strip-components=1 bin/micromamba\n#9 1.357 xz: (stdin): File format not recognized\n#9 1.375 tar: Child died with signal 13\n#9 1.375 tar: Error is not recoverable: exiting now\n#9 ERROR: process \"/bin/sh -c curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xJ -C /usr/local/bin/ --strip-components=1 bin/micromamba\" did not complete successfully: exit code: 2\n------\n > [ 6/14] RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xJ -C /usr/local/bin/ --strip-components=1 bin/micromamba:\n1.357 xz: (stdin): File format not recognized\n1.375 tar: Child died with signal 13\n1.375 tar: Error is not recoverable: exiting now\n------\nenvgym.dockerfile:36\n--------------------\n  34 |     ENV MAMBA_ROOT_PREFIX=/opt/conda\n  35 |     ENV PATH=$MAMBA_ROOT_PREFIX/bin:$PATH\n  36 | >>> RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xJ -C /usr/local/bin/ --strip-components=1 bin/micromamba\n  37 |     RUN chmod +x /usr/local/bin/micromamba\n  38 |     RUN micromamba shell init -s bash -p $MAMBA_ROOT_PREFIX\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xJ -C /usr/local/bin/ --strip-components=1 bin/micromamba\" did not complete successfully: exit code: 2\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

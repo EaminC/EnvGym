@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/simdjson_simdjson; project is in "simdjson_simdjson" subdirectory under "data"
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:buster, python:3.X-slim); do not use ARM images
+- GPU: No NVIDIA GPU detected; do not use CUDA base images; no GPU-specific instructions needed
+- Instruction Notes: No GPU-specific RUN/ENV; multi-core compilation possible (high CPU); large memory/storage available; use WORKDIR /app or similar if relocating code
+- Docker Version: 28.3.2; supports BuildKit, current compose/buildx plugins, --gpus flag available but not usable (no GPU detected)

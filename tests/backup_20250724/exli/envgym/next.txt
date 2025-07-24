@@ -1,0 +1,26 @@
+current progress
+- Dockerfile is present and builds successfully on Ubuntu 22.04, x86_64/amd64, CPU-only.
+- No GPU/CUDA/NVIDIA/ARM dependencies are present.
+- Miniconda x86_64 installer is used; Python 3.9+ is available via Conda.
+- Non-root user (`itdocker`) is created with correct home directory.
+- SDKMAN! installs OpenJDK 8 and Maven (amd64).
+- Firefox and Geckodriver (linux64) are installed.
+- All apt packages are CPU-only; no GPU libraries are installed.
+- Project files are copied to `/home/itdocker` with correct permissions.
+- Python environment is installed via `environment.yml` if present.
+- All shell scripts are made executable.
+- Geckodriver is placed in user's local bin.
+- Conda environment activation is appended to `.bashrc` if named `exli`.
+- Build and runtime logs indicate successful execution with no errors.
+
+next step
+- Double-check `.dockerignore` to ensure no large/unnecessary files (e.g., datasets) are copied into the image.
+- Verify that all scripts, config files, and tests use `/home/itdocker` or `$HOME` paths (not `/home/cc/...`).
+- Confirm `README.md` and documentation clearly state x86_64/amd64-only and CPU-only compatibility, and clarify Docker build context usage.
+- (Optional) Add explicit `--platform=linux/amd64` in documentation/build scripts if not already done.
+- (Optional) Run verification commands inside the container:  
+  - `uname -m` (should output `x86_64`)  
+  - `file $(which java)` and `file $(which python)` (should mention "x86-64")  
+  - `dpkg -l | grep -E 'cuda|nvidia'` (should return nothing)
+- (Optional) Refactor any remaining scripts, configs, or tests referencing host-specific paths or GPU/ARM settings.
+- Proceed to run/verify ExLi build/tests as per plan, and document any issues or troubleshooting steps encountered.

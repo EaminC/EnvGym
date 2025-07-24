@@ -1,0 +1,19 @@
+current progress
+- Docker image builds and runs successfully on Ubuntu 22.04, targeting x86_64 CPU and Linux, CPU-only.
+- All required base development tools are installed: GCC/G++, CMake (satisfying version requirement), Make, Git, pkg-config, Python 3.10, pip, python3-venv.
+- Memory and code coverage tools (Valgrind, lcov), static analyzer (cppcheck), and debugger (GDB) are installed.
+- Zeal (for docset viewing) and mkcert (for HTTPS serving) are installed and initialized.
+- Project directory `/home/cc/EnvGym/data/nlohmann_json` is created and set as the working directory.
+- vcpkg and conan (package managers) are installed and configured; vcpkg bootstrap completed with diagnostics.
+- vcpkg is used to install `doctest` and `nlohmann-json`.
+- Meson and Spack (additional build/package managers) are installed.
+- MkDocs and mkdocs-material (for documentation), PyYAML and watchdog (for scripts), are installed via pip.
+- `.gdbinit.d` directory is prepared for GDB extensions.
+- Dockerfile uses only POSIX paths, Linux-specific tooling, and is free of Windows/macOS/CUDA steps.
+
+next step
+- Add steps to copy or mount the actual project source code (including CMakeLists.txt, source, test, tools, etc.) into `/home/cc/EnvGym/data/nlohmann_json` in the Docker image.
+- (If not present) Add build and test commands to the Dockerfile or document them for use after container start (e.g., `cmake .. && cmake --build . && ctest --output-on-failure`).
+- Ensure the Dockerfile (or documentation) specifies running `mkdocs serve` and Zeal docset commands for documentation and docset usage.
+- Optionally, add a step to generate GDB pretty printer configuration and test serving headers using `serve_header.py`.
+- Review and ensure all necessary Linux scripts/configs (e.g., .gitignore, README.md, CMake configs) are included or mounted for a complete local development environment.

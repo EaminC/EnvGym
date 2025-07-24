@@ -1,0 +1,18 @@
+current progress
+- Docker build and runtime succeeded using the provided Dockerfile.
+- Base image is correctly set to Go 1.24 (linux/amd64) devcontainer.
+- All required apt packages for Linux x86_64 development are installed.
+- GitHub CLI (`gh`), `cosign`, `goreleaser`, and `golangci-lint` are installed with latest x86_64 Linux releases.
+- Node.js/npm installation step is present (enabled).
+- Go 1.24.x version is confirmed.
+- Working directory and shell are correctly set.
+- Project files are not yet copied into the image (COPY command is commented).
+- Optional user setup for `cc` is commented.
+- Dockerfile is fully aligned with the environment setup plan for Linux x86_64, aside from commented COPY and user lines.
+
+next step
+- Uncomment or add the `COPY . /home/cc/EnvGym/data/cli_cli` line to include project files in the image, if project build/test is to be run in Docker.
+- Add or uncomment the user setup (if running as non-root user is desired), and adjust permissions accordingly.
+- Remove or comment out the Node.js/npm installation step if documentation build or JS tools are not required, to streamline the image.
+- Ensure any needed project-specific setup scripts (e.g., `setup-linux.sh`) are included and executable in the image.
+- Optionally, add explicit healthcheck or verification steps if used in CI/CD.

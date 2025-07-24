@@ -1,0 +1,13 @@
+[
+  "README.md",
+  "CMakePresets.json",
+  "CMakeLists.txt",
+  "meson.build",
+  "meson_options.txt",
+  "BUILD.bazel",
+  "MODULE.bazel",
+  ".bazelrc",
+  "appveyor.yml",
+  "codecov.yml",
+  "conanfile.py"
+]

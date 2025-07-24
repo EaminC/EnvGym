@@ -1,0 +1,22 @@
+current progress
+- Docker image builds and runs successfully on Ubuntu 22.04 with platform set to linux/amd64.
+- All required base tools for the environment (build-essential, cmake, git, python3, ninja, doxygen, valgrind, bash, unzip) are installed via apt.
+- LLVM/Clang 18 and clang-tidy-18 are installed from the official LLVM repo, and symlinks are set as default.
+- Bazelisk is installed as /usr/local/bin/bazel for Bazel support.
+- Dockerfile sets the working directory to /home/cc/EnvGym/data/fmtlib_fmt per plan.
+- fmtlib/fmt is cloned into the working directory (project root).
+- Any shell scripts in support/ are made executable if present.
+- The container starts with bash by default.
+- No Windows/macOS/GPU/CUDA/ARM/ARM64-specific content is present.
+
+next step
+- Add build steps to compile the fmt library using CMake (and optionally Ninja) within the Dockerfile:
+  - Create a build directory, configure with CMake, and build with high parallelism (`-j$(nproc)`).
+  - Optionally, add verification steps to ensure build success.
+- Optionally, add Bazel build/test steps to verify Bazel integration.
+- Optionally, run CMake/Bazel tests to ensure the environment supports running the test suite.
+- (Optional) Set up and build fuzzers by running the appropriate shell scripts in test/fuzzing.
+- (Optional) Generate documentation with Doxygen if desired.
+- (Optional) Uncomment and add format-benchmark clone/build steps if benchmarking is required.
+- Clean up any build artifacts if you wish to minimize image size, or leave them for interactive use.
+- Document any additional instructions or build outcomes in the README if making further changes.

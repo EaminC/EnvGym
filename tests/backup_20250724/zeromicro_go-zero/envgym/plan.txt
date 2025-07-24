@@ -1,0 +1,153 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, no GPU, Linux/amd64, /home/cc/EnvGym/data/zeromicro_go-zero) ===
+
+1. DOWNLOADS NEEDED:  
+   - Go (Golang) ≥ 1.16 (preferably latest stable version for x86_64 Linux; install from [official downloads](https://go.dev/dl/); ensure you download the `go1.x.x.linux-amd64.tar.gz` variant)  
+   - Git (latest stable version for your OS; e.g., `sudo apt-get install git`)  
+   - goctl code generation tool:  
+     - Option 1 (recommended): goctl via `go install github.com/zeromicro/go-zero/tools/goctl@latest`  
+     - Option 3: Docker (`docker pull kevinwan/goctl`), **ensure to use `--platform=linux/amd64` if building/running via Docker**  
+     - Option 2 (macOS): Homebrew (`brew install goctl`) **[skip, you are on Linux]**  
+   - go-zero framework (install via Go modules in your project directory)  
+   - (Core) `core/conf`, `core/logx`, `core/mr` libraries  
+   - (Gateway) `github.com/zeromicro/go-zero/gateway`  
+   - (MCP) `github.com/zeromicro/go-zero/mcp`  
+   - (Gateway/Rpc) Protocol Buffers Compiler (`protoc`), version ≥3.0.0:  
+     - Use the Linux x86_64 release from https://github.com/protocolbuffers/protobuf/releases  
+     - For Ubuntu: You can install via `apt-get install -y protobuf-compiler` (check version ≥3.0.0)  
+   - (Rpc) Go plugins for protoc: `protoc-gen-go`, `protoc-gen-go-grpc` (install via Go for Linux/amd64)  
+   - (Mongo Model) MongoDB Go driver  
+   - (Mongo Model) go-zero cache/mon/monc libraries  
+   - (SQL Model) Database client/driver for your target SQL database (install Linux/amd64 compatible versions)  
+   - (SQL Model) Access to a running SQL database instance (ensure connection info for local/remote DB)  
+   - (SQL Model) Redis (for cache mode; Linux/amd64 version)  
+   - (SQL Model) GNU Make:  
+     - For Ubuntu/Debian: `sudo apt-get install make`  
+     - For CentOS/RHEL: `sudo yum install make`  
+     - On Windows: Use WSL, Cygwin, or Git Bash **[Not needed here, you are on Linux]**  
+   - (Optional) goctl plugins  
+   - (Optional) VS Code goctl extension  
+   - (Optional) Docker (latest stable, already present: 28.3.2; supports BuildKit/buildx; use `--platform=linux/amd64` for builds/runs)  
+   - (Optional) MySQL, Redis, MongoDB server (Linux/amd64 versions)  
+   - (Optional) curl  
+   - (Optional) Access to documentation/examples  
+   - (Optional) QR code scanning app  
+   - (Optional) Third-party logging libraries (zap, logrus)  
+   - (Optional) Kafka and Go clients  
+   - (Docker Support) Alpine Linux base image **(must be `amd64` variant in FROM, e.g., `alpine:3.18` or similar)**  
+   - (Docker Support) tzdata, ca-certificates (Linux/amd64 packages)  
+   - (Docker Support) Docker Compose (install as per [docs](https://docs.docker.com/compose/install/), latest Linux/x86_64 version)  
+   - (Kubernetes Support) Access to a Kubernetes cluster (Minikube/kind or remote, Linux/amd64 nodes)  
+   - (Kubernetes Support) `kubectl` (install latest Linux/x86_64)  
+   - (Kubernetes Support) Knowledge/tools as before  
+   - (Kubernetes Job/CronJob Support) Knowledge/tools as before  
+   - **No GPU-specific tools or CUDA/nvidia packages are needed or permitted.**  
+
+2. FILES TO CREATE:  
+   - All as previously listed, but with the following path/OS clarifications:  
+     - All project files and generated code will reside under `/home/cc/EnvGym/data/zeromicro_go-zero` or subdirectories.  
+     - When generating Dockerfiles, ensure `COPY` and context paths match this root.  
+     - If using Dockerfiles, always specify `FROM golang:1.x.x` (or `alpine:3.x`, `ubuntu:22.04`, etc.) with no ARM64/other architecture tags—**only use images that default to `amd64`**.  
+     - If running Docker build locally, use `docker build --platform=linux/amd64 ...` to guarantee matching the host architecture and cluster deployment targets.  
+     - Do not reference Apple/Mac/ARM-specific files, scripts, or Homebrew usage.  
+     - Make sure all shell scripts use Linux line endings (`LF`) and are bash/sh compatible.  
+   - (Docker) `tools/goctl/docker/docker.tpl` and any generated Dockerfiles must use only `amd64` base images.  
+   - (Kubernetes) Any images referenced in manifests must be built/tagged for `amd64`.  
+   - (Optional) Storage-intensive generated files (e.g., many proto/model files): ensure sufficient disk space (modern x86_64 servers/workstations are usually fine; no change needed unless your storage is unusually small).  
+   - **No GPU-specific scripts, Dockerfile RUN nvidia-smi, or nvidia/cuda images.**  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All as previously listed, with these clarifications:  
+     - Any Docker-based tests must use `--platform=linux/amd64` in builds/runs if testing on other platforms or in CI.  
+     - All generated files, built binaries, and containers should be tested on x86_64 Linux only.  
+     - If using multi-stage Docker builds, all builder and runtime images must be compatible with `amd64`.  
+     - (Optional) If you wish to test cross-platform/ARM, you would need to adjust, but this is **not required** for your current hardware.  
+     - **No CUDA, GPU, or nvidia-smi tests; do not assert or check for GPU presence.**  
+     - (Optional) If you expect very large proto/model sets or database dumps, verify sufficient free space with `df -h` before running generation or builds.  
+     - (Optional) Use multi-core parallelism (e.g., `make -j$(nproc)`, Docker's BuildKit parallel builds) to speed up builds, as your hardware allows.  
+
+4. COMPLETE TODO LIST:  
+   1. Install Go (≥1.16) for Linux/amd64 (`go1.x.x.linux-amd64.tar.gz` from [golang.org](https://go.dev/dl/))  
+   2. Install Git via `sudo apt-get install git` or similar  
+   3. (Optional, for China) Set Go module proxy  
+   4. Clone project repository to `/home/cc/EnvGym/data/zeromicro_go-zero`  
+   5. Initialize Go module (if not present)  
+   6. Install go-zero library via `go get` in the working directory  
+   7. Ensure core libraries  
+   8. Install goctl via `go install ...` (Linux/amd64), ensure it is in PATH (export in `.bashrc` or `.profile` as needed)  
+   9. (Gateway/Rpc) Install protoc (`protoc-*-linux-x86_64.zip` from [releases](https://github.com/protocolbuffers/protobuf/releases), or `apt-get install protobuf-compiler`)  
+   10. (Rpc) Install `protoc-gen-go` and `protoc-gen-go-grpc` via `go install ...` (Linux/amd64)  
+   11. (Gateway) Prepare proto files  
+   12. (Mongo Model) Install/ensure access to MongoDB server (Linux/amd64)  
+   13. (Mongo Model) Prepare Go struct(s)  
+   14. (Mongo Model) Use goctl to generate mongo model code  
+   15. (SQL Model) Ensure access to SQL DB (Linux/amd64 client)  
+   16. (SQL Model) Prepare DDL files or live DB  
+   17. (SQL Model) Install GNU Make via `sudo apt-get install make`  
+   18. (SQL Model) Prepare/verify Makefile and directories (all under `/home/cc/EnvGym/data/zeromicro_go-zero/...`)  
+   19. (SQL Model) Use Makefile recipes to generate model code  
+   20. (SQL Model) Review/update model docs  
+   21. (Optional) Install goctl plugins  
+   22. (Optional) Install VS Code goctl extension  
+   23. Create `.gitignore`  
+   24. Create initial API definition file  
+   25. Generate API code with goctl  
+   26. Review/update config files  
+   27. (Gateway) Create entrypoint/config files  
+   28. (Gateway) Verify gRPC upstreams and ProtoSet/reflection  
+   29. (Gateway) Test HTTP to gRPC routing  
+   30. (Rpc) Create/generate rpc service  
+   31. (Rpc) Implement/test rpc logic, server, client  
+   32. (Rpc) Update/reference rpc docs  
+   33. (Optional/Rpc) Document rpc process  
+   34. (Optional/Rpc) Add rpc codegen steps to CI/Docker (using `--platform=linux/amd64` as needed)  
+   35. (Optional) Update service context for DB clients  
+   36. Update code for config/logging  
+   37. (Mongo Model) Integrate model code  
+   38. (SQL Model) Integrate model code  
+   39. (Optional, advanced logx) For custom logging  
+   40. (MapReduce) Implement batch/concurrent processing  
+   41. (MCP) Implement/configure MCP server  
+   42. (MCP) Update/read docs  
+   43. Run `go mod tidy` in all directories  
+   44. Start API, Gateway, MCP, RPC servers  
+   45. (Mongo Model) Start/verify MongoDB (Linux/amd64)  
+   46. (SQL Model) Start/verify SQL DB (Linux/amd64)  
+   47. (SQL Model) (Optional) Start/verify Redis (Linux/amd64)  
+   48. Test all endpoints/model logic  
+   49. Write/run all code/test cases  
+   50. Test goctl installation/CLI usage (Linux/amd64)  
+   51. (Optional) Test goctl code generation for other languages/plugins  
+   52. (Docker Integration)  
+       - Always use/extend `FROM` images for `amd64` (e.g., `golang:1.21-alpine`, `ubuntu:22.04`, `alpine:3.18` with no `arm64`/`arm` in tags)  
+       - If building/running Docker locally/CI, always use `--platform=linux/amd64`  
+       - Ensure context/COPY matches `/home/cc/EnvGym/data/zeromicro_go-zero` paths  
+       - No CUDA/nvidia instructions in Dockerfiles  
+   53. (Kubernetes Integration)  
+       - Build/push Docker images as `linux/amd64`  
+       - Reference only `amd64` images in manifests  
+   54. (Kubernetes Job/CronJob Integration)  
+       - Same as above (image: `amd64`, paths, config)  
+   55. (Optional) If using Docker Compose, ensure all referenced images/services are Linux/amd64  
+   56. (Optional) Update documentation to note all images must be for `amd64`, and no Mac/ARM/GPU-specific instructions  
+   57. (Optional) Add `.env`, CI, etc. as needed  
+   58. (Optional) Reference official docs  
+   59. (Optional) Join WeChat/Knowledge group  
+   60. Final verification:  
+       - All builds/tests/runs are on Linux/amd64  
+       - All Docker/Kubernetes images are for `amd64`  
+       - No GPU/CUDA/nvidia-specific code or instructions  
+       - All documentation, Makefiles, and scripts match Linux/amd64 and working directory structure  
+       - All config, code, and deployment files are tested for `/home/cc/EnvGym/data/zeromicro_go-zero` root  
+       - All project and runtime storage fits in your available disk space (check before large codegen or DB dumps)  
+
+**Summary of Key Adjustments:**  
+- All references, downloads, and images must be for Linux/amd64 (x86_64).  
+- Explicitly avoid any ARM, Mac, GPU, CUDA, or nvidia-specific instructions, images, or code.  
+- All paths, scripts, and Docker COPY contexts must match `/home/cc/EnvGym/data/zeromicro_go-zero`.  
+- Use `--platform=linux/amd64` in Docker when building/running if needed.  
+- No adjustments needed for memory/storage unless your environment is unusually constrained (not indicated).  
+- All development tools (Go, Git, protoc, Make, etc.) must be installed in Linux/x86_64 versions.  
+- Omit all Mac/ARM/WSL-specific steps.  
+- Ensure documentation and CI/CD also target Linux/amd64 only.  
+
+*This plan is now fully aligned with your x86_64 hardware, Linux OS, no GPU, and working directory requirements.*

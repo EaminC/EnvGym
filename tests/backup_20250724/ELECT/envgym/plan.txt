@@ -1,0 +1,153 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (For x86_64/amd64, Ubuntu-based, No GPU) ===
+
+**HARDWARE SUMMARY:**
+- Architecture: x86_64 (amd64), standard Linux/amd64 instructions only.
+- No GPU present — do not use CUDA, nvidia/cuda images, or GPU-specific tools.
+- Working Directory: /home/cc/EnvGym/data/ELECT (project under EnvGym/data, working in ELECT).
+- Docker: Version 28.3.2; BuildKit and Compose v2 supported.
+- Base Images: Use official x86_64 Linux images (e.g., ubuntu:22.04, python:3.x-slim).
+
+---
+
+**1. DOWNLOADS NEEDED (ADJUSTED):**
+
+- **Base System & Tools:**
+  - Use Ubuntu 22.04 LTS (or compatible), or Debian-based x86_64/amd64 images.  
+    *Do NOT use ARM (aarch64) images or any GPU-specific base images.*
+  - All system package commands (apt-get, etc.) should assume Ubuntu 22.04 or 20.04, not bionic (18.04), unless explicitly required.
+  - No CUDA, nvidia-smi, or GPU toolkits in any Dockerfile or script.
+
+- **Java:**
+  - openjdk-11-jdk, openjdk-11-jre  
+    *Ensure apt-get installs amd64 builds. Java 11 is standard on Ubuntu 22.04.*
+
+- **Python 3:**
+  - python3, python3-minimal, python3.7-minimal, python3.8-minimal  
+    *On Ubuntu 22.04, python3.10 is default. Explicit 3.6/3.7/3.8 may require deadsnakes PPA or bionic base for Docker images; see Dockerfile notes below.*
+  - python3-pip
+  - venv
+  - **Note:** If using system Python for main development, prefer python3.10 (default on 22.04) for local installs.  
+    *For compatibility testing, Docker images will provide 3.6/3.7/3.8 as required.*
+
+- **Python 2:**  
+  - Only for legacy integration.  
+    *Install python2/python-minimal only in Dockerfile.ubuntu.py2 (bionic, x86_64).*
+
+- **Cython, Pip Packages, and Tools:**  
+  - No changes needed, all supported on x86_64.
+
+- **Erasure Coding, Ant, Maven, etc.:**
+  - All dependencies (clang, llvm, libisal-dev, ant, maven, bc, make, tar, curl, etc.) are available for amd64/Ubuntu.
+
+- **Time Synchronization:**
+  - ntpdate or chrony (no architecture issues).
+
+- **Docker:**
+  - Only use x86_64 (amd64) base images (e.g., FROM ubuntu:22.04, FROM python:3.10-slim).
+  - In all `docker build` and `docker run` commands, add `--platform=linux/amd64` if building on a multi-arch system or CI (to prevent accidental ARM builds).
+
+- **Development Tools:**
+  - IntelliJ IDEA, Eclipse, VSCode:  
+    *Install only x86_64 versions.*
+
+- **Maven/Java Dependencies:**
+  - No architecture-specific requirements.
+
+- **Python pip packages:**
+  - All major scientific and Cassandra packages support x86_64.
+
+---
+
+**2. FILES TO CREATE (ADJUSTED):**
+
+- Paths and directory structures are valid for Linux/x86_64.
+- No changes needed for .gitignore, config files, SSH keys, or documentation paths.
+- **Dockerfiles:**  
+  - All Dockerfiles must specify amd64-compatible images:
+    - For Python 2:  
+      `FROM ubuntu:18.04` (bionic), with `--platform=linux/amd64` if in CI.
+    - For Python 3.6/3.7/3.8:  
+      Use Ubuntu bionic (18.04) base for 3.6/3.7, or use deadsnakes PPA if newer Ubuntu.  
+      Example:  
+        - `FROM ubuntu:18.04` (for 3.6/3.7/3.8, with appropriate apt install)
+        - Or, for 3.8+: `FROM ubuntu:20.04` + deadsnakes.
+    - For main Python 3:  
+      Use `FROM ubuntu:22.04` (default: python3.10), unless 3.6/3.7/3.8 compatibility is explicitly needed.
+  - **Never use ARM or GPU base images (e.g., arm64v8/*, nvidia/cuda:*, etc.).**
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE (ADJUSTED):**
+
+- All test cases remain valid.
+- **Docker image build/run/test:**  
+  - Always use `--platform=linux/amd64` in CI for `docker build` and `docker run` to enforce correct architecture, e.g.:
+    ```
+    docker build --platform=linux/amd64 -f Dockerfile.ubuntu.py38 -t elect-python38 .
+    docker run --platform=linux/amd64 --rm elect-python38 python --version
+    ```
+  - Do NOT test with nvidia-smi or any GPU detection; skip CUDA/GPU checks in CI scripts and documentation.
+- **Python version tests:**  
+  - On Ubuntu 22.04 hosts, system python3 is 3.10; for 3.6/3.7/3.8, rely on Docker images as above.
+- **Memory/Storage:**  
+  - No explicit RAM or disk constraints set. Ensure at least 4GB RAM and 10GB free disk for smooth local/Docker builds; adjust for CI if needed.
+
+---
+
+**4. COMPLETE TODO LIST (ADJUSTED):**
+
+**General:**
+- All apt-get/yum commands and Dockerfiles must use amd64 (x86_64) images and packages.
+- All file paths are Linux-style and valid under `/home/cc/EnvGym/data/ELECT`.
+
+**[Key Adjustments]:**
+- **[Docker]** All Dockerfiles and docker build/run commands must include `--platform=linux/amd64` as a best practice, especially if using Apple Silicon (M1/M2) hosts or multiarch runners.
+- **[Base Image]** For Python 3.x Docker images, bionic (18.04) is required for 3.6/3.7/3.8, as Ubuntu 22.04 defaults to 3.10. For Python 2, only use bionic or earlier.
+- **[No GPU steps]** Remove/skip any steps involving CUDA, nvidia-smi, or GPU detection/instructions.
+- **[No ARM]** Ensure no use of ARM base images or ARM-specific instructions.
+
+**EXAMPLE ADJUSTED STEPS (partial list):**
+1. [ ] System dependencies (Debian/Ubuntu, x86_64):
+    ```
+    sudo apt-get update
+    sudo apt-get install -y openjdk-11-jdk openjdk-11-jre ant ant-optional maven clang llvm libisal-dev python3 python3-minimal ansible python3-pip bc make tar curl
+    sudo apt-get install -y asciidoc  # or install asciidoctor/antora for docs
+    sudo apt-get install -y python3.7-minimal  # For compatibility testing (may require add-apt-repository ppa:deadsnakes/ppa)
+    sudo apt-get install -y python3.8-minimal
+    ```
+    *(Use only x86_64/amd64 packages; if running in Docker/CI, always add --platform=linux/amd64 to docker build/run.)*
+
+2. [ ] Docker images:
+    ```
+    cd src/elect/pylib/
+    docker build --platform=linux/amd64 -f Dockerfile.ubuntu.py2 -t elect-python2 .
+    docker build --platform=linux/amd64 -f Dockerfile.ubuntu.py3 -t elect-python3 .
+    docker build --platform=linux/amd64 -f Dockerfile.ubuntu.py37 -t elect-python37 .
+    docker build --platform=linux/amd64 -f Dockerfile.ubuntu.py38 -t elect-python38 .
+    ```
+    *(No --gpus flag, no CUDA. Only use official Ubuntu or Python images.)*
+
+3. [ ] Documentation:
+    - Note in developer/CI docs:  
+      "All images and builds are for x86_64/amd64 architecture. Do not use ARM or GPU images."
+    - All paths are to be used as-is (`/home/cc/EnvGym/data/ELECT/...`).
+
+4. [ ] (Optional) If running on Apple Silicon/M1/M2 or ARM64 CI, always force amd64 images in Docker or CI by adding `--platform=linux/amd64` to all commands.
+
+5. [ ] No additional steps for GPU setup, drivers, or libraries.
+
+6. [ ] All source, build, and output directories remain as in the original plan.
+
+---
+
+**SUMMARY OF CHANGES:**
+- Explicitly enforce x86_64/amd64 architecture in all Docker and system installs.
+- Remove any reference to GPU, CUDA, or nvidia-smi in all documentation, Dockerfiles, and scripts.
+- Confirm all base images and dependencies are for standard Linux/amd64.
+- No ARM, ARM64, or aarch64 instructions or images.
+- All file paths, documentation, and tool recommendations remain unchanged and valid for the described working environment.
+- Adjust any Python 3.x Docker images to ensure the correct version is available on Ubuntu 22.04 (default: 3.10), use bionic (18.04) or deadsnakes PPA for 3.6/3.7/3.8 as needed.
+
+---
+
+=== END OF ADJUSTED PLAN FOR x86_64/amd64, UBUNTU, NO GPU ===

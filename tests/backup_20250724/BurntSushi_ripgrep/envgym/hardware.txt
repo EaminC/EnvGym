@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/BurntSushi_ripgrep; likely a Rust project (based on "BurntSushi_ripgrep"); ensure Dockerfile context includes required files/subdirectories.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, rust:latest, alpine:latest)
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: No GPU-related instructions; multi-core CPU available for parallel builds (can use build-args to leverage CPUs); ensure Dockerfile paths match project structure
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag not applicable; Docker Compose v2.38.2 available

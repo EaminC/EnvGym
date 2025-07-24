@@ -3,7 +3,6 @@
 # Project list (format: project_name|GitHub_link)
 repos=(
 "RelTR|https://github.com/yrcong/RelTR"
-"Femu|https://github.com/MoatLab/FEMU"
 "Lottory|https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch"
 "SEED-GNN|https://github.com/henryzhongsc/gnn_editing"
 "TabPFN|https://github.com/PriorLabs/TabPFN"
