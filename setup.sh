@@ -243,7 +243,11 @@ install_docker() {
 
 # Main setup function
 main() {
-    log_info "Starting EnvGym setup..."
+    log_info "🚀 Starting EnvGym setup..."
+    log_info ""
+    
+    # Get Forge API key first
+    get_forge_api_key
     
     # Check prerequisites
     check_prerequisites
@@ -255,75 +259,34 @@ main() {
     install_python_dependencies
     
     # Setup environment variables
-    setup_environment_variables
     
     # Download data repositories
     download_data_repositories
     
-    log_success "EnvGym setup completed successfully!"
-    log_info ""
-    log_info "=== Important Notes ==="
-    log_info "Since conda is installed to $HOME/miniconda3, you need to:"
-    log_info ""
-    log_info "1. Reopen your terminal, or run the following command to reload the environment:"
-    log_info "   source ~/.bashrc"
-    log_info ""
-    log_info "2. If Docker was installed, you may need to log out and back in for Docker permissions:"
-    log_info "   Or run: newgrp docker"
-    log_info ""
-    log_info "3. Then activate the environment:"
-    log_info "   conda activate envgym"
-    log_info ""
-    log_info "4. Test the installation:"
-    log_info "   cd data/exli && python ../../Agent/agent.py"
-    log_info ""
-    log_info "Or, you can use the full path directly:"
-    log_info "   $HOME/miniconda3/bin/conda activate envgym"
-    log_info "   cd data/exli && python ../../Agent/agent.py"
+    log_success "✅ EnvGym setup completed successfully!"
     
     # Auto-execute the next steps by default
-    log_info ""
-    log_info "Auto-executing next steps..."
     auto_execute_next_steps
 }
 
 # Auto-execute next steps function
 auto_execute_next_steps() {
-    log_info "Auto-executing next steps..."
+    log_info "🔧 Setting up environment..."
     
-    # 1. Source bashrc to reload environment
-    log_info "1. Reloading environment..."
+    # Source bashrc to reload environment
     source ~/.bashrc
     
-    # 2. Apply Docker permissions if needed
+    # Apply Docker permissions if needed
     if command_exists docker && ! docker info >/dev/null 2>&1; then
-        log_info "2. Applying Docker permissions..."
         if groups $USER | grep -q docker; then
-            newgrp docker <<< "echo 'Docker permissions applied'"
+            newgrp docker <<< "echo 'Docker permissions applied'" >/dev/null 2>&1
         fi
-    else
-        log_info "2. Docker permissions already available"
     fi
     
-    # 3. Activate conda environment
-    log_info "3. Activating conda environment..."
-    
-    # Create a temporary script to activate environment
-    cat > /tmp/envgym_activate.sh << EOF
-#!/bin/bash
-export PATH="$HOME/miniconda3/bin:$PATH"
-eval "\$(conda shell.bash hook)"
-conda activate envgym
-echo "Conda environment 'envgym' activated successfully!"
-EOF
-    
-    chmod +x /tmp/envgym_activate.sh
-    
-    # Execute the activation script
-    bash /tmp/envgym_activate.sh
-    
-    # Clean up
-    rm /tmp/envgym_activate.sh
+    # Activate conda environment
+    export PATH="$HOME/miniconda3/bin:$PATH"
+    eval "$(conda shell.bash hook)"
+    conda activate envgym >/dev/null 2>&1
     
     # Ask user if they want to test the repo
     log_info ""
@@ -332,37 +295,34 @@ EOF
     if [[ "$test_repo" =~ ^[Yy]$ ]]; then
         log_info "Testing repository..."
         
-        # Create a temporary script to run the test
-        cat > /tmp/envgym_test.sh << EOF
-#!/bin/bash
-export PATH="$HOME/miniconda3/bin:$PATH"
-eval "\$(conda shell.bash hook)"
-conda activate envgym
-cd "$(pwd)/data/exli"
-python ../../Agent/agent.py
-EOF
-        
-        chmod +x /tmp/envgym_test.sh
-        
-        # Execute the test script
-        bash /tmp/envgym_test.sh
-        
-        # Clean up
-        rm /tmp/envgym_test.sh
+        # Run the test
+        cd data/exli
+        python ../../Agent/agent.py
+        cd ../..
         
         log_success "Repository test completed!"
+        log_success "Setup completed successfully!"
     else
-        log_info "Skipping repository test. You can test it later with:"
+        log_info "Skipping repository test."
+        log_success "🎉 EnvGym installation completed successfully!"
+        log_info ""
+        log_info "┌─────────────────────────────────────────────────────────────┐"
+        log_info "│                    Next Steps                              │"
+        log_info "└─────────────────────────────────────────────────────────────┘"
+        log_info ""
+        log_info "To activate the envgym environment:"
+        log_info ""
+        log_info "  source ~/.bashrc"
         log_info "  conda activate envgym"
+        log_info ""
+        log_info "Then test the environment:"
         log_info "  cd data/exli && python ../../Agent/agent.py"
+        log_info ""
     fi
-    
-    log_success "Auto-execution completed!"
-    log_info "You can now use EnvGym directly with: conda activate envgym"
 }
 
 check_prerequisites() {
-    log_info "Checking prerequisites..."
+    log_info "🔍 Checking prerequisites..."
     
     # Check if conda is installed
     if ! command_exists conda; then
@@ -418,7 +378,7 @@ check_prerequisites() {
 }
 
 setup_conda_environment() {
-    log_info "Setting up conda environment..."
+    log_info "🐍 Setting up conda environment..."
     
     # Ensure conda is available in PATH
     if [[ -d "$HOME/miniconda3" ]]; then
@@ -437,7 +397,7 @@ setup_conda_environment() {
 }
 
 install_python_dependencies() {
-    log_info "Installing Python dependencies..."
+    log_info "📦 Installing Python dependencies..."
     
     # Ensure conda is available in PATH
     if [[ -d "$HOME/miniconda3" ]]; then
@@ -456,40 +416,56 @@ install_python_dependencies() {
     fi
 }
 
-setup_environment_variables() {
-    log_info "Setting up environment variables..."
-
-    # Only proceed if .env does not exist
+# Get Forge API key from user
+get_forge_api_key() {
+    log_info "🔑 Setting up Forge API key..."
+    
+    # Check if .env already exists and has a valid API key
+    if [ -f ".env" ]; then
+        if grep -q 'FORGE_API_KEY="[^"]*"' .env && ! grep -q 'FORGE_API_KEY="your-forge-api-key-here"' .env; then
+            log_info ".env file already exists with API key. Skipping API key setup."
+            return 0
+        fi
+    fi
+    
+    # Create .env from .env.example if it doesn't exist
     if [ ! -f ".env" ]; then
         if [ ! -f ".env.example" ]; then
             log_error ".env.example not found. Cannot continue."
             exit 1
         fi
-
         cp .env.example .env
         log_success ".env file created from .env.example"
-
-        # Prompt user for API key (loop until provided)
-        while [ -z "$api_key" ]; do
-            read -p "Enter your Forge API Key (required): " api_key
-        done
-
-        # Escape sed-sensitive characters
-        escaped_api_key=$(printf '%s\n' "$api_key" | sed -e 's/[\/&]/\\&/g')
-
-        # Replace placeholder in .env (assumes double quotes)
-        sed -i.bak "s|FORGE_API_KEY=\"your-forge-api-key-here\"|FORGE_API_KEY=\"$escaped_api_key\"|" .env
-        rm .env.bak 2>/dev/null || true
-
-        log_success "Forge API key saved in .env"
-        log_info "✅ Environment setup complete. You can now use EnvGym!"
-    else
-        log_info ".env file already exists. Skipping creation."
     fi
+    
+    # Prompt user for API key
+    log_info "Please enter your Forge API key (required for EnvGym to work):"
+    while [ -z "$api_key" ]; do
+        read -p "Forge API Key: " api_key
+        if [ -z "$api_key" ]; then
+            log_warning "API key cannot be empty. Please try again."
+        fi
+    done
+    
+    # Escape sed-sensitive characters
+    escaped_api_key=$(printf '%s\n' "$api_key" | sed -e 's/[\/&]/\\&/g')
+    
+    # Replace placeholder in .env
+    sed -i.bak "s|FORGE_API_KEY=\"your-forge-api-key-here\"|FORGE_API_KEY=\"$escaped_api_key\"|" .env
+    rm .env.bak 2>/dev/null || true
+    
+    log_success "✅ Forge API key saved successfully!"
+}
+
+setup_environment_variables() {
+    log_info "⚙️  Setting up environment variables..."
+    
+    # API key is already handled in get_forge_api_key function
+    log_success "Environment variables setup completed"
 }
 
 download_data_repositories() {
-    log_info "Downloading data repositories..."
+    log_info "📥 Downloading data repositories..."
     
     cd data
     
