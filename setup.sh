@@ -268,11 +268,11 @@ main() {
     log_info "1. Reopen your terminal, or run the following command to reload the environment:"
     log_info "   source ~/.bashrc"
     log_info ""
-    log_info "2. Then activate the environment:"
-    log_info "   conda activate envgym"
-    log_info ""
-    log_info "3. If Docker was installed, you may need to log out and back in for Docker permissions:"
+    log_info "2. If Docker was installed, you may need to log out and back in for Docker permissions:"
     log_info "   Or run: newgrp docker"
+    log_info ""
+    log_info "3. Then activate the environment:"
+    log_info "   conda activate envgym"
     log_info ""
     log_info "4. Test the installation:"
     log_info "   cd data/exli && python ../../Agent/agent.py"
@@ -280,6 +280,85 @@ main() {
     log_info "Or, you can use the full path directly:"
     log_info "   $HOME/miniconda3/bin/conda activate envgym"
     log_info "   cd data/exli && python ../../Agent/agent.py"
+    
+    # Auto-execute the next steps by default
+    log_info ""
+    log_info "Auto-executing next steps..."
+    auto_execute_next_steps
+}
+
+# Auto-execute next steps function
+auto_execute_next_steps() {
+    log_info "Auto-executing next steps..."
+    
+    # 1. Source bashrc to reload environment
+    log_info "1. Reloading environment..."
+    source ~/.bashrc
+    
+    # 2. Apply Docker permissions if needed
+    if command_exists docker && ! docker info >/dev/null 2>&1; then
+        log_info "2. Applying Docker permissions..."
+        if groups $USER | grep -q docker; then
+            newgrp docker <<< "echo 'Docker permissions applied'"
+        fi
+    else
+        log_info "2. Docker permissions already available"
+    fi
+    
+    # 3. Activate conda environment
+    log_info "3. Activating conda environment..."
+    
+    # Create a temporary script to activate environment
+    cat > /tmp/envgym_activate.sh << EOF
+#!/bin/bash
+export PATH="$HOME/miniconda3/bin:$PATH"
+eval "\$(conda shell.bash hook)"
+conda activate envgym
+echo "Conda environment 'envgym' activated successfully!"
+EOF
+    
+    chmod +x /tmp/envgym_activate.sh
+    
+    # Execute the activation script
+    bash /tmp/envgym_activate.sh
+    
+    # Clean up
+    rm /tmp/envgym_activate.sh
+    
+    # Ask user if they want to test the repo
+    log_info ""
+    read -p "Do you want to test the repository now? (y/n): " test_repo
+    
+    if [[ "$test_repo" =~ ^[Yy]$ ]]; then
+        log_info "Testing repository..."
+        
+        # Create a temporary script to run the test
+        cat > /tmp/envgym_test.sh << EOF
+#!/bin/bash
+export PATH="$HOME/miniconda3/bin:$PATH"
+eval "\$(conda shell.bash hook)"
+conda activate envgym
+cd "$(pwd)/data/exli"
+python ../../Agent/agent.py
+EOF
+        
+        chmod +x /tmp/envgym_test.sh
+        
+        # Execute the test script
+        bash /tmp/envgym_test.sh
+        
+        # Clean up
+        rm /tmp/envgym_test.sh
+        
+        log_success "Repository test completed!"
+    else
+        log_info "Skipping repository test. You can test it later with:"
+        log_info "  conda activate envgym"
+        log_info "  cd data/exli && python ../../Agent/agent.py"
+    fi
+    
+    log_success "Auto-execution completed!"
+    log_info "You can now use EnvGym directly with: conda activate envgym"
 }
 
 check_prerequisites() {
