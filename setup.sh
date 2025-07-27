@@ -169,6 +169,83 @@ install_python_command() {
     log_success "Python command installed successfully"
 }
 
+# Fix Docker permissions
+fix_docker_permissions() {
+    log_info "🔧 Fixing Docker permissions..."
+    
+    # Check if user is in docker group
+    if ! groups $USER | grep -q docker; then
+        log_info "Adding user to docker group..."
+        sudo usermod -aG docker $USER
+        log_warning "User added to docker group. You may need to log out and log back in for changes to take effect."
+        log_info "Alternatively, you can run: newgrp docker"
+    fi
+    
+    # Try to apply group permissions immediately using a different approach
+    if command_exists newgrp; then
+        log_info "Attempting to apply Docker group permissions immediately..."
+        
+        # Use newgrp in a way that doesn't interrupt the script
+        # We'll use a temporary approach to test if it works
+        if newgrp docker -c "docker info >/dev/null 2>&1"; then
+            log_success "Docker group permissions applied successfully!"
+            log_info "You can now use Docker without sudo. If you encounter issues, run: newgrp docker"
+            return 0
+        else
+            log_warning "Docker permissions still not working. Please try one of the following:"
+            log_info "  1. Run: newgrp docker (this will start a new shell with docker group)"
+            log_info "  2. Log out and log back in"
+            log_info "  3. Run: sudo chmod 666 /var/run/docker.sock (temporary fix)"
+            return 1
+        fi
+    fi
+    
+    return 1
+}
+
+# Start a new shell with envgym environment and Docker permissions
+start_envgym_shell() {
+    log_info "🚀 Starting new shell with envgym environment and Docker permissions..."
+    
+    # Create a script that will be executed in the new shell
+    cat > /tmp/envgym_shell.sh << 'EOF'
+#!/bin/bash
+
+# Define command_exists function
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Set up conda environment
+export PATH="$HOME/miniconda3/bin:$PATH"
+eval "$(conda shell.bash hook)"
+conda activate envgym
+
+# Set up Docker permissions and start new shell
+if command_exists newgrp; then
+    # Start a new shell with docker group
+    exec newgrp docker
+else
+    # Fallback: just activate conda environment
+    echo "Docker group command not available, starting shell with envgym environment only..."
+    exec bash
+fi
+EOF
+
+    chmod +x /tmp/envgym_shell.sh
+    
+    log_success "Starting new shell..."
+    log_info "You will be in a new shell with:"
+    log_info "  ✅ envgym conda environment activated"
+    log_info "  ✅ Docker permissions enabled"
+    log_info ""
+    log_info "To exit this shell and return to your original shell, type: exit"
+    log_info ""
+    
+    # Execute the script
+    exec /tmp/envgym_shell.sh
+}
+
 # Install Docker
 install_docker() {
     log_info "Installing Docker..."
@@ -278,9 +355,8 @@ auto_execute_next_steps() {
     
     # Apply Docker permissions if needed
     if command_exists docker && ! docker info >/dev/null 2>&1; then
-        if groups $USER | grep -q docker; then
-            newgrp docker <<< "echo 'Docker permissions applied'" >/dev/null 2>&1
-        fi
+        log_warning "Docker permission issue detected in auto-execute. Attempting to fix..."
+        fix_docker_permissions
     fi
     
     # Activate conda environment
@@ -304,21 +380,11 @@ auto_execute_next_steps() {
         log_success "Setup completed successfully!"
     else
         log_info "Skipping repository test."
-        log_success "🎉 EnvGym installation completed successfully!"
-        log_info ""
-        log_info "┌─────────────────────────────────────────────────────────────┐"
-        log_info "│                    Next Steps                              │"
-        log_info "└─────────────────────────────────────────────────────────────┘"
-        log_info ""
-        log_info "To activate the envgym environment:"
-        log_info ""
-        log_info "  source ~/.bashrc"
-        log_info "  conda activate envgym"
-        log_info ""
-        log_info "Then test the environment:"
-        log_info "  cd data/exli && python ../../Agent/agent.py"
-        log_info ""
     fi
+    
+    # Auto-start new shell with envgym environment and Docker permissions
+    log_info "Auto-starting shell with envgym environment and Docker permissions..."
+    start_envgym_shell
 }
 
 check_prerequisites() {
@@ -365,6 +431,12 @@ check_prerequisites() {
                 sudo systemctl start docker
                 sudo systemctl enable docker
             fi
+        fi
+        
+        # Check Docker permissions
+        if ! docker info >/dev/null 2>&1; then
+            log_warning "Docker permission issue detected. Attempting to fix..."
+            fix_docker_permissions
         fi
     fi
     
