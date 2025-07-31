@@ -120,7 +120,7 @@ class WritingDockerInitialTool:
 
 Please write a detailed dockerfile to configure this repository based on the plan.
 You should only return the dockerfile content, no other content.
-
+Please create a Dockerfile that, when built, puts me in a /bin/bash cli setting at the root of the repository, with the repository installed and ready to use.
 IMPORTANT: 
 
 Return ONLY the dockerfile content, no explanations, no markdown formatting, no additional text."""

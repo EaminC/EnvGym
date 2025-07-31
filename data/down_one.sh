@@ -2,7 +2,7 @@
 
 # Project list (format: project_name|GitHub_link)
 repos=(
-"exli|https://github.com/EngineeringSoftware/exli"
+"alibaba_fastjson2|https://github.com/alibaba/fastjson2"
 )
 
 # Clone function

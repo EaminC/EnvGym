@@ -256,7 +256,7 @@ IMPORTANT REQUIREMENTS:
 2. Do NOT add COPY or ADD commands for files that don't exist
 3. Verify all file paths against the directory structure
 4. Return ONLY the revised dockerfile content, no explanations, no markdown formatting, no additional text
-
+5. Please create a Dockerfile that, when built, puts me in a /bin/bash cli setting at the root of the repository, with the repository installed and ready to use.
 
 IMPORTANT: 
 

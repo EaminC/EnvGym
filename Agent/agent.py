@@ -40,9 +40,6 @@ if __name__ == "__main__":
     print("Mapping the whole repo")
     ScanningTool(verbose=verbose).run()
 
-    print("Scanning for test files")
-    TestScanningTool(verbose=verbose).run()
-    
     print("Checking the hardware")
     HardwareCheckingTool().run()
 

@@ -1,0 +1,14 @@
+[
+  "README.md",
+  "acto/schema/README.md",
+  "data/percona-xtradb-cluster-operator/README.md",
+  "data/redis-ot-container-kit-operator/README.md",
+  "docs/README.md",
+  "scripts/ansible/README.md",
+  "ssa/README.md",
+  "Makefile",
+  "requirements.txt",
+  "requirements-dev.txt",
+  "pyproject.toml",
+  ".pre-commit-config.yaml"
+]
