@@ -1,0 +1,97 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (FOR x86_64, LINUX/UBUNTU, NO GPU) ===
+
+1. DOWNLOADS NEEDED:  
+   - Java Development Kit (JDK) 8 or higher (JDK 11/17 recommended)
+     - Use x86_64 (amd64) Linux builds from [https://adoptium.net/](https://adoptium.net/) or [https://jdk.java.net/](https://jdk.java.net/).
+     - For Spring 6/Spring Boot 3.x modules: **Java 17 or newer is REQUIRED**.
+     - For GraalVM Native Image: Use GraalVM CE for x86_64 Linux, matching JDK major version.
+   - Apache Maven 3.6+ or Gradle 6.0+ (choose one)
+     - Use official Linux x86_64 distributions.
+   - Git ([https://git-scm.com/downloads]) – Linux x86_64 package (`apt install git` on Ubuntu).
+   - IDE (optional): IntelliJ IDEA, Eclipse, VSCode – Linux x86_64 versions if installing locally.
+   - Optional: Kotlin compiler 1.5+ (Linux x86_64 build) if using Kotlin modules.
+   - Optional: Android SDK only if building for Android (not typical for server x86_64 Linux).
+   - Optional: GraalVM Native Image (see above for supported versions/platforms).
+     - Install via official GraalVM Linux x86_64 builds.
+   - Optional: Spring Framework/Spring Boot (for Spring integration)
+     - For Spring 5: Works with Java 8+, but Spring 6/Spring Boot 3.x requires Java 17+.
+   - Optional: Solon Framework (for Solon integration)
+   - fastjson2 library and all modules (Maven Central dependencies, no hardware-specific issues).
+   - Optional: JaCoCo (code coverage), Codecov (integration), Nexus Repository access, Gitpod, Docker (x86_64 Ubuntu images).
+   - **DO NOT install any CUDA, NVIDIA, or GPU-specific tools.** No GPU is present or needed.
+   - **Docker:** Use official x86_64 images (e.g., `ubuntu:22.04`, `openjdk:17-jdk`, etc.).  
+   - **No ARM/ARM64 images or binaries** – use only x86_64/amd64.
+
+2. FILES TO CREATE (Project Structure):  
+   - All listed files/directories remain valid.
+   - All paths should use forward slashes (`/`), and be case-sensitive (Linux).
+   - Dockerfile (if used):
+     - Base image must be x86_64/amd64 (e.g., `FROM openjdk:17-jdk`, `FROM ubuntu:22.04`).
+     - No CUDA, no `nvidia-smi`, no GPU runtime. Omit any `--gpus` or GPU-specific Docker flags.
+     - Multi-core builds can be enabled (e.g., `mvn -T 1C install`), but not required.
+   - No changes needed for OS, architecture, or GPU in file layout.
+   - If using systemd or cgroup: set `cgroup driver=systemd` if relevant for Docker containers (not usually needed for Java).
+   - No case-insensitive path assumptions; all file references must match case.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All test cases remain valid.
+   - For any Android compatibility tests: **Skip or mark as not applicable if not building/deploying to Android on x86_64 Linux.**
+   - GraalVM Native Image: Use x86_64 build and test only on supported Linux x86_64 hosts.
+   - No GPU/CUDA-related tests.
+
+4. COMPLETE TODO LIST (Adjusted):  
+   1. **JDK:**  
+       - Install Linux x86_64 JDK (8/11/17+ as needed; use `apt install openjdk-17-jdk` or download from Adoptium).
+       - For Spring 6 modules, ensure Java 17+ is installed and used.
+       - `java -version` should report x86_64/amd64 architecture.
+   2. **Maven/Gradle:**  
+       - Install Linux x86_64 Maven or Gradle (via package manager or official tarball).
+   3. **Git:**  
+       - `apt install git` (if not present).
+   4. **Kotlin:**  
+       - Optional; install only if Kotlin modules are in use.
+   5. **Android SDK:**  
+       - Optional/skip for x86_64 server environments unless targeting Android specifically.
+   6. **GraalVM Native Image:**  
+       - Download and unpack GraalVM CE for Linux x86_64.
+       - Set `JAVA_HOME` accordingly.
+       - `gu install native-image` (ensure it is for x86_64).
+   7. **Solon, Spring:**  
+       - No hardware-specific restrictions.
+   8. **IDE:**  
+       - Install Linux x86_64 version if desired.
+   9. **Clone Repository:**  
+       - `git clone https://github.com/alibaba/fastjson2.git`
+   10. **Project Configuration:**  
+       - All configuration files and dependencies as before.
+       - For Spring 6/Spring Boot 3.x modules, ensure `pom.xml` or `build.gradle` specifies Java 17+.
+   11. **.gitignore:**  
+       - No changes.
+   12. **Sample Apps and Tests:**  
+       - All code and tests remain as before.
+       - For GraalVM native image, build/test only on x86_64 Linux.
+   13. **CI/CD:**  
+       - If using Docker, GitHub Actions, or other CI, ensure all images use x86_64/amd64 base images.
+       - No GPU runners or build steps.
+   14. **Dockerfile:**  
+       - `FROM openjdk:17-jdk` or `FROM ubuntu:22.04` (or similar x86_64 images).
+       - Do NOT include any GPU, CUDA, or `nvidia-smi` steps.
+       - Multi-core builds may be enabled (e.g., `RUN mvn -T 1C clean install`) for faster build times.
+   15. **Android-specific steps/files:**  
+       - Omit unless necessary for your target use case.
+   16. **Documentation:**  
+       - Add note: “This setup is for Linux x86_64/amd64 architecture. For ARM/ARM64 or other platforms, adjust base images and binaries accordingly.”
+   17. **Cross-platform Testing:**  
+       - Optional. If testing on Windows/macOS, ensure x86_64/amd64 architecture, or note that GraalVM native images and Docker images are built for x86_64 Linux.
+   18. **No CUDA/GPU instructions anywhere.**
+
+   - **Summary of Key Hardware-Specific Adjustments:**  
+     - Use only x86_64/amd64 binaries and Docker images.
+     - No ARM/ARM64, no GPU, no CUDA.
+     - Case-sensitive paths and filenames.
+     - Multi-core build optimizations are allowed.
+     - Do not install any GPU/CUDA/NVIDIA tools or drivers.
+     - If writing shell scripts, assume `/bin/bash` or `/bin/sh` on Linux.
+     - For Docker: do NOT use `--gpus` option or any GPU-specific flags.
+
+=== END OF ADJUSTED PLAN ===

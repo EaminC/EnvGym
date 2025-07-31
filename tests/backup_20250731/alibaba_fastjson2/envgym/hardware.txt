@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/alibaba_fastjson2; project likely in Python or Java, no specific structure provided
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Official x86_64 images (e.g., ubuntu:22.04, python:3.x-slim, openjdk:xx-jdk); avoid CUDA/NVIDIA images
+- GPU: No NVIDIA GPU detected; CUDA images not applicable
+- Instruction Notes: No GPU-specific instructions (e.g., no RUN nvidia-smi, no CUDA installs); multi-core optimizations possible; file paths case-sensitive; use systemd as cgroup driver if relevant
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag available but not usable due to absent NVIDIA GPU
