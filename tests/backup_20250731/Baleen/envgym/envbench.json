@@ -1,0 +1,30 @@
+{
+  "repository": "Baleen",
+  "timestamp": "2025-07-28T11:46:51Z",
+  "execution_status": "success",
+  "statistics": {
+    "pass_count": 0
+32
+47
+0,
+    "fail_count": 0
+31
+10
+0,
+    "warn_count": 1
+33
+6
+0,
+    "total_tests": ,
+    "environment_score": 0,
+    "dockerfile_score": 0
+  },
+  "docker_status": {
+    "build_failed": false,
+    "run_failed": false
+  },
+  "summary": {
+    "overall_status": "failed",
+    "recommendations": []
+  }
+}

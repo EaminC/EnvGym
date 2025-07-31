@@ -1,0 +1,171 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (FOR x86_64, CPU-ONLY, UBUNTU/DOCKER, NO NVIDIA GPU) ===
+
+**KEY HARDWARE/PLATFORM NOTES:**
+- Architecture: x86_64/amd64 (no ARM)
+- OS: Ubuntu (use Ubuntu 22.04 or compatible base images)
+- No NVIDIA GPU: CUDA, GPU-only, and nvidia-specific instructions/packages are NOT needed or recommended
+- Project path: /home/cc/EnvGym/data/RSNN (ensure all context, volumes, and WORKDIR use this)
+- Docker: Supported, BuildKit enabled
+- Use multi-core optimizations where feasible for builds/installs
+
+---
+
+**1. DOWNLOADS NEEDED:**
+
+   - Python 3.10.12  
+     - [https://www.python.org/downloads/release/python-31012/]
+     - Or use `python:3.10-slim-bullseye` or `ubuntu:22.04` + `apt install python3.10 python3.10-venv`
+   - pip (latest version for Python 3.10.12)
+   - **NO CUDA Toolkit or NVIDIA drivers required**  
+     - Remove all CUDA, nvidia/cuda images, and GPU toolkit steps
+   - Git (latest stable release, for code management and to install packages from git repositories)
+   - Jupyter Notebook
+   - (Optional) virtualenv or conda for environment isolation (conda not required but supported)
+   - **Python Packages** (as in requirements.txt):
+     - numpy
+     - torch **(install CPU-only version, see below)**
+     - scipy
+     - matplotlib
+     - seaborn
+     - h5py
+     - soundfile
+     - tables
+     - torchaudio
+     - torchvision
+     - tonic
+     - xlsxwriter
+     - hydra-core
+     - neurobench
+     - pandas
+     - snntorch
+     - omegaconf
+     - KDEpy
+     - stork (from git at commit 40c68fe)
+     - randman (from git)
+   - **Version compatibility**:  
+     - Ensure torch, torchaudio, torchvision, snntorch, etc. are all installed in CPU-only mode and are compatible with Python 3.10.12
+     - No CUDA or GPU wheels should be requested or installed
+
+   **NOTES:**  
+   - **Torch Installation:**  
+     - Use: `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu`
+     - Do NOT use `+cuXXX` or GPU wheels
+   - **Docker images:**  
+     - Use `--platform=linux/amd64` if building images
+     - Use `python:3.10-slim-bullseye` or `ubuntu:22.04`
+   - **No CUDA:**  
+     - Remove any CUDA, nvidia/cuda, or GPU-related dependencies, containers, or instructions
+
+---
+
+**2. FILES TO CREATE:**
+
+   - requirements.txt  
+     - List all Python dependencies as above; **ensure torch/torchaudio/torchvision are specified for CPU (see note below)**
+     - For torch, either leave version unpinned or specify a CPU version (no +cuXXX)
+   - /conf/data/data-default.yaml
+   - /conf/config.yaml
+   - /challenge/
+     - __init__.py (if not present)
+     - All necessary Python modules for data loaders, models, training, and evaluation.
+   - /challenge/neurobench/
+     - Custom wrapper code for stork models to interface with NeuroBench.
+   - /models/
+     - Pre-trained model state dictionaries as needed
+   - /results/
+     - Output JSON files
+   - train-bigRSNN.py, train-tinyRSNN.py, evaluate.py
+   - results_extract_from_logs.ipynb
+   - README.md
+     - **Update to reflect this is a CPU-only environment**
+     - Remove any GPU/CUDA install or troubleshooting instructions
+   - .gitignore
+   - (Optional) environment.yml  
+     - For conda users; list all dependencies, **exclude CUDA/GPU packages**
+   - (Optional) requirements-dev.txt
+   - (Optional) setup.py or pyproject.toml
+
+   **NOTES:**  
+   - In requirements.txt, do NOT use lines like `torch==1.13.0+cu117`; just `torch==<version>` or leave version unpinned for CPU wheel  
+   - If users might run on GPU elsewhere, document the difference in the README
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**
+
+   - **All test cases remain, but:**
+     - **GPU/CPU Compatibility Test:**  
+       - Ensure all code runs on CPU ONLY  
+       - Test that any device selection logic properly falls back to CPU and does NOT error if CUDA is unavailable  
+       - Remove or skip any tests that require a GPU
+     - **Torch Import Test:**  
+       - Confirm torch, torchaudio, and torchvision import as CPU-only (no CUDA backend)
+     - **Logging and Error Handling:**  
+       - Confirm clear message if attempting to use CUDA and it's unavailable
+   - **End-to-End Smoke Test:**  
+     - Run all tests in a CPU-only context
+
+---
+
+**4. COMPLETE TODO LIST:**
+
+   1. **Install Python 3.10.12**
+      - Use python:3.10 Docker image or Ubuntu 22.04 + python3.10
+      - Verify with `python --version`
+   2. **Set up virtual environment** *(optional but recommended)*  
+      - For pip: `python -m venv venv && source venv/bin/activate`  
+      - For conda: `conda create -n snn-env python=3.10.12 && conda activate snn-env`
+   3. **Create or update requirements.txt**
+      - List all dependencies; for torch/torchaudio/torchvision, do NOT specify +cuXXX
+      - Use git links for stork and randman as before
+   4. **Install dependencies**
+      - Run `pip install -r requirements.txt`
+      - **For torch, torchaudio, torchvision:**  
+        - `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu`
+      - For editable git installs:  
+        - `pip install -e git+https://github.com/fmi-basel/stork.git@40c68fe`
+        - `pip install git+https://github.com/fzenke/randman`
+      - Verify all packages are installed and CPU-only
+   5. **NO CUDA toolkit install; skip all GPU/NVIDIA steps**
+      - Do NOT install CUDA, nvidia drivers, or use nvidia/cuda Docker images
+      - Do NOT use `nvcc`, `nvidia-smi`, or any GPU validation; skip these steps
+   6. **Download/clone the code repository**
+      - `git clone <repo-url>`
+      - Verify files and directories
+   7-20. **All remaining steps unchanged from original plan, except:**
+      - **When running/validating scripts, confirm they do NOT require CUDA or GPU**  
+        - Check that device selection in code (`torch.device(...)`) defaults to CPU and does not crash if CUDA is not present
+      - **Update README.md:**  
+        - State that the environment is CPU-only
+        - Remove or comment out any GPU/CUDA install instructions
+        - Add a troubleshooting note: "This environment is intended for x86_64/amd64, CPU-only. If using GPU elsewhere, install the appropriate CUDA-enabled torch/torchaudio/torchvision wheels."
+      - **In .gitignore and all paths:**  
+        - Use `/home/cc/EnvGym/data/RSNN` as the working/project directory
+        - Ensure all scripts and config files reference this path as the project root/context
+      - **Docker-related notes:**  
+        - Use only amd64-compatible images (no ARM)
+        - Set `WORKDIR /home/cc/EnvGym/data/RSNN` in any Dockerfile
+        - Do NOT use nvidia/cuda or GPU-related Docker options
+        - Use multi-core build jobs where possible (`make -j$(nproc)` etc.)
+
+---
+
+**SUMMARY OF MAJOR ADJUSTMENTS:**
+
+- Remove all CUDA, GPU, and NVIDIA installation, dependencies, and instructions
+- Ensure torch, torchaudio, torchvision, snntorch, etc. are installed as CPU-only packages
+- Ensure code and tests do not require CUDA and gracefully handle absence of GPU
+- Use only x86_64/amd64-compatible images and instructions
+- Update all documentation (README.md, comments) to reflect CPU-only operation
+- Set all paths and working directories to `/home/cc/EnvGym/data/RSNN`
+- Ensure all code, configs, and build scripts are compatible with Ubuntu 22.04 and Python 3.10.12 on x86_64 CPU
+
+---
+
+**AT EACH STAGE:**  
+- Verify steps by running appropriate commands, checking output files, and confirming error-free operation
+- Specifically check that no CUDA, GPU, or nvidia-specific errors appear in any step
+
+---
+
+**END OF ADJUSTED PLAN**

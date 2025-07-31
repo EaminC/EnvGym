@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/darkreader_darkreader; nested under /home/cc/EnvGym/data; typical Python/ML or data project structure
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: use amd64-compatible images, e.g., ubuntu:22.04, python:3.x-slim, debian:bullseye
+- GPU: No compatible NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (no RUN nvidia-smi, no CUDA installs); standard Linux/Ubuntu base; can leverage multi-core builds (e.g., make -j96) if relevant
+- Docker Version: 28.3.2; fully compatible with BuildKit, Docker Compose, and standard features; --gpus flag not supported due to lack of NVIDIA GPU

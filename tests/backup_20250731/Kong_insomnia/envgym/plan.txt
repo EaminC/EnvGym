@@ -1,0 +1,192 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Linux, Docker 28.3.2, no GPU, custom WORKDIR) ===
+
+**Key Adjustments:**
+- All instructions, dependencies, and Docker images are now explicitly compatible with x86_64 (amd64) Linux.
+- No GPU/CUDA logic or dependencies; skip all references to GPU or nvidia/cuda containers.
+- Assumed high CPU/RAM (no limitations), but as always, recommend monitoring disk space (some npm/Electron builds and Playwright downloads can be large).
+- Project root: `/home/cc/EnvGym/data/Kong_insomnia` (adjust all path references and Docker WORKDIR).
+- Docker commands/examples use `--platform=linux/amd64` where applicable.
+- System dependencies and Docker base images: Recommend Ubuntu 22.04 or compatible slim Python images (no ARM or Ubuntu <20.04).
+- All Windows/macOS-specific steps are omitted or marked as “skip/not needed”.
+- No GPU/--gpus-related Docker flags or instructions.
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - **Node.js**
+     - Use version from `.nvmrc` (or `engines.node` in `package.json`, `>=22.14.0`)
+     - **Linux/x86_64:** Use official Node.js Linux binaries or `nvm` (no ARM builds)
+   - **npm:** `>=10` (comes with Node.js)
+   - **Git**
+   - **Electron**: Installed via npm (version `35.1.5`), compatible with Linux x86_64 only
+   - **electron-builder** (`26.0.13`)
+   - **electron-builder-squirrel-windows** (`26.0.13`) — **only needed for cross-building Windows packages; can be skipped if not building for Windows**
+   - **concurrently** (used via npx)
+   - **node-pre-gyp** (for native Node modules, e.g., `@getinsomnia/node-libcurl`)
+   - **Playwright** and `@playwright/test` (`1.51.1`)
+   - **mkcert** (for certificates)
+     - On Linux: See mkcert docs; install via package manager or download Linux binary
+   - **Linux-specific packages** (for Ubuntu 22.04 or similar):
+     - `libfontconfig-dev` (needed for Electron)
+   - **[Docker](https://docs.docker.com/get-docker/)**
+     - **Version:** Docker Engine 20.10+ (your version: 28.3.2; fully supported)
+     - **No --gpus flag or CUDA needed**
+     - Use `--platform=linux/amd64` if building images on multi-arch hosts
+   - **(Optional) curl** (for downloading CLI artifacts)
+   - **patch-package**
+   - **cross-env** (`^7.0.3`)
+   - **esbuild** (`^0.25.2`)
+   - **esbuild-runner** (`^2.2.2`)
+   - **prettier** and **prettier-plugin-tailwindcss**
+   - **TypeScript** and **tslib**
+   - **vitest**
+   - **type-fest**
+   - **vite** (`^6.3.1`)
+   - **@vitejs/plugin-react** (`4.3.4`)
+   - **react** (`^18.3.1`)
+   - **react-dom** (`^18.3.1`)
+   - **@svgr/cli** (`6.4.0`)
+   - **@types/***
+   - **codemirror**, **monaco-editor**, **tailwindcss**, **@tailwindcss/typography**, **postcss**, **autoprefixer**, **classnames**, **nunjucks**, **less**, **ws** (`^8.18.1`), **zod**, **mocha**, **chai**, **@testing-library/***, **electron-devtools-installer**, **fuzzysort**, **gsap**, **date-fns**, **openapi-types**, **buffer**, **objectpath**, **jsonpath-plus**, **httplease-asap**, **deep-equal**, **isomorphic-git**, **highlight.js**, **tinykeys**, **react-aria**, **react-aria-components**, **react-resizable-panels**, **react-router**, **react-stately**, **react-use**, **json-order**, **vkbeautify**, **autoprefixer** (duplicate, but as required by different packages), **shellwords** (`^1.0.1`), **@seald-io/nedb** (`^4.1.1`), **@stoplight/spectral-*`** etc. (all as previously listed)
+   - **@yao-pkg/pkg** (`6.3.2`)
+   - **All other dependencies/devDependencies as listed in all workspaces**
+   - **Editor**: VS Code or other, with ESLint/JSX/Playwright plugins
+   - **(Optional)**: devtools-protocol, pkg (for CLI packaging, now replaced by @yao-pkg/pkg), Playwright Trace Viewer, xz-utils (for tar.xz), `libstdc++6` (runtime for CLI binary)
+
+   **NOTES:**
+   - **No Windows Build Tools or macOS Homebrew steps needed on this hardware.**
+   - **No CUDA, nvidia/cuda images, or GPU driver dependencies.**
+   - **All npm/Electron/Playwright operations should assume Linux/x86_64.**
+
+---
+
+2. FILES TO CREATE:  
+   - **.nvmrc** (ensure Node.js version matches)
+   - **.env** (if needed)
+   - **package.json** (in root and all workspaces)
+   - **package-lock.json**
+   - **CONTRIBUTING.md, CODE_OF_CONDUCT.md, LICENSE**
+   - **.eslintrc/.eslintrc.js** (per workspace)
+   - **.gitignore** (ensure correct patterns; see below for path adjustments)
+   - **.editorconfig** (optional)
+   - **prettier.config.js/.prettierrc**
+   - **Test configs:** `vitest.config.ts`, `playwright.config.ts` (in relevant workspaces)
+   - **Dockerfile**:  
+     - Use `FROM ubuntu:22.04` or `FROM python:3.x-slim` as base (no ARM/ARM64, no nvidia/cuda)
+     - `WORKDIR /home/cc/EnvGym/data/Kong_insomnia`
+     - Use `--platform=linux/amd64` as needed in multi-arch contexts
+   - **README.md** (in root and all workspaces)
+   - **Other docs**: as needed per workspace
+   - **Scripting, test, and config files**: as previously listed, but ensure all paths (in scripts, Dockerfile, and docs) use `/home/cc/EnvGym/data/Kong_insomnia` as the project root.
+   - **bin/** scripts as needed
+
+   **NOTES:**  
+   - **All file and path references must use `/home/cc/EnvGym/data/Kong_insomnia` as the project root in scripts, Dockerfiles, and documentation.**
+   - **No Windows/macOS-specific ignore patterns or config files needed.**
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All as previously listed (API, CLI, E2E, sync, storage, cross-platform, etc.).
+   - **Cross-platform notes:**  
+     - Tests for ARM, Mac, or Windows-specific features are NOT required on this hardware, but cross-platform packaging logic can remain in codebase for CI/CD or downstream users.
+     - Docker CLI and app build/package/test flows are all fully supported on this hardware/OS.
+   - **Docker tests:**  
+     - Run with `--platform=linux/amd64` if building on hosts that support multiple architectures.
+   - **Electron packaging:**  
+     - Test and package only for Linux unless cross-compiling for other platforms (which may require additional setup/tooling not present on this hardware).
+   - **Playwright tests and browser installs:**  
+     - Fully supported; no GPU dependencies needed.
+
+---
+
+4. COMPLETE TODO LIST (ADJUSTED):  
+   1. **Install Node.js version manager (`nvm`) and Node.js (`>=22.14.0`):**  
+      - Use Linux binaries; ignore any ARM or Windows/macOS instructions
+      - Verify: `node --version`
+   2. **Install npm (`>=10`):**  
+      - Verify: `npm --version`
+   3. **Install Git:**  
+      - Verify: `git --version`
+   4. **Clone the project repository** to `/home/cc/EnvGym/data/Kong_insomnia`
+   5. **Install Linux dependencies:**  
+      - `sudo apt-get update && sudo apt-get install libfontconfig-dev`
+      - Optionally: `libstdc++6`, `xz-utils`
+      - Verify: `dpkg -l | grep libfontconfig-dev`
+   6. **[Windows Build Tools step: SKIP]**
+   7. **Install Docker (already at 28.3.2):**  
+      - No `--gpus` flag needed  
+      - Verify: `docker --version`
+   8. **Install mkcert for Linux:**  
+      - Install via package manager or download binary as per [mkcert docs](https://github.com/FiloSottile/mkcert)
+      - Verify: `mkcert -install`, `mkcert localhost`
+   9. **Install project dependencies:**  
+      - `npm install` at project root (`/home/cc/EnvGym/data/Kong_insomnia`)  
+      - Worksapces: all under `packages/`  
+      - Verify: `node_modules` present in all workspaces
+   10. **Run patch-package (postinstall)**
+   11. **Install Playwright browsers:**  
+       - `npx playwright install`
+   12. **Install/update native node modules (node-libcurl):**  
+       - For Node: `node_modules/.bin/node-pre-gyp install --update-binary --directory node_modules/@getinsomnia/node-libcurl`
+       - For Electron: `npm run install-libcurl-electron`
+   13. **Electron cache clearing step:**  
+       - If Electron install fails on Linux: `rm -rf ~/.cache/electron`
+   14. **Set up code editor:**  
+       - Use VS Code or similar
+   15. **Check/create configuration files:**  
+       - Ensure all files and directories are present as above, using the correct root path
+   16. **Prepare Inso CLI binary artifact:**  
+       - Use `@yao-pkg/pkg` targeting Linux amd64 (default)
+   17. **Build Inso CLI Docker image:**  
+       - `docker build --platform=linux/amd64 -t inso-cli .`  
+       - Ensure `WORKDIR /home/cc/EnvGym/data/Kong_insomnia`
+   18. **Run/test Inso CLI Docker container:**  
+       - `docker run --platform=linux/amd64 --rm inso-cli --version`
+       - Mount fixtures as needed with `-v`
+   19. **Run lint and type checks** across all workspaces
+   20. **Run project/unit/E2E tests** (Vitest, Playwright, etc.)
+   21. **Run Playwright smoke tests** (dev/build/package modes)
+   22. **Debug Playwright tests** as needed
+   23. **Reproduce CI Playwright failures** (Trace Viewer)
+   24. **Refresh certificates for smoke test scenarios**
+   25. **Run CLI commands and smoke tests**
+   26. **Debug CLI tests**
+   27. **Update fixture DBs [if needed]**
+   28. **Verify CLI functionality (Node, binary, Docker)**
+   29. **Start development server** (`npm run dev`)
+   30. **Test core features manually**
+   31. **Verify build and packaging for Electron app** (Linux only)
+   32. **Run SVG asset conversion**
+   33. **Verify cross-platform and CI compatibility**  
+       - Only Linux/x86_64 required on this hardware; keep logic for cross-platform builds in codebase for CI
+   34. **Document issues/improvements**
+   35. **Set up plugins [optional]**
+   36. **Set up CI/CD [optional]**
+       - Ensure Docker build steps use `--platform=linux/amd64` if multi-arch runners are used
+       - All steps and scripts must use `/home/cc/EnvGym/data/Kong_insomnia` as project root in CI Docker contexts
+
+**Additional Hardware/Environment Notes:**  
+- **No GPU/CUDA support or instructions needed anywhere.**  
+- **All Docker images, binaries, and packaged CLI/Electron apps must target Linux x86_64 (amd64) architecture.**  
+- **If scripts or documentation reference Windows/macOS paths or Windows-specific build tools, mark them as “not needed for this environment” or remove from local onboarding docs.**  
+- **For large npm/Electron/Playwright installs, monitor available disk space. Typical requirements:**
+  - Node_modules for the full monorepo may consume several GB.
+  - Playwright browser downloads: ~1–2GB.
+  - Electron packaging and Docker images: additional several GB.
+- **No changes needed for CPU or RAM unless running in a constrained VM/container (not indicated here).**
+- **All relative/absolute paths in scripts, Dockerfiles, and documentation should be reviewed and, if needed, set to `/home/cc/EnvGym/data/Kong_insomnia` as the working/project directory.**
+
+---
+
+**Summary of key changes for this hardware:**
+- All platform-specific steps, binaries, and Docker images must target Linux x86_64 (amd64).
+- No GPU/CUDA/nvidia steps or images.
+- No Windows/macOS-specific installation steps.
+- All project scripts and Dockerfiles should use `/home/cc/EnvGym/data/Kong_insomnia` as the project root/WORKDIR.
+- Use `--platform=linux/amd64` in Docker build/run commands if building or running multi-arch images.
+- All other setup, testing, and build steps remain as previously listed.
+
+---
+
+**Proceed with this adjusted plan on your hardware!**

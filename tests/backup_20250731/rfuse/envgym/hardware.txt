@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/rfuse; project likely under /home/cc/EnvGym/data with directory name 'rfuse'
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.X-slim, debian:buster)
+- GPU: No NVIDIA GPU available; CUDA images not recommended/applicable
+- Instruction Notes: No GPU-specific instructions; multi-core build optimizations possible; no ARM support needed; ensure WORKDIR is set to /home/cc/EnvGym/data/rfuse
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag not usable due to missing NVIDIA GPU

@@ -1,0 +1,80 @@
+=== Docker Execution Log - 20250720_083838 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753000703
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.09kB done
+#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [2/8] RUN apt-get update &&     apt-get install -y --no-install-recommends       software-properties-common       wget       ca-certificates       gnupg       lsb-release       curl       build-essential       cmake       git       python3       ninja-build       doxygen       valgrind       bash       unzip &&     rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [3/8] RUN wget https://apt.llvm.org/llvm.sh &&     chmod +x llvm.sh &&     ./llvm.sh 18 &&     rm llvm.sh &&     apt-get update &&     apt-get install -y --no-install-recommends       clang-18       clang-tidy-18       lldb-18       lld-18 &&     rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [4/8] RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100 &&     update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100 &&     update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-18 100
+#7 CACHED
+
+#8 [5/8] RUN curl -L https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 -o /usr/local/bin/bazel &&     chmod +x /usr/local/bin/bazel
+#8 0.182   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#8 0.182                                  Dload  Upload   Total   Spent    Left  Speed
+#8 0.182 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+#8 0.459 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+#8 0.562 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 5844k  100 5844k    0     0  9519k      0 --:--:-- --:--:-- --:--:-- 24.4M
+#8 DONE 0.8s
+
+#9 [6/8] WORKDIR /home/cc/EnvGym/data/fmtlib_fmt
+#9 DONE 0.0s
+
+#10 [7/8] RUN git clone --recursive https://github.com/fmtlib/fmt.git .
+#10 0.356 Cloning into '.'...
+#10 DONE 1.6s
+
+#11 [8/8] RUN if [ -d support ]; then find support -type f -name "*.sh" -exec chmod +x {} ;; fi
+#11 DONE 0.4s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 12.0s done
+#12 writing image sha256:2455af53a9d73aa5cda0a6a8e6e7333e6ce20364eb9ec5b7eefbae107925f16e done
+#12 naming to docker.io/library/envgym_test_1753000703 done
+#12 DONE 12.0s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

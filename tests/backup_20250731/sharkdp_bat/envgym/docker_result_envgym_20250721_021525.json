@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_021525",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753064123",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 3.14kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/18] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb\n#4 DONE 0.0s\n\n#5 [ 2/18] WORKDIR /home/cc/EnvGym/data/sharkdp_bat\n#5 CACHED\n\n#6 [ 3/18] RUN apt-get update &&     apt-get install -y --no-install-recommends       ca-certificates       curl       git       less       fzf       xclip       ripgrep       fd-find       ninja-build       libonig-dev       libgit2-dev       build-essential       pkg-config       libz-dev       clang       coreutils       zsh       fish       sudo       locales       bash-completion &&     rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [ 4/18] RUN locale-gen en_US.UTF-8\n#7 CACHED\n\n#8 [ 5/18] RUN useradd -m -u 1000 cc &&     usermod -aG sudo cc &&     echo \"cc ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\n#8 CACHED\n\n#9 [ 6/18] WORKDIR /home/cc\n#9 DONE 0.1s\n\n#10 [ 7/18] RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup.sh &&     sh /tmp/rustup.sh -y --profile default --default-toolchain 1.74.0\n#10 0.338 info: downloading installer\n#10 1.473 error: could not create bin directory: '/home/cc/.cargo/bin': Permission denied (os error 13)\n#10 ERROR: process \"/bin/sh -c curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup.sh &&     sh /tmp/rustup.sh -y --profile default --default-toolchain 1.74.0\" did not complete successfully: exit code: 1\n------\n > [ 7/18] RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup.sh &&     sh /tmp/rustup.sh -y --profile default --default-toolchain 1.74.0:\n0.338 info: downloading installer\n1.473 error: could not create bin directory: '/home/cc/.cargo/bin': Permission denied (os error 13)\n------\nenvgym.dockerfile:53\n--------------------\n  52 |     # Install Rust toolchain with rustup (set default directly to 1.74.0)\n  53 | >>> RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup.sh && \\\n  54 | >>>     sh /tmp/rustup.sh -y --profile default --default-toolchain 1.74.0\n  55 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup.sh &&     sh /tmp/rustup.sh -y --profile default --default-toolchain 1.74.0\" did not complete successfully: exit code: 1\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,87 @@
+=== Docker Execution Log - 20250729_071640 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753773383
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.89kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [ 3/14] RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+#5 CACHED
+
+#6 [10/14] RUN mkdir -p /home/cc/EnvGym/data/nlohmann_json
+#6 CACHED
+
+#7 [ 6/14] RUN apt-get update && apt-get install -y --no-install-recommends mkcert libnss3-tools && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [ 9/14] RUN useradd -m cc
+#8 CACHED
+
+#9 [ 4/14] RUN curl -L -o /usr/local/bin/bazelisk https://github.com/bazelbuild/bazelisk/releases/download/v1.19.0/bazelisk-linux-amd64 &&     chmod +x /usr/local/bin/bazelisk &&     ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
+#9 CACHED
+
+#10 [12/14] RUN chown -R cc:cc /home/cc/EnvGym
+#10 CACHED
+
+#11 [ 7/14] RUN pip3 install --upgrade pip setuptools wheel
+#11 CACHED
+
+#12 [ 5/14] RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null &&     apt-add-repository 'deb https://apt.kitware.com/ubuntu/ jammy main' &&     apt-get update &&     apt-get install -y --no-install-recommends cmake=3.28.* || true
+#12 CACHED
+
+#13 [11/14] WORKDIR /home/cc/EnvGym/data/nlohmann_json
+#13 CACHED
+
+#14 [ 8/14] RUN pip3 install --no-cache-dir     mkdocs     mkdocs-material     mkdocs-redirects     mkdocs-static-i18n     mkdocs-gen-files     mkdocs-literate-nav     mkdocs-minify-plugin     mkdocs-section-index     mkdocs-git-revision-date-localized-plugin     mkdocs-git-authors-plugin     mkdocs-autorefs     mkdocs-macros-plugin     markdown-include     markdown-exec     markdownify     pygments     lxml     cpplint     pytest     coverage     black     flake8     mypy     reuse     pyyaml     requests
+#14 CACHED
+
+#15 [ 2/14] RUN apt-get update &&     apt-get install -y --no-install-recommends     software-properties-common     wget     curl     ca-certificates     build-essential     git     unzip     python3.10     python3.10-venv     python3-pip     python3-setuptools     python3-wheel     python3-distutils     python3-dev     make     cmake     meson     ninja-build     lcov     valgrind     gdb     astyle     cppcheck     clang-tidy     clang-format     clang     pkg-config     nodejs     npm     xz-utils     && rm -rf /var/lib/apt/lists/*
+#15 CACHED
+
+#16 [13/14] RUN python3 -m venv /home/cc/EnvGym/data/nlohmann_json/.venv
+#16 CACHED
+
+#17 [internal] load build context
+#17 transferring context: 703.32kB 0.1s done
+#17 DONE 0.1s
+
+#18 [14/14] COPY --chown=cc:cc . /home/cc/EnvGym/data/nlohmann_json
+#18 DONE 0.8s
+
+#19 exporting to image
+#19 exporting layers
+#19 exporting layers 14.8s done
+#19 writing image sha256:5bc9bd943f08ec4af027069e3df7336c49354519d56183897560d30b6d99a9a0 done
+#19 naming to docker.io/library/envgym_test_1753773383 done
+#19 DONE 14.8s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

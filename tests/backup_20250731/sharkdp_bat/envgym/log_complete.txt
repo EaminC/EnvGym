@@ -1,0 +1,1223 @@
+=== Docker Execution Log - 20250721_022118 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753064312
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 3.44kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/20] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [ 2/20] WORKDIR /home/cc/EnvGym/data/sharkdp_bat
+#5 CACHED
+
+#6 [ 7/20] WORKDIR /home/cc
+#6 CACHED
+
+#7 [ 9/20] RUN curl -v --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+#7 CACHED
+
+#8 [ 5/20] RUN useradd -m -u 1000 cc &&     usermod -aG sudo cc &&     echo "cc ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+#8 CACHED
+
+#9 [ 6/20] RUN chown -R cc:cc /home/cc
+#9 CACHED
+
+#10 [ 8/20] RUN echo /home/cc && ls -ld /home/cc && ls -l /home/cc
+#10 CACHED
+
+#11 [ 3/20] RUN apt-get update &&     apt-get install -y --no-install-recommends       ca-certificates       curl       git       less       fzf       xclip       ripgrep       fd-find       ninja-build       libonig-dev       libgit2-dev       build-essential       pkg-config       libz-dev       clang       coreutils       zsh       fish       sudo       locales       bash-completion       gcc       libssl-dev       python3       python3-pip &&     rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [ 4/20] RUN locale-gen en_US.UTF-8
+#12 CACHED
+
+#13 [10/20] RUN /home/cc/.cargo/bin/cargo install --locked cargo-audit
+#13 CACHED
+
+#14 [11/20] RUN git clone --recursive https://github.com/sharkdp/bat /home/cc/bat
+#14 0.209 Cloning into '/home/cc/bat'...
+#14 1.377 Submodule 'assets/syntaxes/Packages' (https://github.com/sublimehq/Packages/) registered for path 'assets/syntaxes/01_Packages'
+#14 1.377 Submodule 'assets/syntaxes/AWK' (https://github.com/JohnNilsson/awk-sublime) registered for path 'assets/syntaxes/02_Extra/AWK'
+#14 1.377 Submodule 'assets/syntaxes/02_Extra/Ada' (https://github.com/wiremoons/ada-sublime-syntax) registered for path 'assets/syntaxes/02_Extra/Ada'
+#14 1.378 Submodule 'assets/syntaxes/02_Extra/Apache' (https://github.com/colinta/ApacheConf.tmLanguage) registered for path 'assets/syntaxes/02_Extra/Apache'
+#14 1.378 Submodule 'assets/syntaxes/02_Extra/AsciiDoc' (https://github.com/asciidoctor/sublimetext-asciidoc.git) registered for path 'assets/syntaxes/02_Extra/AsciiDoc'
+#14 1.378 Submodule 'assets/syntaxes/Assembly (ARM)' (https://github.com/tvi/Sublime-ARM-Assembly) registered for path 'assets/syntaxes/02_Extra/Assembly_(ARM)'
+#14 1.378 Submodule 'assets/syntaxes/02_Extra/CFML' (https://github.com/jcberquist/sublimetext-cfml.git) registered for path 'assets/syntaxes/02_Extra/CFML'
+#14 1.378 Submodule 'assets/syntaxes/CMake' (https://github.com/zyxar/Sublime-CMakeLists) registered for path 'assets/syntaxes/02_Extra/CMake'
+#14 1.378 Submodule 'assets/syntaxes/CoffeeScript' (https://github.com/sustained/CoffeeScript-Sublime-Plugin) registered for path 'assets/syntaxes/02_Extra/CoffeeScript'
+#14 1.379 Submodule 'assets/syntaxes/02_Extra/Crontab' (https://github.com/michaelblyons/SublimeSyntax-Crontab) registered for path 'assets/syntaxes/02_Extra/Crontab'
+#14 1.379 Submodule 'assets/syntaxes/Crystal' (https://github.com/crystal-lang-tools/sublime-crystal.git) registered for path 'assets/syntaxes/02_Extra/Crystal'
+#14 1.379 Submodule 'assets/syntaxes/02_Extra/Dart' (https://github.com/elMuso/Dartlight.git) registered for path 'assets/syntaxes/02_Extra/Dart'
+#14 1.379 Submodule 'assets/syntaxes/Docker' (https://github.com/asbjornenge/Docker.tmbundle) registered for path 'assets/syntaxes/02_Extra/Docker'
+#14 1.379 Submodule 'assets/syntaxes/DotENV' (https://github.com/zaynali53/DotENV) registered for path 'assets/syntaxes/02_Extra/DotENV'
+#14 1.380 Submodule 'assets/syntaxes/Elixir' (https://github.com/princemaple/elixir-sublime-syntax/) registered for path 'assets/syntaxes/02_Extra/Elixir'
+#14 1.380 Submodule 'assets/syntaxes/Elm' (https://github.com/elm-community/SublimeElmLanguageSupport) registered for path 'assets/syntaxes/02_Extra/Elm'
+#14 1.380 Submodule 'assets/syntaxes/02_Extra/Email' (https://github.com/mariozaizar/email.sublime-syntax.git) registered for path 'assets/syntaxes/02_Extra/Email'
+#14 1.380 Submodule 'assets/syntaxes/FSharp' (https://github.com/hoest/sublimetext-fsharp) registered for path 'assets/syntaxes/02_Extra/FSharp'
+#14 1.380 Submodule 'assets/syntaxes/sublime-fish' (https://github.com/Phidica/sublime-fish.git) registered for path 'assets/syntaxes/02_Extra/Fish'
+#14 1.381 Submodule 'assets/syntaxes/02_Extra/Fortran' (https://github.com/315234/SublimeFortran) registered for path 'assets/syntaxes/02_Extra/Fortran'
+#14 1.381 Submodule 'assets/syntaxes/02_Extra/GDScript-sublime' (https://github.com/beefsack/GDScript-sublime) registered for path 'assets/syntaxes/02_Extra/GDScript-sublime'
+#14 1.381 Submodule 'assets/syntaxes/02_Extra/GLSL' (https://github.com/euler0/sublime-glsl) registered for path 'assets/syntaxes/02_Extra/GLSL'
+#14 1.381 Submodule 'assets/syntaxes/GraphQL' (https://github.com/dncrews/GraphQL-SublimeText3.git) registered for path 'assets/syntaxes/02_Extra/GraphQL'
+#14 1.381 Submodule 'assets/syntaxes/02_Extra/Groff' (https://github.com/carsonoid/sublime_man_page_support) registered for path 'assets/syntaxes/02_Extra/Groff'
+#14 1.382 Submodule 'assets/syntaxes/HTML (Twig)' (https://github.com/Anomareh/PHP-Twig.tmbundle.git) registered for path 'assets/syntaxes/02_Extra/HTML_(Twig)'
+#14 1.382 Submodule 'assets/syntaxes/INI' (https://github.com/clintberry/sublime-text-2-ini) registered for path 'assets/syntaxes/02_Extra/INI'
+#14 1.382 Submodule 'assets/syntaxes/02_Extra/Idris2' (https://github.com/buzden/sublime-syntax-idris2) registered for path 'assets/syntaxes/02_Extra/Idris2'
+#14 1.382 Submodule 'assets/syntaxes/JavaScript (Babel)' (https://github.com/babel/babel-sublime) registered for path 'assets/syntaxes/02_Extra/JavaScript_(Babel)'
+#14 1.382 Submodule 'assets/syntaxes/Jinja2' (https://github.com/Martin819/sublime-jinja2) registered for path 'assets/syntaxes/02_Extra/Jinja2'
+#14 1.383 Submodule 'assets/syntaxes/Jsonnet' (https://github.com/gburiola/sublime-jsonnet-syntax.git) registered for path 'assets/syntaxes/02_Extra/Jsonnet'
+#14 1.383 Submodule 'assets/syntaxes/Julia' (https://github.com/JuliaEditorSupport/Julia-sublime) registered for path 'assets/syntaxes/02_Extra/Julia'
+#14 1.383 Submodule 'assets/syntaxes/Kotlin' (https://github.com/vkostyukov/kotlin-sublime-package) registered for path 'assets/syntaxes/02_Extra/Kotlin'
+#14 1.384 Submodule 'assets/syntaxes/LESS' (https://github.com/danro/LESS-sublime) registered for path 'assets/syntaxes/02_Extra/LESS'
+#14 1.384 Submodule 'assets/syntaxes/02_Extra/LLVM' (https://github.com/ioncodes/LLVM.tmBundle) registered for path 'assets/syntaxes/02_Extra/LLVM'
+#14 1.384 Submodule 'assets/syntaxes/02_Extra/Lean' (https://github.com/leanprover/vscode-lean4.git) registered for path 'assets/syntaxes/02_Extra/Lean'
+#14 1.384 Submodule 'assets/syntaxes/02_Extra/MediaWiki' (https://github.com/tosher/Mediawiker.git) registered for path 'assets/syntaxes/02_Extra/MediaWiki'
+#14 1.385 Submodule 'assets/syntaxes/02_Extra/NSIS' (https://github.com/SublimeText/NSIS) registered for path 'assets/syntaxes/02_Extra/NSIS'
+#14 1.385 Submodule 'assets/syntaxes/02_Extra/Nginx' (https://github.com/brandonwamboldt/sublime-nginx) registered for path 'assets/syntaxes/02_Extra/Nginx'
+#14 1.385 Submodule 'assets/syntaxes/02_Extra/Ninja' (https://github.com/pope/SublimeNinja.git) registered for path 'assets/syntaxes/02_Extra/Ninja'
+#14 1.385 Submodule 'assets/syntaxes/Nix' (https://github.com/wmertens/sublime-nix) registered for path 'assets/syntaxes/02_Extra/Nix'
+#14 1.386 Submodule 'assets/syntaxes/Org mode' (https://github.com/jezcope/Org.tmbundle.git) registered for path 'assets/syntaxes/02_Extra/Org_mode'
+#14 1.386 Submodule 'assets/syntaxes/PowerShell' (https://github.com/PowerShell/EditorSyntax) registered for path 'assets/syntaxes/02_Extra/PowerShell'
+#14 1.386 Submodule 'assets/syntaxes/protobuf-syntax-highlighting' (https://github.com/VcamX/protobuf-syntax-highlighting.git) registered for path 'assets/syntaxes/02_Extra/Protobuf'
+#14 1.387 Submodule 'assets/syntaxes/Puppet' (https://github.com/russCloak/SublimePuppet) registered for path 'assets/syntaxes/02_Extra/Puppet'
+#14 1.387 Submodule 'assets/syntaxes/PureScript' (https://github.com/tellnobody1/sublime-purescript-syntax) registered for path 'assets/syntaxes/02_Extra/PureScript'
+#14 1.387 Submodule 'assets/syntaxes/02_Extra/QML' (https://github.com/skozlovf/Sublime-QML) registered for path 'assets/syntaxes/02_Extra/QML'
+#14 1.387 Submodule 'assets/syntaxes/02_Extra/Racket' (https://github.com/follesoe/sublime-racket.git) registered for path 'assets/syntaxes/02_Extra/Racket'
+#14 1.388 Submodule 'assets/syntaxes/Robot' (https://github.com/andriyko/sublime-robot-framework-assistant.git) registered for path 'assets/syntaxes/02_Extra/Robot'
+#14 1.388 Submodule 'assets/syntaxes/SCSS_Sass' (https://github.com/braver/SublimeSass) registered for path 'assets/syntaxes/02_Extra/SCSS_Sass'
+#14 1.388 Submodule 'assets/syntaxes/SLS' (https://github.com/saltstack/sublime-text) registered for path 'assets/syntaxes/02_Extra/SLS'
+#14 1.389 Submodule 'assets/syntaxes/02_Extra/Slim' (https://github.com/slim-template/ruby-slim.tmbundle.git) registered for path 'assets/syntaxes/02_Extra/Slim'
+#14 1.389 Submodule 'assets/syntaxes/02_Extra/SmartVHDL' (https://github.com/TheClams/SmartVHDL) registered for path 'assets/syntaxes/02_Extra/SmartVHDL'
+#14 1.389 Submodule 'assets/syntaxes/Strace' (https://github.com/djuretic/SublimeStrace) registered for path 'assets/syntaxes/02_Extra/Strace'
+#14 1.389 Submodule 'assets/syntaxes/02_Extra/Stylus' (https://github.com/billymoon/Stylus) registered for path 'assets/syntaxes/02_Extra/Stylus'
+#14 1.390 Submodule 'assets/syntaxes/02_Extra/SublimeEthereum' (https://github.com/davidhq/SublimeEthereum.git) registered for path 'assets/syntaxes/02_Extra/SublimeEthereum'
+#14 1.390 Submodule 'assets/syntaxes/02_Extra/SublimeJQ' (https://github.com/zogwarg/SublimeJQ.git) registered for path 'assets/syntaxes/02_Extra/SublimeJQ'
+#14 1.390 Submodule 'assets/syntaxes/02_Extra/Svelte' (https://github.com/corneliusio/svelte-sublime) registered for path 'assets/syntaxes/02_Extra/Svelte'
+#14 1.391 Submodule 'assets/syntaxes/Swift' (https://github.com/quiqueg/Swift-Sublime-Package) registered for path 'assets/syntaxes/02_Extra/Swift'
+#14 1.391 Submodule 'assets/syntaxes/02_Extra/SystemVerilog' (https://github.com/TheClams/SystemVerilog.git) registered for path 'assets/syntaxes/02_Extra/SystemVerilog'
+#14 1.391 Submodule 'assets/syntaxes/TOML' (https://github.com/jasonwilliams/sublime_toml_highlighting) registered for path 'assets/syntaxes/02_Extra/TOML'
+#14 1.392 Submodule 'assets/syntaxes/Terraform' (https://github.com/alexlouden/Terraform.tmLanguage.git) registered for path 'assets/syntaxes/02_Extra/Terraform'
+#14 1.392 Submodule 'assets/syntaxes/02_Extra/TodoTxt' (https://github.com/dertuxmalwieder/SublimeTodoTxt) registered for path 'assets/syntaxes/02_Extra/TodoTxt'
+#14 1.392 Submodule 'assets/syntaxes/TypeScript' (https://github.com/Microsoft/TypeScript-Sublime-Plugin) registered for path 'assets/syntaxes/02_Extra/TypeScript'
+#14 1.393 Submodule 'assets/syntaxes/Verilog' (https://github.com/pro711/sublime-verilog) registered for path 'assets/syntaxes/02_Extra/Verilog'
+#14 1.393 Submodule 'assets/syntaxes/VimL' (https://github.com/SalGnt/Sublime-VimL) registered for path 'assets/syntaxes/02_Extra/VimL'
+#14 1.393 Submodule 'assets/syntaxes/Vue' (https://github.com/vuejs/vue-syntax-highlight.git) registered for path 'assets/syntaxes/02_Extra/Vue'
+#14 1.393 Submodule 'assets/syntaxes/02_Extra/Zig' (https://github.com/ziglang/sublime-zig-language.git) registered for path 'assets/syntaxes/02_Extra/Zig'
+#14 1.394 Submodule 'assets/syntaxes/02_Extra/cmd-help' (https://github.com/victor-gp/cmd-help-sublime-syntax.git) registered for path 'assets/syntaxes/02_Extra/cmd-help'
+#14 1.394 Submodule 'assets/syntaxes/02_Extra/gnuplot' (https://github.com/hesstobi/sublime_gnuplot) registered for path 'assets/syntaxes/02_Extra/gnuplot'
+#14 1.394 Submodule 'assets/syntaxes/hosts' (https://github.com/brandonwamboldt/sublime-hosts) registered for path 'assets/syntaxes/02_Extra/hosts'
+#14 1.395 Submodule 'assets/syntaxes/02_Extra/http-request-response' (https://github.com/keith-hall/http-request-response-syntax.git) registered for path 'assets/syntaxes/02_Extra/http-request-response'
+#14 1.395 Submodule 'assets/syntaxes/ssh-config' (https://github.com/robballou/sublimetext-sshconfig.git) registered for path 'assets/syntaxes/02_Extra/ssh-config'
+#14 1.395 Submodule 'assets/syntaxes/02_Extra/sublime-odin' (https://github.com/odin-lang/sublime-odin) registered for path 'assets/syntaxes/02_Extra/sublime-odin'
+#14 1.396 Submodule 'assets/syntaxes/02_Extra/typst-syntax-highlight' (https://github.com/hyrious/typst-syntax-highlight) registered for path 'assets/syntaxes/02_Extra/typst-syntax-highlight'
+#14 1.396 Submodule 'assets/syntaxes/varlink' (https://github.com/varlink/syntax-highlight-varlink.git) registered for path 'assets/syntaxes/02_Extra/varlink'
+#14 1.396 Submodule 'assets/syntaxes/02_Extra/vscode-wgsl' (https://github.com/PolyMeilex/vscode-wgsl.git) registered for path 'assets/syntaxes/02_Extra/vscode-wgsl'
+#14 1.397 Submodule 'assets/themes/1337-Scheme' (https://github.com/MarkMichos/1337-Scheme) registered for path 'assets/themes/1337-Scheme'
+#14 1.397 Submodule 'assets/themes/Catppuccin' (https://github.com/SchweGELBin/catppuccin-bat-sub.git) registered for path 'assets/themes/Catppuccin'
+#14 1.397 Submodule 'assets/themes/Coldark' (https://github.com/ArmandPhilippot/coldark-bat.git) registered for path 'assets/themes/Coldark'
+#14 1.398 Submodule 'assets/themes/DarkNeon' (https://github.com/RainyDayMedia/DarkNeon) registered for path 'assets/themes/DarkNeon'
+#14 1.398 Submodule 'assets/themes/Nord-sublime' (https://github.com/crabique/Nord-plist.git) registered for path 'assets/themes/Nord-sublime'
+#14 1.398 Submodule 'assets/themes/Solarized' (https://github.com/braver/Solarized) registered for path 'assets/themes/Solarized'
+#14 1.399 Submodule 'assets/themes/TwoDark' (https://github.com/erremauro/TwoDark) registered for path 'assets/themes/TwoDark'
+#14 1.399 Submodule 'assets/themes/dracula-sublime' (https://github.com/dracula/sublime.git) registered for path 'assets/themes/dracula-sublime'
+#14 1.399 Submodule 'assets/themes/github-sublime-theme' (https://github.com/AlexanderEkdahl/github-sublime-theme) registered for path 'assets/themes/github-sublime-theme'
+#14 1.400 Submodule 'assets/themes/gruvbox' (https://github.com/subnut/gruvbox-tmTheme.git) registered for path 'assets/themes/gruvbox'
+#14 1.400 Submodule 'assets/themes/onehalf' (https://github.com/sonph/onehalf) registered for path 'assets/themes/onehalf'
+#14 1.401 Submodule 'assets/themes/sublime-monokai-extended' (https://github.com/jonschlinkert/sublime-monokai-extended) registered for path 'assets/themes/sublime-monokai-extended'
+#14 1.401 Submodule 'assets/themes/sublime-snazzy' (https://github.com/greggb/sublime-snazzy) registered for path 'assets/themes/sublime-snazzy'
+#14 1.401 Submodule 'assets/themes/visual-studio-dark-plus' (https://github.com/vidann1/visual-studio-dark-plus.git) registered for path 'assets/themes/visual-studio-dark-plus'
+#14 1.402 Submodule 'assets/themes/zenburn' (https://github.com/colinta/zenburn.git) registered for path 'assets/themes/zenburn'
+#14 1.406 Cloning into '/home/cc/bat/assets/syntaxes/01_Packages'...
+#14 3.955 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/AWK'...
+#14 4.212 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Ada'...
+#14 4.459 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Apache'...
+#14 4.714 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/AsciiDoc'...
+#14 5.016 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Assembly_(ARM)'...
+#14 5.304 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/CFML'...
+#14 5.734 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/CMake'...
+#14 6.043 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/CoffeeScript'...
+#14 6.325 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Crontab'...
+#14 6.680 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Crystal'...
+#14 6.994 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Dart'...
+#14 7.270 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Docker'...
+#14 7.538 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/DotENV'...
+#14 7.858 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Elixir'...
+#14 8.236 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Elm'...
+#14 8.595 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Email'...
+#14 8.994 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/FSharp'...
+#14 9.248 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Fish'...
+#14 9.554 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Fortran'...
+#14 9.885 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/GDScript-sublime'...
+#14 10.19 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/GLSL'...
+#14 10.45 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/GraphQL'...
+#14 10.74 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Groff'...
+#14 10.98 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/HTML_(Twig)'...
+#14 11.32 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/INI'...
+#14 11.56 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Idris2'...
+#14 11.82 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/JavaScript_(Babel)'...
+#14 12.17 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Jinja2'...
+#14 12.41 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Jsonnet'...
+#14 12.69 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Julia'...
+#14 13.04 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Kotlin'...
+#14 13.35 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/LESS'...
+#14 13.67 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/LLVM'...
+#14 13.92 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Lean'...
+#14 15.03 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/MediaWiki'...
+#14 17.63 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/NSIS'...
+#14 17.96 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Nginx'...
+#14 18.26 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Ninja'...
+#14 18.49 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Nix'...
+#14 18.75 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Org_mode'...
+#14 19.02 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/PowerShell'...
+#14 19.31 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Protobuf'...
+#14 19.55 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Puppet'...
+#14 19.81 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/PureScript'...
+#14 20.05 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/QML'...
+#14 20.39 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Racket'...
+#14 20.63 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Robot'...
+#14 20.96 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/SCSS_Sass'...
+#14 21.37 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/SLS'...
+#14 21.65 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Slim'...
+#14 21.92 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/SmartVHDL'...
+#14 22.22 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Strace'...
+#14 22.51 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Stylus'...
+#14 22.80 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/SublimeEthereum'...
+#14 23.11 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/SublimeJQ'...
+#14 23.42 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Svelte'...
+#14 23.75 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Swift'...
+#14 24.04 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/SystemVerilog'...
+#14 24.40 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/TOML'...
+#14 24.66 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Terraform'...
+#14 25.05 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/TodoTxt'...
+#14 25.32 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/TypeScript'...
+#14 35.36 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Verilog'...
+#14 35.62 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/VimL'...
+#14 35.86 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Vue'...
+#14 36.19 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/Zig'...
+#14 36.56 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/cmd-help'...
+#14 37.21 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/gnuplot'...
+#14 37.44 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/hosts'...
+#14 37.66 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/http-request-response'...
+#14 37.95 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/ssh-config'...
+#14 38.25 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/sublime-odin'...
+#14 38.54 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/typst-syntax-highlight'...
+#14 38.84 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/varlink'...
+#14 39.07 Cloning into '/home/cc/bat/assets/syntaxes/02_Extra/vscode-wgsl'...
+#14 39.38 Cloning into '/home/cc/bat/assets/themes/1337-Scheme'...
+#14 39.62 Cloning into '/home/cc/bat/assets/themes/Catppuccin'...
+#14 39.87 Cloning into '/home/cc/bat/assets/themes/Coldark'...
+#14 40.23 Cloning into '/home/cc/bat/assets/themes/DarkNeon'...
+#14 40.62 Cloning into '/home/cc/bat/assets/themes/Nord-sublime'...
+#14 40.84 Cloning into '/home/cc/bat/assets/themes/Solarized'...
+#14 41.20 Cloning into '/home/cc/bat/assets/themes/TwoDark'...
+#14 41.88 Cloning into '/home/cc/bat/assets/themes/dracula-sublime'...
+#14 42.71 Cloning into '/home/cc/bat/assets/themes/github-sublime-theme'...
+#14 43.00 Cloning into '/home/cc/bat/assets/themes/gruvbox'...
+#14 43.26 Cloning into '/home/cc/bat/assets/themes/onehalf'...
+#14 43.74 Cloning into '/home/cc/bat/assets/themes/sublime-monokai-extended'...
+#14 44.01 Cloning into '/home/cc/bat/assets/themes/sublime-snazzy'...
+#14 44.30 Cloning into '/home/cc/bat/assets/themes/visual-studio-dark-plus'...
+#14 44.60 Cloning into '/home/cc/bat/assets/themes/zenburn'...
+#14 44.98 Submodule path 'assets/syntaxes/01_Packages': checked out '759d6eed9b4beed87e602a23303a121c3a6c2fb3'
+#14 45.00 Submodule path 'assets/syntaxes/02_Extra/AWK': checked out 'e23926eca1b6a0bd0b572b7191aead9f77c748d1'
+#14 45.02 Submodule path 'assets/syntaxes/02_Extra/Ada': checked out 'e2b8fd51756e0cc42172c1c3405832ce9c19b6b6'
+#14 45.03 Submodule path 'assets/syntaxes/02_Extra/Apache': checked out 'c438c352db7dd59c7bc0849134b1bab9b338a36e'
+#14 45.05 Submodule path 'assets/syntaxes/02_Extra/AsciiDoc': checked out 'e316a0a85c67c3edb73a46fc3a3ec4a9dfbbba40'
+#14 45.07 Submodule path 'assets/syntaxes/02_Extra/Assembly_(ARM)': checked out '08f33d80ded128a708d83017148dba52ebdfb04a'
+#14 45.10 Submodule path 'assets/syntaxes/02_Extra/CFML': checked out 'b91c44a32e251c20c6359a8d9232287e1b408e6c'
+#14 45.12 Submodule path 'assets/syntaxes/02_Extra/CMake': checked out 'eb40ede56c2d4d5a4a129b2a5bc7095a2df46bb1'
+#14 45.13 Submodule path 'assets/syntaxes/02_Extra/CoffeeScript': checked out 'e08f9b8cdfc84e0456ae63dca7aaefb94bf06e24'
+#14 45.15 Submodule path 'assets/syntaxes/02_Extra/Crontab': checked out '54f1fa7ff0c9d18aea3790555dba6e533ce3749b'
+#14 45.18 Submodule path 'assets/syntaxes/02_Extra/Crystal': checked out 'eb63666f35c259733d4c7fcec9adbd82e5a91dda'
+#14 45.19 Submodule path 'assets/syntaxes/02_Extra/Dart': checked out '2734901b014191f5a7f71c3f48678adf31239098'
+#14 45.21 Submodule path 'assets/syntaxes/02_Extra/Docker': checked out 'c001fb280561d7c16f0f2837d76af493cf6c3bf8'
+#14 45.23 Submodule path 'assets/syntaxes/02_Extra/DotENV': checked out '58201ba2abbbe6a12b2f6d0595efea3b388c1e38'
+#14 45.24 Submodule path 'assets/syntaxes/02_Extra/Elixir': checked out '4fb01891dd17434dde42887bc821917a30f4e010'
+#14 45.27 Submodule path 'assets/syntaxes/02_Extra/Elm': checked out 'e266d279c8074aa342f106554cfa87ebe839a782'
+#14 45.29 Submodule path 'assets/syntaxes/02_Extra/Email': checked out 'e89d09d440f342b753a490918f2c9777c64836b3'
+#14 45.30 Submodule path 'assets/syntaxes/02_Extra/FSharp': checked out '9e4645c6085871d6fe4ae8dbcbafe93cb155b074'
+#14 45.32 Submodule path 'assets/syntaxes/02_Extra/Fish': checked out '98316d4332936f74babb51cb56161410ae9d6e2c'
+#14 45.35 Submodule path 'assets/syntaxes/02_Extra/Fortran': checked out 'dcf4f24f1cecd9eebf6b1eb388e4f5db671a7b08'
+#14 45.40 Submodule path 'assets/syntaxes/02_Extra/GDScript-sublime': checked out '96f5dcf29728aa987123321e2544330eed991a3e'
+#14 45.42 Submodule path 'assets/syntaxes/02_Extra/GLSL': checked out '59a5f8a3120358657cefdc4b830b4a883ebfbf77'
+#14 45.43 Submodule path 'assets/syntaxes/02_Extra/GraphQL': checked out '9b6f6d0a86d7e7ef1d44490b107472af7fb4ffaf'
+#14 45.45 Submodule path 'assets/syntaxes/02_Extra/Groff': checked out '651091c7e266e05c0a529b137b6efd43d717894c'
+#14 45.46 Submodule path 'assets/syntaxes/02_Extra/HTML_(Twig)': checked out 'aedf955eba9753554815b2cbef5e072415e42068'
+#14 45.48 Submodule path 'assets/syntaxes/02_Extra/INI': checked out '8dd3e316ada5cc8bffd3982bc2a9384345729f34'
+#14 45.49 Submodule path 'assets/syntaxes/02_Extra/Idris2': checked out '7c1bf44c4f9092b7b1e274b1332cf32a089b2b99'
+#14 45.51 Submodule path 'assets/syntaxes/02_Extra/JavaScript_(Babel)': checked out 'f4579f9107996c16208466248a85dc2296083a5f'
+#14 45.53 Submodule path 'assets/syntaxes/02_Extra/Jinja2': checked out '45355633d17ee562481ca1d2ad0e3502c238f58a'
+#14 45.54 Submodule path 'assets/syntaxes/02_Extra/Jsonnet': checked out 'e2c917ed7d6020e2ba6c18b06c7278c094db03f7'
+#14 45.56 Submodule path 'assets/syntaxes/02_Extra/Julia': checked out '3366b10be91aaab7a61ae0bc0a5af5cc375e58d1'
+#14 45.57 Submodule path 'assets/syntaxes/02_Extra/Kotlin': checked out 'aeeed2780b04aea3d293c547c24cae27cafef0c5'
+#14 45.59 Submodule path 'assets/syntaxes/02_Extra/LESS': checked out '836b47ec61a9c6a6445b4007e8353337fe63e2c9'
+#14 45.60 Submodule path 'assets/syntaxes/02_Extra/LLVM': checked out '274126faa9febfb649981cc97ecd499fcd7f5b90'
+#14 45.67 Submodule path 'assets/syntaxes/02_Extra/Lean': checked out '514362b5c7fdcd7c43562d833fb94ff973d1da29'
+#14 45.95 Submodule path 'assets/syntaxes/02_Extra/MediaWiki': checked out '5dceaa9dd9af0d2266f1c9e45966d8a610226213'
+#14 45.97 Submodule path 'assets/syntaxes/02_Extra/NSIS': checked out '619a65a04efbf343bdfcde875700675b9b273368'
+#14 45.99 Submodule path 'assets/syntaxes/02_Extra/Nginx': checked out '65f5a63c0d1760c5db2264e50e3b14a7a4567cc0'
+#14 46.01 Submodule path 'assets/syntaxes/02_Extra/Ninja': checked out '25830aaec9316b7fca6600000535214164525d7a'
+#14 46.03 Submodule path 'assets/syntaxes/02_Extra/Nix': checked out '48c497c709c66a2fb118c534a8de8e4e1c4c401d'
+#14 46.04 Submodule path 'assets/syntaxes/02_Extra/Org_mode': checked out 'bb6e5d848151135ab8f87bdcb997437b2308718a'
+#14 46.06 Submodule path 'assets/syntaxes/02_Extra/PowerShell': checked out 'a08b55bf1146c210f58e844be53c2aa78fd5e610'
+#14 46.07 Submodule path 'assets/syntaxes/02_Extra/Protobuf': checked out '1365331580b0e4bb86f74d0c599dccc87e7bdacb'
+#14 46.09 Submodule path 'assets/syntaxes/02_Extra/Puppet': checked out '2a224343d2151b2896b6d9c48343919c06d1e695'
+#14 46.11 Submodule path 'assets/syntaxes/02_Extra/PureScript': checked out '5acebc18503697be09df047591964e68e80fcf8e'
+#14 46.12 Submodule path 'assets/syntaxes/02_Extra/QML': checked out 'e3e058a21f3c44d64ef5eda93925ee84169b62ec'
+#14 46.14 Submodule path 'assets/syntaxes/02_Extra/Racket': checked out '7df4479c079768edd994b20052761152e277af21'
+#14 46.17 Submodule path 'assets/syntaxes/02_Extra/Robot': checked out 'fcd3323b5631d4abe61e8e8c728d0f4329640a64'
+#14 46.19 Submodule path 'assets/syntaxes/02_Extra/SCSS_Sass': checked out 'd3d94046409db6fbbc9d51dea52b589ecc9d3d48'
+#14 46.20 Submodule path 'assets/syntaxes/02_Extra/SLS': checked out 'f8a8cf90b1185acb63127dfdfe53379a6a16c0fd'
+#14 46.22 Submodule path 'assets/syntaxes/02_Extra/Slim': checked out '3b1441f89fde40678c3c0ada6d75ce46417a35b6'
+#14 46.24 Submodule path 'assets/syntaxes/02_Extra/SmartVHDL': checked out 'b45507ddc8a417b84872a1f28388f9650851fca5'
+#14 46.26 Submodule path 'assets/syntaxes/02_Extra/Strace': checked out '3ec51e0bca39bf60cab7f96cecfc5d003c3ea59b'
+#14 46.29 Submodule path 'assets/syntaxes/02_Extra/Stylus': checked out '30908e3b5757d6cab4bf2ce660ef89b0c614cf62'
+#14 46.30 Submodule path 'assets/syntaxes/02_Extra/SublimeEthereum': checked out 'b60e0a3e00e68263fcf35ba1a2e0bd0f6e3544f9'
+#14 46.32 Submodule path 'assets/syntaxes/02_Extra/SublimeJQ': checked out 'b7e53e5d86814f04a48d2e441bcf5f9fdf07e9c1'
+#14 46.34 Submodule path 'assets/syntaxes/02_Extra/Svelte': checked out 'c71f1290b061c79c027b5eb002ed06aa6d874ffe'
+#14 46.35 Submodule path 'assets/syntaxes/02_Extra/Swift': checked out 'fef17119ceef28a3c4b8cf72268d6192b595365d'
+#14 46.39 Submodule path 'assets/syntaxes/02_Extra/SystemVerilog': checked out '7eca705e87f87b94478fe222fc91d54d488cc8e3'
+#14 46.40 Submodule path 'assets/syntaxes/02_Extra/TOML': checked out 'f5a57e8bff694a4e6c52a491dae579aabc7427cf'
+#14 46.42 Submodule path 'assets/syntaxes/02_Extra/Terraform': checked out '54d8350c3c5929c921ea7561c932aa15e7d96c48'
+#14 46.44 Submodule path 'assets/syntaxes/02_Extra/TodoTxt': checked out '071a004217f981152c78dc7a530536374a753d98'
+#14 46.65 Submodule path 'assets/syntaxes/02_Extra/TypeScript': checked out 'ba45efd058df5111837e30fb9598cfc8cbd51095'
+#14 46.67 Submodule path 'assets/syntaxes/02_Extra/Verilog': checked out '532e87c1b40114be14ccfe382a141247daa54be4'
+#14 46.69 Submodule path 'assets/syntaxes/02_Extra/VimL': checked out 'ee85822cbed17858da1a556dec922b7da2a219bb'
+#14 46.71 Submodule path 'assets/syntaxes/02_Extra/Vue': checked out '6eb71bc6bba5e6a284b6d1d3154484da6f366e21'
+#14 46.73 Submodule path 'assets/syntaxes/02_Extra/Zig': checked out '8a4a3fe4a051f85c4752b82f586d395cab843c06'
+#14 47.21 From https://github.com/victor-gp/cmd-help-sublime-syntax
+#14 47.21  * branch            c71ba410bdfcc8f627df3219f14e3f2be4fe68ba -> FETCH_HEAD
+#14 47.23 Submodule path 'assets/syntaxes/02_Extra/cmd-help': checked out 'c71ba410bdfcc8f627df3219f14e3f2be4fe68ba'
+#14 47.25 Submodule path 'assets/syntaxes/02_Extra/gnuplot': checked out '04743470ff90237ba3fb34ccf77c2d256d611262'
+#14 47.26 Submodule path 'assets/syntaxes/02_Extra/hosts': checked out '21250a7117655b0525821237b98b882dcc231350'
+#14 47.28 Submodule path 'assets/syntaxes/02_Extra/http-request-response': checked out '93b93261bcd8b4fbb38d7e92d3cf3734f0814e31'
+#14 47.30 Submodule path 'assets/syntaxes/02_Extra/ssh-config': checked out 'bf49e9181c6bf992a86beb133144d2651e826ddc'
+#14 47.32 Submodule path 'assets/syntaxes/02_Extra/sublime-odin': checked out '5d6a0ed41e41ec3709ec74f40686dc3761d6596e'
+#14 47.34 Submodule path 'assets/syntaxes/02_Extra/typst-syntax-highlight': checked out '3f2561d4d891f9f326fa70f9f06b6e99fda8adc3'
+#14 47.35 Submodule path 'assets/syntaxes/02_Extra/varlink': checked out '04f30d4b831232ea23ffceb5b2da61e12dae5db6'
+#14 47.37 Submodule path 'assets/syntaxes/02_Extra/vscode-wgsl': checked out 'acf26718d7a327377641e31d8f9a9dab376efa84'
+#14 47.39 Submodule path 'assets/themes/1337-Scheme': checked out 'ca6a329cfda8307449d405b70f8fab34b8fd23b5'
+#14 47.40 Submodule path 'assets/themes/Catppuccin': checked out 'ccf194fdc9322d3566a7a178817763434c0dd088'
+#14 47.43 Submodule path 'assets/themes/Coldark': checked out 'e44750b2a9629dd12d8ed3ad9fd50c77232170b9'
+#14 47.45 Submodule path 'assets/themes/DarkNeon': checked out '174bd535dafffd68df7a6a8fd21312aff32600a4'
+#14 47.46 Submodule path 'assets/themes/Nord-sublime': checked out 'bf92a9e4457dc2f97efebc59bbeac95933ec6515'
+#14 47.48 Submodule path 'assets/themes/Solarized': checked out '87e01090cf5fb821a234265b3138426ae84900e7'
+#14 47.54 Submodule path 'assets/themes/TwoDark': checked out '8e0f6fa5b59d196658a22288f519fd8320de4c87'
+#14 47.63 Submodule path 'assets/themes/dracula-sublime': checked out 'c2de0acf5af67042393cf70de68013153c043656'
+#14 47.65 Submodule path 'assets/themes/github-sublime-theme': checked out '508740b2430c3c3a9e785fc93ee1d7c6f233af53'
+#14 47.66 Submodule path 'assets/themes/gruvbox': checked out '64c47250e54298b91e2cf8d401320009aba9f991'
+#14 47.71 Submodule path 'assets/themes/onehalf': checked out '141c775ace6b71992305f144a8ab68e9a8ca4a25'
+#14 47.72 Submodule path 'assets/themes/sublime-monokai-extended': checked out '0ca4e75291515c4d47e2d455e598e03e0dc53745'
+#14 47.74 Submodule path 'assets/themes/sublime-snazzy': checked out '48f43a735037195021fa69d99c1180bf12f38f78'
+#14 47.76 Submodule path 'assets/themes/visual-studio-dark-plus': checked out '01ee1e8e0dc578f3b4e8c0dbb6aa0279b4a26a40'
+#14 47.77 Submodule path 'assets/themes/zenburn': checked out '4f217457230ff5f31d594b0e20474b69294988d4'
+#14 DONE 48.4s
+
+#15 [12/20] WORKDIR /home/cc/bat
+#15 DONE 0.0s
+
+#16 [13/20] RUN mkdir -p build && touch build/main.rs
+#16 DONE 0.2s
+
+#17 [14/20] RUN /home/cc/.cargo/bin/cargo build --bins --locked
+#17 0.493     Updating crates.io index
+#17 1.400  Downloading crates ...
+#17 1.489   Downloaded darling_core v0.20.10
+#17 1.503   Downloaded unicode-ident v1.0.14
+#17 1.510   Downloaded plist v1.7.0
+#17 1.520   Downloaded onig_sys v69.8.1
+#17 1.549   Downloaded pkg-config v0.3.31
+#17 1.550   Downloaded jobserver v0.1.32
+#17 1.553   Downloaded anstream v0.6.18
+#17 1.555   Downloaded etcetera v0.10.0
+#17 1.558   Downloaded bstr v1.11.3
+#17 1.568   Downloaded terminal-colorsaurus v0.4.7
+#17 1.572   Downloaded proc-macro2 v1.0.95
+#17 1.575   Downloaded quick-xml v0.32.0
+#17 1.582   Downloaded serde_yaml v0.9.34+deprecated
+#17 1.586   Downloaded mio v1.0.3
+#17 1.593   Downloaded toml_datetime v0.7.0
+#17 1.594   Downloaded darling_macro v0.20.10
+#17 1.595   Downloaded errno v0.3.10
+#17 1.597   Downloaded serde_derive v1.0.217
+#17 1.599   Downloaded git-version-macro v0.3.9
+#17 1.600   Downloaded thiserror-impl v1.0.69
+#17 1.602   Downloaded crossbeam-deque v0.8.6
+#17 1.603   Downloaded toml_parser v1.0.0
+#17 1.606   Downloaded toml_writer v1.0.0
+#17 1.608   Downloaded content_inspector v0.2.4
+#17 1.610   Downloaded terminal_size v0.4.1
+#17 1.611   Downloaded yaml-rust v0.4.5
+#17 1.614   Downloaded time-macros v0.2.19
+#17 1.617   Downloaded darling v0.20.10
+#17 1.622   Downloaded wild v2.2.1
+#17 1.622   Downloaded crossbeam-utils v0.8.21
+#17 1.626   Downloaded prettyplease v0.2.35
+#17 1.630   Downloaded unicode-segmentation v1.12.0
+#17 1.634   Downloaded serde_with v3.12.0
+#17 1.643   Downloaded indexmap v2.8.0
+#17 1.648   Downloaded time v0.3.37
+#17 1.655   Downloaded serde_json v1.0.135
+#17 1.663   Downloaded winnow v0.7.11
+#17 1.673   Downloaded unicode-width v0.2.0
+#17 1.680   Downloaded vcpkg v0.2.15
+#17 1.727   Downloaded sysinfo v0.33.1
+#17 1.737   Downloaded git2 v0.20.0
+#17 1.746   Downloaded syn v2.0.104
+#17 1.758   Downloaded rustix v0.38.43
+#17 1.783   Downloaded itertools v0.14.0
+#17 1.790   Downloaded clap_builder v4.5.24
+#17 1.797   Downloaded itertools v0.13.0
+#17 1.805   Downloaded flate2 v1.1.2
+#17 1.810   Downloaded miniz_oxide v0.8.9
+#17 1.813   Downloaded clap v4.5.24
+#17 1.821   Downloaded unsafe-libyaml v0.2.11
+#17 1.825   Downloaded toml v0.9.1
+#17 1.830   Downloaded serde v1.0.217
+#17 1.833   Downloaded regex-automata v0.4.9
+#17 1.851   Downloaded globset v0.4.15
+#17 1.852   Downloaded console v0.15.10
+#17 1.855   Downloaded clircle v0.6.1
+#17 1.857   Downloaded grep-cli v0.1.11
+#17 1.858   Downloaded shell-escape v0.1.5
+#17 1.859   Downloaded rgb v0.8.50
+#17 1.862   Downloaded thiserror v1.0.69
+#17 1.867   Downloaded terminal-trx v0.2.3
+#17 1.868   Downloaded serde_spanned v1.0.0
+#17 1.869   Downloaded std_prelude v0.2.12
+#17 1.870   Downloaded serde_with_macros v3.12.0
+#17 1.872   Downloaded git-version v0.3.9
+#17 1.873   Downloaded syntect v5.2.0
+#17 1.886   Downloaded libz-sys v1.1.21
+#17 1.911   Downloaded clap_lex v0.7.4
+#17 1.912   Downloaded itoa v1.0.14
+#17 1.913   Downloaded cc v1.2.7
+#17 1.917   Downloaded semver v1.0.25
+#17 1.919   Downloaded quote v1.0.40
+#17 1.922   Downloaded path_abs v0.5.1
+#17 1.924   Downloaded onig v6.4.0
+#17 1.926   Downloaded nu-ansi-term v0.50.1
+#17 1.928   Downloaded linked-hash-map v0.5.6
+#17 1.930   Downloaded bitflags v1.3.2
+#17 1.932   Downloaded ansi_colours v1.2.3
+#17 1.934   Downloaded bytemuck v1.21.0
+#17 1.937   Downloaded anstyle v1.0.10
+#17 1.938   Downloaded bytesize v1.3.0
+#17 1.940   Downloaded bugreport v0.5.1
+#17 1.942   Downloaded bincode v1.3.3
+#17 1.944   Downloaded anyhow v1.0.97
+#17 1.949   Downloaded libgit2-sys v0.18.0+1.9.0
+#17 2.015   Downloaded linux-raw-sys v0.4.15
+#17 2.230    Compiling proc-macro2 v1.0.95
+#17 2.230    Compiling unicode-ident v1.0.14
+#17 2.230    Compiling libc v0.2.169
+#17 2.230    Compiling memchr v2.7.4
+#17 2.230    Compiling stable_deref_trait v1.2.0
+#17 2.230    Compiling shlex v1.3.0
+#17 2.230    Compiling pkg-config v0.3.31
+#17 2.231    Compiling regex-syntax v0.8.5
+#17 2.234    Compiling strsim v0.11.1
+#17 2.235    Compiling writeable v0.5.5
+#17 2.238    Compiling serde v1.0.217
+#17 2.240    Compiling litemap v0.7.4
+#17 2.241    Compiling crossbeam-utils v0.8.21
+#17 2.242    Compiling equivalent v1.0.1
+#17 2.243    Compiling hashbrown v0.15.2
+#17 2.245    Compiling fnv v1.0.7
+#17 2.247    Compiling cfg-if v1.0.0
+#17 2.249    Compiling bitflags v2.6.0
+#17 2.250    Compiling ident_case v1.0.1
+#17 2.251    Compiling either v1.13.0
+#17 2.255    Compiling icu_locid_transform_data v1.5.0
+#17 2.255    Compiling rustix v0.38.43
+#17 2.255    Compiling linux-raw-sys v0.4.15
+#17 2.255    Compiling utf8parse v0.2.2
+#17 2.255    Compiling vcpkg v0.2.15
+#17 2.255    Compiling icu_properties_data v1.5.0
+#17 2.256    Compiling anstyle v1.0.10
+#17 2.256    Compiling utf16_iter v1.0.5
+#17 2.256    Compiling anstyle-query v1.1.2
+#17 2.256    Compiling itoa v1.0.14
+#17 2.256    Compiling rayon-core v1.12.1
+#17 2.256    Compiling smallvec v1.13.2
+#17 2.256    Compiling write16 v1.0.0
+#17 2.257    Compiling utf8_iter v1.0.4
+#17 2.257    Compiling colorchoice v1.0.3
+#17 2.257    Compiling once_cell v1.20.2
+#17 2.257    Compiling icu_normalizer_data v1.5.0
+#17 2.257    Compiling is_terminal_polyfill v1.70.1
+#17 2.257    Compiling prettyplease v0.2.35
+#17 2.257    Compiling clap_lex v0.7.4
+#17 2.257    Compiling same-file v1.0.6
+#17 2.257    Compiling anyhow v1.0.97
+#17 2.257    Compiling powerfmt v0.2.0
+#17 2.257    Compiling winnow v0.7.11
+#17 2.257    Compiling time-core v0.1.2
+#17 2.257    Compiling ryu v1.0.18
+#17 2.257    Compiling serde_json v1.0.135
+#17 2.257    Compiling adler2 v2.0.0
+#17 2.257    Compiling log v0.4.22
+#17 2.257    Compiling toml_writer v1.0.0
+#17 2.257    Compiling thiserror v1.0.69
+#17 2.258    Compiling percent-encoding v2.3.1
+#17 2.258    Compiling num-conv v0.1.0
+#17 2.258    Compiling bytemuck v1.21.0
+#17 2.258    Compiling thiserror v2.0.11
+#17 2.258    Compiling bugreport v0.5.1
+#17 2.258    Compiling base64 v0.22.1
+#17 2.258    Compiling semver v1.0.25
+#17 2.258    Compiling bitflags v1.3.2
+#17 2.258    Compiling linked-hash-map v0.5.6
+#17 2.258    Compiling unsafe-libyaml v0.2.11
+#17 2.258    Compiling std_prelude v0.2.12
+#17 2.258    Compiling unicode-width v0.2.0
+#17 2.258    Compiling termcolor v1.4.1
+#17 2.258    Compiling home v0.5.9
+#17 2.258    Compiling shell-escape v0.1.5
+#17 2.258    Compiling nu-ansi-term v0.50.1
+#17 2.258    Compiling wild v2.2.1
+#17 2.258    Compiling unicode-segmentation v1.12.0
+#17 2.258    Compiling bytesize v1.3.0
+#17 2.258    Compiling shell-words v1.1.0
+#17 2.271    Compiling crc32fast v1.4.2
+#17 2.271    Compiling encoding_rs v0.8.35
+#17 2.271    Compiling clircle v0.6.1
+#17 2.361    Compiling etcetera v0.10.0
+#17 2.396    Compiling anstyle-parse v0.2.6
+#17 2.466    Compiling rgb v0.8.50
+#17 2.471    Compiling miniz_oxide v0.8.9
+#17 2.475    Compiling path_abs v0.5.1
+#17 2.488    Compiling form_urlencoded v1.2.1
+#17 2.490    Compiling itertools v0.14.0
+#17 2.490    Compiling itertools v0.13.0
+#17 2.532    Compiling anstream v0.6.18
+#17 2.539    Compiling walkdir v2.5.0
+#17 2.546    Compiling deranged v0.3.11
+#17 2.595    Compiling yaml-rust v0.4.5
+#17 2.602    Compiling aho-corasick v1.1.3
+#17 2.602    Compiling quick-xml v0.32.0
+#17 2.602    Compiling content_inspector v0.2.4
+#17 2.675    Compiling indexmap v2.8.0
+#17 2.759    Compiling ansi_colours v1.2.3
+#17 2.850    Compiling flate2 v1.1.2
+#17 2.853    Compiling quote v1.0.40
+#17 2.864    Compiling crossbeam-epoch v0.9.18
+#17 2.977    Compiling syn v2.0.104
+#17 3.027    Compiling crossbeam-deque v0.8.6
+#17 3.039    Compiling time v0.3.37
+#17 3.058    Compiling jobserver v0.1.32
+#17 3.058    Compiling terminal-trx v0.2.3
+#17 3.058    Compiling mio v1.0.3
+#17 3.058    Compiling console v0.15.10
+#17 3.197    Compiling cc v1.2.7
+#17 3.206    Compiling terminal-colorsaurus v0.4.7
+#17 3.209    Compiling terminal_size v0.4.1
+#17 3.252    Compiling clap_builder v4.5.24
+#17 3.431    Compiling rayon v1.10.0
+#17 3.696    Compiling toml_parser v1.0.0
+#17 3.713    Compiling regex-automata v0.4.9
+#17 4.036    Compiling libz-sys v1.1.21
+#17 4.036    Compiling onig_sys v69.8.1
+#17 4.036    Compiling libgit2-sys v0.18.0+1.9.0
+#17 4.736    Compiling serde_spanned v1.0.0
+#17 4.792    Compiling toml_datetime v0.7.0
+#17 4.856    Compiling bincode v1.3.3
+#17 4.856    Compiling plist v1.7.0
+#17 4.856    Compiling serde_yaml v0.9.34+deprecated
+#17 5.044    Compiling clap v4.5.24
+#17 5.223    Compiling onig v6.4.0
+#17 5.274    Compiling sysinfo v0.33.1
+#17 5.387    Compiling toml v0.9.1
+#17 5.637    Compiling regex v1.11.1
+#17 5.900    Compiling synstructure v0.13.1
+#17 5.900    Compiling darling_core v0.20.10
+#17 5.977    Compiling bstr v1.11.3
+#17 6.278    Compiling zerofrom-derive v0.1.5
+#17 6.279    Compiling yoke-derive v0.7.5
+#17 6.279    Compiling zerovec-derive v0.10.3
+#17 6.279    Compiling displaydoc v0.2.5
+#17 6.279    Compiling icu_provider_macros v1.5.0
+#17 6.280    Compiling serde_derive v1.0.217
+#17 6.283    Compiling git-version-macro v0.3.9
+#17 6.285    Compiling thiserror-impl v1.0.69
+#17 6.287    Compiling thiserror-impl v2.0.11
+#17 6.366    Compiling globset v0.4.15
+#17 6.606    Compiling grep-cli v0.1.11
+#17 6.805    Compiling git-version v0.3.9
+#17 7.175    Compiling darling_macro v0.20.10
+#17 7.182    Compiling zerofrom v0.1.5
+#17 7.237    Compiling yoke v0.7.5
+#17 7.340    Compiling zerovec v0.10.4
+#17 7.660    Compiling darling v0.20.10
+#17 7.689    Compiling serde_with_macros v3.12.0
+#17 7.978    Compiling tinystr v0.7.6
+#17 7.978    Compiling icu_collections v1.5.0
+#17 8.072    Compiling icu_locid v1.5.0
+#17 8.333    Compiling syntect v5.2.0
+#17 8.476    Compiling icu_provider v1.5.0
+#17 8.482    Compiling serde_with v3.12.0
+#17 8.708    Compiling icu_locid_transform v1.5.0
+#17 8.978    Compiling bat v0.25.0 (/home/cc/bat)
+#17 9.160    Compiling icu_properties v1.5.1
+#17 10.56    Compiling icu_normalizer v1.5.0
+#17 10.88    Compiling idna_adapter v1.2.0
+#17 10.93    Compiling idna v1.0.3
+#17 11.13    Compiling url v2.5.4
+#17 11.46    Compiling git2 v0.20.0
+#17 20.09     Finished `dev` profile [unoptimized + debuginfo] target(s) in 19.63s
+#17 DONE 22.1s
+
+#18 [15/20] RUN /home/cc/.cargo/bin/cargo test --locked
+#18 0.307  Downloading crates ...
+#18 0.401   Downloaded fastrand v2.3.0
+#18 0.404   Downloaded float-cmp v0.10.0
+#18 0.405   Downloaded assert_cmd v2.0.16
+#18 0.408   Downloaded getrandom v0.3.1
+#18 0.411   Downloaded serial_test_derive v2.0.0
+#18 0.412   Downloaded termtree v0.5.1
+#18 0.413   Downloaded dissimilar v1.0.9
+#18 0.415   Downloaded tempfile v3.16.0
+#18 0.417   Downloaded num-traits v0.2.19
+#18 0.420   Downloaded expect-test v1.5.1
+#18 0.421   Downloaded serial_test v2.0.0
+#18 0.422   Downloaded predicates-tree v1.0.12
+#18 0.423   Downloaded predicates-core v1.0.9
+#18 0.424   Downloaded predicates v3.1.3
+#18 0.426   Downloaded normalize-line-endings v0.3.0
+#18 0.427   Downloaded dashmap v5.5.3
+#18 0.430   Downloaded difflib v0.4.0
+#18 0.430   Downloaded doc-comment v0.3.3
+#18 0.431   Downloaded nix v0.29.0
+#18 0.579    Compiling libc v0.2.169
+#18 0.579    Compiling autocfg v1.4.0
+#18 0.581    Compiling serde v1.0.217
+#18 0.582    Compiling rustix v0.38.43
+#18 0.584    Compiling parking_lot_core v0.9.10
+#18 0.585    Compiling scopeguard v1.2.0
+#18 0.586    Compiling predicates-core v1.0.9
+#18 0.586    Compiling doc-comment v0.3.3
+#18 0.587    Compiling cfg_aliases v0.2.1
+#18 0.589    Compiling getrandom v0.3.1
+#18 0.590    Compiling normalize-line-endings v0.3.0
+#18 0.591    Compiling assert_cmd v2.0.16
+#18 0.594    Compiling hashbrown v0.14.5
+#18 0.594    Compiling difflib v0.4.0
+#18 0.596    Compiling termtree v0.5.1
+#18 0.598    Compiling fastrand v2.3.0
+#18 0.600    Compiling lazy_static v1.5.0
+#18 0.600    Compiling dissimilar v1.0.9
+#18 0.612    Compiling serial_test_derive v2.0.0
+#18 0.615    Compiling nix v0.29.0
+#18 0.655    Compiling predicates-tree v1.0.12
+#18 0.724    Compiling expect-test v1.5.1
+#18 0.767    Compiling num-traits v0.2.19
+#18 0.767    Compiling lock_api v0.4.12
+#18 1.104    Compiling jobserver v0.1.32
+#18 1.120    Compiling terminal_size v0.4.1
+#18 1.161    Compiling clap_builder v4.5.24
+#18 1.240    Compiling cc v1.2.7
+#18 1.427    Compiling float-cmp v0.10.0
+#18 1.473    Compiling predicates v3.1.3
+#18 1.915    Compiling mio v1.0.3
+#18 1.915    Compiling terminal-trx v0.2.3
+#18 1.915    Compiling sysinfo v0.33.1
+#18 1.915    Compiling console v0.15.10
+#18 1.915    Compiling grep-cli v0.1.11
+#18 1.915    Compiling wait-timeout v0.2.0
+#18 2.035    Compiling dashmap v5.5.3
+#18 2.035    Compiling parking_lot v0.12.3
+#18 2.038    Compiling libz-sys v1.1.21
+#18 2.038    Compiling onig_sys v69.8.1
+#18 2.038    Compiling libgit2-sys v0.18.0+1.9.0
+#18 2.064    Compiling terminal-colorsaurus v0.4.7
+#18 2.261    Compiling serial_test v2.0.0
+#18 2.313    Compiling tempfile v3.16.0
+#18 2.483    Compiling bugreport v0.5.1
+#18 2.927    Compiling clap v4.5.24
+#18 2.948    Compiling bincode v1.3.3
+#18 2.970    Compiling serde_json v1.0.135
+#18 2.982    Compiling plist v1.7.0
+#18 2.990    Compiling serde_yaml v0.9.34+deprecated
+#18 3.170    Compiling onig v6.4.0
+#18 3.578    Compiling bat v0.25.0 (/home/cc/bat)
+#18 3.626    Compiling syntect v5.2.0
+#18 3.813    Compiling git2 v0.20.0
+#18 12.18     Finished `test` profile [unoptimized + debuginfo] target(s) in 11.93s
+#18 12.22      Running unittests src/lib.rs (target/debug/deps/bat-15ded72c266b6a6c)
+#18 12.22 
+#18 12.22 running 95 tests
+#18 12.22 test assets::build_assets::acknowledgements::tests::test_append_to_acknowledgements_adds_newline_if_missing ... ok
+#18 12.22 test config::default_config_should_include_all_lines ... ok
+#18 12.22 test config::default_config_should_highlight_no_lines ... ok
+#18 12.22 test input::utf16le ... ok
+#18 12.22 test input::basic ... ok
+#18 12.22 test less::test_parse_less_version_529 ... ok
+#18 12.22 test less::test_parse_less_version_487 ... ok
+#18 12.22 test less::test_parse_less_version_551 ... ok
+#18 12.22 test less::test_parse_less_version_581_2 ... ok
+#18 12.22 test less::test_parse_less_version_busybox ... ok
+#18 12.22 test less::test_parse_less_version_invalid_utf_8 ... ok
+#18 12.22 test less::test_parse_less_version_wrong_program ... ok
+#18 12.22 test line_range::test_parse_fail ... ok
+#18 12.22 test line_range::test_parse_full ... ok
+#18 12.22 test line_range::test_parse_minus_edge_cases_success ... ok
+#18 12.22 test line_range::test_parse_minus_fail ... ok
+#18 12.22 test line_range::test_parse_minus_success ... ok
+#18 12.22 test line_range::test_parse_partial_max ... ok
+#18 12.22 test line_range::test_parse_partial_min ... ok
+#18 12.22 test line_range::test_parse_partial_relative_negative_from_back ... ok
+#18 12.22 test line_range::test_parse_plus ... ok
+#18 12.22 test line_range::test_parse_plus_fail ... ok
+#18 12.22 test line_range::test_parse_plus_overflow ... ok
+#18 12.22 test line_range::test_parse_relative_negative_from_back_partial ... ok
+#18 12.22 test line_range::test_parse_single ... ok
+#18 12.22 test line_range::test_ranges_3_from_back_up_to_end ... ok
+#18 12.23 test line_range::test_ranges_absolute_bound_and_offset ... ok
+#18 12.23 test line_range::test_ranges_advanced ... ok
+#18 12.23 test line_range::test_ranges_all ... ok
+#18 12.23 test line_range::test_ranges_multiple_negative_from_back ... ok
+#18 12.23 test line_range::test_ranges_multiple_negative_offsets_to_end ... ok
+#18 12.23 test line_range::test_ranges_none ... ok
+#18 12.23 test assets::build_assets::acknowledgements::tests::test_normalize_license_text ... ok
+#18 12.23 test line_range::test_ranges_open_high ... ok
+#18 12.23 test line_range::test_ranges_open_up_to_3_from_end ... ok
+#18 12.23 test line_range::test_ranges_open_low ... ok
+#18 12.23 test line_range::test_ranges_simple ... ok
+#18 12.23 test preprocessor::test_strip_ansi ... ok
+#18 12.23 test preprocessor::test_try_parse_utf8_char ... ok
+#18 12.23 test style::test::style_component_list_default_builds_on_auto ... ok
+#18 12.23 test style::test::style_component_list_expand_negates_subcomponents ... ok
+#18 12.23 test style::test::style_component_list_parse ... ok
+#18 12.23 test style::test::style_component_list_to_components ... ok
+#18 12.23 test assets::build_assets::acknowledgements::tests::test_normalize_license_text_with_windows_line_endings ... ok
+#18 12.23 test style::test::style_component_list_to_components_expands_subcomponents ... ok
+#18 12.23 test style::test::style_component_list_to_components_precedence_merges_previous_lists ... ok
+#18 12.23 test style::test::style_component_list_to_components_precedence_overrides_previous_lists ... ok
+#18 12.23 test style::test::style_component_list_to_components_removes_negated ... ok
+#18 12.23 test syntax_mapping::ignored_suffixes::external_suffixes ... ok
+#18 12.23 test syntax_mapping::ignored_suffixes::internal_suffixes ... ok
+#18 12.23 test theme::tests::choosing::chooses_dark_theme_if_dark_or_unknown ... ok
+#18 12.23 test theme::tests::choosing::chooses_default_theme_if_unknown ... ok
+#18 12.23 test theme::tests::choosing::chooses_light_theme_if_light ... ok
+#18 12.23 test theme::tests::color_scheme_detection::called_for_always ... ok
+#18 12.23 test theme::tests::color_scheme_detection::called_for_auto_if_should_detect ... ok
+#18 12.23 test theme::tests::color_scheme_detection::not_called_for_auto_if_not_should_detect ... ok
+#18 12.23 test theme::tests::color_scheme_detection::not_called_for_dark_or_light ... ok
+#18 12.23 test theme::tests::default_theme::default_dark_if_requested_explicitly_through_theme ... ok
+#18 12.23 test theme::tests::default_theme::default_dark_if_unable_to_detect_color_scheme ... ok
+#18 12.23 test theme::tests::default_theme::varies_depending_on_color_scheme ... ok
+#18 12.23 test theme::tests::precedence::detector_is_not_called_if_theme_is_present ... ok
+#18 12.23 test theme::tests::precedence::theme_is_preferred_over_light_or_dark_themes ... ok
+#18 12.23 test theme::tests::theme_preference::values_roundtrip_via_display ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_iterator_iterates ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_iterates ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi_thats_broken ... ok
+#18 12.23 test syntax_mapping::tests::custom_mappings_override_builtin ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi_with_intermediates ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi_with_parameters ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi_with_parameters_and_intermediates ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_nf ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_nf_thats_broken ... ok
+#18 12.23 test syntax_mapping::tests::custom_mappings_precedence ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_osc_thats_broken ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_osc_with_bel ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_osc_with_st ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_text ... ok
+#18 12.23 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_text_stops_at_esc ... ok
+#18 12.23 test vscreen::tests::test_sgr_attributes_do_not_leak_into_wrong_field ... ok
+#18 12.25 test syntax_mapping::tests::builtin_mappings_work ... ok
+#18 12.25 test syntax_mapping::tests::all_fixed_builtin_mappings_can_compile ... ok
+#18 12.25 test syntax_mapping::tests::builtin_mappings_matcher_only_compile_once ... ok
+#18 12.25 test syntax_mapping::tests::custom_mappings_work ... ok
+#18 12.30 test assets::tests::syntax_detection_with_custom_mapping ... ok
+#18 12.31 test assets::tests::syntax_detection_well_defined_mapping_for_duplicate_extensions ... ok
+#18 12.33 test assets::tests::syntax_detection_for_symlinked_file ... ok
+#18 12.33 test assets::tests::syntax_detection_same_for_inputkinds ... ok
+#18 12.33 test assets::tests::syntax_detection_invalid_utf8 ... ok
+#18 12.34 test assets::tests::syntax_detection_basic ... ok
+#18 12.34 test assets::tests::syntax_detection_is_case_insensitive ... ok
+#18 12.34 test assets::tests::syntax_detection_with_extension_mapping_to_unknown ... ok
+#18 12.34 test assets::tests::syntax_detection_first_line_with_utf8_bom ... ok
+#18 12.34 test assets::tests::syntax_detection_stdin_filename ... ok
+#18 12.34 test assets::tests::syntax_detection_first_line ... ok
+#18 12.34 
+#18 12.34 test result: ok. 95 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+#18 12.34 
+#18 12.34      Running unittests src/bin/bat/main.rs (target/debug/deps/bat-1a5842f1e133ab69)
+#18 12.35 
+#18 12.35 running 7 tests
+#18 12.35 test config::empty ... ok
+#18 12.35 test config::comments ... ok
+#18 12.35 test config::multi_line ... ok
+#18 12.35 test config::multiple ... ok
+#18 12.35 test config::single ... ok
+#18 12.35 test config::quotes ... ok
+#18 12.35 test clap_app::verify_app ... ok
+#18 12.35 
+#18 12.35 test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#18 12.35 
+#18 12.35      Running tests/assets.rs (target/debug/deps/assets-490ec08c46f32283)
+#18 12.35 
+#18 12.35 running 1 test
+#18 12.35 test all_themes_are_present ... ignored
+#18 12.35 
+#18 12.35 test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#18 12.35 
+#18 12.35      Running tests/github-actions.rs (target/debug/deps/github_actions-3064f46cc3b3d80b)
+#18 12.35 
+#18 12.35 running 1 test
+#18 12.36 test all_jobs_not_missing_any_jobs ... ok
+#18 12.36 
+#18 12.36 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#18 12.36 
+#18 12.36      Running tests/integration_tests.rs (target/debug/deps/integration_tests-1180390a540fe6a3)
+#18 12.36 
+#18 12.36 running 164 tests
+#18 12.37 test accepts_no_custom_assets_arg ... ok
+#18 12.37 test alias_pager_disable ... ok
+#18 12.37 test basic_io_cycle ... ok
+#18 12.37 test ansi_sgr_joins_attributes_when_wrapped ... ok
+#18 12.37 test can_print_file_named_cache ... ok
+#18 12.37 test acknowledgements ... ok
+#18 12.37 test basic ... ok
+#18 12.37 test bom_not_stripped_in_loop_through_mode ... ok
+#18 12.37 test concatenate ... ok
+#18 12.37 test can_print_file_named_cache_with_additional_argument ... ok
+#18 12.37 test ansi_highlight_underline ... ok
+#18 12.37 test bom_stripped_when_no_color_and_not_loop_through ... ok
+#18 12.37 test binary_as_text ... ok
+#18 12.37 test ansi_sgr_emitted_when_wrapped ... ok
+#18 12.38 test basic_set_terminal_title ... ok
+#18 12.38 test ansi_hyperlink_emitted_when_wrapped ... ok
+#18 12.38 test pager_disable ... ok
+#18 12.39 test pager_failed_to_parse ... ok
+#18 12.39 test ansi_passthrough_emit ... ok
+#18 12.41 test file_with_invalid_utf8_filename ... ok
+#18 12.41 test no_paging_short_arg ... ok
+#18 12.41 test no_line_wrapping_with_s_flag ... ok
+#18 12.41 test no_wrapping_with_chop_long_lines ... ok
+#18 12.41 test cache_build ... ok
+#18 12.42 test pager_value_bat ... ok
+#18 12.42 test paging_does_not_override_simple_plain ... ok
+#18 12.43 test short_help ... ok
+#18 12.43 test plain_mode_does_not_add_nonexisting_newline ... ok
+#18 12.44 test show_all_extends_tab_markers_to_next_tabstop ... ok
+#18 12.44 test show_all_extends_tab_markers_to_next_tabstop_width_8 ... ok
+#18 12.44 test concatenate_empty_first ... ok
+#18 12.45 test empty_file_cycle_is_ok ... ok
+#18 12.45 test first_file_cyclic_is_ok ... ok
+#18 12.45 test show_all_mode ... ok
+#18 12.45 test line_range_up_to_2_from_back ... ok
+#18 12.45 test can_print_file_starting_with_cache ... ok
+#18 12.45 test bat_error_to_stderr ... ok
+#18 12.45 test concatenate_empty_both ... ok
+#18 12.45 test alias_pager_disable_long_overrides_short ... ok
+#18 12.45 test no_line_wrapping_when_set_to_never ... ok
+#18 12.45 test show_all_with_unicode ... ok
+#18 12.46 test simple_plain_does_not_override_paging ... ok
+#18 12.46 test squeeze_blank ... ok
+#18 12.46 test stdin ... ok
+#18 12.46 test show_all_with_caret_notation ... ok
+#18 12.46 test snip ... ok
+#18 12.46 test squeeze_blank_line_numbers ... ok
+#18 12.46 test stdin_to_stdout_cycle ... ok
+#18 12.47 test squeeze_limit ... ok
+#18 12.47 test strip_ansi_always_strips_ansi ... ok
+#18 12.47 test config_read_arguments_from_file ... ok
+#18 12.47 test strip_ansi_does_not_affect_simple_printer ... ok
+#18 12.47 test squeeze_limit_line_numbers ... ok
+#18 12.47 test strip_ansi_never_does_not_strip_ansi ... ok
+#18 12.47 test style_components_can_be_overidden ... ok
+#18 12.48 test style_components_will_merge ... ok
+#18 12.48 test style_components_will_merge_with_env_var ... ok
+#18 12.48 test style_components_can_be_removed ... ok
+#18 12.48 test tabs_4 ... ok
+#18 12.50 test tabs_4_wrapped ... ok
+#18 12.50 test tabs_8_wrapped ... ok
+#18 12.51 test tabs_8 ... ok
+#18 12.51 test tabs_4_env_overrides_config ... ok
+#18 12.51 test tabs_4_arg_overrides_env ... ok
+#18 12.51 test env_var_bat_paging ... ok
+#18 12.51 test tabs_4_arg_overrides_env_noconfig ... ok
+#18 12.51 test do_not_exit_directory ... ok
+#18 12.51 test line_range_up_to_2_from_back_single_line_is_empty ... ok
+#18 12.51 test config_location_from_bat_config_dir_variable ... ok
+#18 12.51 test diagnostic_sanity_check ... ok
+#18 12.51 test env_var_bat_pager_value_bat ... ok
+#18 12.51 test concatenate_single_line ... ok
+#18 12.51 test line_range_first_two ... ok
+#18 12.51 test filename_multiple_err ... ok
+#18 12.51 test disable_pager_if_pp_flag_comes_after_paging ... ok
+#18 12.51 test fail_non_existing ... ok
+#18 12.51 test no_paging_arg ... ok
+#18 12.51 test filename_multiple_ok ... ok
+#18 12.51 test concatenate_stdin ... ok
+#18 12.51 test no_pager_arg ... ok
+#18 12.51 test does_not_print_unwanted_file_named_cache ... ok
+#18 12.51 test concatenate_empty_last ... ok
+#18 12.51 test list_themes_to_piped_output ... ok
+#18 12.51 test line_numbers ... ok
+#18 12.51 test concatenate_single_line_empty ... ok
+#18 12.51 test concatenate_empty_between ... ok
+#18 12.51 test header_full_binary ... ok
+#18 12.51 test line_range_2_3 ... ok
+#18 12.51 test fail_directory ... ok
+#18 12.51 test grid_overrides_rule ... ok
+#18 12.51 test empty_file_leads_to_empty_output_with_grid_enabled ... ok
+#18 12.51 test line_range_from_back_last_two_single_line ... ok
+#18 12.51 test disable_pager_if_disable_paging_flag_comes_after_paging ... ok
+#18 12.51 test header_env_basic ... ok
+#18 12.51 test header_padding_rule ... ok
+#18 12.51 test enable_pager_if_pp_flag_comes_before_paging ... ok
+#18 12.51 test line_range_multiple ... ok
+#18 12.51 test concatenate_empty_first_and_last ... ok
+#18 12.51 test line_range_last_3 ... ok
+#18 12.51 test line_range_from_back_last_two ... ok
+#18 12.51 test list_themes_without_colors ... ok
+#18 12.51 test long_help ... ok
+#18 12.51 test empty_file_leads_to_empty_output_with_rule_enabled ... ok
+#18 12.51 test enable_pager_if_disable_paging_flag_comes_before_paging ... ok
+#18 12.51 test header_basic ... ok
+#18 12.52 test header_arg_overrides_env ... ok
+#18 12.52 test config_location_test ... ok
+#18 12.52 test filename_stdin ... ok
+#18 12.52 test config_location_when_generating ... ok
+#18 12.52 test header_full_padding ... ok
+#18 12.52 test header_padding ... ok
+#18 12.52 test header_full_padding_rule ... ok
+#18 12.52 test line_wrapping_when_auto ... ok
+#18 12.52 test cache_clear ... ok
+#18 12.52 test header_narrow_terminal_with_multibyte_chars ... ok
+#18 12.52 test header_binary ... ok
+#18 12.52 test header_default ... ok
+#18 12.52 test tabs_numbers ... ok
+#18 12.52 test header_full_basic ... ok
+#18 12.52 test env_var_pager_value_bat ... ok
+#18 12.52 test no_broken_osc_emit_with_line_wrapping ... ok
+#18 12.52 test filename_stdin_binary ... ok
+#18 12.52 test header_very_narrow_terminal ... ok
+#18 12.52 test header_default_is_default ... ok
+#18 12.52 test grid_for_file_without_newline ... ok
+#18 12.52 test theme_arg_overrides_env ... ok
+#18 12.53 test theme_light_env_var_is_respected ... ok
+#18 12.53 test tabs_passthrough ... ok
+#18 12.53 test tabs_passthrough_wrapped ... ok
+#18 12.53 test theme_env_overrides_config ... ok
+#18 12.53 test theme_arg_overrides_env_withconfig ... ok
+#18 12.53 test pager_arg_override_env_noconfig ... ok
+#18 12.53 test unicode_wrap ... ok
+#18 12.53 test theme_dark_env_var_is_respected ... ok
+#18 12.53 test utf16 ... ok
+#18 12.54 test no_first_line_fallback_when_mapping_to_invalid_syntax ... ok
+#18 12.54 test pager_arg_override_env_withconfig ... ok
+#18 12.56 test strip_ansi_auto_does_not_strip_ansi_when_plain_text_by_option ... ok
+#18 12.56 test pager_basic ... ok
+#18 12.56 test strip_ansi_does_not_strip_when_show_nonprintable ... ok
+#18 12.57 test pager_basic_arg ... ok
+#18 12.58 test strip_ansi_auto_does_not_strip_when_plain_text_by_filename ... ok
+#18 12.58 test strip_ansi_auto_strips_ansi_when_detected_syntax_by_filename ... ok
+#18 12.59 test pager_env_bat_pager_override_config ... ok
+#18 12.60 test pager_env_pager_nooverride_config ... ok
+#18 12.61 test strip_ansi_auto_strips_ansi_when_provided_syntax_by_option ... ok
+#18 12.61 test bom_stripped_when_colored_output ... ok
+#18 12.62 test pager_more ... ok
+#18 12.63 test pager_most_from_bat_pager_env_var ... ok
+#18 12.65 test pager_most_from_pager_arg ... ok
+#18 12.66 test pager_most_from_pager_env_var ... ok
+#18 12.67 test highlighting_is_skipped_on_long_lines ... ok
+#18 12.67 test no_args_doesnt_break ... ok
+#18 12.68 test pager_most_with_arg ... ok
+#18 12.69 test list_languages ... ok
+#18 12.69 test pager_overwrite ... ok
+#18 12.69 test highlighting_independant_from_map_syntax_case ... ok
+#18 12.70 test map_syntax_target_syntax_case_insensitive ... ok
+#18 12.71 test all_global_git_config_locations_syntax_mapping_work ... ok
+#18 12.72 test map_syntax_and_ignored_suffix_work_together ... ok
+#18 12.73 test list_themes_with_colors ... ok
+#18 12.73 test do_not_detect_different_syntax_for_stdin_and_files ... ok
+#18 12.85 test ignored_suffix_arg ... ok
+#18 13.12 test do_not_panic_regression_tests ... ok
+#18 13.12 
+#18 13.12 test result: ok. 164 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.76s
+#18 13.12 
+#18 13.12      Running tests/no_duplicate_extensions.rs (target/debug/deps/no_duplicate_extensions-84e0a33421e63ad9)
+#18 13.12 
+#18 13.12 running 1 test
+#18 13.21 test no_duplicate_extensions ... ok
+#18 13.21 
+#18 13.21 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+#18 13.21 
+#18 13.21      Running tests/snapshot_tests.rs (target/debug/deps/snapshot_tests-908d4dc89c7ea4ed)
+#18 13.21 
+#18 13.21 running 27 tests
+#18 13.23 test changes_grid_header_numbers ... ok
+#18 13.23 test changes_grid_header_numbers_rule ... ok
+#18 13.23 test changes_grid_header_rule ... ok
+#18 13.23 test changes_grid_numbers ... ok
+#18 13.24 test changes ... ok
+#18 13.24 test changes_header ... ok
+#18 13.24 test grid_header ... ok
+#18 13.24 test rule ... ok
+#18 13.24 test numbers ... ok
+#18 13.24 test grid ... ok
+#18 13.24 test grid_numbers ... ok
+#18 13.24 test header_numbers_rule ... ok
+#18 13.24 test changes_header_rule ... ok
+#18 13.24 test changes_header_numbers ... ok
+#18 13.24 test changes_rule ... ok
+#18 13.24 test full ... ok
+#18 13.24 test header_numbers ... ok
+#18 13.27 test changes_grid ... ok
+#18 13.27 test grid_header_numbers ... ok
+#18 13.27 test changes_grid_rule ... ok
+#18 13.27 test changes_grid_header ... ok
+#18 13.27 test plain ... ok
+#18 13.27 test grid_rule ... ok
+#18 13.27 test header ... ok
+#18 13.27 test grid_header_rule ... ok
+#18 13.27 test changes_numbers ... ok
+#18 13.27 test header_rule ... ok
+#18 13.27 
+#18 13.27 test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+#18 13.27 
+#18 13.27      Running tests/system_wide_config.rs (target/debug/deps/system_wide_config-dc7c076467342579)
+#18 13.27 
+#18 13.27 running 2 tests
+#18 13.27 test config_overrides_system_config ... ignored
+#18 13.27 test use_systemwide_config ... ignored
+#18 13.27 
+#18 13.27 test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#18 13.27 
+#18 13.27      Running tests/test_pretty_printer.rs (target/debug/deps/test_pretty_printer-91cd1dbb6e080076)
+#18 13.27 
+#18 13.27 running 1 test
+#18 13.35 test syntaxes ... ok
+#18 13.35 
+#18 13.35 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+#18 13.35 
+#18 13.35    Doc-tests bat
+#18 13.45 
+#18 13.45 running 5 tests
+#18 13.45 test src/vscreen.rs - vscreen::EscapeSequenceIterator (line 557) ... ignored
+#18 13.45 test src/vscreen.rs - vscreen::EscapeSequenceOffsetsIterator (line 353) ... ignored
+#18 15.57 test src/theme.rs - theme::ThemePreference (line 61) ... ok
+#18 15.57 test src/theme.rs - theme::ThemeName (line 125) ... ok
+#18 15.91 test src/lib.rs - (line 12) ... ok
+#18 15.91 
+#18 15.91 test result: ok. 3 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 2.46s
+#18 15.91 
+#18 DONE 18.7s
+
+#19 [16/20] RUN /home/cc/.cargo/bin/cargo install --path . --locked
+#19 0.246   Installing bat v0.25.0 (/home/cc/bat)
+#19 0.279     Updating crates.io index
+#19 0.825    Compiling proc-macro2 v1.0.95
+#19 0.825    Compiling unicode-ident v1.0.14
+#19 0.825    Compiling libc v0.2.169
+#19 0.825    Compiling memchr v2.7.4
+#19 0.825    Compiling stable_deref_trait v1.2.0
+#19 0.826    Compiling shlex v1.3.0
+#19 0.826    Compiling rustix v0.38.43
+#19 0.827    Compiling pkg-config v0.3.31
+#19 0.829    Compiling writeable v0.5.5
+#19 0.831    Compiling litemap v0.7.4
+#19 0.831    Compiling strsim v0.11.1
+#19 0.831    Compiling serde v1.0.217
+#19 0.831    Compiling crossbeam-utils v0.8.21
+#19 0.833    Compiling cfg-if v1.0.0
+#19 0.834    Compiling icu_locid_transform_data v1.5.0
+#19 0.835    Compiling fnv v1.0.7
+#19 0.839    Compiling ident_case v1.0.1
+#19 0.840    Compiling icu_properties_data v1.5.0
+#19 0.841    Compiling linux-raw-sys v0.4.15
+#19 0.843    Compiling utf8parse v0.2.2
+#19 0.843    Compiling bitflags v2.6.0
+#19 0.844    Compiling vcpkg v0.2.15
+#19 0.844    Compiling regex-syntax v0.8.5
+#19 0.844    Compiling itoa v1.0.14
+#19 0.845    Compiling icu_normalizer_data v1.5.0
+#19 0.845    Compiling colorchoice v1.0.3
+#19 0.845    Compiling write16 v1.0.0
+#19 0.845    Compiling smallvec v1.13.2
+#19 0.845    Compiling utf8_iter v1.0.4
+#19 0.846    Compiling is_terminal_polyfill v1.70.1
+#19 0.846    Compiling anstyle-query v1.1.2
+#19 0.846    Compiling anstyle v1.0.10
+#19 0.846    Compiling rayon-core v1.12.1
+#19 0.846    Compiling utf16_iter v1.0.5
+#19 0.846    Compiling equivalent v1.0.1
+#19 0.846    Compiling powerfmt v0.2.0
+#19 0.846    Compiling clap_lex v0.7.4
+#19 0.846    Compiling prettyplease v0.2.35
+#19 0.846    Compiling winnow v0.7.11
+#19 0.846    Compiling anyhow v1.0.97
+#19 0.847    Compiling hashbrown v0.15.2
+#19 0.847    Compiling either v1.13.0
+#19 0.847    Compiling once_cell v1.20.2
+#19 0.847    Compiling toml_writer v1.0.0
+#19 0.847    Compiling thiserror v1.0.69
+#19 0.847    Compiling serde_json v1.0.135
+#19 0.847    Compiling same-file v1.0.6
+#19 0.847    Compiling log v0.4.22
+#19 0.847    Compiling ryu v1.0.18
+#19 0.847    Compiling num-conv v0.1.0
+#19 0.847    Compiling time-core v0.1.2
+#19 0.847    Compiling adler2 v2.0.0
+#19 0.848    Compiling percent-encoding v2.3.1
+#19 0.848    Compiling semver v1.0.25
+#19 0.848    Compiling thiserror v2.0.11
+#19 0.848    Compiling linked-hash-map v0.5.6
+#19 0.848    Compiling bitflags v1.3.2
+#19 0.848    Compiling base64 v0.22.1
+#19 0.848    Compiling bugreport v0.5.1
+#19 0.848    Compiling bytemuck v1.21.0
+#19 0.848    Compiling termcolor v1.4.1
+#19 0.848    Compiling home v0.5.9
+#19 0.848    Compiling unicode-width v0.2.0
+#19 0.849    Compiling unsafe-libyaml v0.2.11
+#19 0.849    Compiling std_prelude v0.2.12
+#19 0.849    Compiling shell-escape v0.1.5
+#19 0.849    Compiling unicode-segmentation v1.12.0
+#19 0.849    Compiling shell-words v1.1.0
+#19 0.849    Compiling wild v2.2.1
+#19 0.849    Compiling nu-ansi-term v0.50.1
+#19 0.849    Compiling bytesize v1.3.0
+#19 0.855    Compiling crc32fast v1.4.2
+#19 0.855    Compiling encoding_rs v0.8.35
+#19 0.855    Compiling clircle v0.6.1
+#19 1.037    Compiling deranged v0.3.11
+#19 1.040    Compiling etcetera v0.10.0
+#19 1.081    Compiling anstyle-parse v0.2.6
+#19 1.084    Compiling itertools v0.13.0
+#19 1.108    Compiling path_abs v0.5.1
+#19 1.123    Compiling walkdir v2.5.0
+#19 1.123    Compiling itertools v0.14.0
+#19 1.126    Compiling miniz_oxide v0.8.9
+#19 1.146    Compiling rgb v0.8.50
+#19 1.160    Compiling form_urlencoded v1.2.1
+#19 1.218    Compiling yaml-rust v0.4.5
+#19 1.245    Compiling aho-corasick v1.1.3
+#19 1.245    Compiling quick-xml v0.32.0
+#19 1.245    Compiling content_inspector v0.2.4
+#19 1.253    Compiling anstream v0.6.18
+#19 1.444    Compiling ansi_colours v1.2.3
+#19 1.494    Compiling quote v1.0.40
+#19 1.534    Compiling indexmap v2.8.0
+#19 1.547    Compiling crossbeam-epoch v0.9.18
+#19 1.558    Compiling flate2 v1.1.2
+#19 1.617    Compiling syn v2.0.104
+#19 1.714    Compiling mio v1.0.3
+#19 1.714    Compiling terminal-trx v0.2.3
+#19 1.714    Compiling console v0.15.10
+#19 1.724    Compiling jobserver v0.1.32
+#19 1.735    Compiling crossbeam-deque v0.8.6
+#19 1.785    Compiling time v0.3.37
+#19 1.818    Compiling terminal_size v0.4.1
+#19 1.862    Compiling clap_builder v4.5.24
+#19 1.868    Compiling terminal-colorsaurus v0.4.7
+#19 1.868    Compiling cc v1.2.7
+#19 2.257    Compiling rayon v1.10.0
+#19 2.357    Compiling toml_parser v1.0.0
+#19 2.510    Compiling regex-automata v0.4.9
+#19 2.698    Compiling libz-sys v1.1.21
+#19 2.698    Compiling onig_sys v69.8.1
+#19 2.698    Compiling libgit2-sys v0.18.0+1.9.0
+#19 3.324    Compiling toml_datetime v0.7.0
+#19 3.374    Compiling serde_spanned v1.0.0
+#19 3.467    Compiling clap v4.5.24
+#19 3.699    Compiling plist v1.7.0
+#19 3.699    Compiling bincode v1.3.3
+#19 3.699    Compiling serde_yaml v0.9.34+deprecated
+#19 4.068    Compiling toml v0.9.1
+#19 4.479    Compiling sysinfo v0.33.1
+#19 4.610    Compiling regex v1.11.1
+#19 4.719    Compiling synstructure v0.13.1
+#19 4.719    Compiling darling_core v0.20.10
+#19 5.117    Compiling zerofrom-derive v0.1.5
+#19 5.117    Compiling yoke-derive v0.7.5
+#19 5.117    Compiling zerovec-derive v0.10.3
+#19 5.118    Compiling displaydoc v0.2.5
+#19 5.118    Compiling icu_provider_macros v1.5.0
+#19 5.118    Compiling serde_derive v1.0.217
+#19 5.118    Compiling thiserror-impl v1.0.69
+#19 5.119    Compiling git-version-macro v0.3.9
+#19 5.119    Compiling thiserror-impl v2.0.11
+#19 5.472    Compiling onig v6.4.0
+#19 5.610    Compiling git-version v0.3.9
+#19 5.784    Compiling bstr v1.11.3
+#19 5.997    Compiling darling_macro v0.20.10
+#19 5.999    Compiling zerofrom v0.1.5
+#19 6.052    Compiling yoke v0.7.5
+#19 6.161    Compiling zerovec v0.10.4
+#19 6.216    Compiling globset v0.4.15
+#19 6.415    Compiling darling v0.20.10
+#19 6.439    Compiling serde_with_macros v3.12.0
+#19 6.497    Compiling grep-cli v0.1.11
+#19 6.935    Compiling tinystr v0.7.6
+#19 6.935    Compiling icu_collections v1.5.0
+#19 7.037    Compiling icu_locid v1.5.0
+#19 7.122    Compiling syntect v5.2.0
+#19 7.172    Compiling serde_with v3.12.0
+#19 7.527    Compiling icu_provider v1.5.0
+#19 7.666    Compiling bat v0.25.0 (/home/cc/bat)
+#19 7.796    Compiling icu_locid_transform v1.5.0
+#19 8.328    Compiling icu_properties v1.5.1
+#19 9.792    Compiling icu_normalizer v1.5.0
+#19 10.16    Compiling idna_adapter v1.2.0
+#19 10.20    Compiling idna v1.0.3
+#19 10.46    Compiling url v2.5.4
+#19 10.86    Compiling git2 v0.20.0
+#19 53.84     Finished `release` profile [optimized] target(s) in 53.62s
+#19 53.88   Installing /home/cc/.cargo/bin/bat
+#19 53.88    Installed package `bat v0.25.0 (/home/cc/bat)` (executable `bat`)
+#19 DONE 54.0s
+
+#20 [17/20] RUN mkdir -p /home/cc/.config/bat &&     /home/cc/.cargo/bin/bat --generate-config-file || true
+#20 0.265 Success! Config file written to /home/cc/.config/bat/config
+#20 DONE 0.3s
+
+#21 [18/20] RUN echo 'alias bat="batcat"' >> /home/cc/.bashrc &&     echo 'alias bat="batcat"' >> /home/cc/.zshrc &&     mkdir -p /home/cc/.config/fish &&     echo 'alias bat "batcat"' >> /home/cc/.config/fish/config.fish
+#21 DONE 0.4s
+
+#22 [19/20] RUN echo 'export BAT_THEME="TwoDark"' >> /home/cc/.bashrc &&     echo 'export BAT_STYLE="numbers,changes,header"' >> /home/cc/.bashrc &&     echo 'export BAT_PAGER="less -RF"' >> /home/cc/.bashrc &&     echo 'export BAT_THEME="TwoDark"' >> /home/cc/.zshrc &&     echo 'export BAT_STYLE="numbers,changes,header"' >> /home/cc/.zshrc &&     echo 'export BAT_PAGER="less -RF"' >> /home/cc/.zshrc &&     echo 'set -x BAT_THEME "TwoDark"' >> /home/cc/.config/fish/config.fish &&     echo 'set -x BAT_STYLE "numbers,changes,header"' >> /home/cc/.config/fish/config.fish &&     echo 'set -x BAT_PAGER "less -RF"' >> /home/cc/.config/fish/config.fish
+#22 DONE 0.5s
+
+#23 [20/20] WORKDIR /home/cc/EnvGym/data/sharkdp_bat
+#23 DONE 0.0s
+
+#24 exporting to image
+#24 exporting layers
+#24 exporting layers 20.6s done
+#24 writing image sha256:35ce207496e2b2071c63b2ee50a7e57cb628d95530b9141aaa6fc492993a4c81 done
+#24 naming to docker.io/library/envgym_test_1753064312 done
+#24 DONE 20.6s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

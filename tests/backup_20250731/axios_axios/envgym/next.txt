@@ -1,0 +1,18 @@
+current progress
+
+- Dockerfile has been created based on the plan, targeting Linux x86_64 with Node.js 18 (node:18-bullseye), and using the correct working directory (/home/cc/EnvGym/data/axios_axios).
+- All necessary system dependencies for browser testing (chromium, firefox, xvfb, etc.) are installed.
+- Bower is installed globally (optional, as per plan).
+- Project files are copied in before npm ci to ensure all scripts and hooks are present.
+- npm dependencies are installed with npm ci, and the project is built.
+- Environment variables for headless browser testing and node memory are set.
+- Common test ports are exposed.
+- Docker build and runtime logs indicate successful execution.
+- The default CMD is an interactive shell (for debugging), not for automated test/build execution.
+
+next step
+
+- Update the Dockerfile CMD to run automated tests or the default build/test script, replacing the interactive shell with the intended entrypoint (e.g., `CMD ["npm", "test"]` or your project’s main test command).
+- (Optional) Add a README note confirming that Safari is unavailable for local tests in Linux/Docker, and Sauce Labs is required for Safari coverage.
+- Verify that karma.conf.cjs and documentation restrict local browsers to ChromeHeadless/FirefoxHeadless and note the Safari limitation.
+- No further changes to system dependencies or platform configuration are required unless project-specific test/build scripts need adjustment.

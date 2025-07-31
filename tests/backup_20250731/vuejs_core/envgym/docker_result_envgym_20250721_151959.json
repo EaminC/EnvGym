@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_151959",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753111195",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.09kB done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/node:22-bullseye\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/7] FROM docker.io/library/node:22-bullseye@sha256:1d476778f5bb12bb2fd08ef4e3eb97b2bf6a3e35c29a61751f2be0380a7d8406\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 242.65kB 0.0s done\n#5 DONE 0.0s\n\n#6 [2/7] RUN apt-get update && apt-get install -y git bash wget curl     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [3/7] WORKDIR /home/cc/EnvGym/data/vuejs_core\n#7 CACHED\n\n#8 [4/7] RUN npm install -g pnpm@10.12.4\n#8 CACHED\n\n#9 [5/7] COPY package.json pnpm-lock.yaml ./\n#9 CACHED\n\n#10 [6/7] RUN pnpm install --frozen-lockfile\n#10 CACHED\n\n#11 [7/7] COPY . .\n#11 DONE 0.3s\n\n#12 exporting to image\n#12 exporting layers\n#12 exporting layers 0.3s done\n#12 writing image sha256:d2b42f6e90f407d81fadba185b10f34026924a3fbf013864c90d3df4f310435a done\n#12 naming to docker.io/library/envgym_test_1753111195 done\n#12 DONE 0.4s\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "\n> @3.5.17 dev /home/cc/EnvGym/data/vuejs_core\n> node scripts/dev.js --host 0.0.0.0\n\n ELIFECYCLE  Command failed with exit code 1.\n",
+    "stderr": "node:internal/util/parse_args/parse_args:107\n      throw new ERR_PARSE_ARGS_UNKNOWN_OPTION(\n            ^\n\nTypeError [ERR_PARSE_ARGS_UNKNOWN_OPTION]: Unknown option '--host'. To specify a positional argument starting with a '-', place it at the end of the command after '--', as in '-- \"--host\"\n    at checkOptionUsage (node:internal/util/parse_args/parse_args:107:13)\n    at node:internal/util/parse_args/parse_args:381:9\n    at Array.forEach (<anonymous>)\n    at parseArgs (node:internal/util/parse_args/parse_args:378:3)\n    at file:///home/cc/EnvGym/data/vuejs_core/scripts/dev.js:21:5\n    at ModuleJob.run (node:internal/modules/esm/module_job:329:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {\n  code: 'ERR_PARSE_ARGS_UNKNOWN_OPTION'\n}\n\nNode.js v22.17.1\n"
+  }
+}

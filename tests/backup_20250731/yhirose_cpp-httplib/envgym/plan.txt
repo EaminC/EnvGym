@@ -1,0 +1,277 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR YOUR HARDWARE) ===
+
+**Hardware Summary:**  
+- Directory: /home/cc/EnvGym/data/yhirose_cpp-httplib  
+- Architecture: x86_64 (linux/amd64, native)  
+- OS/Base Images: Ubuntu:22.04, debian:bullseye, Alpine (all x86_64)  
+- Docker: v28.3.2, BuildKit supported  
+- No GPU (CPU-only); Multi-core CPU (e.g., make -j96 permitted)  
+- No need for CUDA/NVIDIA/CUDA-specific instructions  
+- No ARM or cross-arch builds required  
+- Assume sufficient RAM/storage (unless otherwise noted; see notes)  
+
+---
+
+#### 1. DOWNLOADS NEEDED (Adjusted)
+
+- **C++ Compiler**:  
+  - GCC >= 13.1 (recommended for C++23, available via Ubuntu 22.04 PPA or backports)  
+  - Clang >= 16 (if using Clang)  
+  - Visual Studio not applicable (Linux environment)  
+  - *Install via apt: sudo apt-get install g++* (check version, may need PPA for >=13.1)  
+
+- **CMake >= 3.8**:  
+  - Ubuntu 22.04 default: 3.22 (compatible)  
+  - *Install: sudo apt-get install cmake*  
+
+- **Meson, Ninja**:  
+  - *Install: sudo apt-get install meson ninja-build* or via pip for Meson: pip install meson  
+
+- **abigail-tools**:  
+  - *Install: sudo apt-get install abigail-tools*  
+
+- **Docker**:  
+  - Already available (v28.3.2, BuildKit enabled, --platform=linux/amd64 is default)  
+  - *No --gpus flag, no CUDA/NVIDIA steps required*  
+
+- **Docker Compose**:  
+  - Ubuntu 22.04: available as docker-compose-plugin or via pip  
+  - *Install: sudo apt-get install docker-compose-plugin*  
+
+- **Alpine Linux base image**:  
+  - Used inside Dockerfiles; cross-arch not required (use default x86_64 images)  
+
+- **OpenSSL >= 3.0**:  
+  - Ubuntu 22.04: openssl 3.0+ available  
+  - *Install: sudo apt-get install libssl-dev openssl*  
+
+- **zlib, Brotli, Zstd**:  
+  - *Install: sudo apt-get install zlib1g-dev libbrotli-dev libzstd-dev*  
+
+- **Python 3.x**:  
+  - Ubuntu 22.04: available  
+  - *Install: sudo apt-get install python3 python3-pip*  
+
+- **Git, curl, wget, pkg-config, ca-certificates**:  
+  - *Install: sudo apt-get install git curl wget pkg-config ca-certificates*  
+
+- **Code editor/IDE**:  
+  - Not specified; VSCode, vim, etc. optional  
+
+- **GoogleTest, Catch2**:  
+  - *Install: sudo apt-get install libgtest-dev* (or use CMake/FetchContent)  
+
+- **clang-format**:  
+  - *Install: sudo apt-get install clang-format*  
+
+- **pre-commit**:  
+  - *Install: pip install pre-commit*  
+
+- **make**:  
+  - *Install: sudo apt-get install make*  
+
+- **libcurl4-openssl-dev, netcat-openbsd**:  
+  - *Install: sudo apt-get install libcurl4-openssl-dev netcat-openbsd*  
+
+- **squid**:  
+  - Used in Docker containers for proxy tests; not needed natively unless you wish to run proxy locally outside Docker  
+  - *Install: sudo apt-get install squid* (optional for local, required only in container for tests)  
+
+- **vcpkg, choco, Visual Studio, Microsoft/setup-msbuild, Windows tools**:  
+  - **NOT required** for native Linux/x86_64; skip Windows-only steps and tools  
+
+- **OSS-Fuzz CIFuzz dependencies, actions/upload-artifact, actions/github-script, etc.**:  
+  - Only relevant for GitHub Actions (CI/CD), not local environment  
+
+- **Memory/Disk**:  
+  - No explicit hardware RAM/disk info; ensure at least a few GB free for Docker images, builds, and fuzzing  
+  - If using heavy fuzzing, monitor RAM usage, or set memory constraints on Docker if system is low on RAM  
+
+---
+
+#### 2. FILES TO CREATE (Adjusted)
+
+- **File paths:**  
+  - All paths are correct for Linux/x86_64  
+  - No path changes needed  
+  - No Windows paths/files needed
+
+- **Alpine, Docker, and Dockerfile usage:**  
+  - All Alpine images used in Docker context only (no cross-arch steps)  
+  - No need for --platform=linux/amd64 on docker build/run (native arch)  
+
+- **CI/CD, GitHub Actions**:  
+  - All .github/workflows/ files as described are relevant  
+  - No Windows-specific configuration needed for local development
+
+- **Makefiles, CMakeLists.txt, Meson files:**  
+  - Ensure GCC/Clang toolchain is used (system default)  
+  - No Windows-specific logic or path handling required
+
+---
+
+#### 3. NECESSARY TEST CASES IN THE CODEBASE (Adjusted)
+
+- **Platform-Specific Tests:**  
+  - Focus on Linux/x86_64  
+  - Optional: macOS/Windows build/test only via CI (not local)  
+  - 32-bit architecture build/checks: possible via multilib or cross-compilation, but optional; default is x86_64  
+  - No ARM testing needed  
+
+- **Docker/Container Tests:**  
+  - Use default linux/amd64 images  
+  - No need for cross-arch or QEMU setup  
+
+- **Fuzzing:**  
+  - Ensure you have enough RAM/disk for fuzzing jobs (monitor during use)  
+
+---
+
+#### 4. COMPLETE TODO LIST (Adjusted)
+
+1. **Install a C++ compiler with C++23 support:**  
+   - On Ubuntu 22.04, GCC >= 13.1 may require PPA (e.g., ppa:ubuntu-toolchain-r/test):  
+     ```sh
+     sudo apt-get update
+     sudo apt-get install software-properties-common
+     sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+     sudo apt-get update
+     sudo apt-get install g++-13
+     sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 120
+     ```
+   - Or use system default if version is sufficient: `g++ --version`
+
+2. **Install CMake >= 3.8:**  
+   - Ubuntu 22.04:  
+     ```sh
+     sudo apt-get install cmake
+     cmake --version
+     ```
+
+3. **Install Meson/Ninja:**  
+   - ```sh
+     sudo apt-get install meson ninja-build
+     meson --version
+     ninja --version
+     ```
+   - Or: `pip install meson` (if newer Meson is needed)
+
+4. **Install Docker:**  
+   - Already present (v28.3.2). No --gpus, no CUDA, no NVIDIA steps.
+
+5. **Install Docker Compose:**  
+   - Ubuntu 22.04:  
+     ```sh
+     sudo apt-get install docker-compose-plugin
+     docker compose version
+     ```
+   - Or use pip if desired.
+
+6. **Install abigail-tools:**  
+   - ```sh
+     sudo apt-get install abigail-tools
+     abidiff --version
+     ```
+
+7. **Install OpenSSL >= 3.0:**  
+   - ```sh
+     sudo apt-get install libssl-dev openssl
+     openssl version
+     ```
+
+8. **Install zlib, brotli, zstd:**  
+   - ```sh
+     sudo apt-get install zlib1g-dev libbrotli-dev libzstd-dev
+     ```
+
+9. **Install Python 3.x, pip:**  
+   - ```sh
+     sudo apt-get install python3 python3-pip
+     python3 --version
+     ```
+
+10. **Install Git, curl, wget, pkg-config, ca-certificates:**  
+    - ```sh
+      sudo apt-get install git curl wget pkg-config ca-certificates
+      ```
+
+11. **Install clang-format:**  
+    - ```sh
+      sudo apt-get install clang-format
+      clang-format --version
+      ```
+
+12. **Install pre-commit:**  
+    - ```sh
+      pip install pre-commit
+      pre-commit --version
+      ```
+
+13. **Install make:**  
+    - ```sh
+      sudo apt-get install make
+      ```
+
+14. **Install libcurl4-openssl-dev, netcat-openbsd:**  
+    - ```sh
+      sudo apt-get install libcurl4-openssl-dev netcat-openbsd
+      ```
+
+15. **Install squid (optional, for local proxy testing):**  
+    - Only if you want to run a local proxy outside Docker; otherwise, Docker container handles this.
+
+16. **Skip Windows-only dependencies/tools:**  
+    - **DO NOT** install vcpkg, choco, Visual Studio, or Windows-specific packages.
+    - **DO NOT** configure CMake for MSVC, or use Microsoft/setup-msbuild.
+
+17. **GoogleTest, Catch2:**  
+    - ```sh
+      sudo apt-get install libgtest-dev
+      ```
+    - Or use CMake FetchContent for GoogleTest in your CMakeLists.txt.
+
+18. **Project Structure/Files:**  
+    - All file locations in the original plan are valid for Linux.
+    - Use `/home/cc/EnvGym/data/yhirose_cpp-httplib` as working root.
+
+19. **Dockerfiles:**  
+    - Use standard `FROM ubuntu:22.04`, `FROM debian:bullseye`, or `FROM alpine:latest` as needed.
+    - No --platform flags required (native x86_64).
+
+20. **Fuzzing/Build Resource Notes:**  
+    - If running heavy fuzzing jobs locally, monitor RAM/CPU usage; adjust `make -jN` to match available cores/RAM.
+    - Ensure at least ~5GB+ free disk space for builds, containers, and test artifacts.
+
+21. **All other TODOs remain as described.**  
+    - Proxy, example builds, Docker Compose, CI/CD, pre-commit, abidiff, etc., are all valid and recommended for your hardware and OS.
+    - Remove all Windows-specific/ARM-specific steps from your local workflow.
+
+---
+
+#### 5. VERIFICATION METHODS (Adjusted)
+
+- All verification methods apply as described, with these notes:
+  - **No Windows/macOS native testing:** Only test on Linux/x86_64 natively; use CI for other platforms.
+  - **No ARM cross-arch tests:** All Docker/Compose/Builds are native x86_64. No QEMU or --platform needed.
+  - **No CUDA/GPU checks:** No nvidia-smi, no CUDA, no --gpus flag on Docker.
+  - **Monitor RAM/disk:** Especially for Docker, large builds, and fuzzing.
+  - **Use make -jN** where N matches available logical CPUs (e.g., make -j96 if you have a 96-core system).
+  - **All file paths assume Linux filesystem conventions.**
+
+---
+
+### Summary of Adjustments
+
+- **Removed all Windows-specific steps, tools, and files** (vcpkg, choco, Visual Studio, MSBuild, Windows CMake, etc.).
+- **No ARM/cross-arch instructions**; all native x86_64 (linux/amd64).
+- **No GPU/CUDA/NVIDIA steps**; all CPU-only.
+- **All installation and build instructions are for Linux/Ubuntu 22.04 x86_64**.
+- **All Docker images/containers run as linux/amd64 by default (no --platform needed)**.
+- **All file paths and scripts are compatible with Linux**.
+- **Resource note:** If running large CI/fuzzing jobs, monitor disk/RAM but otherwise no specific constraints.
+- **No changes needed for file layout or Dockerfile structure.**
+- **All CI/CD and Docker Compose steps remain valid for your hardware.**
+
+---
+
+**Proceed with the environment setup as described above, omitting Windows/ARM/GPU-specific instructions, and using only Linux/x86_64-compatible steps and tools.**

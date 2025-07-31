@@ -1,0 +1,27 @@
+current progress
+
+- Docker image successfully built and ran using Ubuntu 22.04 x86_64, as required.
+- All apt system dependencies for Ubuntu 22.04 x86_64 (non-GPU) are installed.
+- User `cc` is created, with proper home and directory structure under `/home/cc/EnvGym/data/Metis`.
+- Locale is set to en_US.UTF-8.
+- Python3 venv is created at `/home/cc/EnvGym/data/Metis/venv` and pip is upgraded.
+- venv environment is set as default for user cc.
+- SSH keys are generated and configured for user cc; `.ssh` directory and permissions are correct.
+- Build, images, logs, and kernel bug artifact directories are created under the correct path.
+- All permissions for `/home/cc/EnvGym/data/Metis` are set.
+- No GPU/NVIDIA/CUDA packages are present.
+- No ARM/ppc64le/ARM64 components; platform is explicitly set to amd64.
+- No device or kernel module configuration attempted (as expected in unprivileged Docker).
+- No code, repositories, or scripts beyond directory setup and SSH keys have been copied or built yet.
+
+next step
+
+- Add steps to clone all required repositories into `/home/cc/EnvGym/data/Metis` (use correct paths and `--depth=1` if appropriate).
+- Copy or add any project-specific scripts, configs, or patch files into the container at the appropriate locations (uncomment and adjust the relevant `COPY` instructions).
+- Build/install user-space tools (e.g., fsl-spin, swarm-mcfs, eXplode, mcl-demo, etc.) for x86_64 and ensure outputs go to `/home/cc/EnvGym/data/Metis/<component>/build/`.
+- Build/install any required kernel modules (if possible in this container, or document that this must be done on the host or in a privileged container).
+- Set up RefFS, IOCov, and other experiment tools under `/home/cc/EnvGym/data/Metis`.
+- Copy or prepare any initial file system images in `/home/cc/EnvGym/data/Metis/<component>/images/`.
+- (If applicable) Install Python requirements from `requirements.txt` or similar in the venv.
+- Update or copy all test scripts so that outputs/logs are in `/home/cc/EnvGym/data/Metis` or subdirectories.
+- Optionally, set an entrypoint or CMD to start relevant services or a bootstrap script.

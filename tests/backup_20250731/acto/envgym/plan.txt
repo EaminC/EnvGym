@@ -1,0 +1,189 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR HARDWARE) ===
+
+**Key Hardware/Environment Facts:**
+- Architecture: x86_64 (linux/amd64)
+- No GPU/NVIDIA hardware or drivers; CUDA not available or needed
+- Ample memory/CPU (large builds OK)
+- Working Directory: /home/cc/EnvGym/data/acto (inside user $HOME, not /root)
+- Docker version: 28.3.2 (BuildKit supported, no --gpus flag)
+- OS: Presumed Ubuntu 22.04+ or similar (use compatible base images if containerizing)
+- No ARM/Apple Silicon (no need for ARM64 builds or cross-compilation)
+
+All adjustments below are marked **[ADJUSTED]**.
+
+---
+
+1. **DOWNLOADS NEEDED:**
+
+   - **Docker:**  
+     - **[ADJUSTED]** Already installed (v28.3.2). Use as installed.
+     - **[ADJUSTED]** No GPU-specific options or `--gpus` flags anywhere.
+     - **[ADJUSTED]** Use only x86_64/amd64-compatible images (e.g., `ubuntu:22.04`, `python:3.12-slim-bullseye`).  
+     - **[ADJUSTED]** When building custom images, add `--platform=linux/amd64` if running on multi-arch hosts, to avoid build issues.
+   
+   - **Golang (Go):**
+     - **[ADJUSTED]** Install x86_64/amd64 version as per OS. Standard Go install instructions apply.
+   
+   - **Kind (Kubernetes in Docker):**
+     - **[ADJUSTED]** Use standard installation; x86_64/amd64 binaries.
+   
+   - **Python >= 3.12:**  
+     - **[ADJUSTED]** If using system Python, ensure it is 3.12+ and installed for x86_64.  
+     - If provisioning in Docker, use `python:3.12-slim` (**not** `python:3.12-slim-bullseye` if on Ubuntu 22.04+ for best compatibility).
+   
+   - **Python pip, dependencies, pip-tools, pre-commit:**  
+     - No changes (pure Python, x86_64).
+   
+   - **Python dependencies:**  
+     - No GPU/CUDA dependencies present, so all fine.
+   
+   - **kubectl/Helm:**  
+     - **[ADJUSTED]** Download x86_64/amd64 binaries or use OS package manager.  
+     - Do not use ARM/ARM64 releases.
+   
+   - **Operator manifests, Make, Ansible:**  
+     - No changes; all standard x86_64/Linux tools.
+   
+   - **Dockerfile guidance (for containerization):**
+     - **[ADJUSTED]**  
+       - Use `WORKDIR /home/cc/EnvGym/data/acto` (not `/root` or `/app`), to match user home install.
+       - Use `--platform=linux/amd64` to ensure no accidental ARM base images if running on Apple or mixed-arch hosts.
+       - Use only amd64/x86_64 base images (e.g., `FROM ubuntu:22.04`, `FROM python:3.12-slim`).
+       - **Do not** use `nvidia/cuda` or any CUDA-related images.
+       - **Do not** add or RUN any `apt-get install nvidia-driver` or similar.
+       - No need for `ENV NVIDIA_VISIBLE_DEVICES=all` or related settings.
+       - If building custom operators, always ensure Docker build uses `--platform=linux/amd64`.
+   
+   - **Other notes:**
+     - **[ADJUSTED]** No references to CUDA (remove if present in old configs).
+     - **[ADJUSTED]** No need for any GPU dependency, PyTorch/TensorFlow with GPU, or similar libraries.
+     - **[ADJUSTED]** All memory/CPU-intensive builds/tests can proceed (ample resources).
+     - **[ADJUSTED]** Storage: Ensure there is sufficient space for Docker images (~several GB may be needed for all dependencies, Kind, and operators).
+     - **[ADJUSTED]** If using persistent Docker volumes, ensure `/home/cc/EnvGym/data/acto` is used as the working directory for mounts.
+
+---
+
+2. **FILES TO CREATE:**
+
+   - **.env:**  
+     - **[ADJUSTED]** Set environment variables (e.g., `PYTHONPATH`, `KUBECONFIG`, `ACTO_HOME`) to absolute paths under `/home/cc/EnvGym/data/acto` as this is the working directory.
+   
+   - **pyproject.toml, requirements.txt, requirements-dev.txt, Makefile, config.json, etc.:**
+     - **[ADJUSTED]** All file paths in samples/documentation/scripts should use `/home/cc/EnvGym/data/acto` as base directory if absolute paths are needed.
+   
+   - **Makefile(s):**
+     - **[ADJUSTED]** If building or referencing artifacts, ensure output paths are correct and under `/home/cc/EnvGym/data/acto` tree. If using relative paths, ensure they are correct relative to this directory.
+   
+   - **Dockerfile (if present):**
+     - **[ADJUSTED]**  
+       - Add at top:  
+         ```dockerfile
+         FROM python:3.12-slim
+         WORKDIR /home/cc/EnvGym/data/acto
+         ```
+       - For any Docker builds, add `--platform=linux/amd64` if building via CLI or in CI.
+       - All copy/install paths should be relative to `/home/cc/EnvGym/data/acto`.
+     - **[ADJUSTED]** No `RUN apt-get install nvidia-driver`, no `ENV NVIDIA_...`, no `--gpus` flags.
+   
+   - **Operator manifests, Ansible scripts, etc.:**
+     - No changes (paths and YAMLs are platform-independent).
+   
+   - **README(s):**
+     - **[ADJUSTED]**  
+       - Note that the default working directory is `/home/cc/EnvGym/data/acto`.
+       - If using Docker, recommend `--platform=linux/amd64` and correct `WORKDIR`.
+       - State “No GPU/NVIDIA/CUDA hardware required or supported.”
+   
+---
+
+3. **NECESSARY TEST CASES IN THE CODEBASE:**
+
+   - **[ADJUSTED]**  
+     - No GPU/CUDA-dependent tests needed or expected.
+     - No ARM/ARM64-specific compatibility tests required.
+     - If adding Docker-based tests, ensure containers are run/built as `linux/amd64` (no multiarch/ARM).
+     - All tests involving file paths or mounts should use `/home/cc/EnvGym/data/acto` as base path.
+     - No tests for GPU detection, CUDA, or `nvidia-smi`.
+     - All resource-heavy tests are permitted (ample RAM/CPU).
+     - If any tests check for `/root` home, adjust to `/home/cc/EnvGym/data/acto`.
+   
+---
+
+4. **COMPLETE TODO LIST:**
+
+   - **Install steps:**  
+     - **[ADJUSTED]**  
+       - No `nvidia-driver`, CUDA, or related steps.
+       - For any Docker build commands, always use `--platform=linux/amd64` if running on a host that could be multi-arch.
+       - When specifying working directories, always use `/home/cc/EnvGym/data/acto`.
+       - All file references (config, manifests, etc.) should be relative to `/home/cc/EnvGym/data/acto` or use absolute paths starting from there.
+   
+   - **Create and activate Python venv:**  
+     - **[ADJUSTED]**  
+       - Place virtualenv under `/home/cc/EnvGym/data/acto/.venv` or similar.
+       - Activate using absolute path or from within working directory.
+   
+   - **Install project dependencies:**  
+     - No platform changes; all pure Python or x86_64-compiled wheels.
+   
+   - **Operator image build:**  
+     - **[ADJUSTED]**  
+       - When building images (e.g., Redis Operator), use:  
+         ```
+         docker build --platform=linux/amd64 -t f1c547e/redis-operator .
+         ```
+         if on a multiarch host or to guarantee x86_64 build.
+   
+   - **Makefile and build targets:**  
+     - **[ADJUSTED]**  
+       - No references to `/root` or other system paths; all builds/artifacts under `/home/cc/EnvGym/data/acto`.
+   
+   - **Cluster and operator deployment:**  
+     - No changes; all manifests compatible with x86_64 Linux.
+   
+   - **Testing:**  
+     - **[ADJUSTED]**  
+       - No GPU/CUDA-related tests.
+       - All tests should use correct working directory and paths.
+       - No ARM/ARM64 or M1/M2 Mac-specific tests.
+   
+   - **Ansible baremetal automation:**  
+     - No changes; all packages/tools are x86_64.
+   
+   - **Docker cleanup:**  
+     - **[ADJUSTED]**  
+       - No need to remove GPU resources or volumes.
+   
+   - **Verification methods:**  
+     - **[ADJUSTED]**  
+       - All verifications involving images, containers, and builds are to be done for x86_64/amd64 only.
+       - No checks for GPU, CUDA, or `nvidia-smi`.
+       - Ensure paths are correct for `/home/cc/EnvGym/data/acto`.
+   
+   - **Documentation:**  
+     - **[ADJUSTED]**  
+       - Instruct users that this environment is for x86_64/amd64 Linux only, with no GPU support.
+       - If containerizing, document `WORKDIR` and `--platform=linux/amd64` usage.
+       - State clearly: “No CUDA, NVIDIA GPU, or GPU drivers required. Use only standard amd64 Docker images and tools.”
+
+---
+
+**Summary of Adjustments:**
+
+- **No CUDA, NVIDIA, or GPU hardware/software anywhere.**
+- **All Docker images, binaries, and tools must be x86_64/amd64.**
+- **All working directories, Docker WORKDIR, and file paths must reference `/home/cc/EnvGym/data/acto`.**
+- **No ARM/ARM64, multiarch, or Mac-specific references.**
+- **No references to `/root` unless absolutely required (prefer user home directory).**
+- **If Dockerfiles present:**  
+  - Use `FROM python:3.12-slim` (or similar), `WORKDIR /home/cc/EnvGym/data/acto`.
+  - Always build/run with `--platform=linux/amd64` if needed.
+  - Do not add or reference any GPU or CUDA packages.
+- **Documentation and README should make clear:**
+  - This setup is for x86_64/amd64 Linux with no GPU.
+  - All paths and builds are under `/home/cc/EnvGym/data/acto`.
+  - No GPU, CUDA, or special drivers needed.
+
+---
+
+**All other plan content remains unchanged, as the hardware environment is fully compatible with the originally specified tools, dependencies, and development workflow.**

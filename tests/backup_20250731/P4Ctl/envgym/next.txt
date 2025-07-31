@@ -1,0 +1,25 @@
+current progress
+
+- Base image is Ubuntu 22.04 (correct).
+- All required apt repositories (main, universe, multiverse, restricted, deadsnakes/ppa) are enabled.
+- Core build and development tools (build-essential, make, git, wget, curl, ca-certificates) are installed.
+- clang, llvm, libelf-dev, flex, bison, and ncat are installed.
+- linux-headers-generic and linux-headers-$(uname -r) are installed (with error handling).
+- BCC-related packages (python3-bcc, bpfcc-tools, libbpfcc-dev) are attempted to be installed with graceful failure if unavailable.
+- Python 3.7 (with venv and distutils) from deadsnakes is installed.
+- pip for Python 3.7 is installed using the official bootstrap script.
+- scapy==2.4.5 is installed via pip for Python 3.7.
+- Working/project directory `/home/cc/EnvGym/data/P4Ctl` is created and set as WORKDIR.
+- `.env` file with SDE environment variables is created.
+- Placeholder directories for SDE and SDE_INSTALL are created.
+- SDE-related environment variables are set.
+- Project source files (compiler, host_agent, switch, custom scripts, README.md) are copied into the container.
+- Container is set to start with bash.
+- Docker image builds and runs successfully (per previous execution log).
+
+next step
+
+- Add steps (with comments or instructions) to download and extract Tofino SDE 9.7.0 into `/home/cc/bf-sde-9.7.0` (cannot be automated in Dockerfile, but a placeholder or README update is recommended).
+- Optionally, add explicit instructions or a script to guide users on building and installing the SDE within the container.
+- Ensure any additional project-specific scripts or dependencies (e.g., test scripts, NetCL compiler build) are included or explained.
+- Optionally, add a healthcheck or test command to verify that all core dependencies and environment variables are set up correctly after build.

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/Lottory; likely Python/data science project, context path should be set accordingly.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Ubuntu 22.04, python:3.x-slim, or other x86_64 Debian/Ubuntu-based images
+- GPU: No NVIDIA GPU detected; no CUDA support; use CPU-only base images
+- Instruction Notes: No GPU-specific instructions (e.g., no nvidia/cuda); multi-core CPU may benefit from parallel build tools; set WORKDIR to /home/cc/EnvGym/data/Lottory
+- Docker Version: 28.3.2; supports BuildKit, buildx, compose v2, --platform; no special GPU support required

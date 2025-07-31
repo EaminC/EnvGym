@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/sharkdp_fd; project located within /home/cc/EnvGym/data; context: no specific project structure details provided
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible base images; e.g., ubuntu:22.04, debian:bullseye, python:3.11-slim
+- GPU: No usable NVIDIA GPU detected; do not use CUDA or GPU-specific base images
+- Instruction Notes: No GPU-specific instructions (e.g., no nvidia/cuda images or RUN nvidia-smi); standard x86_64 instructions apply; can utilize multi-core build optimizations if desired
+- Docker Version: 28.3.2; supports BuildKit and latest Dockerfile features; --gpus flag not applicable without GPU

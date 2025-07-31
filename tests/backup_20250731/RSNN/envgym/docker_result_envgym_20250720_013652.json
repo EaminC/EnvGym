@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_013652",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752975411",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.16kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/python:3.10-slim-bullseye\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/11] FROM docker.io/library/python:3.10-slim-bullseye@sha256:11f05f1647567bfbec331b66ef72ee852c1ab2b386bba5c689af06f0f692faf6\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 101.11kB 0.0s done\n#5 DONE 0.0s\n\n#6 [ 2/11] WORKDIR /home/cc/EnvGym/data/RSNN\n#6 CACHED\n\n#7 [ 3/11] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         git         gcc         g++         libsndfile1         libhdf5-dev         libblas-dev         liblapack-dev         python3-venv         ca-certificates         curl &&     apt-get clean &&     rm -rf /var/lib/apt/lists/*\n#7 CACHED\n\n#8 [ 4/11] RUN python -m pip install --upgrade pip setuptools wheel\n#8 CACHED\n\n#9 [ 5/11] COPY requirements.txt .\n#9 CACHED\n\n#10 [ 6/11] RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu\n#10 CACHED\n\n#11 [ 7/11] RUN pip install --no-cache-dir -r requirements.txt\n#11 0.898 ERROR: Could not detect requirement name for 'git+https://github.com/fmi-basel/stork.git@40c68fe', please specify one with #egg=your_package_name\n#11 ERROR: process \"/bin/sh -c pip install --no-cache-dir -r requirements.txt\" did not complete successfully: exit code: 1\n------\n > [ 7/11] RUN pip install --no-cache-dir -r requirements.txt:\n0.898 ERROR: Could not detect requirement name for 'git+https://github.com/fmi-basel/stork.git@40c68fe', please specify one with #egg=your_package_name\n------\nenvgym.dockerfile:33\n--------------------\n  31 |     RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu\n  32 |     \n  33 | >>> RUN pip install --no-cache-dir -r requirements.txt\n  34 |     \n  35 |     RUN pip install --no-cache-dir notebook\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c pip install --no-cache-dir -r requirements.txt\" did not complete successfully: exit code: 1\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

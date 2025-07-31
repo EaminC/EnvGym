@@ -1,0 +1,26 @@
+current progress
+- Docker build and runtime both succeeded.
+- All required system tools (build-essential, git, make, bash, curl, pkg-config, libssl-dev, man-db) are installed.
+- Rust toolchain (via rustup), rustfmt, and cross are installed.
+- Project repository (sharkdp/fd) is cloned into /opt/fd.
+- Cargo dependencies fetched; code formatting verified.
+- Project built using all CPU cores via make.
+- Test suite run successfully (no error reported).
+- Shell completions generated.
+- Binary and completions installed system-wide.
+- Manpage database updated.
+- Symlink for fdfind to fd created if fdfind is present.
+- PATH configured to include /root/.local/bin.
+- Container defaults to /workspace and starts with bash.
+
+next step
+- (Optional, but recommended) Add validation steps to ensure successful installation and correct behavior:
+    - Run representative `fd` commands and check output.
+    - Check that completions (bash, fish, zsh) exist in their install locations.
+    - Verify `man fd` displays the manpage.
+- (Optional) Clean up Dockerfile by removing commented lines and unneeded (optional) steps if not required.
+- (Optional) Add documentation or comments in the Dockerfile for clarity.
+- (Optional) If integration tools (fzf, tree, parallel, emacs, xargs, xdg-utils) are needed for testing or completeness, add them to the apt install line.
+- (Optional) Add step to verify code formatting via rustfmt.toml if not already present.
+- (Optional) Add handling for .fdignore and global ignore files if required by workflow.
+- (Optional) Add CI/CD configuration if automated testing in container is required.

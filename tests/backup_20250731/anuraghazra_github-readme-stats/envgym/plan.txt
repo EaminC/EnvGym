@@ -1,0 +1,139 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64 Linux, /home/cc/EnvGym/data/anuraghazra_github-readme-stats, no GPU) ===
+
+**HARDWARE/OS CONTEXT**
+- CPU: x86_64 (amd64); use standard Node.js, Docker, and system binaries for this arch.
+- OS: Linux (assumed Ubuntu 22.04+ or compatible); all CLI and package instructions must use Linux shell syntax (bash/sh).
+- Docker: Version 28.3.2, BuildKit supported, --platform=linux/amd64 by default.
+- GPU: None; no CUDA or GPU-based libraries required.
+- Memory/Storage: Not specified, but plan assumes standard dev server/VM (>=2GB RAM, >=10GB free disk).
+- Working Directory: /home/cc/EnvGym/data/anuraghazra_github-readme-stats — ensure all local paths, Docker WORKDIR, and documentation references match this.
+
+---
+
+**1. DOWNLOADS NEEDED:**
+- Node.js (>=18.0.0, ideally >=18.18.0 for best compatibility)
+  - Use official Node.js Linux x64 binaries or `apt`/`nvm` for install.
+  - Confirm installation with `node -v`; must report >=18.0.0.
+- npm (comes with Node.js)
+- yarn (optional)
+- Git (latest stable version for Linux/x86_64)
+- Vercel CLI (optional; `npm i -g vercel`)
+- Express.js (for local non-Vercel deployment)
+- dotenv (`^17.2.0`)
+- Code editor (VSCode, vim, nano, etc.; install as Linux package as needed)
+- cURL or Postman (cURL available by default in most Linux distros)
+- Docker (use official Docker for Linux/x86_64; no --gpus or CUDA required)
+  - Base images: Use `node:18-bullseye`, `ubuntu:22.04`, or similar amd64 images; do not use ARM or GPU-specific images.
+  - Dockerfile must set `WORKDIR /home/cc/EnvGym/data/anuraghazra_github-readme-stats` to match host path if mounting.
+- Markdown preview extensions/plugins (for code editor)
+- Static site generator, i18n tools, spell-check, markdown validation, translation tools (optional)
+- Testing tools: Jest, jest-bench, jest-environment-jsdom, @testing-library/jest-dom, @testing-library/dom, Supertest (optional)
+- ESLint, plugins/configs, Prettier, Husky, lint-staged, markdownlint, and all other listed dependencies/devDependencies.
+- **All dependencies should be installed using Linux shell (npm/yarn commands) and all package versions must be compatible with Node.js >=18 on x86_64.**
+
+---
+
+**2. FILES TO CREATE:**
+- All files as originally listed. Adjustments:
+  - Paths: All references to the project root must correspond to `/home/cc/EnvGym/data/anuraghazra_github-readme-stats` when operating on this machine.
+  - Dockerfile:
+    - If using Docker, ensure `WORKDIR /home/cc/EnvGym/data/anuraghazra_github-readme-stats` (or `/app` if copying code in container) and base image is `FROM node:18-bullseye` or similar for x86_64.
+    - No ARM-specific or GPU-specific statements or images.
+    - No need for `--gpus` flag in build/run commands.
+- No changes to file content are needed, but documentation should clarify that all Linux commands are to be run in bash/sh.
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**
+- All as originally listed; no changes needed for hardware context.
+- All tests must run and pass on Linux/x86_64/Node.js >=18 environments.
+- If adding test scripts for Docker, ensure they use Linux-compatible paths and commands.
+- If any test requires OS-specific behavior, clarify in documentation that only Linux is supported.
+
+---
+
+**4. COMPLETE TODO LIST (Adjusted for Hardware/OS):**
+1. Install Node.js (>=18.0.0, ideally >=18.18.0) for Linux x86_64.
+   - Use `curl` and `tar`, `apt`, or `nvm` for installation.
+   - Verify with `node -v`.
+2. Install npm (comes with Node.js). Verify with `npm -v`.
+3. Install Git for Linux: `sudo apt install git` or equivalent.
+4. Clone/fork repository to `/home/cc/EnvGym/data/anuraghazra_github-readme-stats`.
+5. `cd /home/cc/EnvGym/data/anuraghazra_github-readme-stats`
+6. Install dependencies: `npm install` (Linux shell).
+   - Will install all dependencies as per `package-lock.json`.
+7. Create `.env` file in project root (Linux path).
+   - Add environment variables as needed.
+   - Ensure `.env` is listed in `.gitignore`.
+8. (Optional) Use yarn: `yarn install` (only if yarn.lock exists and is up to date).
+9. If deploying to Vercel:
+   - Ensure `vercel.json` exists.
+   - Use `vercel` CLI (installed globally) from Linux shell.
+   - Do not use any Windows-specific commands.
+10. If deploying locally:
+    - Confirm `express` installed.
+    - Ensure `express.js` exists and is runnable with `node express.js` (Linux shell).
+11. (Optional) Docker setup:
+    - Create `Dockerfile` (if not present):
+      - Use `FROM node:18-bullseye` or similar.
+      - `WORKDIR /home/cc/EnvGym/data/anuraghazra_github-readme-stats`
+      - `COPY . .`
+      - `RUN npm ci`
+      - Expose relevant ports.
+      - No `--gpus` flag or GPU-specific configs.
+    - Build:  
+      ```sh
+      docker build --platform=linux/amd64 -t github-readme-stats .
+      ```
+    - Run:
+      ```sh
+      docker run --rm -p 3000:3000 -v /home/cc/EnvGym/data/anuraghazra_github-readme-stats:/home/cc/EnvGym/data/anuraghazra_github-readme-stats github-readme-stats
+      ```
+    - **Ensure all Docker instructions, volumes, and paths match Linux/x86_64 expectations.**
+12. Testing:
+    - All test/lint/format scripts run in Linux shell.
+    - If using Docker, run tests inside container using `docker exec` or as part of the Docker build.
+13. Linting/formatting: All as per original plan; all tools compatible with Linux/Node.js >=18.
+14. Husky setup: `npx husky install` (Linux shell).
+15. Endpoint verification, theme testing, localization, documentation: All as per plan.
+16. CI/CD: If using, ensure runners are Linux/x86_64.
+17. Contributor/developer instructions: All commands in documentation/scripts should use Linux syntax (`/`, not `\` for paths; `export` for env vars).
+18. Docker-specific note:  
+    - No ARM, no GPU, no CUDA; only x86_64/amd64 images and instructions.
+    - All Dockerfiles, compose files, or container references must match host architecture.
+    - If using `docker-compose`, ensure all images are `amd64` (not `arm64`).
+19. All other steps as per original plan.
+
+---
+
+**ADDITIONAL NOTES FOR THIS HARDWARE/OS:**
+- No changes needed for memory or storage unless you have <2GB RAM or <10GB disk (not specified; plan assumes enough for Node.js and dependencies).
+- All package, dependency, and script requirements compatible with Linux/x86_64 (no adjustments needed for ARM or Mac/Windows).
+- All documentation, README, and installation scripts MUST use Linux shell and paths (`/home/cc/EnvGym/data/anuraghazra_github-readme-stats`).
+- For Docker, always use `--platform=linux/amd64` if building on systems that might default to ARM.
+- NO GPU-specific dependencies or Docker instructions; do not use `nvidia/cuda` base images or the `--gpus` flag.
+- If adding OS prerequisites to documentation, list: "Tested on Ubuntu 22.04+, x86_64. For other Linux distributions, adjust package manager commands accordingly."
+- If contributors use Mac/Windows, clarify that official support and scripts target Linux/x86_64 and Docker.
+- No other hardware/OS-specific adjustments required.
+
+---
+
+**VERIFICATION (LINUX/X86_64):**
+- All CLI commands run in bash/sh.
+- All tools and dependencies installed and run on Linux/x86_64 (no ARM, no Windows).
+- All API endpoints, tests, and scripts verified from `/home/cc/EnvGym/data/anuraghazra_github-readme-stats`.
+- Docker images build/run with `--platform=linux/amd64` (if needed).
+- All documentation, scripts, and configs reference Linux paths and conventions.
+
+---
+
+**SUMMARY OF CHANGES:**
+- All instructions, Dockerfiles, and documentation standardized for Linux/x86_64 platform.
+- No GPU/CUDA/ARM/Windows-specific references or instructions.
+- All file paths and examples use `/home/cc/EnvGym/data/anuraghazra_github-readme-stats`.
+- Docker base images and build commands set for x86_64; no ARM64 or GPU.
+- Emphasis on Linux shell commands and environment.
+
+---
+
+**The plan is now fully compatible with your Linux/x86_64 environment, project directory, and available hardware.**

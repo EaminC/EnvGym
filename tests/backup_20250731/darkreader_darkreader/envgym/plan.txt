@@ -1,0 +1,164 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR /home/cc/EnvGym/data/darkreader_darkreader ON x86_64 UBUNTU/DEBIAN, NO GPU) ===
+
+1. DOWNLOADS NEEDED: 
+
+   - Node.js (version 16 or higher, LTS recommended; tested with v15+, recommended v16+): https://nodejs.org/
+     - Use official Linux (x86_64/amd64) binaries, or install via `apt` (Ubuntu 22.04) or NodeSource. Do NOT use ARM or non-amd64 builds.
+   - npm (included with Node.js)
+   - git (for source code management): https://git-scm.com/
+   - (Optional) Deno (latest stable version, for experimental builds): https://deno.land/ (Linux x86_64)
+   - (Optional, for compatibility testing) Browsers: Chrome, Firefox, Edge (via Chromium-based builds for Linux), Thunderbird
+     - Safari is not supported on Linux; skip Safari testing on this platform.
+   - (Optional) Ensure `ln` utility is available (standard on Ubuntu/Debian for symlinks)
+   - (Optional) Bash-compatible shell: Ubuntu/Debian default shell is bash; no action needed.
+   - All runtime, dev, and optional dependencies (installed automatically by `npm install`):
+     - Runtime: `malevic` (0.20.2)
+     - Dev: `eslint`, `@eslint/compat`, `@eslint/eslintrc`, `@eslint/js`, `@stylistic/eslint-plugin`, `@types/*`, `jest`, `karma`, `less`, `prettier`, `rollup`, `ts-jest`, `typescript`, `ws`, `puppeteer-core`, etc.
+     - Optional: `@rollup/rollup-linux-x64-gnu` (linux/amd64 only; DO NOT install win32/macos/arm binaries)
+   - (Optional, for testing) Browsers (with automation): Chrome, Firefox, plus headless support (via Puppeteer or similar)
+     - Do NOT attempt browser automation or installation for Safari (not available on Linux).
+
+2. FILES TO CREATE: 
+   - All paths are relative to `/home/cc/EnvGym/data/darkreader_darkreader` (the project root).
+   - package.json (provided; ensure it is present and up-to-date)
+   - .env (if environment variables are needed; contents depend on project requirements)
+   - .npmrc (optional, for custom npm configuration)
+   - .gitignore (to exclude node_modules, build artifacts, logs, etc.)
+   - tsconfig.json (if TypeScript is used)
+   - deno.json or deno.jsonc (if Deno support is required)
+   - README.md (ensure content is up to date)
+   - CONTRIBUTING.md (for contribution guidelines)
+   - /src
+   - /test or /tests
+   - /build
+   - /build/release
+   - /scripts (for custom build or utility scripts, if needed)
+   - .eslintrc or eslint.config.js
+   - .prettierrc (optional)
+   - .editorconfig (optional)
+   - tasks/
+   - tasks/package.json with `{ "type": "module" }`
+   - tests/package.json with `{ "type": "module" }`
+   - tests/unit/jest.config.mjs, tests/browser/jest.config.mjs, etc.
+   - tests/inject/karma.conf.cjs
+   - darkreader.js, darkreader.mjs
+   - index.d.ts
+   - (Optional) darkreader-plus (for plus-link script; symlinked in src/)
+   - (Optional) Any files required by custom scripts in tasks/
+   - (Optional) Ensure ES module compatibility for scripts in tasks/ and tests/ as above
+
+   **Notes for Linux:**
+   - All file and directory names are case-sensitive (Linux).
+   - Symlinks (`ln -s`) and file permissions should be verified if automating.
+
+3. NECESSARY TEST CASES IN THE CODEBASE: 
+
+   - Verify the extension builds successfully on Linux/x86_64 for all targets:
+     - Chrome (MV2 and MV3), Firefox, Plus, Debug, API, Release, All
+     - Output: darkreader-chrome.zip, darkreader-firefox.xpi, etc.
+   - Validate Dark Reader API integration
+   - Confirm extension installs and runs in Chrome, Firefox, Edge (if installed), Thunderbird
+     - Skip Safari on Linux.
+   - Ensure the "site fixes" synchronization feature works
+   - Test restricted pages in Firefox
+   - Test user settings (brightness, contrast, sepia)
+   - Validate error handling for unsupported/incorrect API calls
+   - Confirm digital signature bundling for Firefox builds (if applicable)
+   - Test API usage from both CommonJS and ES module imports
+   - Verify the extension does not break web page functionality or styles
+   - Test Deno build process and ensure parity with Node.js build outputs (if Deno is used)
+   - Validate all npm scripts
+   - Ensure code style/linting rules are enforced
+   - Check coverage reports
+   - Test prepublish and release workflows
+   - Test browser automation scenarios with Jest, Karma, Puppeteer (Linux headless is fine)
+   - Test platform-specific and optional dependency handling (only `@rollup/rollup-linux-x64-gnu`)
+   - (Optional) Test symlink creation for Plus variant (plus-link)
+   - (Optional) Test translation scripts
+   - Test that all scripts inside `tasks/` and `tests/` run as ES modules
+
+   **Linux-Specific Adjustments:**
+   - Do not test Mac/Windows-specific features (e.g., no need for `@rollup/rollup-win32-x64-msvc`)
+   - All browser automation runs in Linux headless mode by default.
+   - Paths use forward slashes `/` and are case-sensitive.
+
+4. COMPLETE TODO LIST: 
+
+   1. Install Node.js (v16+, LTS recommended), npm, and git
+      - On Ubuntu/Debian: `sudo apt update && sudo apt install -y nodejs npm git`
+      - Or use NodeSource (for newer versions): see https://github.com/nodesource/distributions
+      - Verify with `node -v`, `npm -v`, `git --version`
+   2. (Optional) Install Deno for experimental build support
+      - On Linux: follow https://deno.land/manual@v1.38.3/getting_started/installation
+      - Verify with `deno --version`
+   3. Clone the Dark Reader repository or download the source code to `/home/cc/EnvGym/data/darkreader_darkreader`
+      - Use `git clone` or copy files; verify with `git status`
+   4. In the project root, run `npm install`
+      - Installs all dependencies including dev and platform-optional ones
+      - Only `@rollup/rollup-linux-x64-gnu` will be installed as an optional dependency (do NOT attempt to install Windows/Mac/ARM binaries)
+   5. (If required) Set up environment variables in `.env`
+   6. Review or create configuration files as previously listed
+      - All file creation and symlink commands must use Linux paths and conventions
+   7. (Optional) If building Plus variant, ensure `darkreader-plus` exists and run `npm run plus-link`
+      - Verify with `ls -l src/plus`
+   8. Build the extension using npm scripts (Linux shell syntax applies)
+      - Standard build: `npm run build`
+      - Debug: `npm run debug`
+      - All builds: `npm run build:all`
+      - Firefox: `npm run build:firefox`
+      - Plus: `npm run build:plus`
+      - API: `npm run api`
+      - For Deno: `npm run deno:bootstrap`, then `npm run build`
+      - Verify build output in `/home/cc/EnvGym/data/darkreader_darkreader/build/release/`
+   9. (Optional) Bundle with Firefox signatures (if configured)
+      - `npm run build:firefox` or pass extra flags as needed
+   10. Install the extension in supported browsers for manual testing:
+       - Chrome, Chromium, or Firefox (on Linux)
+       - Do NOT test Safari; not available on Linux
+   11. Write and run automated test cases:
+       - Unit: `npm run test:unit`
+       - Browser: `npm run test:browser`
+       - Inject: `npm run test:inject`
+       - All: `npm run test:all`
+       - Coverage: `npm run test:coverage`
+       - Debug/unit: `npm run test:unit:debug`
+       - CI: `npm run test:ci`
+       - Ensure all test scripts/configs in `tests/` run as ES modules
+   12. Manually verify advanced features
+   13. Review and update documentation as needed
+       - Document that this environment is Linux/x86_64/Ubuntu 22.04+
+       - Note that Safari testing and macOS/Windows binaries are not supported in this setup
+       - Document any Linux-specific build/test notes if relevant
+   14. Set up and verify code style/linting tools:
+       - `npm run lint`, `npm run code-style`, `npm run lint:bundle`
+   15. (Optional) Set up CI; on Ubuntu runners, use `ubuntu-latest` or similar
+   16. Clean up with `npm run clean` (if provided)
+   17. Document any Linux/browser/platform-specific issues
+       - Note any missing browser features (e.g., no Safari)
+   18. (Optional) Prepare release packages for Chrome, Firefox, Edge, Thunderbird on Linux
+
+   Verification methods:
+   - Build output in `/home/cc/EnvGym/data/darkreader_darkreader/build/release/`
+   - All automated/manual tests pass (except Safari)
+   - No errors/warnings during install/build/test/lint
+   - All npm scripts run using Linux shell conventions
+   - All scripts in `tasks/` and `tests/` run as ES modules
+   - Documentation notes the Linux/x86_64 context and any unsupported features
+
+**Additional Linux/Hardware Notes:**
+- No GPU dependencies; do not install CUDA or run `nvidia-smi`
+- Use standard Linux/Ubuntu base images (e.g., `ubuntu:22.04`, `python:3.x-slim`, `debian:bullseye`) if containerizing
+- Multi-core builds (e.g., `make -j96`) are not directly relevant to this JavaScript/Node-based project, but npm/node can leverage all available CPU cores for parallelism
+- Ensure sufficient memory and disk space for Node.js builds and npm dependencies (recommend at least 2GB RAM and 2-4GB free disk space)
+- All scripts and commands should use Linux-style paths and shell syntax
+
+**Summary of Adjustments:**
+- All instructions, paths, and scripts are Linux/x86_64-specific; do NOT reference Windows/macOS/ARM binaries or features.
+- Safari is not available on Linux – skip all Safari-related steps.
+- Platform-specific dependencies: only install `@rollup/rollup-linux-x64-gnu`.
+- All filesystem, shell, and symlink operations use Linux conventions.
+- Documentation and test plans should explicitly note the environment: Ubuntu/Debian, x86_64, no GPU, no Safari/macOS/Windows testing.
+
+=========================
+**END OF ADJUSTED PLAN**
+=========================

@@ -1,0 +1,38 @@
+{
+  "session_start": "2025-07-21T03:08:31.028663",
+  "session_end": "2025-07-21T04:35:51.959114",
+  "start_stats": [
+    {
+      "provider_name": "Azure",
+      "model": "gpt-4.1",
+      "input_tokens": 4931829,
+      "output_tokens": 1164470,
+      "total_tokens": 6096299,
+      "requests_count": 598,
+      "cost": 0.0
+    }
+  ],
+  "end_stats": [
+    {
+      "provider_name": "Azure",
+      "model": "gpt-4.1",
+      "input_tokens": 5540791,
+      "output_tokens": 1469552,
+      "total_tokens": 7010343,
+      "requests_count": 673,
+      "cost": 0.0
+    }
+  ],
+  "usage_delta": {
+    "input_tokens": 608962,
+    "output_tokens": 305082,
+    "total_tokens": 914044,
+    "requests_count": 75,
+    "cost": 0.0
+  },
+  "execution_info": {},
+  "api_info": {
+    "provider_name": "Azure",
+    "model": "gpt-4.1"
+  }
+}

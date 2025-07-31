@@ -1,0 +1,202 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (FOR x86_64, LINUX, NO GPU, DOCKER v28.3.2) ===
+
+**Hardware Context:**
+- Architecture: x86_64 (linux/amd64)
+- OS: Linux (Ubuntu 22.04 or compatible)
+- No NVIDIA GPU (no CUDA/GPUs)
+- Docker: v28.3.2 (BuildKit, modern features)
+- Sufficient RAM/storage
+- Working Directory: /home/cc/EnvGym/data/Baleen
+
+---
+
+1. DOWNLOADS NEEDED:
+   - **Git**  
+     - Version: Any recent stable (2.20+ recommended)
+   - **Python**  
+     - Version: 3.11 (as in env, 3.8 with PyPy optional)  
+     - Use linux/amd64 images; do NOT use GPU/CUDA images (e.g., python:3.11-slim, ubuntu:22.04)
+   - **Conda** (or Mamba/Micromamba)  
+     - Version: Compatible with Python 3.11 envs (Micromamba 1.4.1 recommended for Docker)
+     - Use x86_64 downloads only (no ARM)
+   - **pip**  
+     - Latest stable
+   - **JupyterLab/Notebook**  
+     - Install via Conda/pip
+   - **Dataset trace files**  
+     - Downloaded by running `data/get-tectonic.sh`
+   - **Dependencies**  
+     - As in `BCacheSim/install/env_cachelib-py-3.11.yaml` or `requirements.txt`
+   - **(Optional: Advanced)** brooce, redis  
+     - Only if running advanced experiments; not required for basic
+   - **Baleen-FAST24 Repository (with submodules)**  
+     - URL: https://github.com/wonglkd/Baleen-FAST24.git
+
+---
+
+2. FILES TO CREATE:
+   - **Conda environment file:**  
+     - Path: `BCacheSim/install/env_cachelib-py-3.11.yaml`
+   - **Pip requirements file:**  
+     - Path: `BCacheSim/install/requirements.txt`
+   - **Experiment config files:**  
+     - Path: `runs/example/rejectx/config.json` (create new for custom)
+   - **Jupyter notebook outputs:**  
+     - `notebooks/example/example.ipynb`  
+     - `notebooks/paper-figs/fig-01bc,17-202309.ipynb`  
+     - Any custom notebooks
+   - **Data directory:**  
+     - Path: `data/` (trace files after `get-tectonic.sh`)
+   - **Temporary directory:**  
+     - Path: `tmp/` (for ML models and episodes; ensure exists)
+   - **Notebook output directory:**  
+     - Path: `notebooks/figs/` (ensure exists)
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+   - **Simulator functionality:**  
+     - Run baseline simulation (RejectX), verify output in `runs/example/rejectx/`
+   - **ML model training:**  
+     - Train Baleen models, outputs in correct dirs
+   - **ML-driven simulation:**  
+     - Run simulation with trained ML model, verify outputs
+   - **Trace file integrity:**  
+     - Confirm trace files are downloaded, extracted, readable
+   - **Notebook execution:**  
+     - Run `notebooks/example/example.ipynb`, all cells succeed, plots generated
+   - **Data cleanup/refresh:**  
+     - Run `data/clean.sh` and `data/get-tectonic.sh`, verify refresh
+   - **(Optional) Advanced experiment tests:**  
+     - For brooce/redis, only if installed
+
+---
+
+4. COMPLETE TODO LIST (ADJUSTED):
+
+1. **Install Git**
+   - Install latest stable for x86_64 Linux:  
+     - `sudo apt update && sudo apt install -y git`
+   - Verify: `git --version`
+
+2. **Clone Baleen-FAST24 Repository (with submodules)**
+   - `git clone --recurse-submodules https://github.com/wonglkd/Baleen-FAST24.git`
+   - `cd Baleen-FAST24`
+   - Verify: `git submodule status`
+
+3. **Install Python 3.11 and Conda/Mamba/Micromamba**
+   - For Docker: Use Micromamba (x86_64) or Miniconda (x86_64)
+   - If using Dockerfile, set base image to `ubuntu:22.04` or `python:3.11-slim` (`FROM python:3.11-slim` recommended)
+   - No GPU-specific base images!
+   - Install Micromamba (recommended):  
+     - `curl micro.mamba.pm/install.sh | bash`
+   - Verify: `micromamba --version`
+
+4. **Create and Activate Conda Environment**
+   - `micromamba env create -f BCacheSim/install/env_cachelib-py-3.11.yaml`  
+   - `micromamba activate cachelib-py-3.11`
+   - (Optional: PyPy)  
+     - `micromamba env create -f BCacheSim/install/env_cachelib-pypy-3.8.yaml`
+   - Verify: `python --version` → 3.11.x
+
+5. **(Alternative) Install dependencies with pip**  
+   - `python3 -m pip install --user -r BCacheSim/install/requirements.txt`
+   - Verify: `python -c "import numpy, pandas, sklearn"`
+
+6. **Download trace files**
+   - `cd data`
+   - `bash get-tectonic.sh`
+   - Verify: Trace files in `data/`
+
+7. **(Optional) Refresh data directory**
+   - `bash clean.sh`
+   - `bash get-tectonic.sh`
+   - Verify: Data repopulated
+
+8. **Check/Create necessary directories**
+   - Ensure these exist: `runs/`, `tmp/`, `notebooks/figs/`
+   - `mkdir -p runs tmp notebooks/figs`
+
+9. **Run baseline simulation (RejectX)**
+   - ```
+     ./BCacheSim/run_py.sh py -B -m BCacheSim.cachesim.simulate_ap --config runs/example/rejectx/config.json
+     ```
+   - Verify: Output in `runs/example/rejectx/`
+
+10. **Train Baleen’s ML models**
+    - ```
+      ./BCacheSim/run_py.sh py -B -m BCacheSim.episodic_analysis.train --exp example --policy PolicyUtilityServiceTimeSize2 --region Region1 --sample-ratio 0.1 --sample-start 0 --trace-group 201910 --supplied-ea physical --target-wrs 34 50 100 75 20 10 60 90 30 --target-csizes 366.475 --output-base-dir runs/example/baleen --eviction-age 5892.856 --rl-init-kwargs filter_=prefetch --train-target-wr 35.599 --train-models admit prefetch --train-split-secs-start 0 --train-split-secs-end 86400 --ap-acc-cutoff 15 --ap-feat-subset meta+block+chunk
+      ```
+    - Verify: Models/logs in `runs/example/baleen/`
+
+11. **Run simulation with trained ML models**
+    - ```
+      ./BCacheSim/run_py.sh py -B -m BCacheSim.cachesim.simulate_ap --config runs/example/baleen/prefetch_ml-on-partial-hit/config.json
+      ```
+    - Verify: Output in `runs/example/baleen/`
+
+12. **Visualize results in notebooks**
+    - Launch JupyterLab/Notebook (in environment):  
+      - `jupyter lab` or `jupyter notebook`
+    - Open: `notebooks/example/example.ipynb`
+    - Run all cells, verify success and plots
+
+13. **(Optional) Run additional experiments and plot paper figures**
+    - Open and run:  
+      - `notebooks/paper-figs/fig-01bc,17-202309.ipynb`
+      - Any in `notebooks/reproduce/`
+    - Verify: No errors, figures saved to `notebooks/figs/`
+
+14. **(Optional) Setup advanced experiment dependencies**
+    - Install brooce, redis (if needed and compatible with x86_64)
+    - Verify: `which redis-server`, `python -c "import brooce"`
+
+15. **Verify end-to-end functionality**
+    - Complete all steps; outputs and plots as expected
+
+16. **Error handling and troubleshooting**
+    - For repository/data issues:
+      - `git pull --recurse-submodules`
+      - `cd data; bash clean.sh; bash get-tectonic.sh`
+    - For Docker-specific issues:  
+      - Ensure `--platform=linux/amd64` if building on multi-arch host
+      - No GPU flags (`--gpus`) or CUDA base images!
+    - For Linux-only tools (e.g. bash scripts), ensure you are not on Windows natively.  
+      - Use WSL2 or a Linux VM if on Windows.
+
+17. **Document environment**
+    - Save output of `conda list` or `pip freeze`
+    - Note system OS and key package versions
+    - If using Docker, export Dockerfile and/or container hash
+
+---
+
+**Verification Methods:**
+- Run all commands and notebooks as above; verify success on x86_64 Linux (no GPU)
+- Check output files in expected directories
+- Compare plots with documentation or walkthroughs
+- For advanced features, confirm brooce/redis work on x86_64
+
+---
+
+**Compatibility Notes:**
+- All tools/scripts are Linux/x86_64 native; do NOT use ARM images or GPU-specific images/packages
+- Bash scripts require a POSIX shell; Windows users must use WSL2 or Linux VM
+- No GPU/CUDA dependencies—do not install or enable CUDA, nvidia, or related packages
+- Use `--platform=linux/amd64` if building/running Docker on multi-arch hosts
+- If using Docker, set `WORKDIR /home/cc/EnvGym/data/Baleen` in Dockerfile as needed
+
+---
+
+**Summary of Adjustments (based on your hardware):**
+- Explicitly restrict all instructions to x86_64 (linux/amd64) images and tools
+- Remove all GPU/CUDA references and instructions
+- Highlight Linux-only compatibility for scripts; WSL2 or Linux VM for Windows users
+- Ensure all paths (e.g. `/home/cc/EnvGym/data/Baleen`) are correct for your working context
+- For Docker contexts, always use `--platform=linux/amd64` and set `WORKDIR` appropriately
+- No special handling needed for memory/storage (sufficient resources)
+- All other steps remain as written
+
+---
+
+**Ready for setup on your specified hardware.**

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/elastic_logstash; project located in "elastic_logstash" subdir, under /home/cc/EnvGym/data
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, python:3.x-bullseye); no GPU-specific base required
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: No GPU instructions (no nvidia/cuda, no RUN nvidia-smi, no --gpus); can use multi-core build optimizations if parallel builds/scripts needed
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag available but not useful due to lack of GPU

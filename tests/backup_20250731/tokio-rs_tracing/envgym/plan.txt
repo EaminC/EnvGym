@@ -1,0 +1,120 @@
+Certainly! Here’s the complete adjusted environment setup plan, reviewed and tailored for your hardware context:
+
+---
+# ENVIRONMENT SETUP PLAN (ADJUSTED FOR /home/cc/EnvGym/data/tokio-rs_tracing ON x86_64 LINUX)
+
+**HARDWARE CONTEXT:**
+- Working Directory: /home/cc/EnvGym/data/tokio-rs_tracing (project root; place Dockerfile here)
+- Architecture: x86_64 (linux/amd64); NO ARM/AARCH64
+- Base Image: Use Debian/Ubuntu or official Rust (x86_64/amd64) images; DO NOT use CUDA or GPU-specific images
+- OS: Linux (recommend Ubuntu 22.04 LTS, Debian Bullseye, or rust:latest)
+- No GPU/NVIDIA support or instructions
+- Docker: Modern version (28.3.2); BuildKit supported
+
+---
+
+## 1. DOWNLOADS NEEDED (ADJUSTED)
+
+- **Rust toolchain**
+  - Use rustup; install toolchains for x86_64-unknown-linux-gnu target only
+  - Minimum rustc: 1.65.0 (workspace), 1.64.0 (`examples`), 1.49.0 (`tracing-test`)
+  - For CI: test on stable, beta, nightly, 1.65.0, 1.64.0, 1.49.0 (as per crate)
+  - For WASM: rustc 1.81+ (if running wasm tests)
+- **Git**
+- **Clippy/Rustfmt** (rustup component add clippy rustfmt)
+- **Tokio crate**, **mdBook**, **pre-commit tools** (if needed)
+- **Cargo tools**: cargo-nextest, cargo-hack, cargo-minimal-versions, cargo-audit, wasm-pack (install via cargo for x86_64, no ARM/Apple Silicon needed)
+- **Inferno** (for flamegraph): cargo install inferno
+- **All Rust dependencies**: as previously listed (no change, as all crates are x86_64-compatible)
+- **Systemd-journald**: Available on Linux (Ubuntu/Debian images)
+- **No GPU-related tools or libraries required** (no CUDA, no nvidia/cuda, no OpenCL)
+
+---
+
+## 2. FILES TO CREATE (ADJUSTED)
+
+- **All file and directory paths remain as described.** Ensure all are rooted at /home/cc/EnvGym/data/tokio-rs_tracing.
+- **Dockerfile (NEW):**
+  - Place in project root.
+  - Set `WORKDIR /home/cc/EnvGym/data/tokio-rs_tracing`
+  - Use `FROM rust:1.65` (or `rust:latest` if you want to build with newer, but always test with 1.65.0)
+  - Use only x86_64/amd64 base images (e.g., `rust:1.65`, `ubuntu:22.04`, `debian:bullseye`)
+  - Do NOT use ARM or CUDA base images.
+  - Example snippet:
+    ```dockerfile
+    FROM rust:1.65
+    WORKDIR /home/cc/EnvGym/data/tokio-rs_tracing
+    # Install build tools
+    RUN apt-get update && apt-get install -y \
+        git \
+        pkg-config \
+        libssl-dev \
+        systemd \
+        ca-certificates \
+        clang \
+        # mdbook is optional for docs
+        && cargo install cargo-nextest cargo-hack cargo-audit cargo-minimal-versions inferno wasm-pack
+    # Optionally install mdbook, etc.
+    # RUN cargo install mdbook
+    ```
+- **No changes needed to source paths, Cargo.toml, or CI config file paths.**
+- **Path references in scripts and CI must use /home/cc/EnvGym/data/tokio-rs_tracing as the project root.**
+- **Ensure .gitignore, .cargo, and all subdirectories use correct relative paths.**
+
+---
+
+## 3. TEST CASES (ADJUSTED)
+
+- **All test cases remain as described.**
+- **No GPU-dependent or platform-specific (non-x86_64) tests required.**
+- **No ARM, M1, or Apple Silicon builds/tests required.**
+- **No CUDA, OpenCL, or GPU-accelerated tests required or supported.**
+- **All integration/feature/CI tests should run on x86_64 Linux.**
+- **CI matrix should NOT include ARM/aarch64 runners.**
+- **If using Docker in CI, ensure --platform=linux/amd64 is set if multi-arch runners are used.**
+- **If building for wasm32, only test on x86_64 Linux host (not required to cross-compile to ARM or others).**
+
+---
+
+## 4. TODO LIST (ADJUSTED)
+
+- **All steps remain as described, except:**
+  - **Step 0: Add Dockerfile in project root with x86_64 base image (see above).**
+  - **Step 1: When installing Rust toolchain, ensure you use x86_64-unknown-linux-gnu target (default in rust:1.65 Docker images).**
+  - **Step 4: When installing system libraries, use apt-get for Ubuntu/Debian; no ARM/Mac brew/package manager commands required.**
+  - **Step 24: When installing wasm32-unknown-unknown, only install for x86_64 host (no cross-target for ARM).**
+  - **Step 33: All tests and builds are on x86_64 Linux (Windows/macOS only if you add cross-platform runners in CI; not required for this hardware).**
+  - **Step 30: If using rust-analyzer or VSCode, install x86_64 versions only.**
+  - **Step 1, 22, 23, 24: All cargo-installed tools must be for x86_64 (default in your environment).**
+- **Storage/Memory:** No special adjustment unless your `/home/cc/EnvGym/data/tokio-rs_tracing` partition is very small (suggest >2GB free disk for full build/test matrix); all dependencies are standard for Rust development.
+- **No GPU/NVIDIA steps/instructions.**
+- **No ARM, Apple Silicon, or cross-compilation settings.**
+- **No need for multi-arch Docker images or QEMU.**
+- **OS-level dependencies (e.g., libssl-dev, systemd) should be installed via apt-get for Ubuntu/Debian.**
+- **No references to /usr/src/app or non-standard paths; use /home/cc/EnvGym/data/tokio-rs_tracing throughout.**
+
+---
+
+## 5. ADDITIONAL NOTES
+
+- **You are fully compatible with the default Rust ecosystem for x86_64 Linux.**
+- **All upstream tracing ecosystem crates and tools support x86_64 Linux as the primary platform.**
+- **If CI/CD adds macOS or Windows jobs, they are optional (not required for your current hardware setup).**
+- **If you ever migrate to ARM/Mac, revisit dependencies (e.g., systemd-journald may not be available).**
+- **No CUDA or GPU acceleration is possible or needed; do not attempt to build or test any CUDA/GPU-specific crates or features.**
+- **Keep all Docker, CI, and shell script paths and commands using /home/cc/EnvGym/data/tokio-rs_tracing as the root.**
+
+---
+
+## 6. SUMMARY OF CHANGES
+
+- **All steps and configuration as previously specified are valid for your x86_64 Linux environment.**
+- **No ARM/M1, CUDA, or GPU steps are needed.**
+- **Dockerfile must use x86_64/amd64-compatible images; set WORKDIR accordingly.**
+- **Install all tools and dependencies as x86_64 Linux binaries.**
+- **No cross-arch emulation, no ARM builds, no CUDA/GPU tooling.**
+- **All source and config file paths can remain as in the original plan, with explicit WORKDIR set for Docker.**
+
+---
+
+**Proceed with the plan as above, with the above Dockerfile and x86_64-only environment adjustments. No further changes are necessary for your hardware context.**

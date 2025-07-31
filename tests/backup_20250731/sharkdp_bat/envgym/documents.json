@@ -1,0 +1,13 @@
+[
+  "README.md",
+  "Cargo.toml",
+  "Cargo.lock",
+  ".github/ISSUE_TEMPLATE/config.yml",
+  ".github/.codecov.yml",
+  ".github/dependabot.yml",
+  "rustfmt.toml",
+  ".cargo/audit.toml",
+  ".git/config",
+  "tests/examples/git/.gitconfig",
+  "tests/examples/git/.config/git/config"
+]

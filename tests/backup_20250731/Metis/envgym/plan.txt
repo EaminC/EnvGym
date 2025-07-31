@@ -1,0 +1,197 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN FOR: x86_64, NO GPU, UBUNTU 22.04/20.04, USER HOME DIR /home/cc/EnvGym/data/Metis ===
+
+**Key Adjustments Based on Hardware Info:**
+- **Architecture:** x86_64/amd64 only; instructions and downloads must target this architecture
+- **No GPU:** Remove/ignore CUDA/NVIDIA/GPU-specific dependencies or instructions
+- **Working Directory:** All references to `~` or `/home/username` should be `/home/cc/EnvGym/data/Metis` or `/home/cc`. All COPY or path-related steps must use this as the root for code and artifact locations.
+- **Docker Context (if containerized):** Use only amd64-compatible images (e.g., `ubuntu:22.04`, `python:3.x-slim`), avoid any ARM/ARM64/ppc64le images.
+- **Build Parallelism:** Leverage multi-core CPU for `make -j$(nproc)` where possible.
+- **No systemd/cgroup customization unless required.**
+- **SSH, Mounts, Device Creation:** All references assume running on a standard Linux VM or bare metal; inside Docker, further device mapping may be needed but is not covered here.
+- **No GPU/No CUDA:** Remove any nvidia/cuda base images, no CUDA toolkit, no nvidia-*-utils, etc.
+
+---
+
+# 1. DOWNLOADS NEEDED
+
+## Operating System & Architecture
+- **OS:** Ubuntu 22.04 LTS or Ubuntu 20.04 LTS (x86_64 only)
+  - _20.04 strongly recommended if using custom brd modules for old kernels._
+- **Kernel Versions:** Only x86_64/amd64 kernel tarballs and headers.
+- **Base images for containers:** Always use `--platform=linux/amd64` if building Docker images.
+- **NO ARM/ARM64/ppc64le support.**
+
+## System Packages (apt install)
+- All packages must be available for Ubuntu 22.04/20.04 x86_64.
+- _No NVIDIA, CUDA, or GPU compute packages._
+- All build tools, libraries, and headers as previously listed.
+- All system paths (e.g., `/home/cc/EnvGym/data/Metis`) must be updated in scripts and configs.
+
+## Python Packages
+- Use system Python3 (ensure it is present).
+- Install via `sudo pip3 install ...` or within a venv rooted in `/home/cc/EnvGym/data/Metis` if unprivileged.
+
+## Software/Repositories
+- **All git clones must use `/home/cc` or `/home/cc/EnvGym/data/Metis` as the base directory.**
+  - E.g., `git clone <repo> /home/cc/Metis`
+  - For scripts, update all `~/` paths to `/home/cc/`.
+- **No GPU-accelerated libraries or code.**
+- All code must be compiled for x86_64.
+
+## Kernel Modules / Headers
+- Kernel headers must be for the **currently running x86_64 kernel**.
+- All `brd*` modules and custom drivers must be built for x86_64.
+- When building out-of-tree modules, paths like `/lib/modules/$(uname -r)/build` must resolve for x86_64 kernel.
+
+## File System Images
+- Ensure images are compatible with x86_64 (no cross-architecture images).
+- Place all images in `/home/cc/EnvGym/data/Metis/<component>/images/` (adjust paths in scripts and configs accordingly).
+
+## Promela/Spin Tools
+- Use only x86_64 binaries or build from source.
+
+## Version Compatibility
+- **Ubuntu 22.04/20.04 LTS x86_64 only.**
+- All builds/tests must target and run on x86_64.
+
+---
+
+# 2. FILES TO CREATE
+
+## SSH Keys, Configs, and Scripts
+- All generated files (ssh keys, configs, scripts) must be placed in `/home/cc/.ssh/`, `/home/cc/EnvGym/data/Metis/`, or relevant subdirectories.
+- Update all scripts and configs to use `/home/cc/EnvGym/data/Metis` instead of `~` or `/home/username`.
+
+## Build Artifacts
+- Direct all `make` and build outputs to `/home/cc/EnvGym/data/Metis/<component>/build/` or similar, not `/tmp` or root.
+
+## JFS Bug Artifacts and Logs
+- Place all kernel source, configs, and logs in `/home/cc/EnvGym/data/Metis/fs_bugs/jfs/kernel_hang/` or as specified in the README, but using the new root path.
+
+---
+
+# 3. NECESSARY TEST CASES
+
+- All tests must run on x86_64. No ARM, PPC, or GPU testing.
+- All references to device files (`/dev/ram*`, `/dev/mtdblock*`, etc.) are for standard Linux x86_64 device nodes.
+- For kernel-intensive tests (JFS, brd, etc.), verify sufficient RAM is available (see memory note below).
+- **All test scripts, logs, and outputs must be located in `/home/cc/EnvGym/data/Metis` or subdirectories.**
+
+---
+
+# 4. COMPLETE TODO LIST (with Hardware-Specific Adjustments)
+
+1. **Prepare Base OS**
+   - Install Ubuntu 22.04 or 20.04 LTS (amd64/x86_64 only).
+   - Use only x86_64 kernel versions.
+   - All commands/scripts must be run as user `cc` with `$HOME=/home/cc` or inside `/home/cc/EnvGym/data/Metis`.
+
+2. **Install System Dependencies**
+   - All packages must be present for Ubuntu 22.04/20.04 x86_64.
+   - No GPU or nvidia packages.
+   - If running in Docker, ensure you use `--platform=linux/amd64` and install only x86_64 binaries.
+
+3. **Install Python Packages**
+   - Use system Python3 (no conda or GPU-accelerated numpy).
+   - If running as non-root, use a virtualenv in `/home/cc/EnvGym/data/Metis/venv/`.
+
+4. **Generate and Configure SSH Keys**
+   - Store keys in `/home/cc/.ssh/`.
+   - Update any scripts or configs that assume `/root/.ssh/` or another user's home.
+
+5. **Clone Required Repositories**
+   - All clones must land in `/home/cc/EnvGym/data/Metis` or `/home/cc/`.
+   - Update any scripts that hardcode `~/` or `/home/username/`.
+
+6. **Build/Install fsl-spin (Modified Spin)**
+   - Ensure all binaries are built for x86_64 and installed in `/usr/local/bin` or `/home/cc/.local/bin`.
+
+7. **Build/Install swarm-mcfs**
+   - x86_64 only.
+
+8. **Setup Metis Environment**
+   - All paths in scripts must be `/home/cc/EnvGym/data/Metis/...`.
+
+9. **Install and Configure RefFS**
+   - All setup scripts and mount points must use full paths consistent with the working directory; adjust if running inside containers.
+
+10. **Set Up IOCov**
+    - Python scripts and requirements.txt must use `/home/cc/EnvGym/data/Metis/...`.
+
+11. **Build and Configure eXplode**
+    - Ensure x86_64 build.
+
+12. **Build/Install Kernel Modules**
+    - Build all modules for the running x86_64 kernel.
+    - If running in a container, ensure `/lib/modules` is mounted and host kernel headers are present (not typical in most Docker setups).
+
+13. **Prepare File System Images**
+    - Store images in `/home/cc/EnvGym/data/Metis/.../images/`.
+    - Ensure sufficient storage space in `/home/cc/EnvGym/data/Metis`.
+
+14. **Configure Minimal MCFS Bug/Discrepancy Reproducer**
+    - All configs/scripts must use `/home/cc/EnvGym/data/Metis` base path.
+
+15. **Configure Swarm**
+    - All swarm scripts, configs, and logs must use `/home/cc/EnvGym/data/Metis`.
+    - SSH keys and authorized_keys must be in `/home/cc/.ssh/`.
+
+16. **Configure Swarm (Distributed/Multiple Nodes)**
+    - All remote paths must be `/home/cc/EnvGym/data/Metis` or `/home/cc/`.
+
+17. **Build and Configure mcl-demo**
+    - Set `EXPLODE_PATH` using `/home/cc/EnvGym/data/Metis/explode-0.1pre/`.
+
+18. **Run Initial Metis Tests**
+    - All output/logs in `/home/cc/EnvGym/data/Metis`.
+
+19. **Run IOCov and Experiment Scripts**
+    - All scripts run from within `/home/cc/EnvGym/data/Metis/ae-experiments/`.
+
+20. **Bug Reproduction Tests**
+    - For JFS kernel bug: All steps must use `/home/cc/EnvGym/data/Metis` as base.
+    - Mount points and device nodes must be accessible from the VM/host (not possible in unprivileged containers).
+
+21. **Performance/Reproducibility Tests**
+    - All data in `/home/cc/EnvGym/data/Metis`.
+
+22. **Error Handling & Troubleshooting**
+    - All logs and error outputs must be easy to find in `/home/cc/EnvGym/data/Metis/logs/`.
+
+23. **Clean Up and Verification**
+    - All cleanup scripts must target `/home/cc/EnvGym/data/Metis/...`.
+    - No device or kernel module cleanup is possible in unprivileged containers.
+
+24. **Build and Test Additional Demos**
+    - All builds/scripts must use `/home/cc/EnvGym/data/Metis`.
+
+25. **Setup and Validate fs-state**
+    - All scripts and README references: adjust to `/home/cc/EnvGym/data/Metis/fs-state/`.
+
+26. **Verification for Each Step**
+    - All references to output, logs, and artifacts must point to `/home/cc/EnvGym/data/Metis/...`.
+
+---
+
+## Additional Hardware/Resource Notes
+
+- **RAM**: For RAM block device and JFS bug tests, ensure the host VM has at least 4-8GB of RAM free (some tests may need more depending on device size). If less RAM is available, reduce device sizes in test scripts.
+- **Storage**: `/home/cc/EnvGym/data/Metis` must have sufficient free space for sources, build artifacts, kernel source trees (several GB), and images.
+- **CPU**: Leverage `make -j$(nproc)` for builds.
+- **No GPU**: Do NOT install or enable any CUDA, NVIDIA, or GPU-accelerated libraries or use nvidia-docker.
+
+---
+
+## Summary of Adjustments
+
+- **All paths** updated to `/home/cc/EnvGym/data/Metis` or `/home/cc`.
+- **Only x86_64/amd64** instructions, tools, and binaries.
+- **No CUDA/NVIDIA/GPU** dependencies or instructions.
+- **All device and kernel module operations** assume x86_64 Linux; if running in containers, additional host privileges are required—these steps may NOT work in Docker without `--privileged` and `--device` mappings.
+- **All build and run scripts** must leverage CPU parallelism, not GPU.
+- **All storage and RAM requirements** must be checked before large builds or RAM disk setups.
+- **All documentation, README references, and scripts** must be updated to reflect the correct working directory and architecture.
+
+---
+
+**Proceed with the environment setup using this adjusted plan. All original instructions remain valid, except as amended above for path, architecture, and hardware compatibility.**

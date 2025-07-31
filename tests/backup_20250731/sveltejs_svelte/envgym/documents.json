@@ -1,0 +1,23 @@
+[
+  "README.md",
+  "package.json",
+  ".gitignore",
+  ".npmrc",
+  ".prettierrc",
+  ".prettierignore",
+  "pnpm-workspace.yaml",
+  "pnpm-lock.yaml",
+  "svelte.config.js",
+  "eslint.config.js",
+  "vitest.config.js",
+  "playgrounds/sandbox/package.json",
+  "playgrounds/sandbox/tsconfig.json",
+  "playgrounds/sandbox/vite.config.js",
+  "playgrounds/sandbox/svelte.config.js",
+  "benchmarking/tsconfig.json",
+  "packages/svelte/README.md",
+  "packages/svelte/package.json",
+  "packages/svelte/tsconfig.json",
+  "packages/svelte/tsconfig.generated.json",
+  "packages/svelte/tsconfig.runtime.json"
+]

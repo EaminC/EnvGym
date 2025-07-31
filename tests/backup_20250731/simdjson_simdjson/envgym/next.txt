@@ -1,0 +1,19 @@
+current progress
+
+- Docker build and runtime both succeeded using a Dockerfile based on Debian 12 amd64, with a comprehensive list of development tools and libraries installed.
+- The Dockerfile installs both GCC and a custom Clang (p2996 branch), builds Clang from source, and copies resulting binaries to `/usr/local/bin`.
+- Node.js and npm are installed via NodeSource for x86_64.
+- All package installs, shell utilities, and environment variables are compatible with x86_64/amd64 as required.
+- The Dockerfile explicitly sets `--platform=linux/amd64` in the FROM clause and uses `/workspace` as the working directory.
+- Diagnostic commands verify toolchain installation and versions.
+- No ARM, CUDA, or GPU-specific packages are present.
+- The Docker image is configured for non-root user `cc` and supports interactive shell entry.
+
+next step
+
+- Review the installed Node.js/npm versions and ensure the required JavaScript dependencies for large JSON generation (faker@4.1.0, fs) are installed, and `package.json`/`package-lock.json` are present in the project or added to the Dockerfile.
+- Add logic to copy project files (`quickstart.cpp`, `simdjson.h`, `simdjson.cpp`, `twitter.json`, and optional files) into the Docker image or ensure the Docker run instructions mount the correct host directory.
+- If project-specific build/test scripts or CMakeLists.txt are needed, update the Dockerfile to copy or reference them.
+- Optionally add a step in the Dockerfile or project README to document the explicit x86_64/amd64 target and any pathing conventions.
+- Validate that the built Clang (p2996) is available and functioning as expected inside the container.
+- Prepare and run the project build/test commands inside the container using both GCC and the custom Clang to confirm full toolchain operation.

@@ -1,0 +1,14 @@
+[
+  "README.md",
+  "docs/README.md",
+  "docs/primer/README.md",
+  "docs/primer/components/README.md",
+  "docs/primer/foundations/README.md",
+  "docs/primer/getting-started/README.md",
+  "acceptance/README.md",
+  ".devcontainer/devcontainer.json",
+  ".goreleaser.yml",
+  ".golangci.yml",
+  "go.mod",
+  "go.sum"
+]

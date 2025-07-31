@@ -1,0 +1,13 @@
+[
+  "README.md",
+  "Dockerfile",
+  "docker-compose.yml",
+  ".github/workflows/abidiff.yaml",
+  ".github/workflows/cifuzz.yaml",
+  ".github/workflows/test.yaml",
+  ".github/workflows/test_proxy.yaml",
+  ".pre-commit-config.yaml",
+  "example/Dockerfile.hello",
+  "test/proxy/Dockerfile",
+  "test/proxy/docker-compose.yml"
+]

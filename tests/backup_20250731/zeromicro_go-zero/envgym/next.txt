@@ -1,0 +1,20 @@
+current progress
+- The Dockerfile is fully configured for Linux/amd64 (x86_64) with no GPU dependencies, as required by the plan.
+- All base images (`golang:1.21-alpine3.18` and `alpine:3.18`) are `amd64`-compatible.
+- Only Linux/amd64 tools are installed: Go 1.21, git, make, curl, tzdata, ca-certificates, protobuf, gcc, libc-dev.
+- goctl and protoc plugins (`protoc-gen-go`, `protoc-gen-go-grpc`) are installed via `go install` (Linux/amd64).
+- Project files are correctly copied to `/home/cc/EnvGym/data/zeromicro_go-zero`.
+- Go dependencies are installed and tidied (`go mod download`, `go mod tidy`).
+- Binaries for `gateway` and `mcp` are built and copied to the runtime image.
+- Runtime image uses only `amd64` packages and copies built artifacts and goctl binary.
+- No references to ARM/Mac/GPU/CUDA/nvidia, and all Docker COPY/context instructions match the required directory structure.
+- Docker build and runtime logs show success.
+
+next step
+- Review and uncomment or appropriately set the `EXPOSE`, `ENTRYPOINT`, and `CMD` instructions in the Dockerfile based on the actual service(s) to be started (e.g., enable `ENTRYPOINT ["./bin/gateway"]` and `CMD ["-f", "etc/gateway.yaml"]` if gateway is the default app).
+- Remove any unused or unnecessary COPY instructions to minimize image size (e.g., avoid copying the entire project to runtime if not needed).
+- Verify that all required configuration files and static assets referenced by the application are being copied correctly.
+- Test the final image by running it with the intended entrypoint and verifying service startup and logs.
+- If additional services (e.g., `mcp`) need to be run, consider multi-stage builds or separate images, or document how to override the entrypoint for each.
+- Ensure `.dockerignore` is updated to exclude unnecessary files from the build context.
+- Update documentation to reflect the finalized Dockerfile usage and that all images are for Linux/amd64 only.

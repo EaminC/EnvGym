@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/SymMC; project likely in a subdirectory with possible data dependencies
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Ubuntu 22.04 (e.g., ubuntu:22.04), python:3.x-slim-bullseye, or other amd64-compatible images; no GPU-specific base image required
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: No GPU-related instructions (no nvidia/cuda, no --gpus); can leverage multi-core builds; ensure WORKDIR instructions align with /home/cc/EnvGym/data/SymMC context
+- Docker Version: 28.3.2; supports BuildKit, multi-stage builds, and latest Compose features; --gpus flag supported but not needed

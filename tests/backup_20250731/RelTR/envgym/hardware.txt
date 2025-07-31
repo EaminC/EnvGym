@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/RelTR (project context: deep in user home, likely ML/data pipeline, no path issues)
+- Architecture: x86_64 (use --platform=linux/amd64)
+- Base Image: ubuntu:22.04, python:3.x-slim, or similar amd64-based images
+- GPU: No NVIDIA GPU detected; CUDA images not applicable; CPU-only base image recommended
+- Instruction Notes: No GPU-related Dockerfile steps; no special device drivers; ample CPU/memory resources; standard Linux instructions supported
+- Docker Version: 28.3.2 (BuildKit supported, --gpus flag not applicable, modern syntax/features available)

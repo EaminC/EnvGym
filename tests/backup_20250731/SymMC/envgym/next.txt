@@ -1,0 +1,13 @@
+current progress
+- Base environment (Ubuntu 22.04, user cc, working directory) is set up.
+- All key dependencies (OpenJDK 8, Ant, CMake, GCC, Git, Python3, etc.) are installed.
+- MiniSat is cloned and built successfully.
+- Project files are copied into /home/cc/EnvGym/data/SymMC.
+- Directory checks and diagnostics for Enhanced_Kodkod are present in the Dockerfile.
+- Docker build fails because required files/directories in Enhanced_Kodkod are missing: build.sh, build.xml, src/, lib/, util/.
+
+next step
+- Ensure the source tree you COPY into the Docker build context contains Enhanced_Kodkod/build.sh, Enhanced_Kodkod/build.xml, Enhanced_Kodkod/src/, Enhanced_Kodkod/lib/, and Enhanced_Kodkod/util/ (with actual content, not empty or missing).
+- Verify these files and directories exist in your local context before building the Docker image.
+- If using .dockerignore, ensure it does NOT exclude Enhanced_Kodkod or its contents.
+- After correcting the context, rebuild the Docker image to proceed past the Enhanced_Kodkod build checks.

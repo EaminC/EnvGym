@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/acto; project located within a user home directory, likely requiring WORKDIR /home/cc/EnvGym/data/acto in Dockerfile
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64/x86_64-compatible images (e.g., ubuntu:22.04, python:3.10-slim); no CUDA/NVIDIA images required
+- GPU: No NVIDIA GPU available; NVIDIA-SMI failed; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (e.g., no RUN apt-get install nvidia-driver); large memory and CPU available for build parallelism; use standard Linux Docker instructions; avoid GPU-dependent build or runtime steps
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag irrelevant due to lack of NVIDIA GPU

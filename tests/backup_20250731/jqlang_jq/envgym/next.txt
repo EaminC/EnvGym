@@ -1,0 +1,18 @@
+current progress
+- Dockerfile is present and uses `/home/cc/EnvGym/data/jqlang_jq` as the working directory.
+- The build stage uses `ubuntu:22.04` (linux/amd64) and installs all necessary build and optional documentation dependencies.
+- The jq source code is cloned (latest, with submodules), and autoreconf/configure is run for a static build with builtin oniguruma and docs disabled.
+- The build runs with multi-core `make`, logs are saved, and tests are executed and logged.
+- The jq binary is installed with `make install-strip`.
+- The final image uses `scratch`, containing only `/jq`, `/AUTHORS`, and `/COPYING`.
+- Entrypoint and default CMD are set for jq version output.
+- Previous Docker build and run logs show success, with jq built and running as expected.
+
+next step
+- No critical functional changes are required, but for full plan compliance and clarity:
+  1. Ensure `.dockerignore` exists to reduce Docker build context (if not already present).
+  2. Optionally, copy `build.log` and `test.log` as artifacts (not required for minimal image, but may be useful for debugging).
+  3. (Optional) Add comments or a section in the Dockerfile for building docs in a separate stage if desired.
+  4. Double-check all file paths and ownerships in the final image (e.g., `/jq` is owned by root and is executable).
+  5. If automation/test scripts are added later, ensure they are in `/home/cc/EnvGym/data/jqlang_jq/scripts/` and referenced as needed.
+  6. Maintain/update local documentation (`README.local.md`) to reflect any changes.

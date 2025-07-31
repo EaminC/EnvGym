@@ -1,0 +1,11 @@
+[
+  "Readme.md",
+  "examples/README.md",
+  "package.json",
+  ".npmrc",
+  ".eslintrc.yml",
+  ".eslintignore",
+  ".editorconfig",
+  ".gitignore",
+  ".github/dependabot.yml"
+]

@@ -1,0 +1,162 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64 LINUX, UBUNTU 22.04 COMPATIBILITY, NO GPU) ===
+
+**Hardware/OS Context:**  
+- Working Directory: `/home/cc/EnvGym/data/clap-rs_clap`
+- Architecture: x86_64 (`amd64`)
+- OS Compatibility: Ubuntu 22.04 (and similar Debian-based), NOT Alpine or ARM
+- GPU: None (NO CUDA, NO GPU-specific instructions)
+- Docker: v28.3.2, BuildKit/buildx supported, but ignore `--gpus` and CUDA/NVIDIA tooling
+
+---
+
+## 1. DOWNLOADS NEEDED  
+**[General Hardware/OS Adjustments]**  
+- All instructions, paths, and package names are for x86_64 Ubuntu 22.04; do NOT reference ARM, Alpine, or GPU/CUDA tools.
+- All Docker examples (if used) should use Ubuntu 22.04, Debian, or official `rust:*` images for `amd64` (`linux/amd64`).
+- All system dependencies (openssl, sqlite, etc.) must use Ubuntu package names.
+- Windows/macOS sections remain as documentation for cross-platform contributors, but the main workflow and CI must use Linux/Ubuntu instructions.
+- Do NOT reference or require any GPU, CUDA, or related hardware/software.
+
+### Rust Toolchain
+- Use `rustup` to install Rust (minimum 1.74), add `clippy` and `rustfmt`.
+- **On Ubuntu 22.04:**
+  - Use official install script: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+  - Confirm architecture with `uname -m` (should be `x86_64`).
+  - Avoid specifying any ARM or cross-compilation details.
+
+### Build Tools & System Dependencies
+- **On Ubuntu 22.04:**
+  - Install with:
+    ```sh
+    sudo apt update
+    sudo apt install -y build-essential pkg-config libssl-dev libsqlite3-dev python3 python3-pip git
+    ```
+  - No need for ARM/Alpine/Mac/Windows-specific instructions in main flow.
+  - For FFI crates, always use Ubuntu package names (`libssl-dev`, `libsqlite3-dev`).
+  - Document requirement for at least 2GB RAM (for cargo build/test), but do not enforce in scripts.
+
+### Optional Tools
+- Coverage: `cargo-tarpaulin` (supported on x86_64 Linux).
+- ROFF manpage viewer: `man`, `groff` (package: `groff`).
+- Shells: `bash`, `zsh`, `fish`, `nushell` (install via `apt` or documented for contributors).
+- No GPU-dependent tools or variants.
+- No mention of `grcov` for coverage (Windows-only).
+
+### Python & Pre-commit
+- Use `python3` and `pip3` (Ubuntu standard).
+- `pip3 install pre-commit committed`.
+
+### Docker
+- If creating Dockerfiles/CI containers, always use `FROM ubuntu:22.04`, `FROM debian:bullseye`, or `FROM rust:1.74-bullseye` (amd64).
+- Do NOT use Alpine-based images (Alpine uses musl, not glibc; some dependencies may fail).
+- Set `platform: linux/amd64` for all Docker runs if using BuildKit/buildx.
+- Do NOT use `--gpus` or any NVIDIA/CUDA tags.
+
+### Paths/Directories
+- All paths must be under `/home/cc/EnvGym/data/clap-rs_clap` (do not use `/Users`, `C:\`, or other OS-specific conventions).
+- Document relative paths for scripts/tools.
+
+---
+
+## 2. FILES TO CREATE  
+- All file creation and path references must use Unix-style paths (`/`), with absolute paths relative to `/home/cc/EnvGym/data/clap-rs_clap` or relative project root.
+- No Windows path conventions.
+- System-specific instructions (e.g., file permissions) should assume a typical Ubuntu (ext4) environment with `filemode = true` in `.git/config`.
+- `.env`, `.gitignore`, `rust-toolchain.toml`, `.cargo/config.toml`, etc., must be created in project root.
+- No adjustments needed for architecture, but document that any `build.rs` or shell scripts must be compatible with Ubuntu bash/sh.
+
+---
+
+## 3. NECESSARY TEST CASES IN THE CODEBASE  
+- All CI and test automation must assume Ubuntu 22.04, x86_64, no GPU.
+- Build/test matrix in CI must include Linux/x86_64 as the default; macOS/Windows jobs optional for cross-platform validation.
+- All shell, manpage, and FFI integration tests must use Ubuntu package names and tools.
+- For system libraries, test for package presence (`libssl-dev`, `libsqlite3-dev`) using `dpkg -l` or similar in scripts.
+- Do not include or require GPU-specific tests.
+- For coverage, only use `cargo-tarpaulin` (not `grcov`).
+
+---
+
+## 4. COMPLETE TODO LIST (with hardware/OS adjustments)
+**All steps that mention system dependencies, build tools, or OS-specific instructions are now explicitly for Ubuntu 22.04/x86_64.**
+
+1. **Install Rust toolchain:**
+   - Use rustup (as above); ensure x86_64 target.
+   - `rustup target list | grep installed` should show `x86_64-unknown-linux-gnu`.
+
+2. **Install Git:**
+   - `sudo apt install -y git`
+   - Configure `.git/config`: ensure `[core] filemode = true`.
+
+3. **Install build tools/system libraries:**
+   - `sudo apt install -y build-essential pkg-config libssl-dev libsqlite3-dev`
+   - (Document minimum 2GB RAM recommended for builds.)
+
+4. **Install Python 3 and pip:**
+   - `sudo apt install -y python3 python3-pip`
+
+5. **Install pre-commit and committed:**
+   - `pip3 install pre-commit committed`
+
+6. **Install cargo-deny, typos-cli, cargo-release, etc.:**
+   - `cargo install cargo-deny typos-cli cargo-release`
+
+7. **Install coverage tool (optional):**
+   - `cargo install cargo-tarpaulin`
+
+8. **Install shells for completion testing (optional):**
+   - `sudo apt install -y bash zsh fish`
+   - For nushell, follow [Nushell install docs](https://www.nushell.sh/book/installation.html#linux).
+
+9. **Install ROFF tools (optional):**
+   - `sudo apt install -y groff`
+
+10. **Clone and configure repository:**
+    - `git clone https://github.com/clap-rs/clap.git`
+    - Work in `/home/cc/EnvGym/data/clap-rs_clap`
+    - Ensure `.git/config` is correct and has `filemode = true`.
+
+11. **All file creation steps:**  
+    - Use Unix paths, ensure scripts use bash/sh.
+
+12. **Run builds and tests:**
+    - `cargo build --all --locked`
+    - `cargo test --all --locked`
+    - `cargo clippy --all --all-targets --all-features --workspace`
+    - `cargo fmt -- --check`
+    - For offline tests: `cargo test --offline --locked`
+    - For coverage: `cargo tarpaulin --all --workspace`
+
+13. **CI/CD configuration:**
+    - If using Docker, use `platform: linux/amd64`, and base on Ubuntu 22.04 or `rust:*-bullseye`.
+    - All CI jobs default to Linux/x86_64 runners.
+    - No steps for GPU or CUDA.
+
+14. **Document system requirements:**
+    - In `CONTRIBUTING.md`, specify:
+      - x86_64 architecture required
+      - Ubuntu 22.04 (or later) recommended
+      - At least 2GB RAM, 4GB disk free for builds
+      - No GPU required
+
+15. **Remove/adjust:**
+    - References to ARM, Alpine, musl, cross-compilation, CUDA/GPU, or Windows/macOS-specific install steps from the main workflow.
+    - If cross-platform support is documented, make it clear that the main tested and supported environment is Ubuntu 22.04 x86_64.
+
+---
+
+## SUMMARY OF KEY ADJUSTMENTS
+
+- All OS-level instructions, package names, and system dependency installs are for Ubuntu 22.04/x86_64.
+- All Docker images, if used, must be `amd64` (`linux/amd64`), and built from Ubuntu/Debian or `rust:*` images, **not** Alpine or ARM.
+- No steps include GPU, CUDA, or NVIDIA tooling.
+- All paths and scripts are Unix-style; no Windows/`\` or macOS-specific paths in main steps.
+- All FFI/system libraries are installed using Ubuntu package names only.
+- Minimum hardware assumed: x86_64 CPU, 2GB RAM, 4GB disk, no GPU.
+- CI/CD, build, and test instructions are tailored for Ubuntu 22.04/x86_64.
+- All optional/cross-platform steps are clearly marked as such and not part of the main flow.
+- Document these system requirements and recommendations in `CONTRIBUTING.md`.
+
+---
+
+**The above plan is now fully compatible with your x86_64 Ubuntu 22.04 hardware, directory layout, and development environment.**

@@ -1,0 +1,14 @@
+current progress
+
+- The Dockerfile has been refactored to use `python:3.10-slim` as the base image, set `/app` as the working directory, and install necessary development tools compatible with Ubuntu 22.04.
+- GPU/CUDA dependencies are completely removed, in line with requirements.
+- Multi-stage build efficiency is attempted by copying `requirements.txt` before the rest of the code to leverage Docker layer caching.
+- The build failed at the `COPY requirements.txt /app/` step because `requirements.txt` was not found in the build context.
+- No runtime progress could occur due to the failed build.
+
+next step
+
+- Ensure that a valid `requirements.txt` file exists in the build context (the directory from which `docker build` is run).
+- If it does not exist, create or export `requirements.txt` listing all Python dependencies needed by the project.
+- Place `requirements.txt` in the root of your project directory (next to your Dockerfile) before running the build command.
+- Re-run the Docker build process after confirming the presence of `requirements.txt`.

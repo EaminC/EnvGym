@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_174943",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753032282",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 731B done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/node:18-bullseye\n#2 DONE 0.3s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/9] FROM docker.io/library/node:18-bullseye@sha256:0d9e9a8dcd5a83ea737ed92227a6591a31ad70c8bb722b0c51aff7ae23a88b6a\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 95.58kB 0.0s done\n#5 DONE 0.0s\n\n#6 [5/9] RUN npm install -g vercel\n#6 CACHED\n\n#7 [3/9] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         vim         nano     && rm -rf /var/lib/apt/lists/*\n#7 CACHED\n\n#8 [2/9] WORKDIR /home/cc/EnvGym/data/anuraghazra_github-readme-stats\n#8 CACHED\n\n#9 [6/9] COPY package.json package-lock.json* yarn.lock* ./\n#9 CACHED\n\n#10 [7/9] RUN npm install express --save\n#10 CACHED\n\n#11 [4/9] RUN corepack enable && corepack prepare yarn@stable --activate\n#11 CACHED\n\n#12 [8/9] RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi\n#12 CACHED\n\n#13 [9/9] COPY . .\n#13 DONE 0.1s\n\n#14 exporting to image\n#14 exporting layers 0.1s done\n#14 writing image sha256:c9255bf2326c8d2ef0191558d7011bcc027dfb5da33cd03951cf2b169e8cb0e3 done\n#14 naming to docker.io/library/envgym_test_1753032282 done\n#14 DONE 0.1s\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": "Container runtime timeout (1500 seconds)"
+  }
+}

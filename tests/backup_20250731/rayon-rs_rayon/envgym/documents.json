@@ -1,0 +1,9 @@
+[
+  "README.md",
+  "rayon-core/README.md",
+  "rayon-demo/data/tsp/README.md",
+  "rayon-demo/data/README.md",
+  "rayon-demo/examples/README.md",
+  "rayon-core/src/sleep/README.md",
+  "src/iter/plumbing/README.md"
+]

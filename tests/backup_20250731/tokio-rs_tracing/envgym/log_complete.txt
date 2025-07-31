@@ -1,0 +1,71 @@
+=== Docker Execution Log - 20250721_043547 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753072539
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.00kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/rust:1.65
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/10] FROM docker.io/library/rust:1.65@sha256:891bc3b252c43a1c2667083e3861f26e6f571dcc3bc98dcc151d6ff6edc62cb9
+#4 DONE 0.0s
+
+#5 [ 6/10] RUN cargo install cargo-hack --locked --verbose || (cat ~/.cargo/registry/index/*/*/config.json || true)
+#5 CACHED
+
+#6 [ 4/10] RUN rustup update &&     rustup component add clippy rustfmt
+#6 CACHED
+
+#7 [ 5/10] RUN cargo install cargo-nextest --locked --verbose || (cat ~/.cargo/registry/index/*/*/config.json || true)
+#7 CACHED
+
+#8 [ 2/10] WORKDIR /home/cc/EnvGym/data/tokio-rs_tracing
+#8 CACHED
+
+#9 [ 3/10] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         pkg-config         libssl-dev         systemd         ca-certificates         clang         curl         build-essential         libclang-dev         perl     && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [ 7/10] RUN cargo install cargo-audit --locked --verbose || (cat ~/.cargo/registry/index/*/*/config.json || true)
+#10 CACHED
+
+#11 [ 8/10] RUN cargo install cargo-minimal-versions --locked --verbose || (cat ~/.cargo/registry/index/*/*/config.json || true)
+#11 CACHED
+
+#12 [ 9/10] RUN cargo install inferno --verbose || true
+#12 CACHED
+
+#13 [10/10] RUN cargo install --list
+#13 DONE 0.3s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 6.6s done
+#14 writing image sha256:a4afcf17b6a17587d7b51eb13d8ba9a89e060fd6e5256c9886f6266172d3f15c done
+#14 naming to docker.io/library/envgym_test_1753072539 done
+#14 DONE 6.6s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

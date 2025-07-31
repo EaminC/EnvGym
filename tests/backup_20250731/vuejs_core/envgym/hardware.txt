@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/vuejs_core; likely Node.js or frontend project; place Dockerfile in this directory or its parent for context builds
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-based images (e.g., node:alpine, ubuntu:22.04); no ARM or GPU-specific base needed
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-accelerated instructions; standard Linux/amd64 instructions; leverage multi-core builds if needed; use WORKDIR as /home/cc/EnvGym/data/vuejs_core or project root
+- Docker Version: 28.3.2; supports BuildKit and modern Dockerfile features; --gpus flag not applicable due to lack of NVIDIA GPU

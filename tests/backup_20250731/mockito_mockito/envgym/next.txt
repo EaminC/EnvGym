@@ -1,0 +1,18 @@
+current progress
+- The Docker image builds and runs successfully with the following:
+  - Ubuntu 22.04 base image for linux/amd64.
+  - All system tools, build essentials, and JDK 11/17/21 (x86_64) installed via apt.
+  - JAVA_HOME set for each JDK; default is JDK 17.
+  - Android SDK (cmdline-tools) downloaded to `/home/cc/EnvGym/data/mockito_mockito/.android-sdk`, with platform-tools, emulator, build-tools 34.0.0, Android 34 x86_64 system image installed.
+  - Workspace, permissions, and Git system config set.
+  - Environment variables and ports exposed for emulator (software rendering, no GPU).
+  - No ARM, GPU, CUDA, or non-x86_64 dependencies or references present.
+  - All paths and configurations use Linux-style and project root as specified in the plan.
+
+next step
+- Review and verify that no references to Windows/macOS, ARM, or GPU (CUDA, NVIDIA) tooling remain in the Dockerfile, including comments and documentation.
+- (Optional) Clean up any unnecessary or generic comments, and explicitly document in the Dockerfile header that it is intended only for Linux x86_64 environments.
+- Ensure that any additional tools or project dependencies required by the codebase (e.g., Maven, Kotlin, Groovy, Jacoco, Spotless, Checkstyle, Codecov, Develocity, GitHub CLI, Dependabot) are either included or handled by the build system, and add installation steps if needed.
+- Confirm that all temp/output/cache/artifact directories (for build tools, tests, emulator) are set within `/home/cc/EnvGym/data/mockito_mockito` or `/tmp`—update workspace-related instructions if further isolation or cleanup is required.
+- Update project documentation to reference the correct environment, including explicit instructions for Linux/x86_64 use and Docker `--platform=linux/amd64`.
+- Proceed to test the Docker container by running project-specific build and test commands (using Gradle Wrapper and emulator), ensuring all tools and paths function as expected in this environment. Address any errors or missing dependencies by updating the Dockerfile accordingly.

@@ -1,0 +1,12 @@
+[
+  "README.md",
+  "package.json",
+  "package-lock.json",
+  ".eslintrc.json",
+  ".editorconfig",
+  ".gitignore",
+  ".npmignore",
+  ".releaserc",
+  "babel.config.js",
+  "prettier.config.js"
+]

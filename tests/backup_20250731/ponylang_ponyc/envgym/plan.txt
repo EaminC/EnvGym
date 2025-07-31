@@ -1,0 +1,188 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (FOR x86_64, LINUX/AMD64, NO GPU) ===
+
+This plan is reviewed and updated for your server/workstation at /home/cc/EnvGym/data/ponylang_ponyc. It assumes x86_64 (amd64) architecture, standard Linux OS (Ubuntu, Debian, Alpine), no NVIDIA GPU, modern Docker (v28.3.2), and sufficient RAM/storage.
+
+---
+
+**1. DOWNLOADS NEEDED:**
+
+- **Pony Compiler (ponyc) and Tools:**  
+  *Focus only on x86_64/amd64 Linux builds (Ubuntu, Debian, Alpine) and omit ARM/ARM64/RISC-V/Windows/macOS targets since your hardware cannot natively run/test these. Cross-compilation logic/Dockerfiles may be kept for CI, but you'll only build/test for x86_64 locally.*
+
+  - **Binaries/Sources for:**
+    - Linux:
+      - **Ubuntu 24.04 x86_64**
+      - **Ubuntu 22.04 x86_64**
+      - **Alpine 3.20 x86_64-musl**
+      - **Alpine 3.21 x86_64-musl**
+      - **Arch Linux x86_64**
+      - **Fedora 41 x86_64**
+      - **x86_64-unknown-linux-gnu** (via Ubuntu 24.04 + ponyup)
+      - **x86_64-unknown-linux-musl** (via Alpine 3.20 + ponyup)
+      - **x86_64-unknown-linux-gnu RELEASE** (via Ubuntu 24.04 + ponyup)
+      - **x86_64-unknown-linux-musl RELEASE** (via Alpine 3.20 + ponyup)
+    - **DO NOT download ARM64, ARMHF, RISC-V, or Windows/macOS binaries for local use.**  
+      *If you need to build cross-Docker images for CI, those Dockerfiles may be built with QEMU, but should NOT be run/tested directly on this host.*
+
+  - **For All x86_64 Linux Images:**
+    - Use **amd64-compatible base images**: `ubuntu:24.04`, `ubuntu:22.04`, `alpine:3.20`, `alpine:3.21`, `archlinux:latest`, `fedora:41`.
+    - Use `ponyup` for toolchain installation (nightly or release as per Dockerfile).
+    - **Do NOT install or configure QEMU, Linaro GCC for ARM, or RISCV64 toolchains unless building Docker images for CI.**
+
+  - **Windows/macOS Tools:**  
+    *Omit all prebuilt Windows/macOS artifact downloads and extraction on this machine. You cannot natively use/test Windows binaries here.*
+
+- **LLVM:**
+  - **Install LLVM 10+ as required, using system packages (`apt`, `apk`, `dnf`, etc.) for x86_64 only.**
+  - **No Visual Studio/Windows LLVM setup required.**
+
+- **CMake/Git/Docker:**  
+  - Use the latest stable versions from your distro for x86_64.
+  - For Docker, you have v28.3.2 with BuildKit—use multi-stage builds and BuildKit features if desired.
+  - **Omit all Windows-specific installers/configs (e.g., `Git-2.29.2.3-64-bit.exe`, `git.ini`).**
+
+- **Editor/IDE Plugins:**  
+  - Install only for your local editor(s) on Linux.
+
+- **Build Tools:**  
+  - **Linux (x86_64):**  
+    - Ubuntu: `clang`, `curl`, `g++`, `git`, `lsb-release`, `make`, `ca-certificates`
+    - Alpine: `clang`, `curl`, `build-base`, `binutils-gold`, `git`
+    - Arch: `clang`, `git`, `base-devel`
+    - Fedora: `clang`, `git`, `make`, `gcc`, etc.
+  - **No need for cross-compilation toolchains locally.**
+  - **No need to install QEMU emulators.**
+
+- **Python 3, pip, cloudsmith-cli, MkDocs, etc.:**
+  - Install as required for docs or tooling, using system packages for x86_64 only.
+
+- **Additional:**
+  - **Do NOT set up non-root users in Dockerfiles unless your CI/build system requires it.** (Optional for local dev.)
+  - **No GPU toolkits/libraries (CUDA, nvidia-container-toolkit, etc.) to be installed.**
+
+---
+
+**2. FILES TO CREATE:**
+
+- **Only create/update Dockerfiles and configs for x86_64 Linux targets:**
+  - `.dockerfiles/latest/x86-64-unknown-linux-gnu/Dockerfile`
+  - `.dockerfiles/release/x86-64-unknown-linux-gnu/Dockerfile`
+  - `.dockerfiles/latest/x86-64-unknown-linux-musl/Dockerfile`
+  - `.dockerfiles/release/x86-64-unknown-linux-musl/Dockerfile`
+  - `.ci-dockerfiles/x86-64-unknown-linux-ubuntu22.04-builder/Dockerfile`
+  - `.ci-dockerfiles/x86-64-unknown-linux-ubuntu24.04-builder/Dockerfile`
+  - `.ci-dockerfiles/x86-64-unknown-linux-alpine3.20-builder/Dockerfile`
+  - `.ci-dockerfiles/x86-64-unknown-linux-alpine3.21-builder/Dockerfile`
+  - `.ci-dockerfiles/x86-64-unknown-linux-arch-builder/Dockerfile`
+  - `.ci-dockerfiles/x86-64-unknown-linux-fedora41-builder/Dockerfile`
+  - `.ci-dockerfiles/x86-64-unknown-linux-musl-builder/Dockerfile`
+  - (Optional) Cross-build Dockerfiles for ARM/ARMHF/RISCV64 may be kept for CI, but should NOT be built/run locally unless you have QEMU set up and want to test cross-builds.
+- **Omit Windows/macOS Dockerfiles and configs for local builds.**
+- **No `git.ini` or Windows system configs needed.**
+- `.env`, `.gitignore`, test directory, and documentation configs remain as standard.
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**
+
+- **Focus all local compilation, build, and runtime tests on:**
+  - Ubuntu 22.04/24.04 x86_64
+  - Alpine 3.20/3.21 x86_64-musl
+  - Arch Linux x86_64
+  - Fedora 41 x86_64
+  - x86_64-unknown-linux-gnu (nightly and release)
+  - x86_64-unknown-linux-musl (nightly and release)
+- **No Windows/ARM/ARM64/RISC-V runtime tests should be run locally.**
+- **You may build multi-arch Docker images for CI, but cannot run/test them natively.**
+- **All test scripts, build scripts, and CI configs should default to `--platform=linux/amd64` for local builds.**
+- **All memory/storage references are fine—no resource limits to address.**
+
+---
+
+**4. COMPLETE TODO LIST (ADJUSTED):**
+
+1. **Review INSTALL.md and BUILD.md for x86_64 Linux only.**
+   - Omit all ARM/Windows-specific steps for local development.
+
+2. **Download/install Pony compiler and tools via ponyup for x86_64 Linux.**
+   - Use the official bootstrap script.
+   - Use the nightly channel for dev images, release for release images.
+   - No need for ARM/Windows/macOS binaries.
+
+3. **Install dependencies for x86_64 Linux:**
+   - Ubuntu: `clang`, `curl`, `g++`, `git`, `lsb-release`, `make`, `ca-certificates`
+   - Alpine: `clang`, `curl`, `build-base`, `binutils-gold`, `git`
+   - Arch, Fedora as per above.
+   - Omit QEMU, Linaro GCC, Windows tools.
+
+4. **Clone/download source as needed (in `/home/cc/EnvGym/data/ponylang_ponyc`).**
+
+5. **Create `.env` at project root.**
+   - Linux: ensure `/root/.local/share/ponyup/bin` in `PATH` for Docker images, or your user’s `PATH` for local runs.
+
+6. **(Optional) Create project config (`ponyconfig.json`/`pony.toml`).**
+
+7. **Create/update Dockerfiles for x86_64 Linux ONLY.**
+   - Omit ARM/Windows/macOS Dockerfiles from local build/test scripts.
+   - Use only `--platform=linux/amd64` in local Docker builds.
+   - Multi-stage and BuildKit features are available.
+
+8. **No need for `git.ini` or Windows silent installers.**
+
+9. **Create/update `.gitignore` as usual.**
+
+10. **Set up editor integration for Linux editors only.**
+
+11. **Build project with `ponyc` (locally or via Docker for x86_64):**
+    - Use only x86_64/amd64 Dockerfiles for local work.
+    - Multi-core parallel builds are supported and recommended (`make -j$(nproc)`).
+
+12. **Build and verify documentation using MkDocs (Linux only).**
+
+13. **Run test suite on x86_64 Linux platforms only.**
+    - Do NOT attempt to run ARM/Windows/RISCV-specific tests locally.
+
+14. **(Optional) Set up CI for multi-arch if needed.**
+    - Local builds/tests limited to x86_64.
+    - CI may build ARM/Windows images, but cannot be tested locally.
+
+15. **Review CONTRIBUTING.md and LICENSE as normal.**
+
+16. **For Docker-based CI builds:**
+    - Use non-root user (`pony`) in containers if desired/required.
+
+17. **For Ubuntu-based CI builds:**
+    - Set `DEBIAN_FRONTEND=noninteractive` for Dockerfiles.
+    - For Ubuntu 22.04: ensure `lldb-17`.
+    - For Ubuntu 24.04: use default `lldb`.
+
+18. **For Alpine-based CI builds:**
+    - For Alpine 3.20/3.21 x86_64-musl: use `ponyup` for tool installation.
+
+19. **For Windows-based CI builds:**
+    - *Omit all Windows build/test steps locally.*
+
+20. **For Arch/Fedora CI builds:**
+    - *As previously described for x86_64 only.*
+
+21. **For cross-compilation builds:**
+    - *Build only if needed for CI, not locally run/tested.*
+
+---
+
+**ADDITIONAL NOTES:**
+
+- **All Dockerfiles, scripts, and CI configs should default to `--platform=linux/amd64` for local builds.**
+- **No GPU-specific or NVIDIA base images, libraries, or instructions should be present.**
+- **No ARM/ARM64/RISC-V/Windows/macOS binaries should be downloaded, installed, or tested locally.**
+- **Storage and RAM are sufficient; no restrictions needed.**
+- **Directory paths are valid for your Linux environment.**
+
+---
+
+**SUMMARY:**
+- Focus ONLY on x86_64/amd64 Linux targets for all local development, builds, and tests.
+- Remove/ignore all Windows/macOS/ARM/ARM64/RISC-V setup, binaries, and tests from local scripts.
+- Use only amd64-compatible Docker base images and always specify `--platform=linux/amd64` when building locally.
+- No GPU toolchains or libraries should be installed or referenced.
+- All other steps remain as per your original plan, limited to x86_64 Linux platforms.
