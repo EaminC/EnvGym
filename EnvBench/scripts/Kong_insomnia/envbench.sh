@@ -904,6 +904,10 @@ print_status "INFO" "Example: docker run --rm insomnia-env-test npm run test"
 echo ""
 print_status "INFO" "For more information, see README.md and https://insomnia.rest"
 print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/Kong_insomnia insomnia-env-test /bin/bash"
+
+# Write results to JSON
+write_results_to_json
+
 exit 0
 fi
 

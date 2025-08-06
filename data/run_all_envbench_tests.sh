@@ -16,7 +16,7 @@ echo ""
 
 # Initialize log and summary files
 echo "EnvBench Test Results - $(date)" > "$LOG_FILE"
-echo "Repo,PASS,FAIL,WARN,Status,Time" > "$SUMMARY_FILE"
+echo "Repo,PASS,FAIL,WARN,Time" > "$SUMMARY_FILE"
 
 # Counters
 total_repos=0
@@ -46,13 +46,13 @@ run_test_for_repo() {
     
     # Check if envgym/envbench.sh exists
     local envbench_script="$repo_dir/envgym/envbench.sh"
-    if [ ! -f "$envbench_script" ]; then
-        echo "  ✗ Skipped: envbench.sh not found"
-        echo "  ✗ Skipped: envbench.sh not found" >> "$LOG_FILE"
-        echo "$repo_name,0,0,0,SKIPPED_NO_SCRIPT,$(date)" >> "$SUMMARY_FILE"
-        ((skipped_tests++))
-        return
-    fi
+            if [ ! -f "$envbench_script" ]; then
+            echo "  ✗ Skipped: envbench.sh not found"
+            echo "  ✗ Skipped: envbench.sh not found" >> "$LOG_FILE"
+            echo "$repo_name,0,0,0,0s" >> "$SUMMARY_FILE"
+            ((skipped_tests++))
+            return
+        fi
     
     # Check if script is executable
     if [ ! -x "$envbench_script" ]; then
@@ -91,22 +91,14 @@ run_test_for_repo() {
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
         
-        # Determine status
-        local status="SUCCESS"
-        if [ "$exit_code" -ne 0 ]; then
-            status="FAILED_EXECUTION"
-        elif [ "$fail_count" -gt 0 ]; then
-            status="FAILED_TESTS"
-        fi
-        
         # Print results
         echo "  ✓ Completed: PASS=$pass_count, FAIL=$fail_count, WARN=$warn_count (${duration}s)"
         echo "  ✓ Completed: PASS=$pass_count, FAIL=$fail_count, WARN=$warn_count (${duration}s)" >> "$LOG_FILE"
         
         # Add to summary
-        echo "$repo_name,$pass_count,$fail_count,$warn_count,$status,${duration}s" >> "$SUMMARY_FILE"
+        echo "$repo_name,$pass_count,$fail_count,$warn_count,${duration}s" >> "$SUMMARY_FILE"
         
-        if [ "$status" = "SUCCESS" ] && [ "$fail_count" -eq 0 ]; then
+        if [ "$exit_code" -eq 0 ] && [ "$fail_count" -eq 0 ]; then
             ((successful_tests++))
         else
             ((failed_tests++))
@@ -117,7 +109,7 @@ run_test_for_repo() {
         
         echo "  ✗ Failed: envbench.json not generated"
         echo "  ✗ Failed: envbench.json not generated" >> "$LOG_FILE"
-        echo "$repo_name,0,0,0,FAILED_NO_JSON,${duration}s" >> "$SUMMARY_FILE"
+        echo "$repo_name,0,0,0,${duration}s" >> "$SUMMARY_FILE"
         ((failed_tests++))
     fi
     
@@ -159,7 +151,7 @@ echo "Detailed results saved to: $LOG_FILE"
 echo "Summary CSV saved to: $SUMMARY_FILE"
 echo ""
 echo "=== Quick Summary ==="
-echo "Repo,PASS,FAIL,WARN,Status,Time"
+echo "Repo,PASS,FAIL,WARN,Time"
 tail -n +2 "$SUMMARY_FILE" | head -10
 
 if [ $total_repos -gt 10 ]; then

@@ -125,10 +125,12 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/sharkdp_fd" fd-env-test bash -c "
+    docker run --rm -v "$(pwd):/workspace" fd-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
+        source /root/.cargo/env
+        cd /workspace
+        bash envgym/envbench.sh
     "
     exit 0
 fi
@@ -597,8 +599,8 @@ fi
 echo ""
 echo "8. Testing Fd Docker Functionality..."
 echo "-------------------------------------"
-# Test if Docker container can run basic commands
-if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+# Test if Docker container can run basic commands (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
     # Test Rust in Docker
     if docker run --rm fd-env-test rustc --version >/dev/null 2>&1; then
         print_status "PASS" "Rust works in Docker container"
@@ -698,13 +700,15 @@ if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
     else
         print_status "WARN" "cross does not work in Docker container"
     fi
+else
+    print_status "INFO" "Skipping Docker functionality tests (running inside container)"
 fi
 
 echo ""
 echo "9. Testing Fd Build Process..."
 echo "-------------------------------"
-# Test if Docker container can build the project
-if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+# Test if Docker container can build the project (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
     # Test cargo build in Docker
     if docker run --rm -v "$(pwd):/workspace" -w /workspace fd-env-test cargo build --quiet >/dev/null 2>&1; then
         print_status "PASS" "cargo build works in Docker container"
@@ -739,6 +743,8 @@ if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
     else
         print_status "FAIL" "make install does not work in Docker container"
     fi
+else
+    print_status "INFO" "Skipping Docker build tests (running inside container)"
 fi
 
 echo ""

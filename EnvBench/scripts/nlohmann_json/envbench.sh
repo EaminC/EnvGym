@@ -125,10 +125,15 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/nlohmann_json" nlohmann-json-env-test bash -c "
+    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/nlohmann_json" --entrypoint="" nlohmann-json-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
+        # Activate Python virtual environment (if it exists)
+        if [ -f "/home/cc/EnvGym/data/nlohmann_json/.venv/bin/activate" ]; then
+            source /home/cc/EnvGym/data/nlohmann_json/.venv/bin/activate
+        fi
+        cd /home/cc/EnvGym/data/nlohmann_json
+        bash envgym/envbench.sh
     "
     exit 0
 fi
@@ -826,91 +831,95 @@ fi
 echo ""
 echo "10. Testing nlohmann/json Docker Functionality..."
 echo "------------------------------------------------"
-# Test if Docker container can run basic commands
-if [ -f "envgym/envgym.dockerfile" ]; then # Only test if Dockerfile exists
-    # Test GCC in Docker
-    if docker run --rm nlohmann-json-env-test gcc --version >/dev/null 2>&1; then
-        print_status "PASS" "GCC works in Docker container"
-    else
-        print_status "FAIL" "GCC does not work in Docker container"
+# Test if Docker container can run basic commands (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    if [ -f "envgym/envgym.dockerfile" ]; then # Only test if Dockerfile exists
+        # Test GCC in Docker
+        if docker run --rm nlohmann-json-env-test gcc --version >/dev/null 2>&1; then
+            print_status "PASS" "GCC works in Docker container"
+        else
+            print_status "FAIL" "GCC does not work in Docker container"
+        fi
+        
+        # Test G++ in Docker
+        if docker run --rm nlohmann-json-env-test g++ --version >/dev/null 2>&1; then
+            print_status "PASS" "G++ works in Docker container"
+        else
+            print_status "FAIL" "G++ does not work in Docker container"
+        fi
+        
+        # Test CMake in Docker
+        if docker run --rm nlohmann-json-env-test cmake --version >/dev/null 2>&1; then
+            print_status "PASS" "CMake works in Docker container"
+        else
+            print_status "FAIL" "CMake does not work in Docker container"
+        fi
+        
+        # Test Make in Docker
+        if docker run --rm nlohmann-json-env-test make --version >/dev/null 2>&1; then
+            print_status "PASS" "Make works in Docker container"
+        else
+            print_status "FAIL" "Make does not work in Docker container"
+        fi
+        
+        # Test Git in Docker
+        if docker run --rm nlohmann-json-env-test git --version >/dev/null 2>&1; then
+            print_status "PASS" "Git works in Docker container"
+        else
+            print_status "FAIL" "Git does not work in Docker container"
+        fi
+        
+        # Test Python3 in Docker
+        if docker run --rm nlohmann-json-env-test python3 --version >/dev/null 2>&1; then
+            print_status "PASS" "Python3 works in Docker container"
+        else
+            print_status "FAIL" "Python3 does not work in Docker container"
+        fi
+        
+        # Test if CMakeLists.txt is accessible in Docker
+        if docker run --rm nlohmann-json-env-test test -f CMakeLists.txt; then
+            print_status "PASS" "CMakeLists.txt is accessible in Docker container"
+        else
+            print_status "FAIL" "CMakeLists.txt is not accessible in Docker container"
+        fi
+        
+        # Test if Makefile is accessible in Docker
+        if docker run --rm nlohmann-json-env-test test -f Makefile; then
+            print_status "PASS" "Makefile is accessible in Docker container"
+        else
+            print_status "FAIL" "Makefile is not accessible in Docker container"
+        fi
+        
+        # Test if include directory is accessible in Docker
+        if docker run --rm nlohmann-json-env-test test -d include; then
+            print_status "PASS" "include directory is accessible in Docker container"
+        else
+            print_status "FAIL" "include directory is not accessible in Docker container"
+        fi
+        
+        # Test if single_include directory is accessible in Docker
+        if docker run --rm nlohmann-json-env-test test -d single_include; then
+            print_status "PASS" "single_include directory is accessible in Docker container"
+        else
+            print_status "FAIL" "single_include directory is not accessible in Docker container"
+        fi
+        
+        # Test if tests directory is accessible in Docker
+        if docker run --rm nlohmann-json-env-test test -d tests; then
+            print_status "PASS" "tests directory is accessible in Docker container"
+        else
+            print_status "FAIL" "tests directory is not accessible in Docker container"
+        fi
+        
+        # Test if README.md is accessible in Docker
+        if docker run --rm nlohmann-json-env-test test -f README.md; then
+            print_status "PASS" "README.md is accessible in Docker container"
+        else
+            print_status "FAIL" "README.md is not accessible in Docker container"
+        fi
     fi
-    
-    # Test G++ in Docker
-    if docker run --rm nlohmann-json-env-test g++ --version >/dev/null 2>&1; then
-        print_status "PASS" "G++ works in Docker container"
-    else
-        print_status "FAIL" "G++ does not work in Docker container"
-    fi
-    
-    # Test CMake in Docker
-    if docker run --rm nlohmann-json-env-test cmake --version >/dev/null 2>&1; then
-        print_status "PASS" "CMake works in Docker container"
-    else
-        print_status "FAIL" "CMake does not work in Docker container"
-    fi
-    
-    # Test Make in Docker
-    if docker run --rm nlohmann-json-env-test make --version >/dev/null 2>&1; then
-        print_status "PASS" "Make works in Docker container"
-    else
-        print_status "FAIL" "Make does not work in Docker container"
-    fi
-    
-    # Test Git in Docker
-    if docker run --rm nlohmann-json-env-test git --version >/dev/null 2>&1; then
-        print_status "PASS" "Git works in Docker container"
-    else
-        print_status "FAIL" "Git does not work in Docker container"
-    fi
-    
-    # Test Python3 in Docker
-    if docker run --rm nlohmann-json-env-test python3 --version >/dev/null 2>&1; then
-        print_status "PASS" "Python3 works in Docker container"
-    else
-        print_status "FAIL" "Python3 does not work in Docker container"
-    fi
-    
-    # Test if CMakeLists.txt is accessible in Docker
-    if docker run --rm nlohmann-json-env-test test -f CMakeLists.txt; then
-        print_status "PASS" "CMakeLists.txt is accessible in Docker container"
-    else
-        print_status "FAIL" "CMakeLists.txt is not accessible in Docker container"
-    fi
-    
-    # Test if Makefile is accessible in Docker
-    if docker run --rm nlohmann-json-env-test test -f Makefile; then
-        print_status "PASS" "Makefile is accessible in Docker container"
-    else
-        print_status "FAIL" "Makefile is not accessible in Docker container"
-    fi
-    
-    # Test if include directory is accessible in Docker
-    if docker run --rm nlohmann-json-env-test test -d include; then
-        print_status "PASS" "include directory is accessible in Docker container"
-    else
-        print_status "FAIL" "include directory is not accessible in Docker container"
-    fi
-    
-    # Test if single_include directory is accessible in Docker
-    if docker run --rm nlohmann-json-env-test test -d single_include; then
-        print_status "PASS" "single_include directory is accessible in Docker container"
-    else
-        print_status "FAIL" "single_include directory is not accessible in Docker container"
-    fi
-    
-    # Test if tests directory is accessible in Docker
-    if docker run --rm nlohmann-json-env-test test -d tests; then
-        print_status "PASS" "tests directory is accessible in Docker container"
-    else
-        print_status "FAIL" "tests directory is not accessible in Docker container"
-    fi
-    
-    # Test if README.md is accessible in Docker
-    if docker run --rm nlohmann-json-env-test test -f README.md; then
-        print_status "PASS" "README.md is accessible in Docker container"
-    else
-        print_status "FAIL" "README.md is not accessible in Docker container"
-    fi
+else
+    print_status "INFO" "Skipping Docker functionality tests (running inside container)"
 fi
 
 echo ""

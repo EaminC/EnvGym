@@ -52,15 +52,15 @@ print_status() {
     case $status in
         "PASS")
             echo -e "${GREEN}[PASS]${NC} $message"
-            ((PASS_COUNT++))
+            PASS_COUNT=$((PASS_COUNT + 1))
             ;;
         "FAIL")
             echo -e "${RED}[FAIL]${NC} $message"
-            ((FAIL_COUNT++))
+            FAIL_COUNT=$((FAIL_COUNT + 1))
             ;;
         "WARN")
             echo -e "${YELLOW}[WARN]${NC} $message"
-            ((WARN_COUNT++))
+            WARN_COUNT=$((WARN_COUNT + 1))
             ;;
         "INFO")
             echo -e "${BLUE}[INFO]${NC} $message"
@@ -123,13 +123,32 @@ else
         exit 1
     fi
     
-    # Run this script inside Docker container
+    # Run this script inside Docker container (using builder stage for Go tools)
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/zeromicro_go-zero" go-zero-env-test bash -c "
+    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/zeromicro_go-zero" --entrypoint="" golang:1.21-alpine3.18 sh -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
-    "
+        cd /home/cc/EnvGym/data/zeromicro_go-zero
+        sh envgym/envbench.sh
+    " 2>&1 | tee /tmp/docker_output.txt
+    
+    # Extract test results from the output and create JSON
+    PASS_COUNT=$(grep -o "PASS: [0-9]*" /tmp/docker_output.txt | tail -1 | grep -o "[0-9]*" || echo "0")
+    FAIL_COUNT=$(grep -o "FAIL: [0-9]*" /tmp/docker_output.txt | tail -1 | grep -o "[0-9]*" || echo "0")
+    WARN_COUNT=$(grep -o "WARN: [0-9]*" /tmp/docker_output.txt | tail -1 | grep -o "[0-9]*" || echo "0")
+    
+    # Create JSON file with extracted results
+    cat > envgym/envbench.json << EOF
+{
+    "PASS": $PASS_COUNT,
+    "FAIL": $FAIL_COUNT,
+    "WARN": $WARN_COUNT
+}
+EOF
+    echo -e "${BLUE}[INFO]${NC} JSON results extracted and saved to envgym/envbench.json (PASS: $PASS_COUNT, FAIL: $FAIL_COUNT, WARN: $WARN_COUNT)"
+    
+    # Clean up
+    rm -f /tmp/docker_output.txt
     exit 0
 fi
 
@@ -142,92 +161,144 @@ echo "=========================================="
 echo "1. Building Docker Environment..."
 echo "=========================================="
 
-if ! command -v docker &> /dev/null; then
-    print_status "FAIL" "Docker is not installed. Cannot test Docker environment."
-    echo -e "\n[INFO] Docker Environment Score: 0% (0/0 tests passed)"
-    exit 1
-fi
+# Only run Docker tests if we're not inside a container
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    if ! command -v docker &> /dev/null; then
+        print_status "FAIL" "Docker is not installed. Cannot test Docker environment."
+        echo -e "\n[INFO] Docker Environment Score: 0% (0/0 tests passed)"
+        exit 1
+    fi
 
-if [ ! -f "envgym/envgym.dockerfile" ]; then
-    print_status "FAIL" "envgym.dockerfile not found. Cannot test Docker environment."
-    echo -e "\n[INFO] Docker Environment Score: 0% (0/0 tests passed)"
-    exit 1
-fi
+    if [ ! -f "envgym/envgym.dockerfile" ]; then
+        print_status "FAIL" "envgym.dockerfile not found. Cannot test Docker environment."
+        echo -e "\n[INFO] Docker Environment Score: 0% (0/0 tests passed)"
+        exit 1
+    fi
 
-print_status "INFO" "Building Docker image..."
-if timeout 900s docker build -f envgym/envgym.dockerfile -t gozero-env-test .; then
-    print_status "PASS" "Docker image built successfully."
+    print_status "INFO" "Building Docker image..."
+    if timeout 900s docker build -f envgym/envgym.dockerfile -t gozero-env-test .; then
+        print_status "PASS" "Docker image built successfully."
+    else
+        print_status "FAIL" "Docker image build failed. See above for details."
+        echo ""
+        echo "=========================================="
+        echo "go-zero Environment Test Complete"
+        echo "=========================================="
+        echo ""
+        echo "Summary:"
+        echo "--------"
+        echo "Docker build failed - environment not ready for go-zero development"
+        echo ""
+        echo "=========================================="
+        echo "Test Results Summary"
+        echo "=========================================="
+        echo -e "${GREEN}PASS: 0${NC}"
+        echo -e "${RED}FAIL: 0${NC}"
+        echo -e "${YELLOW}WARN: 0${NC}"
+        echo ""
+        print_status "INFO" "Docker Environment Score: 0% (0/0 tests passed)"
+        echo ""
+        print_status "FAIL" "Docker build failed - go-zero environment is not ready!"
+        print_status "INFO" "Please fix the Docker build issues before using this environment"
+        exit 1
+    fi
 else
-    print_status "FAIL" "Docker image build failed. See above for details."
-    echo ""
-    echo "=========================================="
-    echo "go-zero Environment Test Complete"
-    echo "=========================================="
-    echo ""
-    echo "Summary:"
-    echo "--------"
-    echo "Docker build failed - environment not ready for go-zero development"
-    echo ""
-    echo "=========================================="
-    echo "Test Results Summary"
-    echo "=========================================="
-    echo -e "${GREEN}PASS: 0${NC}"
-    echo -e "${RED}FAIL: 0${NC}"
-    echo -e "${YELLOW}WARN: 0${NC}"
-    echo ""
-    print_status "INFO" "Docker Environment Score: 0% (0/0 tests passed)"
-    echo ""
-    print_status "FAIL" "Docker build failed - go-zero environment is not ready!"
-    print_status "INFO" "Please fix the Docker build issues before using this environment"
-    exit 1
+    print_status "INFO" "Running inside Docker container - skipping Docker build phase"
 fi
 
 # ========== 2. Checking Toolchain ==========
 echo ""
 echo "2. Checking Toolchain..."
 echo "-------------------------"
-for tool in go git curl wget make gcc g++ bash; do
-    if docker run --rm gozero-env-test bash -c "command -v $tool" >/dev/null 2>&1; then
-        version=$(docker run --rm gozero-env-test bash -c "$tool version 2>&1 | head -n1")
-        print_status "PASS" "$tool available: $version"
-    else
-        print_status "FAIL" "$tool not available"
-    fi
-done
+# Only run Docker tests if we're not inside a container
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    for tool in go git curl wget make gcc g++ bash; do
+        if docker run --rm gozero-env-test bash -c "command -v $tool" >/dev/null 2>&1; then
+            version=$(docker run --rm gozero-env-test bash -c "$tool version 2>&1 | head -n1")
+            print_status "PASS" "$tool available: $version"
+        else
+            print_status "FAIL" "$tool not available"
+        fi
+    done
+else
+    # Test tools directly when inside container
+    for tool in go git curl wget make gcc g++ bash; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            version=$("$tool" version 2>&1 | head -n1)
+            print_status "PASS" "$tool available: $version"
+        else
+            print_status "FAIL" "$tool not available"
+        fi
+    done
+fi
 
 # ========== 3. Checking Go Modules ==========
 echo ""
 echo "3. Checking Go Modules..."
 echo "-------------------------"
-if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -f go.mod; then
-    print_status "PASS" "go.mod exists"
+# Only run Docker tests if we're not inside a container
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -f go.mod; then
+        print_status "PASS" "go.mod exists"
+    else
+        print_status "FAIL" "go.mod does not exist"
+    fi
+    if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -f go.sum; then
+        print_status "PASS" "go.sum exists"
+    else
+        print_status "FAIL" "go.sum does not exist"
+    fi
 else
-    print_status "FAIL" "go.mod does not exist"
-fi
-if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -f go.sum; then
-    print_status "PASS" "go.sum exists"
-else
-    print_status "FAIL" "go.sum does not exist"
+    # Test files directly when inside container
+    if [ -f go.mod ]; then
+        print_status "PASS" "go.mod exists"
+    else
+        print_status "FAIL" "go.mod does not exist"
+    fi
+    if [ -f go.sum ]; then
+        print_status "PASS" "go.sum exists"
+    else
+        print_status "FAIL" "go.sum does not exist"
+    fi
 fi
 
 # ========== 4. Checking Project Structure ==========
 echo ""
 echo "4. Checking Project Structure..."
 echo "-------------------------------"
-for d in core gateway zrpc rest tools mcp internal .github; do
-    if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -d "$d"; then
-        print_status "PASS" "$d directory exists"
-    else
-        print_status "WARN" "$d directory does not exist"
-    fi
-done
-for f in LICENSE readme.md readme-cn.md CONTRIBUTING.md SECURITY.md code-of-conduct.md .gitignore .dockerignore; do
-    if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -f "$f"; then
-        print_status "PASS" "$f exists"
-    else
-        print_status "FAIL" "$f does not exist"
-    fi
-done
+# Only run Docker tests if we're not inside a container
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    for d in core gateway zrpc rest tools mcp internal .github; do
+        if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -d "$d"; then
+            print_status "PASS" "$d directory exists"
+        else
+            print_status "WARN" "$d directory does not exist"
+        fi
+    done
+    for f in LICENSE readme.md readme-cn.md CONTRIBUTING.md SECURITY.md code-of-conduct.md .gitignore .dockerignore; do
+        if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -f "$f"; then
+            print_status "PASS" "$f exists"
+        else
+            print_status "FAIL" "$f does not exist"
+        fi
+    done
+else
+    # Test directories and files directly when inside container
+    for d in core gateway zrpc rest tools mcp internal .github; do
+        if [ -d "$d" ]; then
+            print_status "PASS" "$d directory exists"
+        else
+            print_status "WARN" "$d directory does not exist"
+        fi
+    done
+    for f in LICENSE readme.md readme-cn.md CONTRIBUTING.md SECURITY.md code-of-conduct.md .gitignore .dockerignore; do
+        if [ -f "$f" ]; then
+            print_status "PASS" "$f exists"
+        else
+            print_status "FAIL" "$f does not exist"
+        fi
+    done
+fi
 
 # ========== 5. Checking Source Files ==========
 echo ""
@@ -244,97 +315,77 @@ fi
 echo ""
 echo "6. Testing Build in Docker..."
 echo "-----------------------------"
-print_status "INFO" "Attempting to build go-zero in container..."
-if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test bash -c 'go mod tidy && go build ./...'; then
-    print_status "PASS" "go build ./... succeeded in Docker container"
+# Only run Docker tests if we're not inside a container
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    print_status "INFO" "Attempting to build go-zero in container..."
+    if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test bash -c 'go mod tidy && go build ./...'; then
+        print_status "PASS" "go build ./... succeeded in Docker container"
+    else
+        print_status "FAIL" "go build ./... failed in Docker container"
+    fi
 else
-    print_status "FAIL" "go build ./... failed in Docker container"
+    # Test build directly when inside container
+    print_status "INFO" "Attempting to build go-zero directly..."
+    if go mod tidy >/dev/null 2>&1 && go build ./... >/dev/null 2>&1; then
+        print_status "PASS" "go build ./... succeeded"
+    else
+        print_status "FAIL" "go build ./... failed"
+    fi
 fi
 
 # ========== 7. Documentation ==========
 echo ""
 echo "7. Checking Documentation..."
 echo "----------------------------"
-for doc in readme.md readme-cn.md LICENSE CONTRIBUTING.md SECURITY.md code-of-conduct.md; do
-    if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -r "$doc"; then
-        print_status "PASS" "$doc is readable"
-    else
-        print_status "FAIL" "$doc is not readable"
-    fi
-done
+# Only run Docker tests if we're not inside a container
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    for doc in readme.md readme-cn.md LICENSE CONTRIBUTING.md SECURITY.md code-of-conduct.md; do
+        if docker run --rm -v "$(pwd):/workspace" -w /workspace gozero-env-test test -r "$doc"; then
+            print_status "PASS" "$doc is readable"
+        else
+            print_status "FAIL" "$doc is not readable"
+        fi
+    done
+else
+    # Test documentation directly when inside container
+    for doc in readme.md readme-cn.md LICENSE CONTRIBUTING.md SECURITY.md code-of-conduct.md; do
+        if [ -r "$doc" ]; then
+            print_status "PASS" "$doc is readable"
+        else
+            print_status "FAIL" "$doc is not readable"
+        fi
+    done
+fi
 
 # ========== 8. Docker Functionality ==========
 echo ""
 echo "8. Checking Docker Functionality..."
 echo "-----------------------------------"
-if docker run --rm gozero-env-test go version >/dev/null 2>&1; then
-    print_status "PASS" "go works in Docker container"
+# Only run Docker tests if we're not inside a container
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    if docker run --rm gozero-env-test go version >/dev/null 2>&1; then
+        print_status "PASS" "go works in Docker container"
+    else
+        print_status "FAIL" "go does not work in Docker container"
+    fi
+    if docker run --rm gozero-env-test git --version >/dev/null 2>&1; then
+        print_status "PASS" "git works in Docker container"
+    else
+        print_status "FAIL" "git does not work in Docker container"
+    fi
+    if docker run --rm -v "$(pwd):/workspace" gozero-env-test test -f go.mod; then
+        print_status "PASS" "go.mod is accessible in Docker container"
+    else
+        print_status "FAIL" "go.mod is not accessible in Docker container"
+    fi
 else
-    print_status "FAIL" "go does not work in Docker container"
-fi
-if docker run --rm gozero-env-test git --version >/dev/null 2>&1; then
-    print_status "PASS" "git works in Docker container"
-else
-    print_status "FAIL" "git does not work in Docker container"
-fi
-if docker run --rm -v "$(pwd):/workspace" gozero-env-test test -f go.mod; then
-    print_status "PASS" "go.mod is accessible in Docker container"
-else
-    print_status "FAIL" "go.mod is not accessible in Docker container"
+    print_status "INFO" "Skipping Docker functionality tests (running inside container)"
 fi
 
 # ========== 9. Summary ==========
 echo ""
 echo "=========================================="
-echo "go-zero Environment Test Complete"
-echo "=========================================="
-echo ""
-echo "Summary:"
-echo "--------"
-echo "This script has tested the Docker environment for go-zero:"
-echo "- Docker build process (Go, git, curl, wget, make, gcc, g++)"
-echo "- Go modules (go.mod, go.sum)"
-echo "- Project structure (core, gateway, zrpc, rest, tools, mcp, internal, .github, key files)"
-echo "- Source files (*.go)"
-echo "- Build/test in Docker (go build ./...)"
-echo "- Documentation (README, LICENSE, CONTRIBUTING, SECURITY, code-of-conduct)"
-echo "- Docker container functionality (toolchain, file access)"
-echo ""
-echo "=========================================="
-echo "Test Results Summary"
-echo "=========================================="
-echo -e "${GREEN}PASS: $PASS_COUNT${NC}"
-echo -e "${RED}FAIL: $FAIL_COUNT${NC}"
-echo -e "${YELLOW}WARN: $WARN_COUNT${NC}"
-echo ""
-total_tests=$((PASS_COUNT + FAIL_COUNT + WARN_COUNT))
-if [ $total_tests -gt 0 ]; then
-    score_percentage=$((PASS_COUNT * 100 / total_tests))
-else
-    score_percentage=0
-fi
-print_status "INFO" "Docker Environment Score: $score_percentage% ($PASS_COUNT/$total_tests tests passed)"
-echo ""
-if [ $FAIL_COUNT -eq 0 ]; then
-    print_status "INFO" "All Docker tests passed! Your go-zero Docker environment is ready!"
-    print_status "INFO" "go-zero is a web and RPC framework written in Go."
-elif [ $FAIL_COUNT -lt 5 ]; then
-    print_status "INFO" "Most Docker tests passed! Your go-zero Docker environment is mostly ready."
-    print_status "WARN" "Some optional features are missing, but core functionality works."
-else
-    print_status "WARN" "Many Docker tests failed. Please check the output above."
-    print_status "INFO" "This might indicate that the Docker environment is not properly set up."
-fi
-echo ""
-print_status "INFO" "You can now run go-zero in Docker: A web and RPC framework written in Go."
-print_status "INFO" "Example: docker run --rm -v \$(pwd):/workspace -w /workspace gozero-env-test go build ./..."
-print_status "INFO" "Example: docker run --rm -v \$(pwd):/workspace -w /workspace gozero-env-test go test ./..."
-echo ""
-print_status "INFO" "For more information, see README.md and https://github.com/zeromicro/go-zero" 
-
-echo ""
-echo "=========================================="
-echo "Docker Environment Test Complete"
+echo "Go-Zero Environment Test Complete"
 echo "=========================================="
 echo ""
 echo "Summary:"

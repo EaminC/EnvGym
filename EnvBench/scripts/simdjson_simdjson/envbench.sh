@@ -125,10 +125,11 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/simdjson_simdjson" simdjson-env-test bash -c "
+    docker run --rm -v "$(pwd):/workspace" --entrypoint="" simdjson-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
+        cd /workspace
+        bash envgym/envbench.sh
     "
     exit 0
 fi
@@ -598,23 +599,115 @@ fi
 echo ""
 echo "8. Testing SimdJSON Docker Functionality..."
 echo "-------------------------------------------"
-# Test if Docker container can run basic commands
-if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
-    # Skip Docker container tests due to binary execution issues
-    print_status "WARN" "Skipping Docker container functionality tests due to binary execution issues"
-    print_status "INFO" "Docker image was built successfully but container execution is problematic"
-    print_status "INFO" "Local environment tests show the project is ready for development"
+# Test if Docker container can run basic commands (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    # Test C++ in Docker
+    if docker run --rm simdjson-env-test g++ --version >/dev/null 2>&1; then
+        print_status "PASS" "G++ works in Docker container"
+    else
+        print_status "FAIL" "G++ does not work in Docker container"
+    fi
+    
+    # Test CMake in Docker
+    if docker run --rm simdjson-env-test cmake --version >/dev/null 2>&1; then
+        print_status "PASS" "CMake works in Docker container"
+    else
+        print_status "FAIL" "CMake does not work in Docker container"
+    fi
+    
+    # Test if README.md is accessible in Docker
+    if docker run --rm -v "$(pwd):/workspace" simdjson-env-test test -f README.md; then
+        print_status "PASS" "README.md is accessible in Docker container"
+    else
+        print_status "FAIL" "README.md is not accessible in Docker container"
+    fi
+    
+    # Test if src directory is accessible in Docker
+    if docker run --rm -v "$(pwd):/workspace" simdjson-env-test test -d src; then
+        print_status "PASS" "src directory is accessible in Docker container"
+    else
+        print_status "FAIL" "src directory is not accessible in Docker container"
+    fi
+    
+    # Test if include directory is accessible in Docker
+    if docker run --rm -v "$(pwd):/workspace" simdjson-env-test test -d include; then
+        print_status "PASS" "include directory is accessible in Docker container"
+    else
+        print_status "FAIL" "include directory is not accessible in Docker container"
+    fi
+    
+    # Test if tests directory is accessible in Docker
+    if docker run --rm -v "$(pwd):/workspace" simdjson-env-test test -d tests; then
+        print_status "PASS" "tests directory is accessible in Docker container"
+    else
+        print_status "FAIL" "tests directory is not accessible in Docker container"
+    fi
+    
+    # Test if examples directory is accessible in Docker
+    if docker run --rm -v "$(pwd):/workspace" simdjson-env-test test -d examples; then
+        print_status "PASS" "examples directory is accessible in Docker container"
+    else
+        print_status "FAIL" "examples directory is not accessible in Docker container"
+    fi
+    
+    # Test if singleheader directory is accessible in Docker
+    if docker run --rm -v "$(pwd):/workspace" simdjson-env-test test -d singleheader; then
+        print_status "PASS" "singleheader directory is accessible in Docker container"
+    else
+        print_status "FAIL" "singleheader directory is not accessible in Docker container"
+    fi
+    
+    # Test if CMakeLists.txt is accessible in Docker
+    if docker run --rm -v "$(pwd):/workspace" simdjson-env-test test -f CMakeLists.txt; then
+        print_status "PASS" "CMakeLists.txt is accessible in Docker container"
+    else
+        print_status "FAIL" "CMakeLists.txt is not accessible in Docker container"
+    fi
+else
+    print_status "INFO" "Skipping Docker functionality tests (running inside container)"
 fi
 
 echo ""
 echo "9. Testing SimdJSON Build Process..."
 echo "------------------------------------"
-# Test if Docker container can run build commands (simplified tests)
-if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
-    # Skip Docker build tests due to binary execution issues
-    print_status "WARN" "Skipping Docker build tests due to binary execution issues"
-    print_status "INFO" "Docker image was built successfully but container execution is problematic"
-    print_status "INFO" "Local environment is ready for SimdJSON development"
+# Test if Docker container can run build commands (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
+    # Test CMake configuration in Docker
+    if docker run --rm -v "$(pwd):/workspace" -w /workspace simdjson-env-test cmake -S . -B /tmp/build >/dev/null 2>&1; then
+        print_status "PASS" "CMake configuration works in Docker container"
+    else
+        print_status "FAIL" "CMake configuration does not work in Docker container"
+    fi
+    
+    # Test C++ compilation in Docker
+    if docker run --rm -v "$(pwd):/workspace" -w /workspace simdjson-env-test g++ -std=c++17 -fsyntax-only singleheader/simdjson.cpp >/dev/null 2>&1; then
+        print_status "PASS" "C++ compilation works in Docker container"
+    else
+        print_status "FAIL" "C++ compilation does not work in Docker container"
+    fi
+    
+    # Test singleheader compilation in Docker
+    if docker run --rm -v "$(pwd):/workspace" -w /workspace simdjson-env-test g++ -std=c++17 -c singleheader/simdjson.cpp -o /tmp/simdjson.o >/dev/null 2>&1; then
+        print_status "PASS" "Singleheader compilation works in Docker container"
+    else
+        print_status "FAIL" "Singleheader compilation does not work in Docker container"
+    fi
+    
+    # Test make in Docker
+    if docker run --rm -v "$(pwd):/workspace" -w /workspace simdjson-env-test make --version >/dev/null 2>&1; then
+        print_status "PASS" "Make works in Docker container"
+    else
+        print_status "FAIL" "Make does not work in Docker container"
+    fi
+    
+    # Test ninja in Docker
+    if docker run --rm -v "$(pwd):/workspace" -w /workspace simdjson-env-test ninja --version >/dev/null 2>&1; then
+        print_status "PASS" "Ninja works in Docker container"
+    else
+        print_status "FAIL" "Ninja does not work in Docker container"
+    fi
+else
+    print_status "INFO" "Skipping Docker build tests (running inside container)"
     
     # Test local build capabilities instead
     if command -v g++ &> /dev/null; then
