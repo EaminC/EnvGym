@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/SEED-GNN; project appears to be in a subdirectory under /home/cc/EnvGym/data
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.X-slim); no CUDA or GPU-specific base image needed
+- GPU: No NVIDIA GPU detected; CUDA not available; do not use nvidia/cuda or GPU-dependent base images
+- Instruction Notes: No GPU instructions (e.g., no RUN nvidia-smi, no CUDA installs); set WORKDIR to project directory; can use multi-core builds if needed; standard Linux instructions apply
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag not applicable without GPU

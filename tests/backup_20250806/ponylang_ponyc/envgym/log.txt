@@ -1,0 +1,29 @@
+=== Docker Execution Log - 20250721_105119 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753095047
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+74 |
+75 | >>> RUN set -euxo pipefail; \
+76 | >>>     echo "==== Downloading pinned ponyup-init.sh ===="; \
+77 | >>>     curl --proto '=https' --tlsv1.2 -fsSL -o /tmp/ponyup-init.sh https://raw.githubusercontent.com/ponylang/ponyup/${PONYUP_INIT_COMMIT}/ponyup-init.sh; \
+78 | >>>     echo "==== ponyup-init.sh first 40 lines ===="; head -40 /tmp/ponyup-init.sh || true; \
+79 | >>>     echo "==== Checking file type of ponyup-init.sh ===="; file /tmp/ponyup-init.sh; \
+80 | >>>     chmod +x /tmp/ponyup-init.sh; \
+81 | >>>     echo "==== Checking if bash, curl, and coreutils are present ===="; \
+82 | >>>     bash --version; \
+83 | >>>     curl --version; \
+84 | >>>     ls --version; \
+85 | >>>     file --version; \
+86 | >>>     wget --version; \
+87 | >>>     mkdir -p /root/.local/share/ponyup; \
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

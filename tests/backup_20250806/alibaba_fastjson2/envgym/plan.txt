@@ -1,0 +1,122 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR HARDWARE INFO) ===
+
+1. DOWNLOADS NEEDED:  
+   - Java Development Kit (JDK) 8 or newer (preferably JDK 11 or 17); ensure x86_64/amd64 compatibility. No ARM/ARM64 (aarch64) or PPC64LE images/packages are required.
+   - Apache Maven: Use amd64-compatible binaries (minimum 3.6.x; 3.8.8 recommended for Docker builds; 3.9.6 for aaaaaaaaaaa/envgym.dockerfile). No ARM/ARM64 Maven binaries needed.
+   - Gradle: Use latest stable amd64-compatible version (minimum 6.x; Gradle 7.6.4 auto-installed in cccccc/envgym.dockerfile). No ARM/ARM64 versions needed.
+   - Git (latest stable release, x86_64/amd64).
+   - Docker (latest stable, supports BuildKit, multi-stage builds, and --platform=linux/amd64). No GPU/NVIDIA runtime or images needed; do not use --gpus flag.
+   - (Optional) IntelliJ IDEA, Eclipse, or VS Code (for Java/Kotlin development; ensure x86_64/amd64 versions).
+   - (If using Kotlin integration) Kotlin compiler & tooling (latest stable, x86_64/amd64 only; optional install block in aaaaaaaaaaa/envgym.dockerfile).
+   - (If running on Android) Android Studio, Android SDK (API 26+, Android 8+; only x86_64/amd64 images/emulators needed, no ARM builds/emulation).
+   - (If using GraalVM native-image features) GraalVM CE 22.3.x (22.3.2 for cccccc/envgym.dockerfile, 22.3.3 install block in aaaaaaaaaaa/envgym.dockerfile); use x86_64/amd64 GraalVM only.
+   - (If using GraalVM native-image) Ensure native-image supports x86_64/amd64 and is installed as per Dockerfile blocks; do not attempt ARM builds.
+   - (Optional for coverage) Codecov CLI (x86_64/amd64 version).
+   - (Optional for Gitpod usage) Gitpod account and browser extension (x86_64/amd64 containers only).
+   - (Optional) Latest fastjson2 binaries/artifacts for direct download/testing (x86_64/amd64).
+   - (Optional for JSON Schema/JSONB features) Review documentation links for additional tools or schemas (x86_64/amd64).
+   - Ensure access to Maven Central for dependencies.  
+   - (If using Solon) Solon framework dependencies (x86_64/amd64).
+   - (If using Solon integration) fastjson2-extension-solon module (x86_64/amd64).
+   - (If using Spring/Spring Boot) Spring Boot (latest stable, minimum 2.x, x86_64/amd64), Spring Web, Spring WebSocket modules, fastjson2-extension-spring module.
+   - (If using Spring 6 integration) fastjson2-extension-spring6 module.
+   - (If using WebSocket in Spring) Spring WebSocket dependencies.
+   - (If using GraalVM native-image) Ensure support for META-INF/native-image configuration files for fastjson2.
+   - (If using ProGuard, R8, or similar tools) Download ProGuard (x86_64/amd64), as support for ProGuard config is provided via core/src/main/resources/META-INF/proguard/fastjson2.pro.
+   - Ubuntu 22.04 base image (for bbbbbbbb/envgym.dockerfile-based setups; x86_64/amd64 only).
+   - Python 3 (latest available in Ubuntu 22.04; required for bbbbbbbb/envgym.dockerfile; x86_64/amd64 compatible).
+   - Python pip (latest available; for bbbbbbbb/envgym.dockerfile).
+   - Python venv (for bbbbbbbb/envgym.dockerfile).
+   - build-essential (x86_64/amd64).
+   - curl, ca-certificates (x86_64/amd64).
+   - requirements.txt (optional, for Python dependencies; for bbbbbbbb/envgym.dockerfile).
+   - Ensure access to OpenJDK 17 (for bbbbbbbb/envgym.dockerfile, cccccc/envgym.dockerfile, aaaaaaaaaaa/envgym.dockerfile; x86_64/amd64 only).
+   - openjdk:17-jdk-slim base image (for cccccc/envgym.dockerfile and aaaaaaaaaaa/envgym.dockerfile; use --platform=linux/amd64 if building on multi-arch hosts).
+   - ruby-full and Jekyll (for documentation builds in cccccc/envgym.dockerfile; x86_64/amd64 only).
+   - unzip (x86_64/amd64).
+   - [NEW] aaaaaaaaaaa/envgym.dockerfile:  
+     - Maven 3.9.6 (amd64 official binary).
+     - Git, curl, unzip, ca-certificates, bash, build-essential, libz-dev (amd64).
+     - GraalVM CE 22.3.3 (optional, amd64 only).
+     - Kotlin compiler (optional, amd64 only).
+     - No Ruby/Jekyll, no Python tools, no CUDA/GPU/NVIDIA tools by default.
+   - All tools/packages/images must be x86_64/amd64 compatible; do not use ARM/ARM64 variants.
+
+2. FILES TO CREATE:  
+   - No changes to file contents/layout, but ensure Dockerfiles and scripts use the correct working directory:  
+     - For bbbbbbbb/envgym.dockerfile and cccccc/envgym.dockerfile, WORKDIR should be /home/cc/EnvGym/data/alibaba_fastjson2 to match hardware/project location.
+     - For aaaaaaaaaaa/envgym.dockerfile, WORKDIR should be /workspace (as planned), but when running on the actual hardware, use the -v /home/cc/EnvGym/data/alibaba_fastjson2:/workspace mount to access the source.
+   - Document that all Docker-based examples and workflows assume x86_64/amd64 images, and that the working directory for code is /home/cc/EnvGym/data/alibaba_fastjson2.
+   - No CUDA/NVIDIA/GPU-related files or Dockerfile instructions should be present; omit all nvidia/cuda or --gpus references.
+   - Ensure all scripts and Dockerfiles use amd64-compatible base images (e.g., openjdk:17-jdk-slim, ubuntu:22.04, python:3.x-slim, debian:buster, ruby, etc. with --platform=linux/amd64 if needed).
+   - Add a note in README.md and README_EN.md:  
+     - "All provided Dockerfiles and setup instructions are for x86_64/amd64 systems. No ARM/ARM64 or GPU-specific features are enabled. If you are running on a different architecture, you may need to adapt the base images accordingly."
+   - No changes needed for storage (unless project grows), but monitor for space if building large native images or documentation.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - No change to test requirements, but all CI and local tests should be executed on x86_64/amd64 runners/containers.
+   - All native-image builds and validations should target x86_64/amd64 only; do not attempt ARM builds or test on ARM runners.
+   - Remove/omit any GPU/CUDA/NVIDIA-related test cases or instructions.
+   - In Docker-based test examples, use --platform=linux/amd64 if there is any ambiguity or the host is multi-arch.
+   - Ensure that all path references in tests (e.g., /home/cc/EnvGym/data/alibaba_fastjson2, /workspace) are correct for each environment.
+
+4. COMPLETE TODO LIST (with hardware-specific adjustments):  
+   1. Install Java JDK 8+ (preferably JDK 11/17); ensure x86_64/amd64 version.  
+   2. Install Maven (amd64, minimum 3.6.x, 3.8.8 or 3.9.6 as required).  
+   3. (Optional) Install Gradle (amd64).  
+   4. (Optional) Install IDE (amd64).  
+   5. Install Git (amd64).  
+   6. Clone the project repository into /home/cc/EnvGym/data/alibaba_fastjson2.  
+   7. Install Docker (latest, amd64, supports BuildKit, multi-stage, --platform=linux/amd64).  
+   8. (Optional) Install Docker Compose (amd64).  
+   9. (Optional) Install GraalVM CE (amd64 only); do not use ARM builds.  
+   10. (Optional) Install Kotlin CLI/tools (amd64 only).  
+   11. (If using Solon) Download Solon dependencies (amd64).  
+   12. (If using Spring/Spring Boot) Download dependencies (amd64).  
+   13. (If using Spring Boot with H2/MyBatis-Plus/YAML config): No hardware-specific changes.  
+   14. (If using Spring Boot with custom logging): No hardware-specific changes.  
+   15. (If using ProGuard, R8, or Android code shrinking/obfuscation): Only use amd64 tools.  
+   16. For Docker-based build and development:  
+       - All docker build/run commands should use --platform=linux/amd64 if host is multi-arch, to ensure amd64 images are used.
+       - Use correct project path:  
+         - For bbbbbbbb/envgym.dockerfile and cccccc/envgym.dockerfile, mount /home/cc/EnvGym/data/alibaba_fastjson2 as needed.
+         - For aaaaaaaaaaa/envgym.dockerfile, mount /home/cc/EnvGym/data/alibaba_fastjson2:/workspace.
+   17. For Ubuntu+Java+Python-based build using bbbbbbbb/envgym.dockerfile:  
+       - Ensure Docker image is built for x86_64/amd64.  
+       - WORKDIR should be /home/cc/EnvGym/data/alibaba_fastjson2.
+       - Use -v /home/cc/EnvGym/data/alibaba_fastjson2:/home/cc/EnvGym/data/alibaba_fastjson2 for mounting if needed.
+   18. For cccccc/envgym.dockerfile (Java+GraalVM+Jekyll):  
+       - Ensure Docker image is built for x86_64/amd64.
+       - WORKDIR is /home/cc/EnvGym/data/alibaba_fastjson2.
+       - Use -v /home/cc/EnvGym/data/alibaba_fastjson2:/home/cc/EnvGym/data/alibaba_fastjson2 for mounting.
+   19. [NEW] For aaaaaaaaaaa/envgym.dockerfile (minimal Java/Maven):  
+       - Ensure Docker image is built for x86_64/amd64, not ARM.
+       - WORKDIR is /workspace.
+       - Mount /home/cc/EnvGym/data/alibaba_fastjson2:/workspace for local development.
+       - Note: This image is for x86_64/amd64 only; ARM is not supported.
+   20. In the project directory:  
+       - No hardware-specific changes, but all tools/paths must be compatible with x86_64/amd64.
+   21. Create/update .gitignore as described.
+   22. Create initial Java/Kotlin source folders and code as described.
+   23. Implement and commit JUnit (or Kotlin) test cases as described.
+   24. (If using Spring) Add minimal Spring Boot app, YAML/properties/logback as described.
+   25. (If using Solon) Add minimal Solon config, test entrypoint.
+   26. (If using Spring 5 extension) Add/document tests for extension-spring5.
+   27. Configure CI:  
+       - All runners should be x86_64/amd64; if using GitHub Actions, ensure jobs run on ubuntu-latest or self-hosted x86_64 runners.
+       - All docker build commands should use --platform=linux/amd64 if there is any ambiguity.
+       - Do not add or reference any ARM or GPU runners.
+   28. (Optional) Add additional Dockerfiles/scripts as needed.
+   29. (Optional) Add .gitpod.yml and .gitpod.Dockerfile (x86_64/amd64 only).
+   30. (Optional) Configure and test Android project (x86_64/amd64 emulators only).
+   31. Update README.md and README_EN.md:  
+       - Add a section clarifying that all Dockerfiles and instructions are for x86_64/amd64 only; no ARM/ARM64 or GPU support is provided.
+       - Add a note that the project directory is /home/cc/EnvGym/data/alibaba_fastjson2 and reference this in Docker and build instructions.
+   32. Verify:  
+       - Build, tests, and Docker images must all succeed on x86_64/amd64 hosts/containers only.
+       - All path references are correct for /home/cc/EnvGym/data/alibaba_fastjson2 and /workspace (depending on Dockerfile).
+       - No CUDA/GPU/NVIDIA tools or instructions are present.
+   33. (Optional) Run sample code and benchmarks as described.
+   34. Document any environment-specific issues/solutions, especially regarding x86_64/amd64-only support, working directory paths, and that no ARM or GPU support is provided.
+
+=== END OF PLAN (ADJUSTED FOR x86_64/amd64, NO GPU, /home/cc/EnvGym/data/alibaba_fastjson2 WORKDIR) ===

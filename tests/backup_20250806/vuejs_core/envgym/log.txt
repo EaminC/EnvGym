@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250721_191708 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753125397
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+25 |     RUN pnpm build || true
+26 |
+27 | >>> RUN pnpm dev & sleep 10 && curl -f http://localhost:5173 || (ls -l /home/cc/EnvGym/data/vuejs_core/vite.config.*; exit 1)
+28 |
+29 |     CMD ["pnpm", "dev"]
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c pnpm dev & sleep 10 && curl -f http://localhost:5173 || (ls -l /home/cc/EnvGym/data/vuejs_core/vite.config.*; exit 1)" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

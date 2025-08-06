@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/zeromicro_go-zero; project likely Go-based (go-zero framework)
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., golang:1.x, ubuntu:22.04, debian:bullseye)
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (e.g., no RUN nvidia-smi or CUDA installs); multi-core build parallelization possible; large memory available—no hard limits needed; ensure COPY context matches working directory structure
+- Docker Version: 28.3.2; BuildKit and buildx supported; --gpus flag not usable without compatible NVIDIA GPU/driver

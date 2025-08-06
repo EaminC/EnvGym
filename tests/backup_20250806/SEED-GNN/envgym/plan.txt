@@ -1,0 +1,119 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (CPU-ONLY, x86_64, NO GPU/CUDA) ===
+
+1. DOWNLOADS NEEDED:
+   - Python 3.8 or 3.9  
+     - Ensure compatibility with PyTorch 2.0.0, PyG ecosystem, and all requirements.txt dependencies.
+   - pip (latest version)
+   - PyTorch 2.0.0 (CPU-only build; do NOT use any CUDA or cu* versions)
+   - torch-scatter==2.1.1 (PyG dependency; CPU wheel via extra index)
+   - torch-cluster==1.6.1 (PyG dependency; CPU wheel via extra index)
+   - torch-spline-conv==1.2.2 (PyG dependency; present in requirements.txt and as explicit dependency—avoid duplicate install)
+   - torch-sparse==0.6.17 (PyG dependency; CPU wheel via extra index)
+   - torch-geometric==2.3.1 (requirements.txt)
+   - torchvision==0.15.1 (requirements.txt)
+   - torchaudio==2.0.1 (requirements.txt)
+   - numpy==1.24.4 (requirements.txt)
+   - pandas==2.0.3 (requirements.txt)
+   - ogb==1.3.6 (requirements.txt)
+   - requirements.txt (project-specific Python dependencies)
+   - Git
+   - Bash (default in Linux; available in Ubuntu images)
+   - wget or curl (for dataset downloads if not managed by code)
+   - (Optional) conda or venv (for isolated Python environment)
+   - (Optional) .env or environment.yml (for environment variable management or conda environments)
+
+   **Version Compatibility/Hardware Notes:**
+   - All requirements.txt dependencies remain compatible with Python 3.8/3.9 and PyTorch 2.0.0.
+   - torch-geometric==2.3.1 supports PyTorch 2.0.0.
+   - torch-scatter, -cluster, -sparse, -spline-conv must be installed via the PyG wheels for CPU compatibility (use torch-2.0.0+cpu.html index).
+   - Do NOT install CUDA Toolkit or any cu* Python wheels.
+   - Do NOT set up GPU or CUDA-specific environment variables or tools.
+
+2. FILES TO CREATE:
+   - requirements.txt  
+     - Includes: torch-geometric==2.3.1, torchvision==0.15.1, torchaudio==2.0.1, torch-spline-conv==1.2.2, numpy==1.24.4, pandas==2.0.3, ogb==1.3.6.
+     - Should NOT include torch, torch-scatter, torch-cluster, torch-sparse (since they are installed via version/platform-specific URLs).
+   - config/pipeline_config/[method]/[model]/[dataset].json  
+   - config/eval_config/edit_gnn/[dataset].json  
+   - scripts/pretrain/seed_gnn/cora.sh (and other dataset/model scripts)
+   - scripts/edit/seed_gnn/gcn/cora.sh (and other dataset/model scripts)
+   - .env or environment.yml (optional)
+   - README.md  
+     - Update to clarify CPU-only installation steps for torch-geometric and related dependencies, and that CUDA/GPU setup is NOT needed.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+   - Test that all dependencies install without error (CPU wheels for PyTorch and PyG extensions).
+   - Test torch and CUDA compatibility:
+     - Ensure `torch.cuda.is_available()` returns False (as expected for CPU-only).
+   - Test importing all key packages.
+   - Test running a minimal training/editing script to completion on CPU.
+   - Test for existence and readability of config files.
+   - Test creation of output directories and log files.
+   - Test that results (metrics) are parsed/displayed correctly.
+   - Test error handling for missing files, incorrect arguments, or environment mismatch.
+   - Test new library APIs: import and run a minimal function from torch-geometric, torchvision, torchaudio, ogb, etc.
+   - Test for version mismatches or duplicate installations (especially torch-spline-conv).
+   - Test for compatibility issues between torch, torch-geometric, and all dependent packages.
+
+4. COMPLETE TODO LIST:
+   1. Install Git.
+      - Verification: run `git --version`.
+   2. Clone/download the repository.
+      - Verification: repository files are present locally.
+   3. Install Python 3.8 or 3.9 (if not present).
+      - Verification: run `python --version`.
+   4. (Optional but recommended) Set up a virtual environment (venv or conda).
+      - Verification: activate environment, ensure `which python` points to venv/conda path.
+   5. Upgrade pip to latest version.
+      - Command: `pip install --upgrade pip`
+      - Verification: run `pip --version`.
+   6. **Remove CUDA Toolkit install — not needed for CPU-only hardware.**
+   7. Install PyTorch 2.0.0 (CPU-only).
+      - Command: `pip install torch==2.0.0+cpu -f https://download.pytorch.org/whl/torch_stable.html`
+      - Verification: `python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"` (should print "False" for CUDA).
+   8. Install torch-scatter, torch-cluster, torch-spline-conv, torch-sparse (CPU wheels) from PyG.
+      - Command:  
+        ```
+        pip install torch-scatter==2.1.1 torch-cluster==1.6.1 torch-spline-conv==1.2.2 torch-sparse==0.6.17 -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+        ```
+      - Verification: `python -c "import torch_scatter, torch_cluster, torch_spline_conv, torch_sparse"`
+   9. Install all additional requirements from requirements.txt.
+      - Command: `pip install -r requirements.txt`
+      - Verification: `pip freeze` shows correct versions.
+   10. Ensure Bash is available (Linux: default; Ubuntu image: default).
+       - Verification: run `bash --version`.
+   11. Create/check config files for pipeline and eval settings.
+       - Verification: files exist and are valid JSON.
+   12. Create or verify pretrain and edit scripts.
+       - Verification: scripts are present and executable; `chmod +x` if needed.
+   13. Download or verify access to required datasets; place in expected directories.
+       - Verification: dataset files exist in <dataset_dir>.
+   14. Run a pretraining script (e.g., `bash scripts/pretrain/seed_gnn/cora.sh <output_dir> <dataset_dir>`).
+       - Verification: baseline checkpoints are produced in output directory.
+   15. Run an editing script (e.g., `bash scripts/edit/seed_gnn/gcn/cora.sh <output_dir> <dataset_dir>`).
+       - Verification: experiment runs end-to-end; output folder contains expected logs and results.
+   16. Check output: ensure input_config, output_config.json, raw_results.json, and exp.log are created and populated.
+       - Verification: inspect files for expected content and metrics.
+   17. Write and execute test cases (see section 3 above).
+       - Verification: all tests pass, errors are handled gracefully.
+   18. (Optional) Update README.md with new dependencies and clarify the need to install torch-scatter, torch-cluster, torch-spline-conv, torch-sparse via the correct PyG wheels (CPU index) and NOT via requirements.txt; **note no CUDA/GPU support is needed**.
+   19. Archive or document the finalized environment setup for reproducibility.
+       - Verification: all steps are documented and can be rerun by a new user successfully.
+
+**NOTES (CPU-ONLY, x86_64):**  
+- DO NOT install CUDA Toolkit or any GPU/CUDA drivers/tools.
+- DO NOT use any +cu* (cu117, cu118 etc.) wheels for torch, torch-scatter, torch-cluster, torch-sparse, or torch-spline-conv. Use only +cpu wheels.
+- Use only CPU wheel index URLs for PyG extensions: https://data.pyg.org/whl/torch-2.0.0+cpu.html
+- torch-spline-conv appears both in requirements.txt and as an explicit install—avoid duplicate/conflicting installations; prefer explicit install for compatibility.
+- README.md must clearly state this is a CPU-only setup, and that users must not attempt to install CUDA or GPU packages.
+- All new dependencies must be tested for installation, import, and basic usage on CPU.
+- Ensure the base image (if using Docker) is x86_64 compatible (e.g., ubuntu:22.04, python:3.8-slim/3.9-slim); do not use nvidia/cuda images.
+- Set WORKDIR to /home/cc/EnvGym/data/SEED-GNN (or as appropriate for project layout).
+- Storage and RAM: Ensure sufficient disk space for datasets and experiments; memory should be monitored during execution, but no specific requirements are imposed by the environment plan.
+- All paths and scripts should use standard Linux conventions; no Windows-specific instructions are necessary.
+
+**SUMMARY OF CRITICAL CHANGES:**
+- No CUDA Toolkit or GPU-specific instructions; all PyTorch and PyG builds are CPU-only.
+- Use CPU-only wheel URLs for PyG extension installations.
+- Ensure all scripts, documentation, and test cases expect and verify CPU-only operation (`torch.cuda.is_available()` returns False).
+- README and documentation must highlight the CPU-only nature of the setup.

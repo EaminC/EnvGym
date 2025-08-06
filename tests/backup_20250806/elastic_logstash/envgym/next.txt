@@ -1,0 +1,24 @@
+current progress
+
+- Dockerfile is fully set up for x86_64/amd64, Ubuntu 22.04.
+- All required base system dependencies are installed via apt-get (wget, curl, git, perl, build tools, OpenJDK 8/11, etc.).
+- Adoptium Temurin JDK 17 (x86_64) is downloaded and installed to the correct directory.
+- Gradle 8.7 (x86_64) is installed and symlinked.
+- JRuby 9.4.7.0 (x86_64) is installed, symlinked, and verified.
+- RubyGems tools (bundler, rake, rspec, dotenv, fpm) are installed via JRuby.
+- Drip (optional) and Vault (x86_64) are installed.
+- Elasticsearch OSS (x86_64) is downloaded and unpacked.
+- All environment variables are set with Linux conventions and correct paths.
+- Project root and user (`cc`) are created and permissions set.
+- Gradle cache directory and properties are configured for multi-core builds.
+- Dockerfile explicitly uses `--platform=linux/amd64`.
+- The image builds and runs successfully (per the latest Docker execution log).
+- Placeholders for `.ruby-version` and repository cloning are present but commented.
+
+next step
+
+- Uncomment and enable `COPY .ruby-version .ruby-version` to ensure `.ruby-version` is present in the image.
+- If repository cloning is required, uncomment and configure the repository clone section (set `REPO_URL` as needed).
+- Proceed to add/configure Logstash-specific files and configuration steps (e.g., `config/logstash.yml` for X-Pack/OSS mode).
+- Add steps for installing development dependencies using `./gradlew` or system Gradle within the Dockerfile or as documented post-build steps.
+- Prepare for build, test, and verification steps for Logstash and related tools as outlined in the plan.

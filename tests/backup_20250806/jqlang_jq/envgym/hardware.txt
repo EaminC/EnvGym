@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/jqlang_jq; project located in "jqlang_jq" directory under "EnvGym/data"
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Debian, Ubuntu, or other linux/amd64 images; no GPU-specific base image required
+- GPU: No available NVIDIA GPU detected; do not use CUDA base images
+- Instruction Notes: No GPU/accelerator instructions needed; multi-core CPU optimizations possible; default to linux/amd64 images; ensure WORKDIR is set to /home/cc/EnvGym/data/jqlang_jq in Dockerfile
+- Docker Version: 28.3.2; supports BuildKit, multi-stage builds, and latest Compose features; no GPU (--gpus) support required

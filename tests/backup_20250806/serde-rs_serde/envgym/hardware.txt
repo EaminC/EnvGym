@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/serde-rs_serde; project in a nested data subdirectory; parent likely holds multiple similar projects.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:buster, python:3.11-slim, rust:latest)
+- GPU: No NVIDIA GPU detected; CUDA base images not applicable
+- Instruction Notes: No GPU-specific instructions (e.g., no nvidia/cuda or RUN nvidia-smi); multi-core CPU optimizations possible (e.g., make -j96); ensure base images match Ubuntu 22.04 compatibility
+- Docker Version: 28.3.2; BuildKit and buildx supported; --gpus flag not applicable

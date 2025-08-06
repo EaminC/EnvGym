@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_101308",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753092784",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 905B done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/python:3.10-slim\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/6] FROM docker.io/library/python:3.10-slim@sha256:9dd6774a1276178f94b0cc1fb1f0edd980825d0ea7634847af9940b1b6273c13\n#4 DONE 0.0s\n\n#5 [2/6] WORKDIR /app\n#5 CACHED\n\n#6 [3/6] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         git         vim         ca-certificates         curl         unzip     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [internal] load build context\n#7 transferring context: 5.78MB 3.4s done\n#7 DONE 3.5s\n\n#8 [4/6] COPY requirements.txt /app/\n#8 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::zrntmdd43fuav6amydmudpg8b: \"/requirements.txt\": not found\n------\n > [4/6] COPY requirements.txt /app/:\n------\nenvgym.dockerfile:24\n--------------------\n  22 |     \n  23 |     # Copy only requirements first to leverage Docker layer caching\n  24 | >>> COPY requirements.txt /app/\n  25 |     \n  26 |     # Install Python dependencies\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::zrntmdd43fuav6amydmudpg8b: \"/requirements.txt\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

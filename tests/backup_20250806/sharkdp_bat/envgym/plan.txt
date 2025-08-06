@@ -1,0 +1,194 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED for x86_64 Linux, Docker, no GPU) ===
+
+**KEY HARDWARE/OS CONTEXT:**
+- Architecture: x86_64 (amd64)  
+- OS: Linux (assume Ubuntu 22.04/Debian Bullseye as base)  
+- No GPU (skip CUDA/nvidia directions)  
+- Working Directory: /home/cc/EnvGym/data/sharkdp_bat (user's home, non-root)  
+- Docker: Version 28.3.2+, BuildKit supported  
+- No special ARM/Mac/Windows requirements  
+- No root access assumed for project build directory  
+- All instructions, path references, and package names are for x86_64 Linux
+
+---
+
+**1. DOWNLOADS NEEDED:**  
+*(Adjusted for x86_64 Linux, Docker, non-root, no GPU, no Mac/Windows tools)*
+
+- Rust toolchain (>=1.74.0, edition 2021)
+  - Install via rustup (`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`)
+  - Ensure correct architecture (`x86_64-unknown-linux-gnu` triple by default)
+- Cargo (comes with Rust toolchain)
+- Git (latest stable; install via apt)
+- less pager (latest stable; install via apt)
+- **Omit**: Visual C++ Redistributable (Windows only)
+- **Omit**: home/plist (macOS only)
+- **Omit**: Windows-specific links or Chocolatey/Scoop/WinGet instructions
+- Optional tools (install via apt or cargo as appropriate):  
+  - fzf (apt: `fzf`)  
+  - xclip (apt: `xclip`)  
+  - iconv (comes with GNU coreutils; `apt install iconv` is a no-op, use `apt install coreutils` if minimal image)  
+  - ripgrep (`apt install ripgrep` or `cargo install ripgrep`)  
+  - fd (`apt install fd-find` or `cargo install fd-find`)  
+  - bat-extras (see https://github.com/eth-p/bat-extras, install via script or apt if available)  
+  - delta (`apt install git-delta` or `cargo install git-delta`)
+- Shells for aliases/config: bash (default), zsh, fish (optional, via apt)
+- Build tools:
+  - build-essential (`apt install build-essential`)
+  - pkg-config (`apt install pkg-config`)
+  - libz-dev (`apt install libz-dev`)
+  - gcc, clang (via build-essential or `apt install clang`)
+  - ninja-build (optional, for C deps; `apt install ninja-build`)
+- Optional native libraries:
+  - oniguruma (`apt install libonig-dev`)
+  - libgit2 (`apt install libgit2-dev`)
+- Nix (dev/test: `cargo install nix` or via apt)
+- All dev-dependencies handled by Cargo
+- Ensure presence of `build/main.rs` for build scripts
+- **No** MSVC, vcpkg, or Windows-native tools
+- **No** GPU tools/CUDA/nvidia packages
+- **No** arm64/other multiarch packages
+- bat-extras scripts (optional, install via upstream instructions)
+- (Security auditing) cargo-audit: `cargo install cargo-audit`
+- **Path notes:** All paths use Linux conventions, e.g. `~/.config/bat/config`, `/etc/bat/config`
+- **Image base:** Use `ubuntu:22.04`, `debian:bullseye`, or similar x86_64-only images
+- **No** Dockerfile `--platform=arm64` or cross-compiling steps
+- **No** macOS or Windows-specific package names or links
+
+---
+
+**2. FILES TO CREATE:**  
+*(All path references and file formats are for Linux/x86_64 only.)*
+
+- `~/.config/bat/config`: User bat configuration
+- Optional: `$(bat --config-dir)/syntaxes` and `/themes`
+- Shell aliases: add to `~/.bashrc`, `~/.zshrc`, `~/.config/fish/config.fish`
+- `/etc/bat/config`: (optional) system-wide config
+- No Windows/Cygwin wrapper scripts
+- `build/main.rs`: Ensure present for custom build steps
+- `Cargo.toml` and `Cargo.lock` (lockfile version 3)
+- Test fixture files:  
+  - `tests/examples/git/.gitconfig`  
+  - `tests/examples/git/.config/git/config`
+- `.github/ISSUE_TEMPLATE/config.yml`
+- `.github/.codecov.yml`
+- `.github/dependabot.yml`
+- `rustfmt.toml` (project root)
+- `.cargo/audit.toml`
+- `.git/config` (created during `git clone`, validate contents)
+- (Optional) Dev/test config/fixture files for advanced tests
+- (Optional) Native build configuration files (e.g., Makefile)
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**  
+*(No changes required; all tests apply for x86_64 Linux.  
+Explicitly note that Mac/Windows-specific tests are not relevant in this environment.)*
+
+- Test bat features (syntax highlighting, paging, configuration, themes, etc.)
+- Test Git integration and user config fallback (with provided fixtures)
+- Ensure all Linux paths and conventions are used in code/tests
+- No need to test Mac/Windows specific integration
+- Test for missing native libraries and build tools (simulate apt removal if needed)
+- Test Rust MSRV (>=1.74.0)
+- Test all dev, test, and CI hygiene as listed
+
+---
+
+**4. COMPLETE TODO LIST:**  
+*(All instructions and commands are Linux/x86_64 only; remove Mac/Windows/GPU/ARM-specific steps)*
+
+1. Install Rust toolchain (>=1.74.0, edition 2021)
+   - `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+   - Confirm with `rustc --version` and `cargo --version`
+2. Install Git: `sudo apt update && sudo apt install git`
+   - Confirm with `git --version`
+3. Clone project with submodules:
+   - `git clone --recursive https://github.com/sharkdp/bat`
+   - Check `.git/config` for correct remote/branch/core settings
+4. Install less pager: `sudo apt install less`
+   - Confirm with `less --version`
+5. **Skip:** Windows-only steps (Visual C++ Redistributable)
+6. **Skip:** macOS-only steps (home, plist)
+7. Install optional tools via apt:
+   - `sudo apt install fzf xclip ripgrep fd-find git-delta ninja-build libonig-dev libgit2-dev`
+   - For iconv: Provided by coreutils; verify with `iconv --version`
+   - (Note: If minimal base image, ensure `coreutils` is installed)
+8. Install build tools and native dependencies:
+   - `sudo apt install build-essential pkg-config libz-dev`
+   - gcc/clang included via build-essential
+9. (Dev/testing) Install/verify dev dependencies:
+   - Nix: `cargo install nix` (or `sudo apt install nix`)
+   - All others via Cargo
+10. Ensure `build/main.rs` is present
+11. Build project: `cargo build --bins`
+    - Output: `target/debug/`
+    - Cargo.lock version 3 checked
+12. Run tests: `cargo test`
+    - Ensure XDG test fixture logic sets `HOME` or `XDG_CONFIG_HOME` for user-level git config
+    - Validate all fixture-based tests pass
+13. (Optional) Run feature-specific tests: `cargo test --features="feature_name"`
+14. Install binary locally: `cargo install --path . --locked`
+    - Confirm with `bat --version`
+15. Generate default config: `bat --generate-config-file`
+    - Confirm at `~/.config/bat/config`
+16. Edit config as needed (theme, style, etc.)
+17. (Optional) Add shell aliases to `~/.bashrc`, `~/.zshrc`
+    - For Debian/Ubuntu: `alias bat="batcat"`
+    - No Windows/Cygwin aliasing steps
+18. (Optional) Add custom syntaxes/themes in `~/.config/bat/syntaxes` and `/themes`
+    - Run `bat cache --build`
+19. (Optional) Set environment variables in shell profile:
+    - `export BAT_THEME="TwoDark"`
+    - `export BAT_STYLE="numbers,changes,header"`
+    - `export BAT_PAGER="less -RF"`
+20. (Optional) Integrate with other CLI tools (fzf, ripgrep, fd, tail, git, man, etc.)
+21. (Optional) Add/modify `/etc/bat/config` for system-wide config (requires root)
+22. Final verification: Run bat on various files, test paging/highlighting/config
+23. Build release binary: `cargo build --release`
+    - Check `target/release/` for optimized binary
+24. (Optional) Test library usage with/without features
+25. Validate `assets/syntaxes/*` and `assets/themes/*` are excluded from packaging (per Cargo.toml)
+26. (Optional) Update/validate `Cargo.lock` (do not edit manually)
+27. Project/community hygiene:
+    - Ensure all `.github/*` files present and valid as listed
+    - Lint YAML as needed
+28. Coverage/CI hygiene:
+    - Check `.github/.codecov.yml` (comment: false)
+    - Confirm CI integration as appropriate (local coverage reporting not required unless desired)
+29. Dependency update hygiene:
+    - Check `.github/dependabot.yml` (Cargo, gitsubmodule, github-actions, correct schedule, ignore git2 0.13.17)
+    - Lint YAML as needed
+30. Formatting/code style:
+    - Ensure `rustfmt.toml` present (even if empty/default)
+    - Run `cargo fmt`
+    - (Optional) Set up CI formatting check
+31. Security audit:
+    - Install with `cargo install cargo-audit`
+    - Ensure `.cargo/audit.toml` (ignore advisories as listed)
+    - Run `cargo audit`
+    - (Optional) Add CI audit step
+32. Repository config hygiene:
+    - After clone, verify `.git/config` (remote URL, branch tracking, core settings)
+    - (Optional) Test git pull/push as needed
+33. Test fixture hygiene:
+    - Ensure `tests/examples/git/.gitconfig` and `tests/examples/git/.config/git/config` exist and are used in relevant tests
+    - Set environment for XDG config simulation as needed
+    - Confirm fixtures do not affect real user configs
+34. Document any test fixture usage as appropriate
+
+---
+
+**NOTES & ENVIRONMENT ADJUSTMENTS:**
+- All commands, paths, and instructions use Linux/x86_64 conventions only
+- No ARM, Mac, or Windows instructions, links, or tools included
+- No GPU-specific packages, flags, or instructions
+- All installations (apt, cargo) should be run as the current user unless root is required (`sudo` for apt)
+- If running in Docker, use the provided working directory: `WORKDIR /home/cc/EnvGym/data/sharkdp_bat`
+- For minimal images, ensure all required build and runtime dependencies are explicitly installed (as many images are slim)
+- For CI, ensure the build and test steps are compatible with x86_64 Linux, no cross-compilation needed
+- All test and fixture paths in the plan are correct for the provided directory structure and Linux conventions
+
+---
+
+**END OF ADJUSTED PLAN**

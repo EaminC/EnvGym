@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_111305",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753096370",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.60kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.2s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb\n#4 DONE 0.0s\n\n#5 [ 2/14] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         curl         git         unzip         zip         wget         ca-certificates         bash         openssl         libssl-dev         zlib1g-dev         libbz2-dev         libreadline-dev         libsqlite3-dev         llvm         libncursesw5-dev         xz-utils         tk-dev         libxml2-dev         libxmlsec1-dev         libffi-dev         liblzma-dev         software-properties-common         maven         python3-venv         python3-pip         python3-setuptools         python3-distutils     && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [ 3/14] RUN mkdir -p /home/cc/EnvGym/data/gluetest\n#6 CACHED\n\n#7 [ 4/14] WORKDIR /home/cc/EnvGym/data/gluetest\n#7 CACHED\n\n#8 [ 5/14] RUN wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.2/graalvm-ce-java17-linux-amd64-22.3.2.tar.gz &&     tar -xzf graalvm-ce-java17-linux-amd64-22.3.2.tar.gz -C /opt &&     rm graalvm-ce-java17-linux-amd64-22.3.2.tar.gz &&     ln -s /opt/graalvm-ce-java17-linux-amd64-22.3.2 /opt/graalvm\n#8 DONE 13.9s\n\n#9 [ 6/14] RUN /opt/graalvm-ce-java17-linux-amd64-22.3.2/bin/gu install python\n#9 0.190 /bin/sh: 1: /opt/graalvm-ce-java17-linux-amd64-22.3.2/bin/gu: not found\n#9 ERROR: process \"/bin/sh -c $JAVA_HOME/bin/gu install python\" did not complete successfully: exit code: 127\n------\n > [ 6/14] RUN /opt/graalvm-ce-java17-linux-amd64-22.3.2/bin/gu install python:\n0.190 /bin/sh: 1: /opt/graalvm-ce-java17-linux-amd64-22.3.2/bin/gu: not found\n------\nenvgym.dockerfile:58\n--------------------\n  56 |     \n  57 |     # Install GraalVM Updater (gu) Python component\n  58 | >>> RUN $JAVA_HOME/bin/gu install python\n  59 |     \n  60 |     # Verify graalpython is available\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c $JAVA_HOME/bin/gu install python\" did not complete successfully: exit code: 127\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

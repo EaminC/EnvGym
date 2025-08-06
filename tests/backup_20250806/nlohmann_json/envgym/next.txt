@@ -1,0 +1,18 @@
+current progress
+- A Docker image based on Ubuntu 22.04 is successfully built and runs.
+- All key system dependencies for Linux/x86_64 development are installed, including GCC, Clang, CMake (with attempt to install 3.28+), Meson, Ninja, Bazelisk, Python 3.10, pip, and essential Python/C++ dev tools.
+- Documentation and static analysis Python packages (MkDocs, cpplint, pytest, etc.) are installed globally via pip3.
+- mkcert and libnss3-tools are installed for certificate management.
+- A non-root user `cc` and the working directory `/home/cc/EnvGym/data/nlohmann_json` are set up with correct ownership.
+- A Python virtual environment is created in the project root, and PATH is updated.
+- The project files are copied into the image at the correct location.
+- The container launches into a bash shell at the project root.
+- No Windows/ARM/Apple/CUDA tools are present, matching plan constraints.
+
+next step
+- Ensure only necessary files are copied by refining the `COPY` command and adding a `.dockerignore` if not already present.
+- Confirm that CMake ≥3.28 is actually installed and used (since `apt-get install ... cmake=3.28.* || true` may not guarantee installation if version is unavailable—consider fallback to manual install from Kitware or source if required).
+- Optionally, set the default shell to use the Python venv automatically for non-root user (`source .venv/bin/activate` or similar in `.bashrc` or entrypoint).
+- Validate all tool versions inside the running container (`gcc --version`, `clang --version`, `cmake --version`, etc.), updating the Dockerfile as needed to meet minimum requirements.
+- If running CI/CD or local builds, confirm the image supports all intended test/build workflows and update or add any missing dependencies per the plan.
+- Remove any unused tools or packages if stricter image minimization is desired.

@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_131134",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753101993",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 790B done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/node:22-alpine\n#2 DONE 0.3s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/7] FROM docker.io/library/node:22-alpine@sha256:5539840ce9d013fa13e3b9814c9353024be7ac75aca5db6d039504a56c04ea59\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 94.59kB 0.0s done\n#5 DONE 0.0s\n\n#6 [5/7] COPY package.json pnpm-lock.yaml ./\n#6 CACHED\n\n#7 [2/7] RUN apk add --no-cache git bash\n#7 CACHED\n\n#8 [3/7] WORKDIR /home/cc/EnvGym/data/vuejs_core\n#8 CACHED\n\n#9 [4/7] RUN npm install -g pnpm@10.12.4\n#9 CACHED\n\n#10 [6/7] RUN pnpm install --frozen-lockfile\n#10 CACHED\n\n#11 [7/7] COPY . .\n#11 DONE 0.2s\n\n#12 exporting to image\n#12 exporting layers\n#12 exporting layers 0.3s done\n#12 writing image sha256:788428de7a6f093a557c680a3badbdd41c5711de23114a775b21b1584740eba7 done\n#12 naming to docker.io/library/envgym_test_1753101993 done\n#12 DONE 0.3s\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": "Container runtime timeout (1500 seconds)"
+  }
+}

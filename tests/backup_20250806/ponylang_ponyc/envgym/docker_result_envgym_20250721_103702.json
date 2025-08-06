@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_103702",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753094222",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.40kB done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:24.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/8] FROM docker.io/library/ubuntu:24.04@sha256:a08e551cb33850e4740772b38217fc1796a66da2506d312abe51acda354ff061\n#4 DONE 0.0s\n\n#5 [2/8] RUN apt-get update &&     apt-get install -y --no-install-recommends       clang       curl       g++       git       lsb-release       make       ca-certificates       python3       python3-pip       lldb       cmake &&     rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [3/8] RUN curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/ponylang/ponyup/latest/ponyup-init.sh | bash\n#6 CACHED\n\n#7 [internal] load build context\n#7 transferring context: 190.72kB 0.1s done\n#7 DONE 0.1s\n\n#8 [4/8] RUN ls -l /root/.local/share/ponyup/bin &&     echo /root/.local/share/ponyup/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin &&     /root/.local/share/ponyup/bin/ponyup --version\n#8 0.203 ls: cannot access '/root/.local/share/ponyup/bin': No such file or directory\n#8 ERROR: process \"/bin/sh -c ls -l /root/.local/share/ponyup/bin &&     echo $PATH &&     /root/.local/share/ponyup/bin/ponyup --version\" did not complete successfully: exit code: 2\n------\n > [4/8] RUN ls -l /root/.local/share/ponyup/bin &&     echo /root/.local/share/ponyup/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin &&     /root/.local/share/ponyup/bin/ponyup --version:\n0.203 ls: cannot access '/root/.local/share/ponyup/bin': No such file or directory\n------\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\nenvgym.dockerfile:27\n--------------------\n  26 |     # Verify ponyup installation and PATH\n  27 | >>> RUN ls -l /root/.local/share/ponyup/bin && \\\n  28 | >>>     echo $PATH && \\\n  29 | >>>     /root/.local/share/ponyup/bin/ponyup --version\n  30 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c ls -l /root/.local/share/ponyup/bin &&     echo $PATH &&     /root/.local/share/ponyup/bin/ponyup --version\" did not complete successfully: exit code: 2\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

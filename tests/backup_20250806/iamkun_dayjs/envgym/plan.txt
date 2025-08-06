@@ -1,0 +1,127 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR HARDWARE) ===
+
+**Key Hardware Facts Considered:**
+- x86_64 architecture (amd64); use only amd64-compatible base images and binaries.
+- Linux environment (Ubuntu 22.04 or similar base recommended).
+- No GPU/NVIDIA capabilities; do not use or reference CUDA/NVIDIA/GPU features.
+- Directory: /home/cc/EnvGym/data/iamkun_dayjs (all relative paths must be correct).
+- Docker: Supported, BuildKit enabled, no --gpus, no ARM images.
+- No explicit hardware resource restrictions, but assume standard development server/workstation.
+
+---
+
+1. DOWNLOADS NEEDED:
+
+   - **Node.js:** Use LTS amd64 builds only (e.g., 18.x or 20.x, but >=14.x is recommended; >=10.x minimum).  
+     - Use official Node.js Linux x64 binaries or apt/yarn/nvm installations for x86_64.
+     - Do NOT use ARM or ARM64 builds.  
+     - Example: `curl -fsSL https://deb.nodesource.com/setup_18.x | bash -` + `apt install -y nodejs`
+   - **npm:** Ensure version >=6.x (comes with Node.js).
+   - **All npm dependencies as listed**  
+     - All packages and CLIs are cross-platform/Node-based and compatible with x86_64 Linux.
+     - Use `npm ci` (reproducible, respects package-lock.json).
+   - **Git:** Use version >=2.x; available in Ubuntu 22.04 and all standard Linux distros.
+   - **Editors/Tools:** Use VS Code, Vim, Sublime, or similar (all available for Linux x86_64).
+   - **No GPU dependencies:** Omit any reference to GPU, CUDA, or nvidia-* packages.
+   - **No ARM/ARM64 images:** Only use amd64-compatible Docker images and binaries.
+
+   **Newly added/confirmed required tools/files:**  
+   - No change; all tools are available and compatible with x86_64 Linux.
+
+   **Hardware-specific notes:**
+   - All Node.js/NPM/binary downloads must explicitly be for x86_64/amd64.
+   - If using Docker, always set `--platform=linux/amd64` when pulling/building images (e.g., `FROM node:18-bullseye-slim`).
+   - No GPU/NVIDIA packages or instructions. Do not include `RUN nvidia-*` or similar.
+
+2. FILES TO CREATE:
+
+   - **Paths:** All file paths must be relative to /home/cc/EnvGym/data/iamkun_dayjs.
+   - **No change in required files**, but verify:
+     - Build, test, and output directories (e.g., build/, coverage/, esm/, etc.) all exist under the correct project root.
+     - All scripts and config files use Linux-style paths (`/`), not Windows-style.
+   - **.gitignore/.npmignore:**  
+     - No hardware change, but ensure that they do not conflict with Linux file system case sensitivity.
+   - **No platform-specific scripts:**  
+     - Avoid Windows-only scripts (e.g., `.cmd` or `.bat`); use POSIX shell scripts or npm scripts.
+   - **No ARM/ARM64-specific files or binaries:**  
+     - Ensure no platform-specific binaries are included in the package or scripts.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+
+   - **All test cases remain valid.**
+   - **OS/Arch-specific checks:**  
+     - All JS and Node-based tests are cross-platform, but:
+       - If any shell scripts are referenced, ensure they use `/bin/sh` or `/bin/bash` and are compatible with Ubuntu/Linux.
+       - If any path manipulation or file access is done, use POSIX conventions.
+   - **No GPU/ARM-specific code or tests.**
+   - **Browser tests:**  
+     - Browser/karma/sauce labs tests are unaffected.
+
+4. COMPLETE TODO LIST:
+
+   1. **Node.js Installation:**  
+      - On Linux x86_64, install Node.js using amd64 binaries or the system package manager (e.g., apt, nvm).
+      - Confirm `node -v` and `npm -v`.
+      - If using Docker, base images must be amd64 (e.g., `FROM node:18-bullseye-slim` with `--platform=linux/amd64` if needed).
+   2. **Project Directory:**  
+      - Work in `/home/cc/EnvGym/data/iamkun_dayjs`.
+      - All paths in scripts/configs should be relative to this directory.
+   3. **Dependency Installation:**  
+      - Use `npm ci` (reproducible, uses package-lock.json).
+      - Do not use `yarn.lock` or any other package manager unless specified.
+      - No platform-specific or binary dependencies outside npm packages.
+   4. **.gitignore:**  
+      - No changes; Linux-friendly, case-sensitive.
+   5. **.npmignore:**  
+      - No changes; verify with `npm pack` or `npm publish --dry-run` on Linux.
+   6. **LICENSE:**  
+      - No change.
+   7. **Config files:**  
+      - All configs as described (babel, prettier, eslint, etc.).
+      - All scripts, if custom, must be Linux-compatible (no Windows .bat/.cmd).
+   8. **.editorconfig:**  
+      - No changes.
+   9. **Pre-commit hook:**  
+      - If using shell scripts, ensure they are executable and have Linux line endings (`chmod +x` if needed).
+   10. **Build project:**  
+       - All build tools used (babel, rollup, terser, etc.) are Node-based and cross-platform.
+       - Use Linux shell commands in scripts.
+   11. **Lint/Formatting:**  
+       - No changes.
+   12. **Automated Tests:**  
+       - No changes; all tests are cross-platform.
+   13. **README.md:**  
+       - If referencing environment setup, clarify that all setup instructions are for Linux x86_64.
+   14. **Manual Verification:**  
+       - Test on Linux x86_64, in `/home/cc/EnvGym/data/iamkun_dayjs`.
+   15. **Environment Variables:**  
+       - If any, document in `.env.example`; Linux-compatible notation.
+   16. **Commit and Push:**  
+       - No changes.
+   17. **Error Handling:**  
+       - Resolve any path or shell script issues relating to Linux x86_64.
+   18. **package-lock.json:**  
+       - Keep in sync, validate on Linux x86_64.
+
+   **Final Verification:**  
+   - **Run all setup, build, test, lint, and format scripts in a clean Linux x86_64 environment.**
+   - **If using Docker, always use `--platform=linux/amd64` and base images compatible with x86_64 (e.g., `node:18`, `ubuntu:22.04`).**
+   - **No references to GPU, CUDA, nvidia, or ARM/ARM64 images or binaries.**
+   - **All file operations, scripts, and configs must use Linux/Unix conventions.**
+   - **Check all scripts for executable permissions (`chmod +x` if shell scripts are used).**
+   - **Verify that all build/test/format scripts complete successfully on Linux x86_64.**
+   - **All paths and files must resolve and operate correctly under `/home/cc/EnvGym/data/iamkun_dayjs`.**
+
+---
+
+**Summary of Adjustments:**
+- **Explicitly specify x86_64/amd64 architecture in all Node.js, Docker, and OS references.**
+- **Do NOT use or reference ARM/ARM64, GPU, CUDA, or NVIDIA hardware/software/instructions.**
+- **Ensure all scripts and paths are Linux/Unix compatible; do not use Windows-specific scripts or paths.**
+- **All build and test steps confirmed to be cross-platform, but validated specifically for Linux x86_64.**
+- **All file and directory paths must be correct for `/home/cc/EnvGym/data/iamkun_dayjs`.**
+- **If using Docker, always set `--platform=linux/amd64` and use compatible images.**
+
+---
+
+**No further changes are needed to the logic, content, or scope of the original plan beyond these architecture and platform-specific adjustments.**

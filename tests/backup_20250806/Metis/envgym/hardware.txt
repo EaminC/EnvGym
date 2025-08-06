@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/Metis; typical subdir in a user home, adjust COPY paths accordingly
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim, etc.)
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (e.g., no RUN nvidia-* or CUDA installs); can leverage multi-core CPU for parallel build steps; ensure paths are correct for context; use systemd as cgroup driver if needed
+- Docker Version: 28.3.2; supports BuildKit and modern Dockerfile syntax, no native --gpus support required

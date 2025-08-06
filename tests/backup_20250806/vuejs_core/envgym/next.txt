@@ -1,0 +1,23 @@
+current progress
+
+- The Dockerfile is Linux/x86_64/amd64-specific, using `FROM --platform=linux/amd64 node:22-bullseye` and correct WORKDIR `/home/cc/EnvGym/data/vuejs_core`.
+- System dependencies (git, bash, wget, curl) and pnpm@10.12.4 are installed as required.
+- Project files (`package.json`, `pnpm-lock.yaml`, and all source files) are copied as per plan.
+- `pnpm install --frozen-lockfile` runs successfully.
+- Environment variables and port exposure are set for Linux development.
+- Healthcheck uses Linux tools (`wget`).
+- Build step with `pnpm build || true` is present.
+- The build fails at the line `RUN pnpm dev & sleep 10 && curl -f http://localhost:5173 ...`—the dev server likely cannot start or is inaccessible in this context.
+- The CMD is set to start the dev server with `pnpm dev`.
+- No ARM/ARM64/GPU-specific instructions are present.
+- The last build attempt failed at the dev server availability check step.
+
+next step
+
+- Remove or rework `RUN pnpm dev & sleep 10 && curl -f http://localhost:5173 || (ls -l /home/cc/EnvGym/data/vuejs_core/vite.config.*; exit 1)` because running a dev server in a Docker build step is not supported (the server cannot persist across build layers).
+- Instead, ensure only build steps (`pnpm build`) run during build; move development server startup to the container runtime (CMD/ENTRYPOINT).
+- Suggested change:  
+  - Delete or comment out the problematic `RUN pnpm dev ...` line.
+  - Keep `CMD ["pnpm", "dev"]` as the container startup command.
+  - Optionally, add a healthcheck that works at runtime (already present).
+- Rebuild the Docker image after making these changes and re-test container startup and healthcheck.

@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_063222",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752993142",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.54kB done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.2s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/9] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb\n#4 DONE 0.0s\n\n#5 [3/9] RUN useradd -ms /bin/bash cc &&     mkdir -p /home/cc/.ssh &&     mkdir -p /home/cc/EnvGym/data/Metis &&     chown -R cc:cc /home/cc\n#5 CACHED\n\n#6 [2/9] RUN apt-get update &&     apt-get install -y --no-install-recommends     sudo     git     wget     curl     build-essential     python3     python3-pip     python3-venv     python3-setuptools     python3-dev     openssh-client     openssh-server     vim     ca-certificates     pkg-config     libssl-dev     libffi-dev     libxml2-dev     libxslt1-dev     zlib1g-dev     libbz2-dev     libreadline-dev     libsqlite3-dev     linux-headers-$(uname -r)     bison     flex     autoconf     automake     libtool     gawk     cmake     unzip     tar     locales     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [4/9] WORKDIR /home/cc/EnvGym/data/Metis\n#7 CACHED\n\n#8 [5/9] RUN apt-get update && apt-get install -y locales &&     locale-gen en_US.UTF-8\n#8 0.197 Reading package lists...\n#8 0.208 E: List directory /var/lib/apt/lists/partial is missing. - Acquire (13: Permission denied)\n#8 ERROR: process \"/bin/sh -c apt-get update && apt-get install -y locales &&     locale-gen en_US.UTF-8\" did not complete successfully: exit code: 100\n------\n > [5/9] RUN apt-get update && apt-get install -y locales &&     locale-gen en_US.UTF-8:\n\n0.208 E: List directory /var/lib/apt/lists/partial is missing. - Acquire (13: Permission denied)\n------\n\n \u001b[33m3 warnings found (use docker --debug to expand):\n\u001b[0m - LegacyKeyValueFormat: \"ENV key=value\" should be used instead of legacy \"ENV key value\" format (line 60)\n - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n - LegacyKeyValueFormat: \"ENV key=value\" should be used instead of legacy \"ENV key value\" format (line 59)\nenvgym.dockerfile:56\n--------------------\n  55 |     # Set locales (fixed for Ubuntu 22.04)\n  56 | >>> RUN apt-get update && apt-get install -y locales && \\\n  57 | >>>     locale-gen en_US.UTF-8\n  58 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c apt-get update && apt-get install -y locales &&     locale-gen en_US.UTF-8\" did not complete successfully: exit code: 100\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

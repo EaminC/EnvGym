@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/Baleen; typical subdirectory inside a project, set WORKDIR accordingly in Dockerfile if building from this context
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use linux/amd64 images (e.g., ubuntu:22.04, python:3.10-slim); no GPU/CUDA requirement
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: No GPU-specific instructions (no nvidia/cuda or related packages); can use multi-core builds or parallelism if relevant; large memory and storage available for build steps
+- Docker Version: 28.3.2; supports BuildKit, multi-stage builds, and all modern Dockerfile features; --gpus flag not supported due to lack of NVIDIA GPU/driver

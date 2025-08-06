@@ -1,0 +1,7 @@
+[
+  "README.md",
+  "p2996/Dockerfile",
+  "tests/docker/Dockerfile",
+  "scripts/javascript/package.json",
+  "scripts/javascript/package-lock.json"
+]

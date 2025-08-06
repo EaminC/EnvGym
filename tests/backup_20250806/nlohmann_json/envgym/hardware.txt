@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/nlohmann_json; project located under user's home, likely non-root builds and context path starts here
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: ubuntu:22.04, debian:bullseye, or other linux/amd64-based images; no ARM or GPU-specific base images required
+- GPU: No NVIDIA GPU detected; CUDA or GPU base images not applicable
+- Instruction Notes: No GPU-specific Dockerfile instructions; can use multi-core builds (e.g., make -j96); use WORKDIR /home/cc/EnvGym/data/nlohmann_json
+- Docker Version: 28.3.2; supports BuildKit, modern syntax, and advanced features but no GPU runtime support enabled

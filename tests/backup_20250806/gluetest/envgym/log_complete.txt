@@ -1,0 +1,1190 @@
+=== Docker Execution Log - 20250721_111737 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753096549
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 3.80kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/21] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [ 2/21] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         curl         git         unzip         zip         wget         ca-certificates         bash         openssl         libssl-dev         zlib1g-dev         libbz2-dev         libreadline-dev         libsqlite3-dev         llvm         libncursesw5-dev         xz-utils         tk-dev         libxml2-dev         libxmlsec1-dev         libffi-dev         liblzma-dev         software-properties-common         maven         python3-venv         python3-pip         python3-setuptools         python3-distutils     && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [ 3/21] RUN mkdir -p /home/cc/EnvGym/data/gluetest
+#6 CACHED
+
+#7 [ 4/21] WORKDIR /home/cc/EnvGym/data/gluetest
+#7 CACHED
+
+#8 [internal] load build context
+#8 transferring context: 686.95kB 0.0s done
+#8 DONE 0.0s
+
+#9 [ 5/21] RUN wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.2/graalvm-ce-java17-linux-amd64-22.3.2.tar.gz &&     tar -xzf graalvm-ce-java17-linux-amd64-22.3.2.tar.gz -C /opt &&     rm graalvm-ce-java17-linux-amd64-22.3.2.tar.gz &&     ln -s /opt/graalvm-ce-java17-22.3.2 /opt/graalvm
+#9 DONE 14.9s
+
+#10 [ 6/21] RUN ls -l /opt && ls -lR /opt/graalvm-ce-java17-22.3.2 || (echo "Directory /opt/graalvm-ce-java17-22.3.2 does not exist. Listing /opt:" && ls -l /opt && false)
+#10 0.223 total 4
+#10 0.223 lrwxrwxrwx  1 root root   29 Jul 21 11:16 graalvm -> /opt/graalvm-ce-java17-22.3.2
+#10 0.223 drwxr-xr-x 10 root root 4096 Jul 21 11:16 graalvm-ce-java17-22.3.2
+#10 0.225 /opt/graalvm-ce-java17-22.3.2:
+#10 0.225 total 416
+#10 0.225 -rw-rw-r--  1 root root   1611 Apr 20  2023 GRAALVM-README.md
+#10 0.225 -rw-rw-r--  1 root root  23491 Apr 20  2023 LICENSE.txt
+#10 0.225 -rw-rw-r--  1 root root 354225 Apr 20  2023 THIRD_PARTY_LICENSE.txt
+#10 0.225 drwxr-xr-x  2 root root   4096 Jul 21 11:16 bin
+#10 0.225 drwxr-xr-x  5 root root   4096 Jul 21 11:16 conf
+#10 0.225 drwxr-xr-x  3 root root   4096 Jul 21 11:16 include
+#10 0.225 drwxr-xr-x  2 root root   4096 Jul 21 11:16 jmods
+#10 0.225 drwxr-xr-x  6 root root   4096 Jul 21 11:16 languages
+#10 0.225 drwxr-xr-x 72 root root   4096 Jul 21 11:16 legal
+#10 0.225 drwxr-xr-x 12 root root   4096 Jul 21 11:16 lib
+#10 0.225 -rw-rw-r--  1 root root   4177 Apr 20  2023 release
+#10 0.225 drwxr-xr-x  9 root root   4096 Jul 21 11:16 tools
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/bin:
+#10 0.225 total 448
+#10 0.225 lrwxrwxrwx 1 root root    23 Apr 20  2023 gu -> ../lib/installer/bin/gu
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jar
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 jarsigner
+#10 0.225 -rwxrwxr-x 1 root root 12368 Apr 20  2023 java
+#10 0.225 -rwxrwxr-x 1 root root 12416 Apr 20  2023 javac
+#10 0.225 -rwxrwxr-x 1 root root 12424 Apr 20  2023 javadoc
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 javap
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jcmd
+#10 0.225 -rwxrwxr-x 1 root root 12456 Apr 20  2023 jconsole
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jdb
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 jdeprscan
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jdeps
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jfr
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jhsdb
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 jimage
+#10 0.225 -rwxrwxr-x 1 root root 12416 Apr 20  2023 jinfo
+#10 0.225 -rwxrwxr-x 1 root root 12416 Apr 20  2023 jlink
+#10 0.225 -rwxrwxr-x 1 root root 12416 Apr 20  2023 jmap
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jmod
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 jpackage
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jps
+#10 0.225 -rwxrwxr-x 1 root root 12424 Apr 20  2023 jrunscript
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 jshell
+#10 0.225 -rwxrwxr-x 1 root root 12424 Apr 20  2023 jstack
+#10 0.225 -rwxrwxr-x 1 root root 12384 Apr 20  2023 jstat
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 jstatd
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 keytool
+#10 0.225 lrwxrwxrwx 1 root root    28 Apr 20  2023 polyglot -> ../lib/polyglot/bin/polyglot
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 rmiregistry
+#10 0.225 -rwxrwxr-x 1 root root 12392 Apr 20  2023 serialver
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/conf:
+#10 0.225 total 28
+#10 0.225 -rw-rw-r-- 1 root root 2732 Apr 20  2023 logging.properties
+#10 0.225 drwxr-xr-x 2 root root 4096 Jul 21 11:16 management
+#10 0.225 -rw-rw-r-- 1 root root 6608 Apr 20  2023 net.properties
+#10 0.225 drwxr-xr-x 2 root root 4096 Jul 21 11:16 sdp
+#10 0.225 drwxr-xr-x 3 root root 4096 Jul 21 11:16 security
+#10 0.225 -rw-rw-r-- 1 root root 1210 Apr 20  2023 sound.properties
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/conf/management:
+#10 0.225 total 28
+#10 0.225 -rw-rw-r-- 1 root root  3997 Apr 20  2023 jmxremote.access
+#10 0.225 -rw-rw-r-- 1 root root  5690 Apr 20  2023 jmxremote.password.template
+#10 0.225 -rw-rw-r-- 1 root root 14410 Apr 20  2023 management.properties
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/conf/sdp:
+#10 0.225 total 4
+#10 0.225 -rw-rw-r-- 1 root root 1455 Apr 20  2023 sdp.conf.template
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/conf/security:
+#10 0.225 total 64
+#10 0.225 -rw-rw-r-- 1 root root  2180 Apr 20  2023 java.policy
+#10 0.225 -rw-rw-r-- 1 root root 57167 Apr 20  2023 java.security
+#10 0.225 drwxr-xr-x 4 root root  4096 Jul 21 11:16 policy
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/conf/security/policy:
+#10 0.225 total 12
+#10 0.225 -rw-rw-r-- 1 root root 2390 Apr 20  2023 README.txt
+#10 0.225 drwxr-xr-x 2 root root 4096 Jul 21 11:16 limited
+#10 0.225 drwxr-xr-x 2 root root 4096 Jul 21 11:16 unlimited
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/conf/security/policy/limited:
+#10 0.225 total 12
+#10 0.225 -rw-rw-r-- 1 root root 146 Apr 20  2023 default_US_export.policy
+#10 0.225 -rw-rw-r-- 1 root root 647 Apr 20  2023 default_local.policy
+#10 0.225 -rw-rw-r-- 1 root root 566 Apr 20  2023 exempt_local.policy
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/conf/security/policy/unlimited:
+#10 0.225 total 8
+#10 0.225 -rw-rw-r-- 1 root root 146 Apr 20  2023 default_US_export.policy
+#10 0.225 -rw-rw-r-- 1 root root 193 Apr 20  2023 default_local.policy
+#10 0.225 
+#10 0.225 /opt/graalvm-ce-java17-22.3.2/include:
+#10 0.225 total 216
+#10 0.225 -rw-rw-r-- 1 root root 22155 Apr 20  2023 classfile_constants.h
+#10 0.225 -rw-rw-r-- 1 root root 12458 Apr 20  2023 jawt.h
+#10 0.225 -rw-rw-r-- 1 root root  8151 Apr 20  2023 jdwpTransport.h
+#10 0.225 -rw-rw-r-- 1 root root 75678 Apr 20  2023 jni.h
+#10 0.226 -rw-rw-r-- 1 root root 81725 Apr 20  2023 jvmti.h
+#10 0.226 -rw-rw-r-- 1 root root  4771 Apr 20  2023 jvmticmlr.h
+#10 0.226 drwxr-xr-x 2 root root  4096 Jul 21 11:16 linux
+#10 0.226 
+#10 0.226 /opt/graalvm-ce-java17-22.3.2/include/linux:
+#10 0.226 total 8
+#10 0.226 -rw-rw-r-- 1 root root 1965 Apr 20  2023 jawt_md.h
+#10 0.226 -rw-rw-r-- 1 root root 2208 Apr 20  2023 jni_md.h
+#10 0.226 
+#10 0.226 /opt/graalvm-ce-java17-22.3.2/jmods:
+#10 0.226 total 91004
+#10 0.226 -rw-rw-r-- 1 root root      646 Apr 20  2023 com.oracle.graal.graal_enterprise.jmod
+#10 0.226 -rw-rw-r-- 1 root root      626 Apr 20  2023 com.oracle.svm.svm_enterprise.jmod
+#10 0.226 -rw-rw-r-- 1 root root      614 Apr 20  2023 com.oracle.svm_enterprise.ml_dataset.jmod
+#10 0.226 -rw-rw-r-- 1 root root      582 Apr 20  2023 com.oracle.truffle.regex.jmod
+#10 0.226 -rw-rw-r-- 1 root root      583 Apr 20  2023 com.oracle.truffle.truffle_nfi.jmod
+#10 0.226 -rw-rw-r-- 1 root root      593 Apr 20  2023 com.oracle.truffle.truffle_nfi_libffi.jmod
+#10 0.226 -rw-rw-r-- 1 root root 20771550 Apr 20  2023 java.base.jmod
+#10 0.226 -rw-rw-r-- 1 root root   130564 Apr 20  2023 java.compiler.jmod
+#10 0.226 -rw-rw-r-- 1 root root    59128 Apr 20  2023 java.datatransfer.jmod
+#10 0.226 -rw-rw-r-- 1 root root 13580201 Apr 20  2023 java.desktop.jmod
+#10 0.226 -rw-rw-r-- 1 root root    46608 Apr 20  2023 java.instrument.jmod
+#10 0.226 -rw-rw-r-- 1 root root   122270 Apr 20  2023 java.logging.jmod
+#10 0.226 -rw-rw-r-- 1 root root   902791 Apr 20  2023 java.management.jmod
+#10 0.226 -rw-rw-r-- 1 root root    99799 Apr 20  2023 java.management.rmi.jmod
+#10 0.226 -rw-rw-r-- 1 root root   474666 Apr 20  2023 java.naming.jmod
+#10 0.226 -rw-rw-r-- 1 root root   745621 Apr 20  2023 java.net.http.jmod
+#10 0.226 -rw-rw-r-- 1 root root    69434 Apr 20  2023 java.prefs.jmod
+#10 0.226 -rw-rw-r-- 1 root root   267373 Apr 20  2023 java.rmi.jmod
+#10 0.226 -rw-rw-r-- 1 root root    45801 Apr 20  2023 java.scripting.jmod
+#10 0.226 -rw-rw-r-- 1 root root     9859 Apr 20  2023 java.se.jmod
+#10 0.226 -rw-rw-r-- 1 root root   617976 Apr 20  2023 java.security.jgss.jmod
+#10 0.226 -rw-rw-r-- 1 root root    89344 Apr 20  2023 java.security.sasl.jmod
+#10 0.226 -rw-rw-r-- 1 root root    63312 Apr 20  2023 java.smartcardio.jmod
+#10 0.226 -rw-rw-r-- 1 root root    83674 Apr 20  2023 java.sql.jmod
+#10 0.226 -rw-rw-r-- 1 root root   200957 Apr 20  2023 java.sql.rowset.jmod
+#10 0.226 -rw-rw-r-- 1 root root    11687 Apr 20  2023 java.transaction.xa.jmod
+#10 0.226 -rw-rw-r-- 1 root root   677735 Apr 20  2023 java.xml.crypto.jmod
+#10 0.226 -rw-rw-r-- 1 root root  4650365 Apr 20  2023 java.xml.jmod
+#10 0.226 -rw-rw-r-- 1 root root    58043 Apr 20  2023 jdk.accessibility.jmod
+#10 0.226 -rw-rw-r-- 1 root root    38194 Apr 20  2023 jdk.attach.jmod
+#10 0.226 -rw-rw-r-- 1 root root  1197716 Apr 20  2023 jdk.charsets.jmod
+#10 0.226 -rw-rw-r-- 1 root root  9223043 Apr 20  2023 jdk.compiler.jmod
+#10 0.226 -rw-rw-r-- 1 root root   379264 Apr 20  2023 jdk.crypto.cryptoki.jmod
+#10 0.226 -rw-rw-r-- 1 root root   138904 Apr 20  2023 jdk.crypto.ec.jmod
+#10 0.226 -rw-rw-r-- 1 root root   165924 Apr 20  2023 jdk.dynalink.jmod
+#10 0.226 -rw-rw-r-- 1 root root    15297 Apr 20  2023 jdk.editpad.jmod
+#10 0.226 -rw-rw-r-- 1 root root  2332447 Apr 20  2023 jdk.hotspot.agent.jmod
+#10 0.226 -rw-rw-r-- 1 root root   114188 Apr 20  2023 jdk.httpserver.jmod
+#10 0.226 -rw-rw-r-- 1 root root   325277 Apr 20  2023 jdk.incubator.foreign.jmod
+#10 0.226 -rw-rw-r-- 1 root root  1070324 Apr 20  2023 jdk.incubator.vector.jmod
+#10 0.226 -rw-rw-r-- 1 root root    15166 Apr 20  2023 jdk.internal.ed.jmod
+#10 0.226 -rw-rw-r-- 1 root root   102421 Apr 20  2023 jdk.internal.jvmstat.jmod
+#10 0.226 -rw-rw-r-- 1 root root   422242 Apr 20  2023 jdk.internal.le.jmod
+#10 0.226 -rw-rw-r-- 1 root root    90607 Apr 20  2023 jdk.internal.opt.jmod
+#10 0.226 -rw-rw-r-- 1 root root   502784 Apr 20  2023 jdk.internal.vm.ci.jmod
+#10 0.226 -rw-rw-r-- 1 root root  8800800 Apr 20  2023 jdk.internal.vm.compiler.jmod
+#10 0.226 -rw-rw-r-- 1 root root    11402 Apr 20  2023 jdk.internal.vm.compiler.management.jmod
+#10 0.226 -rw-rw-r-- 1 root root    11384 Apr 20  2023 jdk.internal.vm.compiler.truffle.jfr.jmod
+#10 0.226 -rw-rw-r-- 1 root root   199216 Apr 20  2023 jdk.jartool.jmod
+#10 0.226 -rw-rw-r-- 1 root root  1373132 Apr 20  2023 jdk.javadoc.jmod
+#10 0.226 -rw-rw-r-- 1 root root   117173 Apr 20  2023 jdk.jcmd.jmod
+#10 0.226 -rw-rw-r-- 1 root root   475944 Apr 20  2023 jdk.jconsole.jmod
+#10 0.226 -rw-rw-r-- 1 root root   736637 Apr 20  2023 jdk.jdeps.jmod
+#10 0.226 -rw-rw-r-- 1 root root   846796 Apr 20  2023 jdk.jdi.jmod
+#10 0.226 -rw-rw-r-- 1 root root   149826 Apr 20  2023 jdk.jdwp.agent.jmod
+#10 0.227 -rw-rw-r-- 1 root root   643788 Apr 20  2023 jdk.jfr.jmod
+#10 0.227 -rw-rw-r-- 1 root root   416648 Apr 20  2023 jdk.jlink.jmod
+#10 0.227 -rw-rw-r-- 1 root root   719334 Apr 20  2023 jdk.jpackage.jmod
+#10 0.227 -rw-rw-r-- 1 root root   676303 Apr 20  2023 jdk.jshell.jmod
+#10 0.227 -rw-rw-r-- 1 root root    10750 Apr 20  2023 jdk.jsobject.jmod
+#10 0.227 -rw-rw-r-- 1 root root    34592 Apr 20  2023 jdk.jstatd.jmod
+#10 0.227 -rw-rw-r-- 1 root root 10252494 Apr 20  2023 jdk.localedata.jmod
+#10 0.227 -rw-rw-r-- 1 root root    82747 Apr 20  2023 jdk.management.agent.jmod
+#10 0.227 -rw-rw-r-- 1 root root    62226 Apr 20  2023 jdk.management.jfr.jmod
+#10 0.227 -rw-rw-r-- 1 root root    77434 Apr 20  2023 jdk.management.jmod
+#10 0.227 -rw-rw-r-- 1 root root    69854 Apr 20  2023 jdk.naming.dns.jmod
+#10 0.227 -rw-rw-r-- 1 root root    30860 Apr 20  2023 jdk.naming.rmi.jmod
+#10 0.227 -rw-rw-r-- 1 root root    31405 Apr 20  2023 jdk.net.jmod
+#10 0.227 -rw-rw-r-- 1 root root    10223 Apr 20  2023 jdk.nio.mapmode.jmod
+#10 0.227 -rw-rw-r-- 1 root root    29529 Apr 20  2023 jdk.random.jmod
+#10 0.227 -rw-rw-r-- 1 root root    93188 Apr 20  2023 jdk.sctp.jmod
+#10 0.227 -rw-rw-r-- 1 root root    73651 Apr 20  2023 jdk.security.auth.jmod
+#10 0.227 -rw-rw-r-- 1 root root    32851 Apr 20  2023 jdk.security.jgss.jmod
+#10 0.227 -rw-rw-r-- 1 root root    21629 Apr 20  2023 jdk.unsupported.desktop.jmod
+#10 0.227 -rw-rw-r-- 1 root root    24979 Apr 20  2023 jdk.unsupported.jmod
+#10 0.227 -rw-rw-r-- 1 root root    49990 Apr 20  2023 jdk.xml.dom.jmod
+#10 0.227 -rw-rw-r-- 1 root root   112424 Apr 20  2023 jdk.zipfs.jmod
+#10 0.227 -rw-rw-r-- 1 root root    35861 Apr 20  2023 org.graalvm.js.scriptengine.jmod
+#10 0.227 -rw-rw-r-- 1 root root     5688 Apr 20  2023 org.graalvm.locator.jmod
+#10 0.227 -rw-rw-r-- 1 root root   353484 Apr 20  2023 org.graalvm.sdk.jmod
+#10 0.227 -rw-rw-r-- 1 root root  6415449 Apr 20  2023 org.graalvm.truffle.jmod
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/languages:
+#10 0.227 total 16
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 icu4j
+#10 0.227 drwxr-xr-x 3 root root 4096 Jul 21 11:16 nfi
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 nfi-libffi
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 regex
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/languages/icu4j:
+#10 0.227 total 16704
+#10 0.227 -rw-r--r-- 1 root root  3130927 Jan  4  2023 icu4j-charset.jar
+#10 0.227 -rw-r--r-- 1 root root 13963762 Jan  4  2023 icu4j.jar
+#10 0.227 -rw-rw-r-- 1 root root      158 Apr 20  2023 native-image.properties
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/languages/nfi:
+#10 0.227 total 1240
+#10 0.227 drwxr-xr-x 2 root root    4096 Jul 21 11:16 include
+#10 0.227 -rw-rw-r-- 1 root root 1264381 Apr 20  2023 truffle-nfi.jar
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/languages/nfi/include:
+#10 0.227 total 12
+#10 0.227 -rw-rw-r-- 1 root root 9393 Apr 20  2023 trufflenfi.h
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/languages/nfi-libffi:
+#10 0.227 total 692
+#10 0.227 -rw-rw-r-- 1 root root 706865 Apr 20  2023 truffle-nfi-libffi.jar
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/languages/regex:
+#10 0.227 total 3052
+#10 0.227 -rw-rw-r-- 1 root root     148 Apr 20  2023 native-image.properties
+#10 0.227 -rw-rw-r-- 1 root root 3120426 Apr 20  2023 tregex.jar
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/legal:
+#10 0.227 total 280
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.base
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.compiler
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.datatransfer
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.desktop
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.instrument
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.logging
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.management
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.management.rmi
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.naming
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.net.http
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.prefs
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.rmi
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.scripting
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.se
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.security.jgss
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.security.sasl
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.smartcardio
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.sql
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.sql.rowset
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.transaction.xa
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.xml
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 java.xml.crypto
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.accessibility
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.attach
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.charsets
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.compiler
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.crypto.cryptoki
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.crypto.ec
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.dynalink
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.editpad
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.hotspot.agent
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.httpserver
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.incubator.foreign
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.incubator.vector
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.internal.ed
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.internal.jvmstat
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.internal.le
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.internal.opt
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.internal.vm.ci
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.internal.vm.compiler
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.internal.vm.compiler.management
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jartool
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.javadoc
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jcmd
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jconsole
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jdeps
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jdi
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jdwp.agent
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jfr
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jlink
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jpackage
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jshell
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jsobject
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.jstatd
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.localedata
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.management
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.management.agent
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.management.jfr
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.naming.dns
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.naming.rmi
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.net
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.nio.mapmode
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.random
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.sctp
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.security.auth
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.security.jgss
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.unsupported
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.unsupported.desktop
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.xml.dom
+#10 0.227 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jdk.zipfs
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/legal/java.base:
+#10 0.227 total 88
+#10 0.227 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.227 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.227 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.227 -r--r--r-- 1 root root  1444 Apr 20  2023 aes.md
+#10 0.227 -r--r--r-- 1 root root  1584 Apr 20  2023 asm.md
+#10 0.227 -r--r--r-- 1 root root  1556 Apr 20  2023 c-libutl.md
+#10 0.227 -r--r--r-- 1 root root  9130 Apr 20  2023 cldr.md
+#10 0.227 -r--r--r-- 1 root root 11086 Apr 20  2023 icu.md
+#10 0.227 -r--r--r-- 1 root root 17785 Apr 20  2023 public_suffix.md
+#10 0.227 -r--r--r-- 1 root root  2384 Apr 20  2023 unicode.md
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/legal/java.compiler:
+#10 0.227 total 28
+#10 0.227 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.227 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.227 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/legal/java.datatransfer:
+#10 0.227 total 28
+#10 0.227 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.227 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.227 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.227 
+#10 0.227 /opt/graalvm-ce-java17-22.3.2/legal/java.desktop:
+#10 0.227 total 68
+#10 0.227 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.227 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.227 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.227 -r--r--r-- 1 root root   167 Apr 20  2023 colorimaging.md
+#10 0.227 -r--r--r-- 1 root root  1288 Apr 20  2023 giflib.md
+#10 0.227 -r--r--r-- 1 root root  3094 Apr 20  2023 harfbuzz.md
+#10 0.228 -r--r--r-- 1 root root  3475 Apr 20  2023 jpeg.md
+#10 0.228 -r--r--r-- 1 root root  2589 Apr 20  2023 lcms.md
+#10 0.228 -r--r--r-- 1 root root  6917 Apr 20  2023 libpng.md
+#10 0.228 -r--r--r-- 1 root root  5732 Apr 20  2023 mesa3d.md
+#10 0.228 -r--r--r-- 1 root root  1348 Apr 20  2023 xwd.md
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.instrument:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.logging:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.management:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.management.rmi:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.naming:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.net.http:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.prefs:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.rmi:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.scripting:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.se:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.security.jgss:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.security.sasl:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.smartcardio:
+#10 0.228 total 32
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 -r--r--r-- 1 root root  1863 Apr 20  2023 pcsclite.md
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.sql:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.sql.rowset:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.transaction.xa:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.xml:
+#10 0.228 total 76
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 -r--r--r-- 1 root root 11195 Apr 20  2023 bcel.md
+#10 0.228 -r--r--r-- 1 root root  3761 Apr 20  2023 dom.md
+#10 0.228 -r--r--r-- 1 root root  1448 Apr 20  2023 jcup.md
+#10 0.228 -r--r--r-- 1 root root 13494 Apr 20  2023 xalan.md
+#10 0.228 -r--r--r-- 1 root root 11852 Apr 20  2023 xerces.md
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/java.xml.crypto:
+#10 0.228 total 40
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 -r--r--r-- 1 root root 11436 Apr 20  2023 santuario.md
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.accessibility:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.attach:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.charsets:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.compiler:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.crypto.cryptoki:
+#10 0.228 total 36
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 -r--r--r-- 1 root root  3923 Apr 20  2023 pkcs11cryptotoken.md
+#10 0.228 -r--r--r-- 1 root root  2131 Apr 20  2023 pkcs11wrapper.md
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.crypto.ec:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.dynalink:
+#10 0.228 total 32
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 -r--r--r-- 1 root root  1502 Apr 20  2023 dynalink.md
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.editpad:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.hotspot.agent:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.httpserver:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.incubator.foreign:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.incubator.vector:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.228 
+#10 0.228 /opt/graalvm-ce-java17-22.3.2/legal/jdk.internal.ed:
+#10 0.228 total 28
+#10 0.228 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.228 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.228 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.internal.jvmstat:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.internal.le:
+#10 0.229 total 32
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 -r--r--r-- 1 root root  1579 Apr 20  2023 jline.md
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.internal.opt:
+#10 0.229 total 32
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 -r--r--r-- 1 root root  1122 Apr 20  2023 jopt-simple.md
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.internal.vm.ci:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.internal.vm.compiler:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.internal.vm.compiler.management:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jartool:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.javadoc:
+#10 0.229 total 36
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 -r--r--r-- 1 root root  2936 Apr 20  2023 jquery.md
+#10 0.229 -r--r--r-- 1 root root  1870 Apr 20  2023 jqueryUI.md
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jcmd:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jconsole:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jdeps:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jdi:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jdwp.agent:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jfr:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jlink:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jpackage:
+#10 0.229 total 28
+#10 0.229 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.229 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.229 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.229 
+#10 0.229 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jshell:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jsobject:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.jstatd:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.localedata:
+#10 0.230 total 44
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 -r--r--r-- 1 root root  9130 Apr 20  2023 cldr.md
+#10 0.230 -r--r--r-- 1 root root  1346 Apr 20  2023 thaidict.md
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.management:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.management.agent:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.management.jfr:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.naming.dns:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.naming.rmi:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.net:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.nio.mapmode:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.random:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.sctp:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.security.auth:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.security.jgss:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.unsupported:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.unsupported.desktop:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.xml.dom:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/legal/jdk.zipfs:
+#10 0.230 total 28
+#10 0.230 -r--r--r-- 1 root root  2114 Apr 20  2023 ADDITIONAL_LICENSE_INFO
+#10 0.230 -r--r--r-- 1 root root  1522 Apr 20  2023 ASSEMBLY_EXCEPTION
+#10 0.230 -r--r--r-- 1 root root 19274 Apr 20  2023 LICENSE
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/lib:
+#10 0.230 total 269052
+#10 0.230 -rw-rw-r-- 1 root root     71366 Apr 20  2023 classlist
+#10 0.230 -rw-rw-r-- 1 root root   8301486 Apr 20  2023 ct.sym
+#10 0.230 drwxr-xr-x 2 root root      4096 Jul 21 11:16 graal
+#10 0.230 drwxr-xr-x 2 root root      4096 Jul 21 11:16 graalvm
+#10 0.230 drwxr-xr-x 4 root root      4096 Jul 21 11:15 installer
+#10 0.230 -rwxrwxr-x 1 root root     12480 Apr 20  2023 jexec
+#10 0.230 drwxr-xr-x 2 root root      4096 Jul 21 11:16 jfr
+#10 0.230 -rw-rw-r-- 1 root root    110513 Apr 20  2023 jrt-fs.jar
+#10 0.230 -rwxrwxr-x 1 root root     17640 Apr 20  2023 jspawnhelper
+#10 0.230 -rw-r--r-- 1 root root        44 Apr 20  2023 jvm.cfg
+#10 0.230 drwxr-xr-x 2 root root      4096 Jul 21 11:16 jvmci
+#10 0.230 -rw-rw-r-- 1 root root     12808 Apr 20  2023 libattach.so
+#10 0.230 -rw-rw-r-- 1 root root    895528 Apr 20  2023 libawt.so
+#10 0.230 -rw-rw-r-- 1 root root     38488 Apr 20  2023 libawt_headless.so
+#10 0.230 -rw-rw-r-- 1 root root    482264 Apr 20  2023 libawt_xawt.so
+#10 0.230 -rw-rw-r-- 1 root root     27584 Apr 20  2023 libdt_socket.so
+#10 0.230 -rw-rw-r-- 1 root root     12832 Apr 20  2023 libextnet.so
+#10 0.230 -rw-rw-r-- 1 root root   2186024 Apr 20  2023 libfontmanager.so
+#10 0.230 -rw-rw-r-- 1 root root     50304 Apr 20  2023 libinstrument.so
+#10 0.230 -rw-rw-r-- 1 root root     47032 Apr 20  2023 libj2gss.so
+#10 0.230 -rw-rw-r-- 1 root root     17632 Apr 20  2023 libj2pcsc.so
+#10 0.230 -rw-rw-r-- 1 root root     92296 Apr 20  2023 libj2pkcs11.so
+#10 0.230 -rw-rw-r-- 1 root root      7712 Apr 20  2023 libjaas.so
+#10 0.230 -rw-rw-r-- 1 root root    190288 Apr 20  2023 libjava.so
+#10 0.230 -rw-rw-r-- 1 root root    239976 Apr 20  2023 libjavajpeg.so
+#10 0.230 -rw-rw-r-- 1 root root      7736 Apr 20  2023 libjawt.so
+#10 0.230 -rw-rw-r-- 1 root root    289536 Apr 20  2023 libjdwp.so
+#10 0.230 -rw-rw-r-- 1 root root    145528 Apr 20  2023 libjimage.so
+#10 0.230 -rw-rw-r-- 1 root root     73032 Apr 20  2023 libjli.so
+#10 0.230 -rw-rw-r-- 1 root root     12672 Apr 20  2023 libjsig.so
+#10 0.230 -rw-rw-r-- 1 root root     80336 Apr 20  2023 libjsound.so
+#10 0.230 -rw-rw-r-- 1 root root    866496 Apr 20  2023 libjsvml.so
+#10 0.230 -rwxrwxr-x 1 root root  37955400 Apr 20  2023 libjvmcicompiler.so
+#10 0.230 -rw-rw-r-- 1 root root    606104 Apr 20  2023 liblcms.so
+#10 0.230 -rw-rw-r-- 1 root root     25456 Apr 20  2023 libmanagement.so
+#10 0.230 -rw-rw-r-- 1 root root      7752 Apr 20  2023 libmanagement_agent.so
+#10 0.230 -rw-rw-r-- 1 root root     32984 Apr 20  2023 libmanagement_ext.so
+#10 0.230 -rw-rw-r-- 1 root root    603080 Apr 20  2023 libmlib_image.so
+#10 0.230 -rw-rw-r-- 1 root root    108432 Apr 20  2023 libnet.so
+#10 0.230 -rw-rw-r-- 1 root root     99848 Apr 20  2023 libnio.so
+#10 0.230 -rw-rw-r-- 1 root root     11976 Apr 20  2023 libprefs.so
+#10 0.230 -rw-rw-r-- 1 root root      7480 Apr 20  2023 librmi.so
+#10 0.230 -rw-rw-r-- 1 root root    184296 Apr 20  2023 libsaproc.so
+#10 0.230 -rw-rw-r-- 1 root root     27872 Apr 20  2023 libsctp.so
+#10 0.230 -rw-rw-r-- 1 root root    368656 Apr 20  2023 libsplashscreen.so
+#10 0.230 -rw-rw-r-- 1 root root      7464 Apr 20  2023 libsyslookup.so
+#10 0.230 -rwxrwxr-x 1 root root    332448 Apr 20  2023 libtrufflenfi.so
+#10 0.230 -rw-rw-r-- 1 root root     64016 Apr 20  2023 libverify.so
+#10 0.230 -rw-rw-r-- 1 root root     41056 Apr 20  2023 libzip.so
+#10 0.230 -rw-rw-r-- 1 root root 162914689 Apr 20  2023 modules
+#10 0.230 drwxr-xr-x 3 root root      4096 Jul 21 11:16 polyglot
+#10 0.230 -rw-rw-r-- 1 root root      3793 Apr 20  2023 psfont.properties.ja
+#10 0.230 -rw-rw-r-- 1 root root     11390 Apr 20  2023 psfontj2d.properties
+#10 0.230 drwxr-xr-x 2 root root      4096 Jul 21 11:16 security
+#10 0.230 drwxr-xr-x 2 root root      4096 Jul 21 11:16 server
+#10 0.230 -rw-rw-r-- 1 root root  57559731 Apr 20  2023 src.zip
+#10 0.230 drwxr-xr-x 3 root root      4096 Jul 21 11:16 svm
+#10 0.230 drwxr-xr-x 2 root root      4096 Jul 21 11:16 truffle
+#10 0.230 -rw-rw-r-- 1 root root    102619 Apr 20  2023 tzdb.dat
+#10 0.230 
+#10 0.230 /opt/graalvm-ce-java17-22.3.2/lib/graal:
+#10 0.230 total 272
+#10 0.230 -rw-rw-r-- 1 root root 276113 Apr 20  2023 graal-processor.jar
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/graalvm:
+#10 0.231 total 3628
+#10 0.231 -rw-rw-r-- 1 root root  104162 Apr 20  2023 graal-hotspot-library.jar
+#10 0.231 -rw-rw-r-- 1 root root  134579 Apr 20  2023 graal-truffle-compiler-libgraal.jar
+#10 0.231 -rw-rw-r-- 1 root root 3471977 Apr 20  2023 launcher-common.jar
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/installer:
+#10 0.231 total 1060
+#10 0.231 drwxr-xr-x 2 root root   4096 Jul 21 11:15 bin
+#10 0.231 drwxr-xr-x 3 root root   4096 Jul 21 11:16 components
+#10 0.231 -rw-rw-r-- 1 root root 929206 Apr 20  2023 installer.jar
+#10 0.231 -rw-r--r-- 1 root root 146422 Jan  4  2023 trufflejson.jar
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/installer/bin:
+#10 0.231 total 32760
+#10 0.231 -rwxrwxr-x 1 root root 33544256 Apr 20  2023 gu
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/installer/components:
+#10 0.231 total 8
+#10 0.231 -rw-r--r-- 1 root root  116 Apr 20  2023 org.graalvm.component
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:15 polyglot
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/installer/components/polyglot:
+#10 0.231 total 0
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/jfr:
+#10 0.231 total 72
+#10 0.231 -rw-rw-r-- 1 root root 35857 Apr 20  2023 default.jfc
+#10 0.231 -rw-rw-r-- 1 root root 35817 Apr 20  2023 profile.jfc
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/jvmci:
+#10 0.231 total 4
+#10 0.231 -rw-r--r-- 1 root root 5 Apr 20  2023 compiler-name
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/polyglot:
+#10 0.231 total 176
+#10 0.231 drwxr-xr-x 2 root root   4096 Jul 21 11:16 bin
+#10 0.231 -rw-rw-r-- 1 root root 170954 Apr 20  2023 polyglot-native-api.jar
+#10 0.231 -rw-rw-r-- 1 root root   2242 Apr 20  2023 polyglot_types.h
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/polyglot/bin:
+#10 0.231 total 8
+#10 0.231 -rwxr-xr-x 1 root root 4350 Apr 20  2023 polyglot
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/security:
+#10 0.231 total 348
+#10 0.231 -rw-rw-r-- 1 root root   2488 Apr 20  2023 blocked.certs
+#10 0.231 -rw-rw-r-- 1 root root 103187 Apr 20  2023 cacerts
+#10 0.231 -rw-rw-r-- 1 root root  10738 Apr 20  2023 default.policy
+#10 0.231 -rw-rw-r-- 1 root root 232158 Apr 20  2023 public_suffix_list.dat
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/server:
+#10 0.231 total 35296
+#10 0.231 -r--r--r-- 1 root root 13447168 Apr 20  2023 classes.jsa
+#10 0.231 -rw-rw-r-- 1 root root    12672 Apr 20  2023 libjsig.so
+#10 0.231 -rw-rw-r-- 1 root root 22674168 Apr 20  2023 libjvm.so
+#10 0.231 -rw-r--r-- 1 root root       47 Apr 20  2023 vm.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/svm:
+#10 0.231 total 4
+#10 0.231 drwxr-xr-x 7 root root 4096 Jul 21 11:16 macros
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/svm/macros:
+#10 0.231 total 20
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 gu-launcher
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 jvmcicompiler-library
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 polyglot-launcher
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 polyglot-library
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 truffle
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/svm/macros/gu-launcher:
+#10 0.231 total 4
+#10 0.231 -rw-rw-r-- 1 root root 877 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/svm/macros/jvmcicompiler-library:
+#10 0.231 total 4
+#10 0.231 -rw-rw-r-- 1 root root 1977 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/svm/macros/polyglot-launcher:
+#10 0.231 total 4
+#10 0.231 -rw-rw-r-- 1 root root 835 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/svm/macros/polyglot-library:
+#10 0.231 total 8
+#10 0.231 -rw-rw-r-- 1 root root 434 Apr 20  2023 native-image.properties
+#10 0.231 -rw-rw-r-- 1 root root 686 Apr 20  2023 polynative-libpolyglot-macro.jar
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/svm/macros/truffle:
+#10 0.231 total 4
+#10 0.231 -rw-rw-r-- 1 root root 702 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/lib/truffle:
+#10 0.231 total 17240
+#10 0.231 -rw-rw-r-- 1 root root    10156 Apr 20  2023 locator.jar
+#10 0.231 -rw-rw-r-- 1 root root 15137492 Apr 20  2023 truffle-api.jar
+#10 0.231 -rw-rw-r-- 1 root root  2355766 Apr 20  2023 truffle-dsl-processor.jar
+#10 0.231 -rw-rw-r-- 1 root root   140344 Apr 20  2023 truffle-tck.jar
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/tools:
+#10 0.231 total 28
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 chromeinspector
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 coverage
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 dap
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 insight
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 insightheap
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 lsp
+#10 0.231 drwxr-xr-x 2 root root 4096 Jul 21 11:16 profiler
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/tools/chromeinspector:
+#10 0.231 total 1048
+#10 0.231 -rw-rw-r-- 1 root root 1065165 Apr 20  2023 chromeinspector.jar
+#10 0.231 -rw-rw-r-- 1 root root     141 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/tools/coverage:
+#10 0.231 total 252
+#10 0.231 -rw-rw-r-- 1 root root    134 Apr 20  2023 native-image.properties
+#10 0.231 -rw-rw-r-- 1 root root 252945 Apr 20  2023 truffle-coverage.jar
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/tools/dap:
+#10 0.231 total 992
+#10 0.231 -rw-rw-r-- 1 root root 1007639 Apr 20  2023 dap.jar
+#10 0.231 -rw-rw-r-- 1 root root     129 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/tools/insight:
+#10 0.231 total 336
+#10 0.231 -rw-rw-r-- 1 root root 337994 Apr 20  2023 insight.jar
+#10 0.231 -rw-rw-r-- 1 root root    170 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/tools/insightheap:
+#10 0.231 total 296
+#10 0.231 -rw-rw-r-- 1 root root 295535 Apr 20  2023 insight-heap.jar
+#10 0.231 -rw-rw-r-- 1 root root    170 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/tools/lsp:
+#10 0.231 total 1300
+#10 0.231 -rw-rw-r-- 1 root root   45783 Apr 20  2023 lsp-api.jar
+#10 0.231 -rw-rw-r-- 1 root root 1274242 Apr 20  2023 lsp.jar
+#10 0.231 -rw-rw-r-- 1 root root     148 Apr 20  2023 native-image.properties
+#10 0.231 
+#10 0.231 /opt/graalvm-ce-java17-22.3.2/tools/profiler:
+#10 0.231 total 636
+#10 0.231 -rw-rw-r-- 1 root root    227 Apr 20  2023 native-image.properties
+#10 0.231 -rw-rw-r-- 1 root root 643992 Apr 20  2023 truffle-profiler.jar
+#10 DONE 0.2s
+
+#11 [ 7/21] RUN if [ -f "/opt/graalvm-ce-java17-22.3.2/bin/gu" ]; then chmod +x /opt/graalvm-ce-java17-22.3.2/bin/gu; fi
+#11 DONE 0.5s
+
+#12 [ 8/21] RUN ls -l /opt/graalvm-ce-java17-22.3.2/bin/gu && /opt/graalvm-ce-java17-22.3.2/bin/gu --version
+#12 0.384 lrwxrwxrwx 1 root root 23 Apr 20  2023 /opt/graalvm-ce-java17-22.3.2/bin/gu -> ../lib/installer/bin/gu
+#12 0.389 GraalVM Updater 22.3.2
+#12 DONE 0.4s
+
+#13 [ 9/21] RUN /opt/graalvm-ce-java17-22.3.2/bin/gu list | tee /tmp/graalvm_components.txt
+#13 0.427 ComponentId              Version             Component name                Stability                     Origin 
+#13 0.427 ---------------------------------------------------------------------------------------------------------------------------------
+#13 0.427 graalvm                  22.3.2              GraalVM Core                  Supported                     
+#13 DONE 0.4s
+
+#14 [10/21] RUN apt-get update && apt-get install -y --no-install-recommends libz-dev libexpat1 && rm -rf /var/lib/apt/lists/*
+#14 0.428 Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+#14 0.438 Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+#14 0.542 Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+#14 0.569 Get:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+#14 0.611 Get:5 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1267 kB]
+#14 0.698 Get:6 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+#14 0.719 Get:7 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [48.5 kB]
+#14 0.720 Get:8 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3148 kB]
+#14 0.721 Get:9 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+#14 0.760 Get:10 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [4932 kB]
+#14 0.786 Get:11 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+#14 0.792 Get:12 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+#14 0.960 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [75.9 kB]
+#14 0.961 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1572 kB]
+#14 0.972 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [5139 kB]
+#14 1.011 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3461 kB]
+#14 1.035 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.2 kB]
+#14 1.035 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [83.2 kB]
+#14 2.554 Fetched 40.1 MB in 2s (18.6 MB/s)
+#14 2.554 Reading package lists...
+#14 3.585 Reading package lists...
+#14 4.544 Building dependency tree...
+#14 4.716 Reading state information...
+#14 4.903 libexpat1 is already the newest version (2.4.7-1ubuntu0.6).
+#14 4.903 libexpat1 set to manually installed.
+#14 4.903 zlib1g-dev is already the newest version (1:1.2.11.dfsg-2ubuntu9.2).
+#14 4.903 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+#14 DONE 4.9s
+
+#15 [11/21] RUN cat /tmp/graalvm_components.txt
+#15 0.332 ComponentId              Version             Component name                Stability                     Origin 
+#15 0.332 ---------------------------------------------------------------------------------------------------------------------------------
+#15 0.332 graalvm                  22.3.2              GraalVM Core                  Supported                     
+#15 DONE 0.3s
+
+#16 [12/21] RUN /opt/graalvm-ce-java17-22.3.2/bin/gu install python || (echo "gu install python failed, showing help:" && /opt/graalvm-ce-java17-22.3.2/bin/gu --help)
+#16 0.327 Downloading: Component catalog from www.graalvm.org
+#16 0.448 Error: Component python requires to upgrade GraalVM Core to at least 23.0.0.
+#16 0.452 gu install python failed, showing help:
+#16 0.457 GraalVM Component Updater v2.0.0
+#16 0.457 
+#16 0.457 Usage: 
+#16 0.457 	gu info [-cClLnprstuvVJ] <param>        print info about a specific component (from a file, a URL or a catalog)
+#16 0.457 	gu available [-aClvVJ] <expr>           list components available in a catalog
+#16 0.457 	gu install [-0CcDfiLMnosruvyxY] <param> install a component package
+#16 0.457 	gu list [-clvJ] <expression>            list installed components, or components from a catalog
+#16 0.457 	gu remove [-0DfMxv] <id>                uninstall a component
+#16 0.457 	gu upgrade [-cCnLsuxSd] [<ver>] [<cmp>] upgrade to a recent GraalVM or edition
+#16 0.457 	gu rebuild-images                       rebuild native executables. Use -h for detailed usage
+#16 0.457 
+#16 0.457 Common options:
+#16 0.457   -A, --auto-yes              respond YES or ACCEPT to all questions.
+#16 0.457   -c, --catalog               treat parameters as component IDs from a catalog of GraalVM components. This is the default.
+#16 0.457   -C, --custom-catalog <url>  use user-supplied catalog at URL.
+#16 0.457   -e, --debug                 debugging. Prints stacktraces, ...
+#16 0.457   -E, --no-catalog-errors     do not stop if at least one catalog is working.
+#16 0.457   -h, --help                  print help.
+#16 0.457   -L, --local-file, --file    treat parameters as local filenames of packaged components.
+#16 0.457   -N, --non-interactive       noninteractive mode. Fail when input is required.
+#16 0.457   --show-version              print version information and continue.
+#16 0.457   -u, --url                   interpret parameters as URLs of packaged components.
+#16 0.457   -v, --verbose               be verbose. Print versions and dependency information.
+#16 0.457   --version                   print version.
+#16 0.457 
+#16 0.457 Additonal options:
+#16 0.457 	--config <path>           path to configuration file
+#16 0.457 	--show-ee-token           print current download token
+#16 0.457     
+#16 0.457 Use 
+#16 0.457 	gu <command> -h
+#16 0.457 to get specific help.
+#16 0.457 
+#16 0.457 Runtime options:
+#16 0.457   --native                                     Run using the native launcher with limited access to Java libraries
+#16 0.457                                                (default).
+#16 0.457   --jvm                                        Run on the Java Virtual Machine with access to Java libraries.
+#16 0.457   --vm.[option]                                Pass options to the host VM. To see available options, use '--help:vm'.
+#16 0.457   --log.file=<String>                          Redirect guest languages logging into a given file.
+#16 0.457   --log.[logger].level=<String>                Set language log level to OFF, SEVERE, WARNING, INFO, CONFIG, FINE,
+#16 0.457                                                FINER, FINEST or ALL.
+#16 0.457   --help                                       Print this help message.
+#16 0.457   --help:vm                                    Print options for the host VM.
+#16 0.457 
+#16 0.457 See http://www.graalvm.org for more information.
+#16 DONE 0.5s
+
+#17 [13/21] RUN if [ -f "/opt/graalvm-ce-java17-22.3.2/bin/graalpython" ]; then /opt/graalvm-ce-java17-22.3.2/bin/graalpython --version; else echo "graalpython not available"; fi
+#17 0.350 graalpython not available
+#17 DONE 0.4s
+
+#18 [14/21] RUN curl https://pyenv.run | bash
+#18 0.391   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#18 0.391                                  Dload  Upload   Total   Spent    Left  Speed
+#18 0.391 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100   270  100   270    0     0   1790      0 --:--:-- --:--:-- --:--:--  1800
+#18 0.615 Cloning into '/root/.pyenv'...
+#18 1.178 Cloning into '/root/.pyenv/plugins/pyenv-doctor'...
+#18 1.473 Cloning into '/root/.pyenv/plugins/pyenv-update'...
+#18 1.732 Cloning into '/root/.pyenv/plugins/pyenv-virtualenv'...
+#18 DONE 2.1s
+
+#19 [15/21] RUN bash -c "export PATH=/root/.pyenv/bin:/root/.pyenv/shims:/root/.pyenv/bin:/root/.pyenv/shims:/opt/graalvm-ce-java17-22.3.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin &&     pyenv install 3.11.4 &&     pyenv global 3.11.4"
+#19 0.431 Downloading Python-3.11.4.tar.xz...
+#19 0.431 -> https://www.python.org/ftp/python/3.11.4/Python-3.11.4.tar.xz
+#19 2.545 Installing Python-3.11.4...
+#19 54.67 Installed Python-3.11.4 to /root/.pyenv/versions/3.11.4
+#19 DONE 55.7s
+
+#20 [16/21] RUN ln -sf /root/.pyenv/versions/3.11.4/bin/python3 /usr/local/bin/python3 &&     ln -sf /root/.pyenv/versions/3.11.4/bin/pip3 /usr/local/bin/pip3
+#20 DONE 0.2s
+
+#21 [17/21] RUN python3 -m pip install --upgrade pip
+#21 0.793 Requirement already satisfied: pip in /root/.pyenv/versions/3.11.4/lib/python3.11/site-packages (23.1.2)
+#21 0.944 Collecting pip
+#21 1.023   Downloading pip-25.1.1-py3-none-any.whl (1.8 MB)
+#21 1.109      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 22.0 MB/s eta 0:00:00
+#21 1.166 Installing collected packages: pip
+#21 1.166   Attempting uninstall: pip
+#21 1.169     Found existing installation: pip 23.1.2
+#21 1.217     Uninstalling pip-23.1.2:
+#21 1.366       Successfully uninstalled pip-23.1.2
+#21 2.336 Successfully installed pip-25.1.1
+#21 2.336 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#21 DONE 2.6s
+
+#22 [18/21] RUN python3 -m venv venv
+#22 DONE 4.3s
+
+#23 [19/21] RUN . venv/bin/activate && pip install pytest
+#23 0.814 Collecting pytest
+#23 0.895   Downloading pytest-8.4.1-py3-none-any.whl (365 kB)
+#23 0.941      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 365.5/365.5 kB 8.4 MB/s eta 0:00:00
+#23 0.972 Collecting iniconfig>=1 (from pytest)
+#23 0.977   Downloading iniconfig-2.1.0-py3-none-any.whl (6.0 kB)
+#23 1.015 Collecting packaging>=20 (from pytest)
+#23 1.020   Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#23 1.026      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.5/66.5 kB 12.2 MB/s eta 0:00:00
+#23 1.052 Collecting pluggy<2,>=1.5 (from pytest)
+#23 1.057   Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+#23 1.099 Collecting pygments>=2.7.2 (from pytest)
+#23 1.104   Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+#23 1.152      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 26.5 MB/s eta 0:00:00
+#23 1.255 Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+#23 2.341 Successfully installed iniconfig-2.1.0 packaging-25.0 pluggy-1.6.0 pygments-2.19.2 pytest-8.4.1
+#23 7.488 
+#23 7.488 [notice] A new release of pip is available: 23.1.2 -> 25.1.1
+#23 7.488 [notice] To update, run: pip install --upgrade pip
+#23 DONE 7.6s
+
+#24 [20/21] COPY . /home/cc/EnvGym/data/gluetest
+#24 DONE 0.6s
+
+#25 [21/21] RUN if [ -f run.sh ]; then chmod +x run.sh; fi
+#25 DONE 0.2s
+
+#26 exporting to image
+#26 exporting layers
+#26 exporting layers 11.7s done
+#26 writing image sha256:c25123b9f75e5fba632f0d33feffecb1b2ce1310583143fa163469999548fa3c done
+#26 naming to docker.io/library/envgym_test_1753096549 done
+#26 DONE 11.7s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

@@ -1,0 +1,22 @@
+[
+  "README.md",
+  "clap_builder/README.md",
+  "clap_complete/README.md",
+  "clap_complete_nushell/README.md",
+  "clap_derive/README.md",
+  "clap_lex/README.md",
+  "clap_mangen/README.md",
+  "examples/README.md",
+  ".cargo/config.toml",
+  ".clippy.toml",
+  ".pre-commit-config.yaml",
+  "Cargo.toml",
+  "Cargo.lock",
+  "deny.toml",
+  "release.toml",
+  "typos.toml",
+  "committed.toml",
+  ".github/renovate.json5",
+  ".github/settings.yml",
+  ".git/config"
+]

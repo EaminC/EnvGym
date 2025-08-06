@@ -1,0 +1,118 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (For x86_64 Linux, Docker, no GPU, likely Ubuntu/Debian base) ===
+
+**KEY HARDWARE ADJUSTMENT NOTES:**
+- CPU: x86_64 (amd64). All tools, dependencies, and base images must target this architecture.
+- OS: Linux (Docker host and container). Use Ubuntu/Debian-based images for best compatibility.
+- GPU: None; ignore CUDA/NVIDIA/GPU tooling or dependencies.
+- Memory/Storage: No explicit constraints given, but for benchmarking, ensure container is given sufficient RAM (ideally >8GB for heavy benchmarks; >32GB if trying to match i9-12900K/128GB environments).
+- Docker context: Ensure all required files for build and benchmarks are in the context (especially subdirs like crates/, benchsuite/, pkg/, deployment/).
+- Use BuildKit for improved parallel build performance.
+- No Windows/macOS-specific build steps or manifests will be performed in this environment.
+- All package and tool references should assume Linux (Ubuntu/Debian) package names and installation methods.
+
+---
+
+1. DOWNLOADS NEEDED  
+   - **Rust toolchain** (>=1.72.0, cargo):  
+     - Install via rustup (preferred) or from rust:latest Docker image targeting x86_64.
+     - Ensure `edition = "2021"` and `rust-version = "1.72"` in Cargo.toml.
+   - **Git:**  
+     - Ubuntu/Debian: `apt-get install git`  
+   - **C Compiler, pkg-config, MUSL tools, PCRE2-dev:**  
+     - Ubuntu/Debian: `apt-get install build-essential pkg-config musl-tools libpcre2-dev`  
+   - **strip utility:**  
+     - Provided by `binutils` (`apt-get install binutils`)  
+   - **Shell utilities & search tools for benchmarking:**  
+     - Ubuntu/Debian:  
+       - `apt-get install grep silversearcher-ag sift platinumsearcher universalcodegrep ugrep`  
+       - If not all are available via apt, build/install from source as needed (especially `ugrep >= 3.9.2`).  
+     - Confirm versions, as packaged versions may lag; use manual installation if needed.
+   - **Python 3:**  
+     - For benchmark scripts: `apt-get install python3`
+   - **Tools for Debian packaging:**  
+     - `apt-get install dpkg-dev`  
+     - `cargo install cargo-deb`  
+   - **Dependency analysis tools:**  
+     - `ldd` (from `libc-bin`), included by default  
+   - **rustfmt:**  
+     - `rustup component add rustfmt`
+   - **No Windows/macOS-specific tools needed. Ignore Homebrew, MacPorts, Chocolatey, etc.**  
+   - **No GPU or CUDA-related downloads needed.**
+   - **All other Rust crates resolved via cargo.**
+
+2. FILES TO CREATE  
+   - All file paths should use Linux/Unix conventions (no `%APPDATA%`, no backslashes).
+   - **ripgrep config:**  
+     - Path: `/home/cc/.config/ripgrep/config` (or `$HOME/.config/ripgrep/config`)  
+   - **Shell completions:**  
+     - Output to:  
+       - Bash: `/etc/bash_completion.d/rg` or `/usr/share/bash-completion/completions/rg`  
+       - Zsh: `/usr/share/zsh/vendor-completions/_rg`  
+       - Fish: `/usr/share/fish/vendor_completions.d/rg.fish`  
+     - If user home directory is needed: `~/.bash_completion.d/rg`, etc.
+   - **All ignore, manifest, and config files as described in original plan; use forward slashes.**
+   - **No Windows manifest or Windows-specific files required for this Linux/x86_64 environment.**
+   - **Ensure all referenced files/directories (crates/, benchsuite/, deployment/, etc.) are in the Docker context and copied into the image.**
+
+3. NECESSARY TEST CASES IN THE CODEBASE  
+   - Focus on Linux-specific tests (ignore Windows manifest/long path tests, manifest embedding, etc.).
+   - All functional, integration, and benchmark tests apply.
+   - Benchmarking:  
+     - Confirm sufficient RAM is allocated to Docker containers for meaningful testing/benchmarking.  
+     - If matching i9-12900K/128GB benchmarks, allocate as much as feasible (memory may be a limiting factor in Docker).
+   - Static linking tests:  
+     - For static builds, use MUSL (`x86_64-unknown-linux-musl`).
+     - Confirm static linking with `ldd`.
+   - Windows/macOS-specific test cases can be omitted or marked as not applicable.
+
+4. COMPLETE TODO LIST (LINUX/x86_64/Dockerized)  
+   1. **Install Rust and cargo:**  
+      - Use rustup or `rust:latest` x86_64 image.  
+      - `rustup default stable` (if not using pre-installed)
+   2. **Install git:**  
+      - `apt-get update && apt-get install -y git`
+   3. **Install build tools and dependencies:**  
+      - `apt-get install -y build-essential pkg-config musl-tools libpcre2-dev binutils python3`  
+   4. **Install rustfmt:**  
+      - `rustup component add rustfmt`
+   5. **Install benchmarking/search tools:**  
+      - Try `apt-get install -y grep silversearcher-ag sift platinumsearcher universalcodegrep ugrep`  
+      - If any tool is too old or unavailable, download and build latest from GitHub releases.
+   6. **Install cargo-deb and dpkg tools (if packaging):**  
+      - `cargo install cargo-deb`  
+      - `apt-get install -y dpkg-dev`
+   7. **Clone repo and enter directory:**  
+      - `git clone https://github.com/BurntSushi/ripgrep`  
+      - `cd ripgrep`
+   8. **Verify all required files exist (copy into Docker if needed):**  
+      - All `Cargo.toml`, `Cargo.lock`, `.cargo/config.toml`, `build.rs`, `benchsuite/`, and crate subdirs present.
+   9. **Set up `.cargo/config.toml` for static builds:**  
+      - Use provided content targeting MUSL for Linux static linking (no Windows sections needed).
+   10. **No Windows manifest or manifest handling in `build.rs` needed.**  
+   11. **No Windows/macOS packaging or completion file steps required.**  
+   12. **Continue with all other steps as described (build, test, format, create config, run benchmarks, etc.).**  
+   13. **All file paths and created files should use Linux conventions (forward slashes, `$HOME`, etc.).**  
+   14. **For benchmarking:**  
+       - Ensure `/dev/shm` or other fast storage is available and mounted inside Docker if used for large runs.  
+       - If hardware is limited, document any resource differences when comparing with published benchmarks.
+   15. **Omit all steps related to Windows manifest, MSVC/mt.exe, or Windows long path support.**  
+   16. **Omit Homebrew, MacPorts, Chocolatey, and other OS-specific package manager references.**  
+   17. **When building static binaries, verify with `ldd` that the binary is statically linked.**  
+   18. **Ensure all relevant benchmarks, README, and documentation mention Linux/x86_64 platform.**  
+   19. **If packaging or distributing, create .deb packages using `cargo-deb` only (no .msi, .exe, etc.).**  
+   20. **If using Docker, ensure Dockerfile copies all necessary files/subdirs (benchsuite, crates, deployment, etc.) and sets correct working directory.**  
+   21. **If using CI, configure for Linux/x86_64 runners.**
+
+---
+
+**Summary of Adjustments:**
+- All instructions and file paths are standardized for Linux/x86_64 in Docker.
+- Windows/macOS-specific steps and files are omitted.
+- Package installation assumes Ubuntu/Debian (`apt-get`).
+- No GPU or CUDA steps.
+- Docker build context must include all needed files.
+- Sufficient container resources (especially RAM) should be allocated for benchmarking.
+- Static linking targets MUSL only.
+- Test, build, and documentation steps are streamlined for this environment.
+
+**Proceed with this adjusted plan for maximum compatibility and feasibility on your specified hardware and environment.**

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/axios_axios (project directory under /home/cc/EnvGym/data, no GPU code expected based on hardware)
+- Architecture: x86_64 (use --platform=linux/amd64)
+- Base Image: amd64-compatible images (e.g., ubuntu:22.04, node:<tag>, python:<tag>)
+- GPU: No NVIDIA GPU detected; CUDA images not recommended/applicable
+- Instruction Notes: No GPU-specific instructions (no need for nvidia/cuda or related RUN/ENV), use standard Linux x86_64 instructions
+- Docker Version: 28.3.2 (BuildKit supported, --gpus flag available but not useful without NVIDIA GPU)

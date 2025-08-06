@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_051322",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752988383",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.84kB done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.2s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/9] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb\n#4 DONE 0.0s\n\n#5 [4/9] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         wget         curl         python3.10         python3.10-venv         python3.10-dev         qemu-kvm         qemu-utils         libvirt-daemon-system         libvirt-clients         bridge-utils         memcached         clang         clang-tools         llvm         build-essential         make         linux-headers-generic         ca-certificates         lsb-release         sudo         openssh-client         unzip         pkg-config         libssl-dev         libffi-dev         libxml2-dev         libxslt1-dev         zlib1g-dev         tmux         vim         gpg         && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [2/9] WORKDIR /home/cc/EnvGym/data/Silhouette\n#6 CACHED\n\n#7 [3/9] RUN mkdir -p /home/cc/EnvGym/data/Silhouette/qemu_imgs\n#7 CACHED\n\n#8 [5/9] RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1\n#8 CACHED\n\n#9 [internal] load build context\n#9 transferring context: 95B 0.0s done\n#9 DONE 0.0s\n\n#10 [6/9] RUN mkdir -p /home/cc/EnvGym/data/Silhouette/Silhouette/codebase/scripts/fs_conf &&     touch /home/cc/EnvGym/data/Silhouette/Silhouette/codebase/scripts/fs_conf/sshkey &&     chmod 600 /home/cc/EnvGym/data/Silhouette/Silhouette/codebase/scripts/fs_conf/sshkey\n#10 DONE 0.2s\n\n#11 [7/9] COPY install_dep.sh /home/cc/EnvGym/data/Silhouette/\n#11 DONE 0.0s\n\n#12 [8/9] COPY prepare.sh /home/cc/EnvGym/data/Silhouette/\n#12 DONE 0.0s\n\n#13 [9/9] COPY README.md /home/cc/EnvGym/data/Silhouette/\n#13 DONE 0.0s\n\n#14 exporting to image\n#14 exporting layers\n#14 exporting layers 17.8s done\n#14 writing image sha256:cb51103acad53391e838740bf616e40243220ec6fd358ac418b8c411262fa15b done\n#14 naming to docker.io/library/envgym_test_1752988383 done\n#14 DONE 17.8s\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n"
+  },
+  "run": {
+    "success": true,
+    "stdout": "",
+    "stderr": ""
+  }
+}

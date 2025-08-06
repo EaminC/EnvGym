@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/expressjs_express; Node.js/Express.js project likely (based on directory name)
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., node:XX-bullseye, ubuntu:22.04, debian:buster-slim)
+- GPU: No NVIDIA GPU detected; skip CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions needed; no hardware-based limits on build; large RAM allows for multi-stage builds or parallel compilation if needed
+- Docker Version: 28.3.2; BuildKit and --gpus flag supported but not needed due to lack of GPU; supports modern Dockerfile syntax and features

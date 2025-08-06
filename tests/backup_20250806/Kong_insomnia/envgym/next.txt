@@ -1,0 +1,13 @@
+current progress
+- Docker image builds and runs successfully on Linux x86_64 (Ubuntu 22.04, Node.js 22.14.0).
+- All key system dependencies are installed, including mkcert, libfontconfig-dev, Playwright browsers, and node-pre-gyp for native modules.
+- Project files and workspace packages are copied and installed (`npm ci` at both root and insomnia workspace).
+- mkcert CA is installed, and patch-package runs if present.
+- The Dockerfile is using the correct WORKDIR: `/home/cc/EnvGym/data/Kong_insomnia`.
+- The final container starts with a bash shell for debugging (not the intended application entrypoint).
+
+next step
+- Change the final `CMD [ "bash" ]` to start the actual development or production process (e.g., `CMD ["npm", "run", "dev"]` or the appropriate start command).
+- Remove any unnecessary debug steps or shell entrypoints.
+- (Optional) Add health checks or expose ports if running services in the container.
+- Test the container with the intended app workflow (development, build, or CLI usage) to verify full functionality.

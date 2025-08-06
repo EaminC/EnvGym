@@ -1,0 +1,148 @@
+Adjusted Environment Setup Plan  
+(tailored for: x86_64 CPU, Ubuntu 22.04, no GPU, WORKDIR=/home/cc/EnvGym/data/Fairify, Docker 28.3.2, BuildKit, project root at Fairify/)
+
+=== ENVIRONMENT SETUP PLAN (ADJUSTED) ===
+
+1. DOWNLOADS NEEDED:
+   - Python 3.7 (required for TensorFlow 2.5.0; use pyenv or Miniconda if system Python is newer)
+     - On Ubuntu 22.04, system Python is 3.10; you must install Python 3.7 separately (see TODO).
+   - pip (latest version)
+   - virtualenv or venv (Python built-in; venv preferred with Python 3.7+)
+   - Git (for cloning the repository)
+   - Bash shell (default on Ubuntu)
+   - Python packages per requirements.txt:
+     - z3-solver
+     - tensorflow==2.5.0 (CPU-only; no GPU, no CUDA requirements)
+     - aif360
+     - pandas
+   - System libraries for aif360:
+     - Ubuntu 22.04: `libgomp1`, `libc++1`, `glibc` (provided by Ubuntu)
+     - Install with `apt-get`; see TODO.
+   - Conda (recommended; simplifies aif360/TensorFlow install on Ubuntu)
+   - Data files for:
+     - Adult Census Income dataset (`data/adult/`)
+     - Bank Marketing dataset (`data/bank/`)
+     - German Credit dataset (`data/german/`)
+   - wget or curl (optional, for data download)
+   - CSV viewing/editing tools (pandas, LibreOffice, Excel, etc.)
+   - Sufficient disk space for datasets and CSV results (standard datasets: <10MB, results: depends on run size)
+   - (Optional) Documentation tools for reading Markdown
+   - NOTE: No GPU/CUDA/CuDNN or related libraries needed; no NVIDIA drivers required.
+
+2. FILES TO CREATE:
+   - requirements.txt:
+     ```
+     z3-solver
+     tensorflow==2.5.0
+     aif360
+     pandas
+     ```
+     - All versions compatible with Python 3.7 and Ubuntu 22.04 x86_64
+   - INSTALL.md:
+     - Explicitly note: "This environment is tested on Ubuntu 22.04 x86_64, Python 3.7, CPU-only (no GPU)."
+     - Remove/omit all GPU/TensorFlow-GPU/CUDA/CuDNN instructions or troubleshooting.
+     - Add instructions for installing Python 3.7 on Ubuntu 22.04 (see TODO).
+     - Note that on Ubuntu 22.04, Python 3.7 must be installed using deadsnakes PPA or Miniconda/pyenv, as system Python is 3.10.
+     - All paths, examples, and code snippets should assume the project root is at `/home/cc/EnvGym/data/Fairify` (unless run in Docker, see below).
+   - `.gitignore`:
+     - No changes needed for CPU-only or x86_64.
+     - Ensure correct relative paths given project root is `Fairify/` within `/home/cc/EnvGym/data/`.
+   - test_environment.py:
+     - Add check: Python architecture is x86_64 (64-bit).
+     - Add check: Running on Linux (specifically, Ubuntu 22.04 if possible).
+     - Add check: TensorFlow is not using a GPU (`tf.config.list_physical_devices('GPU')` should return empty).
+     - If running in Docker, print current working directory and confirm it matches `/home/cc/EnvGym/data/Fairify` or passed WORKDIR.
+     - Ensure all path checks are relative to the detected project root.
+   - environment.yml (optional, for Conda users):
+     ```yaml
+     name: fairify
+     channels:
+       - conda-forge
+     dependencies:
+       - python=3.7
+       - tensorflow=2.5.0
+       - aif360
+       - z3-solver
+       - pandas
+     ```
+     - Add comment: "Tested on x86_64; do not use on ARM/Mac M1/M2."
+   - setup.sh:
+     - Add detection of Ubuntu version and architecture.
+     - Add check for Python 3.7; if missing, print instructions to install via deadsnakes PPA or Miniconda.
+     - Install system dependencies for aif360 using apt-get.
+     - Print warning if running on non-x86_64 or non-Ubuntu 22.04.
+     - All mkdir and file checks should use absolute paths rooted at `/home/cc/EnvGym/data/Fairify` if possible.
+   - All `README.md` and result directory documentation: no adjustment needed for hardware.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+   - Add/expand: test_environment.py should:
+     - Print detected architecture (`platform.machine()`), OS (`platform.system()`, `platform.release()`), and Python version.
+     - Fail with a clear error if not running on x86_64/Linux.
+     - Confirm TensorFlow does NOT detect a GPU.
+   - Remove/omit: Any test for GPU or CUDA.
+   - All data and result file checks remain as before.
+   - All tests should use absolute or project-root-relative paths.
+   - Memory/storage: No change needed; standard system (even a 2GB RAM VM) sufficient for these datasets and CPU-only TensorFlow.
+
+4. COMPLETE TODO LIST (ADJUSTED):
+   1. Install Python 3.7:
+      - On Ubuntu 22.04, use deadsnakes PPA:
+        ```
+        sudo apt-get update
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt-get update
+        sudo apt-get install -y python3.7 python3.7-venv python3.7-dev
+        ```
+        OR (recommended for isolation) use Miniconda:
+        ```
+        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+        bash Miniconda3-latest-Linux-x86_64.sh
+        conda create -n fairify python=3.7
+        conda activate fairify
+        ```
+      - Verification: `python3.7 --version` or `conda activate fairify && python --version`
+      - Add note: Python 3.7 must be 64-bit (x86_64), not ARM.
+   2. Install Conda (recommended; see above).
+   3. Install Git:
+      - `sudo apt-get install -y git`
+   4. Use venv or Conda for environment isolation.
+   5. Clone the Fairify repository:
+      - `git clone ...` (ensure destination is `/home/cc/EnvGym/data/Fairify` if possible)
+   6. Set project root correctly:
+      - All scripts, setup, and Dockerfiles must use `/home/cc/EnvGym/data/Fairify` as WORKDIR.
+      - In Dockerfile: `WORKDIR /home/cc/EnvGym/data/Fairify`
+   7. Upgrade pip:
+      - `python3.7 -m pip install --upgrade pip` (or use conda environment's pip)
+   8. Install system dependencies for aif360:
+      - `sudo apt-get install -y libgomp1 libc++1`
+   9. Install Python dependencies:
+      - `pip install -r requirements.txt` or `conda install ...`
+   10. Ensure all required folders/files (as listed in plan) are present at correct absolute paths.
+   11. (Optional) Create/update environment.yml for Conda (see above).
+   12. Update `.gitignore` if any directory structure changes due to the deep project path.
+   13. Update/setup.sh to use absolute paths and check Ubuntu version/architecture.
+   14. Update test_environment.py to check architecture, OS, and TensorFlow backend (CPU-only).
+   15. Test main scripts as before; ensure all data and result directories use correct paths.
+   16. Run verification in all result directories; check CSVs as before.
+   17. Omit all GPU instructions; do not mention nvidia/cuda/cudnn or --gpus in Docker.
+   18. In INSTALL.md, add note: "Tested on Ubuntu 22.04 x86_64, CPU-only. Not tested or supported on ARM, Mac M1/M2, or GPU."
+   19. (Optional, recommended) Add warning in scripts if running on non-x86_64 or non-Ubuntu.
+   20. All environment archiving and reproducibility instructions unchanged.
+   21. Final verification: as before, but explicitly on CPU-only, x86_64, Ubuntu 22.04, Python 3.7.
+   22. (Docker-specific) In Dockerfile:
+       - Use `FROM amd64/ubuntu:22.04` or `FROM python:3.7-slim-buster` (if available for x86_64).
+       - Set `WORKDIR /home/cc/EnvGym/data/Fairify`
+       - Do NOT use `--platform=linux/arm*` or any ARM images.
+       - Do NOT add nvidia/cuda/cudnn or related libraries.
+       - No `--gpus` flag in docker run or compose.
+       - Use BuildKit features as needed.
+
+5. GENERAL NOTES:
+   - The environment is designed for x86_64/amd64 (Intel/AMD 64-bit) CPUs only. Do not run on ARM (e.g., Mac M1/M2, Raspberry Pi).
+   - Ubuntu 22.04 is the assumed base OS; instructions for other OSes (e.g., Windows, macOS) should be secondary and clearly marked as untested.
+   - No GPU or CUDA support is included or needed; all TensorFlow and aif360 dependencies should be CPU-only.
+   - All scripts and documentation must refer to the correct working directory (`/home/cc/EnvGym/data/Fairify`).
+   - Storage and memory requirements are minimal for these datasets and CPU-only workloads; ensure at least 2GB RAM and ~1GB free disk space for smooth operation.
+
+All other original content about data file requirements, result directory structure, documentation, and test coverage remains unchanged except as noted. Adjust all scripting and documentation for paths and platform as above.

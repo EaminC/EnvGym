@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/sveltejs_svelte; likely a SvelteJS (Node.js) web project
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: node:XX-bullseye, node:XX-alpine, ubuntu:22.04, or other amd64-compatible images
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA images not applicable
+- Instruction Notes: No GPU-specific instructions (e.g., no RUN nvidia-* or FROM nvidia/cuda required); avoid ARM or CUDA base images; use multi-stage builds if needed for performance; can utilize parallel builds due to high CPU count
+- Docker Version: 28.3.2; supports BuildKit, buildx, and all standard Dockerfile features as of 2024

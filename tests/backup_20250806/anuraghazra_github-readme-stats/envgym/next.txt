@@ -1,0 +1,23 @@
+current progress
+- Dockerfile exists and is located at the project root.
+- Base image is correctly set to `node:18-bullseye` (x86_64, Linux).
+- WORKDIR matches `/home/cc/EnvGym/data/anuraghazra_github-readme-stats`.
+- Required Linux tools (`git`, `vim`, `nano`) are installed.
+- Corepack and Yarn are enabled and prepared (optional dependency management).
+- `package.json`, lock files, and `yarn.lock` are correctly handled.
+- Express is installed explicitly via `npm install express --save`.
+- All remaining dependencies are installed using `npm ci` or `npm install`.
+- Project source is copied after dependency installation.
+- Port 3000 is exposed.
+- NODE_ENV is set to production.
+- HEALTHCHECK is defined to verify the `/api/status/up` endpoint.
+- Container starts with `CMD ["node", "api/index.js"]`.
+- Docker image builds and runs successfully; dotenv is loaded at runtime with no errors.
+
+next step
+- Remove the explicit `RUN npm install express --save` because express should be declared as a dependency in `package.json` and installed with other dependencies.
+- Ensure that installing express separately does not overwrite or interfere with lock files (remove the line if possible).
+- Optionally, consider copying all project files (including `package.json` and lock files) together at once to optimize layer caching, unless intentional for multi-stage builds.
+- Double-check that `.dockerignore` is present and excludes node_modules and other unnecessary files.
+- Verify that all dependencies (dev and prod) are correctly listed in `package.json` and installed via `npm ci`.
+- Test the Docker container to confirm that all endpoints and functionality work as expected after these changes.

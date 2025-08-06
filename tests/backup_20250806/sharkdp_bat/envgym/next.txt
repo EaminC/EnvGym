@@ -1,0 +1,34 @@
+current progress
+- The Docker image builds successfully and runs without errors.
+- All required system packages and optional tools (fzf, xclip, ripgrep, fd-find, ninja-build, libonig-dev, libgit2-dev, build-essential, pkg-config, libz-dev, clang, coreutils, zsh, fish, etc.) are installed.
+- Locale is set to en_US.UTF-8.
+- Non-root user "cc" is created and configured with sudo privileges.
+- Rust toolchain (via rustup) is installed and environment variables (CARGO_HOME, RUSTUP_HOME) are set.
+- cargo-audit is installed via cargo.
+- The bat repository is cloned with submodules into $HOME/bat.
+- build/main.rs is ensured to exist.
+- The project builds and tests successfully (`cargo build --bins --locked`, `cargo test --locked`).
+- The bat binary is installed for the user with `cargo install --path . --locked`.
+- Default bat config is generated at $HOME/.config/bat/config.
+- Shell aliases for bat ("batcat") and BAT environment variables are set in bashrc, zshrc, and fish config.
+- WORKDIR is correctly set, and the Docker container starts in /home/cc/EnvGym/data/sharkdp_bat.
+
+next step
+- Add steps to ensure the following files exist and are valid in the repository clone:
+  - `.github/ISSUE_TEMPLATE/config.yml`
+  - `.github/.codecov.yml`
+  - `.github/dependabot.yml`
+  - `rustfmt.toml`
+  - `.cargo/audit.toml`
+  - `tests/examples/git/.gitconfig`
+  - `tests/examples/git/.config/git/config`
+- Optionally validate `.git/config` contents after clone.
+- Optionally run/verify feature-specific tests: `cargo test --features="feature_name"`.
+- Optionally add steps to build release binary (`cargo build --release`) and check output.
+- Optionally check and document that `assets/syntaxes/*` and `assets/themes/*` are excluded from packaging per Cargo.toml.
+- Optionally run `cargo fmt` and verify formatting.
+- Optionally lint YAML files for syntax correctness.
+- Optionally add/verify `/etc/bat/config` for system-wide config (requires root, may be skipped in non-root builds).
+- Optionally test integration with other CLI tools (fzf, ripgrep, fd, etc.).
+- Optionally automate or document test fixture handling to ensure test isolation.
+- Review and document any additional project/community hygiene steps as per plan.

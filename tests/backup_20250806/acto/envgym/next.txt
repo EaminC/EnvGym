@@ -1,0 +1,25 @@
+current progress
+
+- Dockerfile (`envgym/envgym.dockerfile`) is present and configured for x86_64/amd64 only.
+- Uses correct base image: `python:3.12-slim` with `--platform=linux/amd64`.
+- `WORKDIR` is correctly set to `/home/cc/EnvGym/data/acto`.
+- Installs all required system dependencies (build tools, curl, gcc, etc.).
+- Installs Go (x86_64), kubectl, Helm (x86_64), and Kind (x86_64) using latest stable releases.
+- Installs Python build tools (`pip-tools`, `pre-commit`) and upgrades pip.
+- Copies and installs dependencies from `requirements.txt` and `requirements-dev.txt`.
+- Copies the entire repository after dependency installation (efficient layering).
+- Sets key environment variables (`ACTO_HOME`, `PYTHONPATH`, `KUBECONFIG`) to correct absolute paths.
+- Sets default shell to bash and CMD to drop into bash.
+- No GPU/CUDA or ARM/ARM64 references; fully compatible with the adjusted plan.
+- Previous Docker build and runtime logs indicate successful execution.
+
+next step
+
+- Review and ensure all scripts, sample configs, and documentation reference `/home/cc/EnvGym/data/acto` as the base directory.
+- Double-check that no CUDA, NVIDIA, or GPU-related lines exist anywhere in the Dockerfile or associated scripts.
+- Validate that all files and build artifacts referenced in Makefile(s) and other automation scripts use the correct directory.
+- If not already present, add `.env`, `pyproject.toml`, and other necessary config files with absolute paths as per plan.
+- Update README and documentation to reflect: (a) no GPU/CUDA support, (b) amd64/x86_64 only, (c) correct WORKDIR, and (d) Docker usage recommendations.
+- Run containerized tests to confirm that the environment behaves as expected for all intended workflows.
+- If further Python/OS dependencies are discovered missing during use, add them to the Dockerfile as needed.
+- Maintain Dockerfile with only x86_64/amd64-compatible tools and images.

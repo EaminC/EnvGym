@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_040212",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753070195",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 811B done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/rust:1.65\n#2 DONE 0.3s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/12] FROM docker.io/library/rust:1.65@sha256:891bc3b252c43a1c2667083e3861f26e6f571dcc3bc98dcc151d6ff6edc62cb9\n#4 DONE 0.0s\n\n#5 [ 2/12] WORKDIR /home/cc/EnvGym/data/tokio-rs_tracing\n#5 CACHED\n\n#6 [ 3/12] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         pkg-config         libssl-dev         systemd         ca-certificates         clang         curl         build-essential         libclang-dev     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [ 4/12] RUN rustup update &&     rustup component add clippy rustfmt\n#7 CACHED\n\n#8 [ 5/12] RUN cargo install --list\n#8 CACHED\n\n#9 [ 6/12] RUN cargo install -vv cargo-nextest --locked || exit 1\n#9 0.247     Updating crates.io index\n#9 337.2  Downloading crates ...\n#9 337.3   Downloaded cargo-nextest v0.9.101\n#9 337.3 error: failed to parse manifest at `/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/cargo-nextest-0.9.101/Cargo.toml`\n#9 337.3 \n#9 337.3 Caused by:\n#9 337.3   failed to parse the `edition` key\n#9 337.3 \n#9 337.3 Caused by:\n#9 337.3   this version of Cargo is older than the `2024` edition, and only supports `2015`, `2018`, and `2021` editions.\n#9 ERROR: process \"/bin/sh -c cargo install -vv cargo-nextest --locked || exit 1\" did not complete successfully: exit code: 1\n------\n > [ 6/12] RUN cargo install -vv cargo-nextest --locked || exit 1:\n0.247     Updating crates.io index\n337.2  Downloading crates ...\n337.3   Downloaded cargo-nextest v0.9.101\n337.3 error: failed to parse manifest at `/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/cargo-nextest-0.9.101/Cargo.toml`\n337.3 \n337.3 Caused by:\n337.3   failed to parse the `edition` key\n337.3 \n337.3 Caused by:\n337.3   this version of Cargo is older than the `2024` edition, and only supports `2015`, `2018`, and `2021` editions.\n------\nenvgym.dockerfile:23\n--------------------\n  21 |     RUN cargo install --list\n  22 |     \n  23 | >>> RUN cargo install -vv cargo-nextest --locked || exit 1\n  24 |     RUN cargo install -vv cargo-hack || exit 1\n  25 |     RUN cargo install -vv cargo-audit || exit 1\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c cargo install -vv cargo-nextest --locked || exit 1\" did not complete successfully: exit code: 1\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

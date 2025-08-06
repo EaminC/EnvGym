@@ -1,0 +1,16 @@
+current progress
+- The Docker image builds and runs successfully on Ubuntu 22.04, targeting Linux x86_64 (amd64) with no GPU/CUDA dependencies.
+- All required Linux packages for building Rust projects (curl, git, build-essential, pkg-config, libssl-dev, etc.) are installed.
+- UTF-8 locale is set up correctly.
+- Rust toolchain (rustc 1.63.0+, cargo, rustup) is installed and available to all users.
+- Optional tools (wasm-pack, rust-analyzer) are hinted but not installed.
+- The container is configured to mount `/home/cc/EnvGym/data/rayon-rs_rayon` as a volume at `/workspace` and defaults to `/workspace` as the working directory.
+- No GPU- or non-amd64-specific logic is present.
+
+next step
+- Confirm that project files (`Cargo.toml`, `README.md`, `rayon-demo/`, etc.) exist in `/home/cc/EnvGym/data/rayon-rs_rayon` on the host and are mounted to `/workspace` in the container.
+- (If needed) Uncomment and install optional tools such as `wasm-pack` or `rust-analyzer` if WebAssembly builds or enhanced IDE support are required.
+- Update the Dockerfile comments to explicitly reference only `/workspace` (not `/project`) in usage instructions for consistency with the plan and to avoid confusion.
+- Ensure that no GPU-related comments, packages, or instructions exist in the Dockerfile.
+- Document environment usage and Linux/x86_64 assumptions in `README.md` within the project directory.
+- Proceed to scaffold/demo/test the project per the plan, running all build and test commands inside the container from `/workspace`.

@@ -1,0 +1,106 @@
+=== Docker Execution Log - 20250720_141600 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753020945
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 5.51kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.8
+#2 DONE 0.1s
+
+#3 docker-image://docker.io/docker/dockerfile:1.8@sha256:e87caa74dcb7d46cd820352bfea12591f3dba3ddc4285e19c7dcd13359f7cefd
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/ubuntu:22.04
+#4 DONE 0.1s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 60B done
+#5 DONE 0.0s
+
+#6 [stage-0  1/19] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#6 DONE 0.0s
+
+#7 [stage-0  9/19] RUN jruby -S gem install rspec --no-document --verbose
+#7 CACHED
+
+#8 [stage-0  7/19] RUN jruby -S gem install bundler:2.2.33 --no-document --verbose
+#8 CACHED
+
+#9 [stage-0  3/19] RUN mkdir -p /tmp/jdk &&     wget -qO /tmp/jdk.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.10+7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.10_7.tar.gz &&     tar -xzf /tmp/jdk.tar.gz -C /tmp/jdk --strip-components=1 &&     mkdir -p /usr/lib/jvm/adoptium-temurin-17-jdk-amd64 &&     mv /tmp/jdk/* /usr/lib/jvm/adoptium-temurin-17-jdk-amd64 &&     rm -rf /tmp/jdk.tar.gz /tmp/jdk
+#9 CACHED
+
+#10 [stage-0  5/19] RUN wget -qO /tmp/jruby.tar.gz https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.7.0/jruby-dist-9.4.7.0-bin.tar.gz &&     tar -xzf /tmp/jruby.tar.gz -C /opt &&     mv /opt/jruby-9.4.7.0 /opt/jruby &&     ln -s /opt/jruby/bin/jruby /usr/local/bin/jruby &&     rm /tmp/jruby.tar.gz
+#10 CACHED
+
+#11 [stage-0 10/19] RUN jruby -S gem install dotenv -v 2.8.1 --no-document --verbose &&     jruby -S gem install fpm -v 1.11.0 --no-document --verbose
+#11 CACHED
+
+#12 [stage-0 13/19] RUN VAULT_VERSION=1.15.5 &&     wget -qO /tmp/vault.zip https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip &&     unzip /tmp/vault.zip -d /usr/local/bin &&     chmod +x /usr/local/bin/vault &&     rm /tmp/vault.zip
+#12 CACHED
+
+#13 [stage-0  2/19] RUN --mount=type=cache,target=/var/cache/apt     apt-get update &&     apt-get install -y       wget       curl       git       unzip       perl       build-essential       libssl-dev       zlib1g-dev       libreadline-dev       libyaml-dev       libsqlite3-dev       sqlite3       libxml2-dev       libxslt1-dev       libffi-dev       libgdbm-dev       libncurses5-dev       libtool       bison       openjdk-8-jdk-headless       openjdk-11-jdk-headless       ca-certificates       python3       python3-pip       jq       lsb-release       && rm -rf /var/lib/apt/lists/*
+#13 CACHED
+
+#14 [stage-0 11/19] RUN wget -qO /usr/local/bin/drip https://github.com/ninjudd/drip/releases/download/0.4.5/drip-0.4.5-linux-x86_64 || echo "Drip not available, skipping" &&     [ ! -f /usr/local/bin/drip ] || chmod +x /usr/local/bin/drip
+#14 CACHED
+
+#15 [stage-0  8/19] RUN jruby -S gem install rake --no-document --verbose
+#15 CACHED
+
+#16 [stage-0  4/19] RUN wget -qO /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.7-bin.zip &&     unzip -d /opt /tmp/gradle.zip &&     ln -s /opt/gradle-8.7/bin/gradle /usr/local/bin/gradle &&     rm /tmp/gradle.zip
+#16 CACHED
+
+#17 [stage-0 12/19] RUN wget -qO /tmp/elasticsearch.tar.gz https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13.4-linux-x86_64.tar.gz &&     mkdir -p /opt/elasticsearch &&     tar -xzf /tmp/elasticsearch.tar.gz -C /opt/elasticsearch --strip-components=1 &&     rm /tmp/elasticsearch.tar.gz
+#17 CACHED
+
+#18 [stage-0  6/19] RUN jruby -v && jruby -S gem -v
+#18 CACHED
+
+#19 [stage-0 14/19] RUN mkdir -p /home/cc/EnvGym/data/elastic_logstash && chown -R 1000:1000 /home/cc/EnvGym/data/elastic_logstash
+#19 CACHED
+
+#20 [stage-0 15/19] RUN useradd -m -u 1000 cc &&     mkdir -p /home/cc/.gradle &&     chown -R cc:cc /home/cc &&     echo "org.gradle.daemon=true" > /home/cc/.gradle/gradle.properties &&     echo "org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=1g" >> /home/cc/.gradle/gradle.properties
+#20 0.194 useradd: warning: the home directory /home/cc already exists.
+#20 0.194 useradd: Not copying any file from skel directory into it.
+#20 DONE 0.2s
+
+#21 [stage-0 16/19] WORKDIR /home/cc/EnvGym/data/elastic_logstash
+#21 DONE 0.0s
+
+#22 [stage-0 17/19] RUN chown -R 1000:1000 /home/cc/EnvGym/data/elastic_logstash
+#22 DONE 0.4s
+
+#23 [stage-0 18/19] RUN echo "export JAVA_HOME=/usr/lib/jvm/adoptium-temurin-17-jdk-amd64" >> /etc/profile.d/envgym_java.sh &&     echo "export BUILD_JAVA_HOME=/usr/lib/jvm/adoptium-temurin-17-jdk-amd64" >> /etc/profile.d/envgym_java.sh &&     echo "export JRUBY_HOME=/opt/jruby" >> /etc/profile.d/envgym_java.sh &&     echo "export GEM_HOME=/usr/local/bundle" >> /etc/profile.d/envgym_java.sh &&     echo "export GEM_PATH=/usr/local/bundle" >> /etc/profile.d/envgym_java.sh &&     echo "export PATH=/opt/jruby/bin:/usr/lib/jvm/adoptium-temurin-17-jdk-amd64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> /etc/profile.d/envgym_java.sh
+#23 DONE 0.4s
+
+#24 [stage-0 19/19] WORKDIR /home/cc/EnvGym/data/elastic_logstash
+#24 DONE 0.0s
+
+#25 exporting to image
+#25 exporting layers
+#25 exporting layers 13.2s done
+#25 writing image sha256:2afa59f300dc7b013821cadc5a319387ec71a645edf8fb378b757413f36c4e21 done
+#25 naming to docker.io/library/envgym_test_1753020945 done
+#25 DONE 13.2s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/TabPFN; project located under "TabPFN" in a data directory, likely Python or ML-related
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., python:3.10-slim, ubuntu:22.04); do not use ARM-based images
+- GPU: No NVIDIA GPU detected; no CUDA support; use CPU-only images (avoid nvidia/cuda base images)
+- Instruction Notes: No GPU-specific Dockerfile instructions (omit RUN nvidia-smi, CUDA installs, etc.); large memory and CPU available for multi-threaded builds; use WORKDIR /home/cc/EnvGym/data/TabPFN
+- Docker Version: 28.3.2; supports BuildKit and modern features; --gpus flag has no effect on this system

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/sharkdp_bat; project is located under user's home, likely non-root build context, typical for code/data projects
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, python:3.11-slim); do not use arm64 or multiarch images unless explicitly needed
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images; build images for CPU-only
+- Instruction Notes: No GPU-specific instructions (no RUN nvidia-smi, no CUDA installs); standard Dockerfile instructions apply; use WORKDIR /home/cc/EnvGym/data/sharkdp_bat as needed
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag irrelevant (no GPU); fully compatible with multi-stage and latest features

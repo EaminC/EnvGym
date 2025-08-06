@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_091552",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753089352",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.97kB done\n#1 DONE 0.0s\n\n#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.7\n#2 DONE 0.1s\n\n#3 docker-image://docker.io/docker/dockerfile:1.7@sha256:a57df69d0ea827fb7266491f2813635de6f17269be881f696fbfdf2d83dda33e\n#3 CACHED\n\n#4 [internal] load metadata for docker.io/library/node:20.11.1-bullseye-slim\n#4 DONE 0.1s\n\n#5 [internal] load .dockerignore\n#5 transferring context: 2B done\n#5 DONE 0.0s\n\n#6 [1/9] FROM docker.io/library/node:20.11.1-bullseye-slim@sha256:5a5a92b3a8d392691c983719dbdc65d9f30085d6dcd65376e7a32e6fe9bf4cbe\n#6 DONE 0.0s\n\n#7 [2/9] WORKDIR /app\n#7 CACHED\n\n#8 [3/9] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         git         python3         python3-pip         python3-venv         ca-certificates         openssh-client         curl         nano         vim         && rm -rf /var/lib/apt/lists/*\n#8 CACHED\n\n#9 [internal] load build context\n#9 transferring context: 44.79MB 0.3s done\n#9 CANCELED\n\n#10 [4/9] RUN groupadd -g 1000 muiuser &&     useradd -m -u 1000 -g 1000 -s /bin/bash muiuser\n#10 0.193 groupadd: GID '1000' already exists\n#10 ERROR: process \"/bin/sh -c groupadd -g $GID $USER &&     useradd -m -u $UID -g $GID -s /bin/bash $USER\" did not complete successfully: exit code: 4\n------\n > [4/9] RUN groupadd -g 1000 muiuser &&     useradd -m -u 1000 -g 1000 -s /bin/bash muiuser:\n0.193 groupadd: GID '1000' already exists\n------\nERROR: failed to build: failed to solve: process \"/bin/sh -c groupadd -g $GID $USER &&     useradd -m -u $UID -g $GID -s /bin/bash $USER\" did not complete successfully: exit code: 4\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

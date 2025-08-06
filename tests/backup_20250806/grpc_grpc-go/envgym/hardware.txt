@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/grpc_grpc-go; likely Go (grpc-go) project, context should include this directory for docker builds.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible base images (e.g., ubuntu:22.04, golang:1.x-bullseye, debian:bullseye-slim)
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: No GPU-specific instructions; multi-core CPU may allow for parallel builds (e.g., RUN make -j96), but not required for Dockerfile; default user is root; extfs/overlay2 file system
+- Docker Version: 28.3.2; supports BuildKit, Docker Compose v2, no experimental features enabled, supports --gpus flag but GPU not present

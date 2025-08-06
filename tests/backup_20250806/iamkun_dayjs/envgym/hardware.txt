@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/iamkun_dayjs; project is under /home/cc/EnvGym/data; working in "iamkun_dayjs" directory
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.11-slim, node:18, etc.); do not use ARM images
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not recommended or applicable
+- Instruction Notes: No specific hardware limitations; multi-core builds supported; no GPU-specific instructions (e.g., no RUN nvidia-* or CUDA); use standard Linux instructions; filesystem is extfs with overlay2
+- Docker Version: 28.3.2; BuildKit supported; GPU features (--gpus) not usable due to missing NVIDIA drivers/hardware

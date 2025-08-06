@@ -1,0 +1,63 @@
+=== Docker Execution Log - 20250720_005921 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1752973152
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.61kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/7] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb
+#4 DONE 0.0s
+
+#5 [2/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget         curl         git         build-essential         ca-certificates         unzip         bzip2         libglib2.0-0         libxext6         libsm6         libxrender1         liblzma-dev         && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [3/7] RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh &&     bash /tmp/miniconda.sh -b -p /opt/conda &&     rm /tmp/miniconda.sh &&     /opt/conda/bin/conda clean -afy
+#6 CACHED
+
+#7 [4/7] RUN mkdir -p /home/cc/EnvGym/data/RelTR
+#7 CACHED
+
+#8 [5/7] WORKDIR /home/cc/EnvGym/data/RelTR
+#8 CACHED
+
+#9 [6/7] RUN conda config --set always_yes yes --set changeps1 no
+#9 CACHED
+
+#10 [7/7] RUN git clone https://github.com/yrcong/RelTR.git . &&     git submodule update --init --recursive
+#10 0.191 Cloning into '.'...
+#10 DONE 1.0s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 7.3s done
+#11 writing image sha256:c14ac70f82d29e07086444e1400c7b55a0296210b5978db2d1fd5c48f7b4c5b4 done
+#11 naming to docker.io/library/envgym_test_1752973152 done
+#11 DONE 7.3s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/Silhouette; project likely Python/data-science related, adjust COPY/WORKDIR accordingly
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim, or similar)
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda images
+- Instruction Notes: No GPU-specific instructions; leverage multi-core build optimizations if needed; ensure compatibility with Ubuntu 22.04; use systemd/cgroup v2 compatible base images if init/system features required
+- Docker Version: 28.3.2; BuildKit and buildx supported; --gpus flag not applicable as no NVIDIA GPU present

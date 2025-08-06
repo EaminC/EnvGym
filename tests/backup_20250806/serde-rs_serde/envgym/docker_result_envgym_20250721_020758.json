@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_020758",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753063677",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.12kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/rust:latest\n#2 DONE 0.5s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/11] FROM docker.io/library/rust:latest@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e\n#4 resolve docker.io/library/rust:latest@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e done\n#4 sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e 7.75kB / 7.75kB done\n#4 sha256:95f6d6956bf8abd7461763ba7ccd243d8964a41c8eb3f41d895490c782628d7c 1.94kB / 1.94kB done\n#4 sha256:a479811b82446e6bf598238bb2fcd3ae41b351a1a7c87e53d8f2333a7bbe001d 4.36kB / 4.36kB done\n#4 sha256:7bbf972c6c2f5b7313ae3cb74e63888ab70931bcd9aefd960f9a38c540dbf2ca 0B / 24.02MB 0.1s\n#4 sha256:900e2c02f17f686733f4f957ddfb07b3342d1957d87b56254634d4fbb2abb81d 0B / 64.40MB 0.1s\n#4 sha256:abe9c1abe6f3b8ca9fc6abe710405f830f95262f1d356e8f6545d823b5840a5c 0B / 211.37MB 0.1s\n#4 CANCELED\n\n#5 [internal] load build context\n#5 transferring context: 10.96MB 0.2s done\n#5 DONE 0.2s\n\n#6 [ 4/11] COPY Cargo.toml ./\n#6 CACHED\n\n#7 [ 2/11] RUN apt-get update &&     apt-get install -y --no-install-recommends       git       build-essential       ca-certificates       curl       pkg-config       libssl-dev &&     rm -rf /var/lib/apt/lists/*\n#7 CACHED\n\n#8 [ 3/11] WORKDIR /home/cc/EnvGym/data/serde-rs_serde\n#8 CACHED\n\n#9 [ 5/11] COPY Cargo.lock ./\n#9 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::peqfu6l7q7kx6odpgbdz8ac3y: \"/Cargo.lock\": not found\n------\n > [ 5/11] COPY Cargo.lock ./:\n------\nenvgym.dockerfile:19\n--------------------\n  17 |     # Copy only Cargo.toml files and source trees first for caching dependencies\n  18 |     COPY Cargo.toml ./\n  19 | >>> COPY Cargo.lock ./\n  20 |     # Copy workspace member manifests if any (adjust as necessary)\n  21 |     COPY serde_derive/Cargo.toml serde_derive/Cargo.toml\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::peqfu6l7q7kx6odpgbdz8ac3y: \"/Cargo.lock\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

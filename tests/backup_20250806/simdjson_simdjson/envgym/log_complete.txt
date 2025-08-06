@@ -1,0 +1,749 @@
+=== Docker Execution Log - 20250720_102854 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753007147
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 4.27kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.2s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:9857836c9ee4268391bb5b09f9f157f3c91bb15821bb77969642813b0d00518d
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/debian:12
+#4 DONE 0.2s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 185B done
+#5 DONE 0.0s
+
+#6 [ 1/21] FROM docker.io/library/debian:12@sha256:d42b86d7e24d78a33edcf1ef4f65a20e34acb1e1abd53cabc3f7cdf769fc4082
+#6 DONE 0.0s
+
+#7 [ 2/21] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     gcc     g++     clang     clang-tidy     clang-format     lldb     lld     make     cmake     ninja-build     doxygen     git     wget     curl     ca-certificates     gnupg     zlib1g     zlib1g-dev     unzip     subversion     python3     python3-dev     python3-pip     sudo     binutils     linux-perf     vim     zsh     valgrind     lcov     gcovr     pkg-config     libcurl4-openssl-dev     rust-all     nodejs     npm     libxml2-dev     libedit-dev     libncurses5-dev     libncursesw5-dev     swig     libffi-dev     libssl-dev     libtool     python3-setuptools     libsqlite3-dev     uuid-dev     libzstd-dev     libtinfo-dev     liblzma-dev     libpython3-dev     libgmp-dev     libexpat1-dev     libstdc++-12-dev     lib32z1     libbz2-dev     libz-dev     libreadline-dev     gcc-multilib     g++-multilib     libxml2-utils     libyaml-dev     libmpfr-dev     libmpc-dev     libisl-dev     libpthread-stubs0-dev     ninja-build     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [ 3/21] RUN CMAKE_VERSION=3.27.9     && wget -qO- https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz | tar --strip-components=1 -xz -C /usr/local
+#8 CACHED
+
+#9 [ 4/21] WORKDIR /workspace
+#9 CACHED
+
+#10 [ 5/21] RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -     && apt-get update && apt-get install -y nodejs     && rm -rf /var/lib/apt/lists/*
+#10 0.515 [38;5;79m2025-07-20 10:25:48 - Installing pre-requisites[0m
+#10 0.539 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#10 0.551 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#10 0.552 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+#10 0.610 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+#10 0.925 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [756 B]
+#10 0.926 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [272 kB]
+#10 1.979 Fetched 9320 kB in 1s (6461 kB/s)
+#10 1.979 Reading package lists...
+#10 2.522 Reading package lists...
+#10 3.006 Building dependency tree...
+#10 3.097 Reading state information...
+#10 3.228 ca-certificates is already the newest version (20230311+deb12u1).
+#10 3.228 curl is already the newest version (7.88.1-10+deb12u12).
+#10 3.228 gnupg is already the newest version (2.2.40-1.1).
+#10 3.228 The following NEW packages will be installed:
+#10 3.229   apt-transport-https
+#10 3.249 0 upgraded, 1 newly installed, 0 to remove and 1 not upgraded.
+#10 3.249 Need to get 25.2 kB of archives.
+#10 3.249 After this operation, 35.8 kB of additional disk space will be used.
+#10 3.249 Get:1 http://deb.debian.org/debian bookworm/main amd64 apt-transport-https all 2.6.1 [25.2 kB]
+#10 3.388 debconf: delaying package configuration, since apt-utils is not installed
+#10 3.411 Fetched 25.2 kB in 0s (1560 kB/s)
+#10 3.429 Selecting previously unselected package apt-transport-https.
+#10 3.429 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 61113 files and directories currently installed.)
+#10 3.454 Preparing to unpack .../apt-transport-https_2.6.1_all.deb ...
+#10 3.455 Unpacking apt-transport-https (2.6.1) ...
+#10 3.488 Setting up apt-transport-https (2.6.1) ...
+#10 3.649 Hit:1 http://deb.debian.org/debian bookworm InRelease
+#10 3.649 Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+#10 3.650 Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+#10 3.731 Get:4 https://deb.nodesource.com/node_18.x nodistro InRelease [12.1 kB]
+#10 3.868 Get:5 https://deb.nodesource.com/node_18.x nodistro/main amd64 Packages [11.6 kB]
+#10 3.882 Fetched 23.7 kB in 0s (94.0 kB/s)
+#10 3.882 Reading package lists...
+#10 4.381 [1;34m2025-07-20 10:25:52 - Repository configured successfully.[0m
+#10 4.382 [38;5;79m2025-07-20 10:25:52 - To install Node.js, run: apt-get install nodejs -y[0m
+#10 4.383 [38;5;79m2025-07-20 10:25:52 - You can use N|solid Runtime as a node.js alternative[0m
+#10 4.384 [1;32m2025-07-20 10:25:52 - To install N|solid Runtime, run: apt-get install nsolid -y 
+#10 4.384 [0m
+#10 4.425 Hit:1 http://deb.debian.org/debian bookworm InRelease
+#10 4.425 Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+#10 4.425 Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+#10 4.517 Hit:4 https://deb.nodesource.com/node_18.x nodistro InRelease
+#10 4.629 Reading package lists...
+#10 5.118 Reading package lists...
+#10 5.604 Building dependency tree...
+#10 5.692 Reading state information...
+#10 5.822 The following packages were automatically installed and are no longer required:
+#10 5.822   gyp handlebars libc-ares2 libjs-async libjs-events libjs-inherits
+#10 5.822   libjs-is-typedarray libjs-prettify libjs-regenerate libjs-source-map
+#10 5.822   libjs-sprintf-js libjs-typedarray-to-buffer libuv1-dev node-abbrev
+#10 5.822   node-ampproject-remapping node-ansi-escapes node-ansi-regex node-ansi-styles
+#10 5.822   node-aproba node-are-we-there-yet node-argparse node-arrify node-async
+#10 5.822   node-async-each node-babel-plugin-add-module-exports node-babel7-runtime
+#10 5.822   node-balanced-match node-base64-js node-binary-extensions
+#10 5.822   node-brace-expansion node-busboy node-camelcase node-caniuse-lite
+#10 5.822   node-chownr node-chrome-trace-event node-ci-info node-cjs-module-lexer
+#10 5.822   node-clone node-clone-deep node-color-convert node-color-name node-colors
+#10 5.822   node-commander node-commondir node-concat-stream
+#10 5.822   node-console-control-strings node-convert-source-map node-core-js
+#10 5.822   node-core-js-pure node-core-util-is node-data-uri-to-buffer
+#10 5.822   node-decompress-response node-deep-is node-defaults node-delegates node-depd
+#10 5.822   node-diff node-electron-to-chromium node-encoding node-end-of-stream
+#10 5.822   node-err-code node-error-ex node-es-module-lexer node-escape-string-regexp
+#10 5.822   node-eslint-utils node-eslint-visitor-keys node-esquery node-estraverse
+#10 5.822   node-esutils node-events node-fancy-log node-fast-deep-equal
+#10 5.822   node-fast-levenshtein node-fetch node-find-up node-flatted node-for-in
+#10 5.822   node-for-own node-foreground-child node-fs-readdir-recursive
+#10 5.822   node-fs-write-stream-atomic node-fs.realpath node-function-bind
+#10 5.822   node-functional-red-black-tree node-get-caller-file node-get-stream
+#10 5.822   node-glob node-globals node-got node-graceful-fs node-has-flag
+#10 5.822   node-has-unicode node-hosted-git-info node-iconv-lite node-ieee754
+#10 5.822   node-iferr node-imurmurhash node-indent-string node-inflight node-inherits
+#10 5.822   node-ini node-interpret node-ip node-ip-regex node-is-arrayish
+#10 5.822   node-is-binary-path node-is-buffer node-is-extendable node-is-extglob
+#10 5.822   node-is-path-cwd node-is-plain-obj node-is-plain-object node-is-stream
+#10 5.822   node-is-typedarray node-is-windows node-isarray node-isexe node-isobject
+#10 5.822   node-js-tokens node-jsesc node-json-buffer node-json-parse-better-errors
+#10 5.822   node-json-schema node-json-schema-traverse node-json-stable-stringify
+#10 5.822   node-jsonify node-jsonparse node-kind-of node-levn node-loader-runner
+#10 5.822   node-locate-path node-lodash-packages node-lowercase-keys node-lru-cache
+#10 5.822   node-memfs node-merge-stream node-mimic-response node-minimatch
+#10 5.822   node-minimist node-minipass node-mute-stream node-n3 node-negotiator
+#10 5.822   node-neo-async node-npm-run-path node-object-inspect node-once node-optimist
+#10 5.822   node-optionator node-osenv node-p-cancelable node-p-limit node-p-locate
+#10 5.822   node-p-map node-path-dirname node-path-exists node-path-is-absolute
+#10 5.822   node-path-is-inside node-path-type node-pify node-pkg-dir
+#10 5.822   node-postcss-value-parser node-prelude-ls node-process-nextick-args
+#10 5.822   node-promise-inflight node-promise-retry node-promzard node-prr node-pump
+#10 5.822   node-quick-lru node-randombytes node-read node-readable-stream node-rechoir
+#10 5.822   node-regenerate node-regenerate-unicode-properties node-regenerator-runtime
+#10 5.822   node-regenerator-transform node-regexpp node-regjsgen node-repeat-string
+#10 5.822   node-require-directory node-resolve node-resolve-cwd node-resolve-from
+#10 5.822   node-resumer node-retry node-run-queue node-safe-buffer
+#10 5.822   node-serialize-javascript node-set-blocking node-set-immediate-shim
+#10 5.822   node-shebang-command node-shebang-regex node-signal-exit node-slash
+#10 5.822   node-slice-ansi node-source-list-map node-source-map node-source-map-support
+#10 5.822   node-spdx-correct node-spdx-exceptions node-spdx-expression-parse
+#10 5.822   node-spdx-license-ids node-sprintf-js node-ssri node-string-decoder
+#10 5.822   node-strip-bom node-strip-json-comments node-supports-color node-tapable
+#10 5.822   node-terser node-text-table node-through node-time-stamp
+#10 5.822   node-to-fast-properties node-tslib node-type-check node-typedarray
+#10 5.822   node-typedarray-to-buffer node-undici
+#10 5.822   node-unicode-canonical-property-names-ecmascript
+#10 5.822   node-unicode-match-property-value-ecmascript
+#10 5.822   node-unicode-property-aliases-ecmascript node-unique-filename
+#10 5.822   node-util-deprecate node-uuid node-v8flags node-validate-npm-package-license
+#10 5.822   node-wcwidth.js node-webpack-sources node-wordwrap node-wrappy
+#10 5.823   node-write-file-atomic node-xtend node-y18n node-yallist
+#10 5.823 Use 'apt autoremove' to remove them.
+#10 5.839 The following packages will be REMOVED:
+#10 5.839   eslint libjs-util libnode-dev libnode108 node-acorn node-agent-base node-ajv
+#10 5.839   node-ajv-keywords node-anymatch node-archy node-assert
+#10 5.839   node-babel-helper-define-polyfill-provider node-babel-plugin-lodash
+#10 5.839   node-babel-plugin-polyfill-corejs2 node-babel-plugin-polyfill-corejs3
+#10 5.839   node-babel-plugin-polyfill-regenerator node-babel7 node-braces
+#10 5.839   node-browserslist node-builtins node-cacache node-chalk node-chokidar
+#10 5.839   node-cli-table node-cliui node-columnify node-copy-concurrently
+#10 5.839   node-core-js-compat node-css-loader node-css-selector-tokenizer
+#10 5.839   node-debbundle-es-to-primitive node-debug node-decamelize node-deep-equal
+#10 5.839   node-define-properties node-defined node-del node-doctrine
+#10 5.839   node-enhanced-resolve node-errno node-es-abstract node-es6-error
+#10 5.839   node-escodegen node-eslint-scope node-espree node-esprima node-esrecurse
+#10 5.839   node-file-entry-cache node-fill-range node-find-cache-dir node-flat-cache
+#10 5.839   node-gauge node-glob-parent node-globby node-gyp node-https-proxy-agent
+#10 5.839   node-icss-utils node-ignore node-is-glob node-is-number node-is-path-inside
+#10 5.839   node-istanbul node-jest-debbundle node-jest-worker node-js-yaml node-json5
+#10 5.839   node-lodash node-make-dir node-memory-fs node-micromatch node-mime
+#10 5.839   node-mime-types node-mkdirp node-move-concurrently node-ms node-nopt
+#10 5.839   node-normalize-package-data node-normalize-path node-npm-bundled
+#10 5.839   node-npm-package-arg node-npmlog node-object-assign node-parse-json
+#10 5.839   node-picocolors node-postcss node-postcss-modules-extract-imports
+#10 5.839   node-postcss-modules-values node-progress node-punycode
+#10 5.839   node-read-package-json node-read-pkg node-readdirp node-regexpu-core
+#10 5.839   node-regjsparser node-rimraf node-schema-utils node-semver node-string-width
+#10 5.839   node-strip-ansi node-tape node-tar node-to-regex-range
+#10 5.839   node-unicode-match-property-ecmascript node-uri-js node-util
+#10 5.839   node-v8-compile-cache node-validate-npm-package-name node-watchpack
+#10 5.839   node-webassemblyjs node-which node-wide-align node-wrap-ansi node-write
+#10 5.840   node-yargs node-yargs-parser npm terser webpack
+#10 5.841 The following packages will be upgraded:
+#10 5.841   nodejs
+#10 5.956 1 upgraded, 0 newly installed, 118 to remove and 1 not upgraded.
+#10 5.956 Need to get 29.7 MB of archives.
+#10 5.956 After this operation, 89.5 MB of additional disk space will be used.
+#10 5.956 Get:1 https://deb.nodesource.com/node_18.x nodistro/main amd64 nodejs amd64 18.20.8-1nodesource1 [29.7 MB]
+#10 6.420 debconf: delaying package configuration, since apt-utils is not installed
+#10 6.460 Fetched 29.7 MB in 0s (69.9 MB/s)
+#10 6.472 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 61117 files and directories currently installed.)
+#10 6.496 Removing npm (9.2.0~ds1-1) ...
+#10 6.570 Removing node-css-loader (6.7.2+~cs14.0.11-1) ...
+#10 6.584 Removing webpack (5.75.0+dfsg+~cs17.16.14-1+deb12u1) ...
+#10 6.625 Removing eslint (6.4.0~dfsg+~6.1.9-7) ...
+#10 6.652 Removing node-webassemblyjs (1.11.4+dfsg+~cs10.11.17-2) ...
+#10 6.693 Removing node-gyp (9.3.0-2) ...
+#10 6.704 Removing libnode-dev (18.19.0+dfsg-6~deb12u2) ...
+#10 6.726 Removing node-espree (9.4.1~dfsg-1) ...
+#10 6.738 Removing node-v8-compile-cache (2.3.0-3+deb12u1) ...
+#10 6.749 Removing node-jest-debbundle (29.3.1~ds1+~cs70.48.25-2) ...
+#10 6.768 Removing node-babel-plugin-lodash (3.3.4+~cs2.0.1-6) ...
+#10 6.781 Removing terser (5.16.5-2) ...
+#10 6.795 Removing node-npm-package-arg (10.0.0+~3.0.0-2) ...
+#10 6.807 Removing node-cacache (17.0.3+~cs10.3.7-1) ...
+#10 6.819 Removing node-move-concurrently (1.0.1-5) ...
+#10 6.832 Removing node-schema-utils (3.1.1~ds-2) ...
+#10 6.846 Removing node-progress (2.0.3-2) ...
+#10 6.857 Removing node-postcss-modules-extract-imports (3.0.0-2) ...
+#10 6.874 Removing node-eslint-scope (7.1.1+~3.7.4-1) ...
+#10 6.888 Removing node-esrecurse (4.3.0-2) ...
+#10 6.904 Removing node-jest-worker (29.3.1~ds1+~cs70.48.25-2) ...
+#10 6.921 Removing node-https-proxy-agent (5.0.1+~cs8.0.0-3) ...
+#10 6.934 Removing node-tar (6.1.13+~cs7.0.5-1) ...
+#10 6.947 Removing node-mime-types (2.1.35-1) ...
+#10 6.958 Removing node-mime (3.0.0+dfsg+~cs3.97.1-1) ...
+#10 6.982 Removing node-watchpack (2.4.0+~cs2.8.1-1) ...
+#10 6.994 Removing node-chokidar (3.5.3-2) ...
+#10 7.010 Removing node-file-entry-cache (6.0.0+~3.0.4+~2.0.0+~1.0.0+~2.0.1-5) ...
+#10 7.021 Removing node-flat-cache (3.0.4~6.0.0+~3.0.4+~2.0.0+~1.0.0+~2.0.1-5) ...
+#10 7.041 Removing node-write (2.0.0~6.0.0+~3.0.4+~2.0.0+~1.0.0+~2.0.1-5) ...
+#10 7.056 Removing node-enhanced-resolve (5.10.0-1) ...
+#10 7.071 Removing node-memory-fs (0.5.0+~0.3.3-2) ...
+#10 7.084 Removing node-errno (1.0.0-3) ...
+#10 7.097 Removing node-doctrine (3.0.0-4) ...
+#10 7.111 Removing node-css-selector-tokenizer (0.8.0+~cs4.8.3-1) ...
+#10 7.232 Removing node-deep-equal (2.1.0+~cs31.12.80-1) ...
+#10 7.301 Removing node-tape (5.6.1+~cs8.20.19-1) ...
+#10 7.324 Removing node-istanbul (0.4.5+repack10+~cs97.25.57-3) ...
+#10 7.349 Removing node-read-pkg (5.2.0-2) ...
+#10 7.361 Removing node-parse-json (5.2.0+~cs5.1.7-1) ...
+#10 7.371 Removing node-assert (2.0.0+~cs3.9.8-2) ...
+#10 7.382 Removing node-util (0.12.5+~1.0.10-1) ...
+#10 7.392 Removing libjs-util (0.12.5+~1.0.10-1) ...
+#10 7.404 Removing node-define-properties (1.1.4+~1.1.3-1) ...
+#10 7.415 Removing node-es-abstract (1.20.4+~cs26.27.47-1) ...
+#10 7.508 Removing node-debbundle-es-to-primitive (1.2.1+~cs9.7.25-2) ...
+#10 7.521 Removing node-which (2.0.2+~cs1.3.2-3) ...
+#10 7.533 Removing node-babel7 (7.20.15+ds1+~cs214.269.168-3+deb12u2) ...
+#10 7.704 Removing node-regexpu-core (5.2.2-3) ...
+#10 7.715 Removing node-unicode-match-property-ecmascript (2.0.0-2) ...
+#10 7.725 Removing node-yargs (16.2.0+~16.0.4-7) ...
+#10 7.741 Removing node-cliui (7.0.4+repack+~cs3.1.0-4) ...
+#10 7.752 Removing node-wrap-ansi (8.0.1+~8.0.1-3) ...
+#10 7.766 Removing node-regjsparser (0.9.1+ds-2) ...
+#10 7.781 Removing node-babel-plugin-polyfill-corejs3 (0.6.0~0~20220913+ds1-1) ...
+#10 7.792 Removing node-core-js-compat (3.26.1-3) ...
+#10 7.802 Removing node-browserslist (4.21.4+~cs6.1.17-2) ...
+#10 7.816 Removing node-object-assign (4.1.1-7) ...
+#10 7.826 Removing node-find-cache-dir (3.3.2+~3.2.1-1) ...
+#10 7.836 Removing node-del (7.0.0-5) ...
+#10 7.847 Removing node-globby (13.1.3+~cs16.25.40-1+deb12u1) ...
+#10 7.865 Removing node-micromatch (4.0.5+~4.0.2-1) ...
+#10 7.877 Removing node-nopt (5.0.0-4) ...
+#10 7.891 Removing node-lodash (4.17.21+dfsg+~cs8.31.198.20210220-9) ...
+#10 8.001 Removing node-json5 (2.2.3+dfsg-1) ...
+#10 8.013 Removing node-js-yaml (4.1.0+dfsg+~4.0.5-7) ...
+#10 8.026 Removing node-is-path-inside (3.0.3-2) ...
+#10 8.037 Removing node-braces (3.0.2+~3.0.1-1) ...
+#10 8.049 Removing node-fill-range (7.0.1+~7.0.0-1) ...
+#10 8.059 Removing node-to-regex-range (5.0.1-4) ...
+#10 8.069 Removing node-is-number (7.0.0-4) ...
+#10 8.089 Removing node-glob-parent (6.0.2+~5.1.1-2) ...
+#10 8.100 Removing node-is-glob (4.0.3-2) ...
+#10 8.111 Removing node-ignore (5.2.1-1) ...
+#10 8.121 Removing node-escodegen (2.0.0+dfsg+~0.0.7-2) ...
+#10 8.132 Removing node-esprima (4.0.1+ds+~4.0.3-2) ...
+#10 8.162 Removing node-es6-error (4.1.1-5) ...
+#10 8.173 Removing node-defined (1.0.1+~1.0.0-1) ...
+#10 8.185 Removing node-yargs-parser (21.1.1+~21.0.0-4) ...
+#10 8.200 Removing node-decamelize (4.0.0-2) ...
+#10 8.213 Removing node-chalk (5.2.0-1) ...
+#10 8.228 Removing node-archy (1.0.0-6) ...
+#10 8.243 Removing node-babel-plugin-polyfill-corejs2 (0.3.3~0~20220913+ds1-1) ...
+#10 8.394 dpkg: node-ajv: dependency problems, but removing anyway as you requested:
+#10 8.394  node-ajv-keywords depends on node-ajv (>= 6.9.1~).
+#10 8.394 
+#10 8.396 Removing node-ajv (6.12.6-3) ...
+#10 8.415 Removing node-uri-js (4.4.0+dfsg-8) ...
+#10 8.432 Removing node-punycode (2.1.1-6) ...
+#10 8.444 dpkg: node-postcss: dependency problems, but removing anyway as you requested:
+#10 8.444  node-postcss-modules-values depends on node-postcss (>= 8.1~).
+#10 8.444  node-icss-utils depends on node-postcss (>= 8.1~).
+#10 8.444 
+#10 8.446 Removing node-postcss (8.4.20+~cs8.0.23-1+deb12u1) ...
+#10 8.468 Removing node-picocolors (1.0.0-4) ...
+#10 8.480 dpkg: node-anymatch: dependency problems, but removing anyway as you requested:
+#10 8.480  node-readdirp depends on node-anymatch (>= 3.0.3).
+#10 8.480 
+#10 8.483 Removing node-anymatch (3.1.3+~cs4.6.1-2) ...
+#10 8.498 Removing node-normalize-path (3.0.0+~3.0.0-1) ...
+#10 8.510 dpkg: node-debug: dependency problems, but removing anyway as you requested:
+#10 8.510  node-babel-helper-define-polyfill-provider depends on node-debug.
+#10 8.510  node-agent-base depends on node-debug.
+#10 8.510 
+#10 8.513 Removing node-debug (4.3.4+~cs4.1.7-1) ...
+#10 8.534 Removing node-ms (2.1.3+~cs0.7.31-3) ...
+#10 8.544 dpkg: node-mkdirp: dependency problems, but removing anyway as you requested:
+#10 8.544  node-copy-concurrently depends on node-mkdirp (>= 1).
+#10 8.544 
+#10 8.545 Removing node-mkdirp (1.0.4+~1.0.2-4) ...
+#10 8.555 dpkg: libnode108:amd64: dependency problems, but removing anyway as you requested:
+#10 8.555  nodejs depends on libnode108 (= 18.19.0+dfsg-6~deb12u2).
+#10 8.555 
+#10 8.557 Removing libnode108:amd64 (18.19.0+dfsg-6~deb12u2) ...
+#10 8.570 dpkg: node-strip-ansi: dependency problems, but removing anyway as you requested:
+#10 8.570  node-string-width depends on node-strip-ansi.
+#10 8.570  node-gauge depends on node-strip-ansi.
+#10 8.570  node-columnify depends on node-strip-ansi.
+#10 8.570 
+#10 8.572 Removing node-strip-ansi (6.0.1-2) ...
+#10 8.584 dpkg: node-semver: dependency problems, but removing anyway as you requested:
+#10 8.584  node-normalize-package-data depends on node-semver.
+#10 8.584  node-make-dir depends on node-semver.
+#10 8.584  node-builtins depends on node-semver.
+#10 8.584  node-babel-helper-define-polyfill-provider depends on node-semver.
+#10 8.584  node-agent-base depends on node-semver.
+#10 8.584 
+#10 8.586 Removing node-semver (7.3.5+~7.3.9-2) ...
+#10 8.604 dpkg: node-rimraf: dependency problems, but removing anyway as you requested:
+#10 8.604  node-copy-concurrently depends on node-rimraf.
+#10 8.604 
+#10 8.606 Removing node-rimraf (3.0.2-2) ...
+#10 8.653 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 47383 files and directories currently installed.)
+#10 8.671 Preparing to unpack .../nodejs_18.20.8-1nodesource1_amd64.deb ...
+#10 8.675 Unpacking nodejs (18.20.8-1nodesource1) over (18.19.0+dfsg-6~deb12u2) ...
+#10 10.27 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 52557 files and directories currently installed.)
+#10 10.29 Removing node-acorn (8.8.1+ds+~cs25.17.7-2) ...
+#10 10.31 Removing node-agent-base (6.0.2+~cs5.4.2-2) ...
+#10 10.32 Removing node-ajv-keywords (3.5.2-2) ...
+#10 10.33 Removing node-babel-plugin-polyfill-regenerator (0.4.1~0~20220913+ds1-1) ...
+#10 10.34 Removing node-babel-helper-define-polyfill-provider (0.3.3~0~20220913+ds1-1) ...
+#10 10.35 Removing node-validate-npm-package-name (5.0.0+~4.0.0-1) ...
+#10 10.36 Removing node-builtins (5.0.1-1) ...
+#10 10.37 Removing node-cli-table (0.3.11+~cs0.13.4-3) ...
+#10 10.39 Removing node-columnify (1.6.0+~1.5.1-1) ...
+#10 10.40 Removing node-copy-concurrently (1.0.5-9) ...
+#10 10.41 Removing node-npmlog (7.0.1+~4.1.4-1) ...
+#10 10.42 Removing node-gauge (4.0.4-1) ...
+#10 10.43 Removing node-postcss-modules-values (4.0.0+~4.0.0-1) ...
+#10 10.44 Removing node-icss-utils (5.1.0+~5.1.0-1) ...
+#10 10.46 Removing node-make-dir (3.1.0-3) ...
+#10 10.47 Removing node-npm-bundled (2.0.1-2) ...
+#10 10.48 Removing node-read-package-json (5.0.2+~2.0.0-1) ...
+#10 10.50 Removing node-normalize-package-data (4.0.1+~2.4.1-1) ...
+#10 10.51 Removing node-readdirp (3.6.0-1) ...
+#10 10.52 Removing node-wide-align (1.1.3-4) ...
+#10 10.54 Removing node-string-width (4.2.3+~cs13.2.3-1) ...
+#10 10.56 Setting up nodejs (18.20.8-1nodesource1) ...
+#10 10.57 Processing triggers for libc-bin (2.36-9+deb12u10) ...
+#10 DONE 10.9s
+
+#11 [ 6/21] RUN groupadd -g 1000 cc     && useradd -m -u 1000 -g 1000 -s /bin/bash cc     && echo "cc ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+#11 DONE 0.2s
+
+#12 [ 7/21] WORKDIR /workspace
+#12 DONE 0.0s
+
+#13 [ 8/21] RUN echo "gcc version: $(gcc --version | head -n1)" &&     echo "clang version: $(clang --version | head -n1)" &&     echo "cmake version: $(cmake --version | head -n1)" &&     echo "ninja version: $(ninja --version)" &&     echo "python3 version: $(python3 --version)" &&     echo "node version: $(node --version)" &&     echo "npm version: $(npm --version)" &&     echo "rustc version: $(rustc --version)"
+#13 0.368 gcc version: gcc (Debian 12.2.0-14+deb12u1) 12.2.0
+#13 0.396 clang version: Debian clang version 14.0.6
+#13 0.399 cmake version: cmake version 3.27.9
+#13 0.401 ninja version: 1.11.1
+#13 0.402 python3 version: Python 3.11.2
+#13 0.408 node version: v18.20.8
+#13 0.515 npm version: 10.8.2
+#13 0.540 rustc version: rustc 1.63.0
+#13 DONE 0.6s
+
+#14 [ 9/21] WORKDIR /workspace
+#14 DONE 0.0s
+
+#15 [10/21] RUN git clone --depth 1 --branch p2996 https://github.com/bloomberg/clang-p2996.git /tmp/clang-p2996
+#15 0.416 Cloning into '/tmp/clang-p2996'...
+#15 95.61 Updating files:   7% (11937/159245)
+Updating files:   8% (12740/159245)
+Updating files:   9% (14333/159245)
+Updating files:  10% (15925/159245)
+Updating files:  11% (17517/159245)
+Updating files:  12% (19110/159245)
+Updating files:  13% (20702/159245)
+Updating files:  14% (22295/159245)
+Updating files:  15% (23887/159245)
+Updating files:  16% (25480/159245)
+Updating files:  17% (27072/159245)
+Updating files:  17% (27762/159245)
+Updating files:  18% (28665/159245)
+Updating files:  19% (30257/159245)
+Updating files:  20% (31849/159245)
+Updating files:  21% (33442/159245)
+Updating files:  22% (35034/159245)
+Updating files:  23% (36627/159245)
+Updating files:  24% (38219/159245)
+Updating files:  25% (39812/159245)
+Updating files:  26% (41404/159245)
+Updating files:  27% (42997/159245)
+Updating files:  28% (44589/159245)
+Updating files:  28% (45186/159245)
+Updating files:  29% (46182/159245)
+Updating files:  30% (47774/159245)
+Updating files:  31% (49366/159245)
+Updating files:  32% (50959/159245)
+Updating files:  33% (52551/159245)
+Updating files:  34% (54144/159245)
+Updating files:  35% (55736/159245)
+Updating files:  36% (57329/159245)
+Updating files:  37% (58921/159245)
+Updating files:  38% (60514/159245)
+Updating files:  39% (62106/159245)
+Updating files:  40% (63698/159245)
+Updating files:  40% (63829/159245)
+Updating files:  41% (65291/159245)
+Updating files:  42% (66883/159245)
+Updating files:  43% (68476/159245)
+Updating files:  44% (70068/159245)
+Updating files:  45% (71661/159245)
+Updating files:  46% (73253/159245)
+Updating files:  47% (74846/159245)
+Updating files:  48% (76438/159245)
+Updating files:  49% (78031/159245)
+Updating files:  49% (78370/159245)
+Updating files:  50% (79623/159245)
+Updating files:  51% (81215/159245)
+Updating files:  52% (82808/159245)
+Updating files:  53% (84400/159245)
+Updating files:  54% (85993/159245)
+Updating files:  55% (87585/159245)
+Updating files:  55% (87964/159245)
+Updating files:  56% (89178/159245)
+Updating files:  57% (90770/159245)
+Updating files:  58% (92363/159245)
+Updating files:  59% (93955/159245)
+Updating files:  60% (95547/159245)
+Updating files:  61% (97140/159245)
+Updating files:  61% (98177/159245)
+Updating files:  62% (98732/159245)
+Updating files:  63% (100325/159245)
+Updating files:  64% (101917/159245)
+Updating files:  65% (103510/159245)
+Updating files:  66% (105102/159245)
+Updating files:  67% (106695/159245)
+Updating files:  68% (108287/159245)
+Updating files:  69% (109880/159245)
+Updating files:  70% (111472/159245)
+Updating files:  71% (113064/159245)
+Updating files:  71% (113081/159245)
+Updating files:  72% (114657/159245)
+Updating files:  73% (116249/159245)
+Updating files:  74% (117842/159245)
+Updating files:  75% (119434/159245)
+Updating files:  76% (121027/159245)
+Updating files:  77% (122619/159245)
+Updating files:  78% (124212/159245)
+Updating files:  78% (125116/159245)
+Updating files:  79% (125804/159245)
+Updating files:  80% (127396/159245)
+Updating files:  81% (128989/159245)
+Updating files:  82% (130581/159245)
+Updating files:  83% (132174/159245)
+Updating files:  84% (133766/159245)
+Updating files:  85% (135359/159245)
+Updating files:  86% (136951/159245)
+Updating files:  87% (138544/159245)
+Updating files:  88% (140136/159245)
+Updating files:  88% (141591/159245)
+Updating files:  89% (141729/159245)
+Updating files:  90% (143321/159245)
+Updating files:  91% (144913/159245)
+Updating files:  92% (146506/159245)
+Updating files:  93% (148098/159245)
+Updating files:  94% (149691/159245)
+Updating files:  95% (151283/159245)
+Updating files:  96% (152876/159245)
+Updating files:  96% (153704/159245)
+Updating files:  97% (154468/159245)
+Updating files:  98% (156061/159245)
+Updating files:  99% (157653/159245)
+Updating files: 100% (159245/159245)
+Updating files: 100% (159245/159245), done.
+#15 DONE 112.0s
+
+#16 [11/21] RUN cd /tmp/clang-p2996 && git submodule update --init --recursive
+#16 DONE 0.3s
+
+#17 [12/21] RUN mkdir /tmp/clang-p2996/build
+#17 DONE 0.4s
+
+#18 [13/21] RUN echo "PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" && env &&     cmake --version &&     ninja --version &&     gcc --version &&     g++ --version &&     clang --version &&     python3 --version &&     ldd --version
+#18 0.390 PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#18 0.391 USER_ID=1000
+#18 0.391 PWD=/workspace
+#18 0.391 USER_NAME=cc
+#18 0.391 HOME=/root
+#18 0.391 LANG=C.UTF-8
+#18 0.391 SHLVL=1
+#18 0.391 GROUP_ID=1000
+#18 0.391 LC_ALL=C.UTF-8
+#18 0.391 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#18 0.391 DEBIAN_FRONTEND=noninteractive
+#18 0.391 _=/usr/bin/env
+#18 0.393 cmake version 3.27.9
+#18 0.393 
+#18 0.393 CMake suite maintained and supported by Kitware (kitware.com/cmake).
+#18 0.395 1.11.1
+#18 0.397 gcc (Debian 12.2.0-14+deb12u1) 12.2.0
+#18 0.397 Copyright (C) 2022 Free Software Foundation, Inc.
+#18 0.397 This is free software; see the source for copying conditions.  There is NO
+#18 0.397 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#18 0.397 
+#18 0.398 g++ (Debian 12.2.0-14+deb12u1) 12.2.0
+#18 0.398 Copyright (C) 2022 Free Software Foundation, Inc.
+#18 0.398 This is free software; see the source for copying conditions.  There is NO
+#18 0.398 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#18 0.398 
+#18 0.420 Debian clang version 14.0.6
+#18 0.420 Target: x86_64-pc-linux-gnu
+#18 0.420 Thread model: posix
+#18 0.420 InstalledDir: /usr/bin
+#18 0.425 Python 3.11.2
+#18 0.427 ldd (Debian GLIBC 2.36-9+deb12u10) 2.36
+#18 0.427 Copyright (C) 2022 Free Software Foundation, Inc.
+#18 0.427 This is free software; see the source for copying conditions.  There is NO
+#18 0.427 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#18 0.427 Written by Roland McGrath and Ulrich Drepper.
+#18 DONE 0.4s
+
+#19 [14/21] RUN cd /tmp/clang-p2996 && ls -l && ls -l llvm && ls -l clang && ls -l cmake || true
+#19 0.408 total 168
+#19 0.408 -rw-r--r--  1 root root   112 Jul 20 10:27 CODE_OF_CONDUCT.md
+#19 0.408 -rw-r--r--  1 root root   638 Jul 20 10:27 CONTRIBUTING.md
+#19 0.408 -rw-r--r--  1 root root 15141 Jul 20 10:27 LICENSE.TXT
+#19 0.408 -rw-r--r--  1 root root 26600 Jul 20 10:27 P2996.md
+#19 0.408 -rw-r--r--  1 root root  2534 Jul 20 10:27 README.md
+#19 0.408 -rw-r--r--  1 root root   205 Jul 20 10:27 SECURITY.md
+#19 0.408 drwxr-xr-x 11 root root  4096 Jul 20 10:27 bolt
+#19 0.408 drwxr-xr-x  2 root root  4096 Jul 20 10:27 build
+#19 0.408 drwxr-xr-x 14 root root  4096 Jul 20 10:27 clang
+#19 0.408 drwxr-xr-x 18 root root  4096 Jul 20 10:27 clang-tools-extra
+#19 0.408 drwxr-xr-x  3 root root  4096 Jul 20 10:27 cmake
+#19 0.408 drwxr-xr-x 11 root root  4096 Jul 20 10:27 compiler-rt
+#19 0.408 drwxr-xr-x  7 root root  4096 Jul 20 10:27 cross-project-tests
+#19 0.408 drwxr-xr-x 11 root root  4096 Jul 20 10:27 flang
+#19 0.408 drwxr-xr-x  8 root root  4096 Jul 20 10:27 flang-rt
+#19 0.408 drwxr-xr-x 17 root root  4096 Jul 20 10:27 libc
+#19 0.408 drwxr-xr-x  8 root root  4096 Jul 20 10:27 libclc
+#19 0.408 drwxr-xr-x 11 root root  4096 Jul 20 10:27 libcxx
+#19 0.408 drwxr-xr-x  9 root root  4096 Jul 20 10:27 libcxxabi
+#19 0.408 drwxr-xr-x  7 root root  4096 Jul 20 10:27 libunwind
+#19 0.408 drwxr-xr-x 15 root root  4096 Jul 20 10:27 lld
+#19 0.408 drwxr-xr-x 15 root root  4096 Jul 20 10:27 lldb
+#19 0.408 drwxr-xr-x 16 root root  4096 Jul 20 10:27 llvm
+#19 0.408 drwxr-xr-x  3 root root  4096 Jul 20 10:27 llvm-libgcc
+#19 0.408 drwxr-xr-x 13 root root  4096 Jul 20 10:27 mlir
+#19 0.408 drwxr-xr-x 13 root root  4096 Jul 20 10:27 offload
+#19 0.408 drwxr-xr-x  7 root root  4096 Jul 20 10:27 openmp
+#19 0.408 drwxr-xr-x 10 root root  4096 Jul 20 10:27 polly
+#19 0.408 -rw-r--r--  1 root root    57 Jul 20 10:27 pyproject.toml
+#19 0.408 drwxr-xr-x  3 root root  4096 Jul 20 10:27 runtimes
+#19 0.408 -rw-r--r--  1 root root    93 Jul 20 10:27 test.json
+#19 0.408 drwxr-xr-x  4 root root  4096 Jul 20 10:27 third-party
+#19 0.408 drwxr-xr-x  3 root root  4096 Jul 20 10:27 utils
+#19 0.409 total 192
+#19 0.409 -rw-r--r--  1 root root 64024 Jul 20 10:27 CMakeLists.txt
+#19 0.409 -rw-r--r--  1 root root 13015 Jul 20 10:27 CREDITS.TXT
+#19 0.409 -rw-r--r--  1 root root 15141 Jul 20 10:27 LICENSE.TXT
+#19 0.409 -rw-r--r--  1 root root 17168 Jul 20 10:27 Maintainers.md
+#19 0.409 -rw-r--r--  1 root root   663 Jul 20 10:27 README.txt
+#19 0.409 -rw-r--r--  1 root root  1009 Jul 20 10:27 RELEASE_TESTERS.TXT
+#19 0.409 drwxr-xr-x  2 root root  4096 Jul 20 10:27 benchmarks
+#19 0.409 drwxr-xr-x  3 root root  4096 Jul 20 10:27 bindings
+#19 0.409 drwxr-xr-x  4 root root  4096 Jul 20 10:27 cmake
+#19 0.409 -rwxr-xr-x  1 root root   573 Jul 20 10:27 configure
+#19 0.409 drwxr-xr-x 19 root root 12288 Jul 20 10:27 docs
+#19 0.409 drwxr-xr-x 14 root root  4096 Jul 20 10:27 examples
+#19 0.409 drwxr-xr-x  4 root root  4096 Jul 20 10:27 include
+#19 0.409 drwxr-xr-x 50 root root  4096 Jul 20 10:27 lib
+#19 0.409 drwxr-xr-x  2 root root  4096 Jul 20 10:27 projects
+#19 0.409 drwxr-xr-x  2 root root  4096 Jul 20 10:27 resources
+#19 0.409 drwxr-xr-x  2 root root  4096 Jul 20 10:27 runtimes
+#19 0.409 drwxr-xr-x 35 root root  4096 Jul 20 10:27 test
+#19 0.409 drwxr-xr-x 98 root root  4096 Jul 20 10:27 tools
+#19 0.409 drwxr-xr-x 43 root root  4096 Jul 20 10:27 unittests
+#19 0.409 drwxr-xr-x 44 root root  4096 Jul 20 10:27 utils
+#19 0.410 total 128
+#19 0.410 -rw-r--r--  1 root root   414 Jul 20 10:27 AreaTeamMembers.txt
+#19 0.410 -rw-r--r--  1 root root 33166 Jul 20 10:27 CMakeLists.txt
+#19 0.410 -rw-r--r--  1 root root  2153 Jul 20 10:27 INSTALL.txt
+#19 0.410 -rw-r--r--  1 root root 15140 Jul 20 10:27 LICENSE.TXT
+#19 0.410 -rw-r--r--  1 root root 10288 Jul 20 10:27 Maintainers.rst
+#19 0.410 -rw-r--r--  1 root root  4076 Jul 20 10:27 NOTES.txt
+#19 0.410 -rw-r--r--  1 root root  1135 Jul 20 10:27 README.md
+#19 0.410 drwxr-xr-x  4 root root  4096 Jul 20 10:27 bindings
+#19 0.410 drwxr-xr-x  4 root root  4096 Jul 20 10:27 cmake
+#19 0.410 drwxr-xr-x  7 root root  4096 Jul 20 10:27 docs
+#19 0.410 drwxr-xr-x  8 root root  4096 Jul 20 10:27 examples
+#19 0.410 drwxr-xr-x  4 root root  4096 Jul 20 10:27 include
+#19 0.410 drwxr-xr-x 31 root root  4096 Jul 20 10:27 lib
+#19 0.410 drwxr-xr-x  3 root root  4096 Jul 20 10:27 runtime
+#19 0.410 drwxr-xr-x 81 root root  4096 Jul 20 10:27 test
+#19 0.410 drwxr-xr-x 32 root root  4096 Jul 20 10:27 tools
+#19 0.410 drwxr-xr-x 25 root root  4096 Jul 20 10:27 unittests
+#19 0.410 drwxr-xr-x 13 root root  4096 Jul 20 10:27 utils
+#19 0.410 drwxr-xr-x  3 root root  4096 Jul 20 10:27 www
+#19 0.411 total 8
+#19 0.411 drwxr-xr-x 2 root root 4096 Jul 20 10:27 Modules
+#19 0.411 -rw-r--r-- 1 root root 1864 Jul 20 10:27 README.rst
+#19 DONE 0.5s
+
+#20 [15/21] RUN cd /tmp/clang-p2996/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .. || (     echo "=== CMakeError.log ===" &&     cat /tmp/clang-p2996/build/CMakeFiles/CMakeError.log || true;     echo "=== CMakeOutput.log ===" &&     cat /tmp/clang-p2996/build/CMakeFiles/CMakeOutput.log || true;     cp /tmp/clang-p2996/build/CMakeFiles/CMakeError.log /workspace/CMakeError.log 2>/dev/null || true;     cp /tmp/clang-p2996/build/CMakeFiles/CMakeOutput.log /workspace/CMakeOutput.log 2>/dev/null || true;     ls -l /tmp/clang-p2996/build/CMakeFiles/ || true;     exit 0 )
+#20 0.394 CMake Warning:
+#20 0.394   Ignoring extra path from command line:
+#20 0.394 
+#20 0.394    ".."
+#20 0.394 
+#20 0.394 
+#20 0.394 CMake Error: The source directory "/tmp/clang-p2996" does not appear to contain CMakeLists.txt.
+#20 0.394 Specify --help for usage, or press the help button on the CMake GUI.
+#20 0.395 === CMakeError.log ===
+#20 0.397 cat: /tmp/clang-p2996/build/CMakeFiles/CMakeError.log: No such file or directory
+#20 0.397 === CMakeOutput.log ===
+#20 0.399 cat: /tmp/clang-p2996/build/CMakeFiles/CMakeOutput.log: No such file or directory
+#20 0.402 ls: cannot access '/tmp/clang-p2996/build/CMakeFiles/': No such file or directory
+#20 DONE 0.4s
+
+#21 [16/21] RUN if [ -f /tmp/clang-p2996/build/build.ninja ]; then ninja -C /tmp/clang-p2996/build; else echo "Skipping ninja build due to missing build.ninja"; fi
+#21 0.406 Skipping ninja build due to missing build.ninja
+#21 DONE 0.4s
+
+#22 [17/21] RUN if [ -d /tmp/clang-p2996/build/bin ]; then cp /tmp/clang-p2996/build/bin/clang* /usr/local/bin/ || true; fi
+#22 DONE 0.4s
+
+#23 [18/21] RUN if [ -d /tmp/clang-p2996/build/bin ]; then cp /tmp/clang-p2996/build/bin/llvm* /usr/local/bin/ || true; fi
+#23 DONE 0.4s
+
+#24 [19/21] RUN if [ -d /tmp/clang-p2996/build/bin ]; then cp /tmp/clang-p2996/build/bin/clang++ /usr/local/bin/ || true; fi
+#24 DONE 0.4s
+
+#25 [20/21] RUN rm -rf /tmp/clang-p2996
+#25 DONE 4.9s
+
+#26 [21/21] WORKDIR /workspace
+#26 DONE 0.0s
+
+#27 exporting to image
+#27 exporting layers
+#27 exporting layers 52.4s done
+#27 writing image sha256:7a71ae2e80bcc2ff07daa4bbe16bd7c7f5a81bf4f834142b423cfc689eda16f1 done
+#27 naming to docker.io/library/envgym_test_1753007147 done
+#27 DONE 52.4s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 3)
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

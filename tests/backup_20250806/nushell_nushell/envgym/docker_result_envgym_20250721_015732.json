@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_015732",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753063051",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.12kB done\n#1 DONE 0.0s\n\n#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.4\n#2 DONE 0.1s\n\n#3 docker-image://docker.io/docker/dockerfile:1.4@sha256:9ba7531bd80fb0a858632727cf7a112fbfd19b17e94c4e84ced81e24ef1a0dbc\n#3 CACHED\n\n#4 [internal] load .dockerignore\n#4 transferring context: 2B done\n#4 DONE 0.0s\n\n#5 [internal] load metadata for docker.io/library/ubuntu:22.04\n#5 DONE 0.1s\n\n#6 [ 1/11] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb\n#6 DONE 0.0s\n\n#7 [ 2/11] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         libssl-dev         pkg-config         perl         clang         dpkg         git         wget         ca-certificates         curl         software-properties-common         bash         locales     && rm -rf /var/lib/apt/lists/*\n#7 CACHED\n\n#8 [ 3/11] RUN locale-gen en_US.UTF-8\n#8 CACHED\n\n#9 [internal] load build context\n#9 transferring context: 305.98kB 0.1s done\n#9 DONE 0.1s\n\n#10 [ 4/11] RUN ARCH=linux-x86_64 &&     wget -q https://github.com/nushell/nushell/releases/download/0.92.1/nu-0.92.1-${ARCH}.tar.gz &&     tar -xzf nu-0.92.1-${ARCH}.tar.gz &&     mv nu-0.92.1-${ARCH}/nu /usr/local/bin/ &&     chmod +x /usr/local/bin/nu &&     rm -rf nu-0.92.1-${ARCH}*\n#10 ERROR: process \"/bin/sh -c ARCH=linux-x86_64 &&     wget -q https://github.com/nushell/nushell/releases/download/${NUSHELL_VERSION}/nu-${NUSHELL_VERSION}-${ARCH}.tar.gz &&     tar -xzf nu-${NUSHELL_VERSION}-${ARCH}.tar.gz &&     mv nu-${NUSHELL_VERSION}-${ARCH}/nu /usr/local/bin/ &&     chmod +x /usr/local/bin/nu &&     rm -rf nu-${NUSHELL_VERSION}-${ARCH}*\" did not complete successfully: exit code: 8\n------\n > [ 4/11] RUN ARCH=linux-x86_64 &&     wget -q https://github.com/nushell/nushell/releases/download/0.92.1/nu-0.92.1-${ARCH}.tar.gz &&     tar -xzf nu-0.92.1-${ARCH}.tar.gz &&     mv nu-0.92.1-${ARCH}/nu /usr/local/bin/ &&     chmod +x /usr/local/bin/nu &&     rm -rf nu-0.92.1-${ARCH}*:\n------\nERROR: failed to build: failed to solve: process \"/bin/sh -c ARCH=linux-x86_64 &&     wget -q https://github.com/nushell/nushell/releases/download/${NUSHELL_VERSION}/nu-${NUSHELL_VERSION}-${ARCH}.tar.gz &&     tar -xzf nu-${NUSHELL_VERSION}-${ARCH}.tar.gz &&     mv nu-${NUSHELL_VERSION}-${ARCH}/nu /usr/local/bin/ &&     chmod +x /usr/local/bin/nu &&     rm -rf nu-${NUSHELL_VERSION}-${ARCH}*\" did not complete successfully: exit code: 8\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

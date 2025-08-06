@@ -1,0 +1,171 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (TAILORED TO PROVIDED HARDWARE INFO) ===
+
+**Hardware Summary Applied:**
+- Architecture: x86_64 (linux/amd64); use `--platform=linux/amd64` if/when needed.
+- Base OS: Debian/Ubuntu or compatible linux/amd64 images; no GPU.
+- Docker: Version 28.3.2, BuildKit/multi-stage/Compose supported, no GPU features.
+- Working Directory: `/home/cc/EnvGym/data/jqlang_jq` (project in `jqlang_jq` under `EnvGym/data`).
+- No GPU/accelerator support required.
+- Multi-core CPU (parallel builds permitted).
+- Paths should reflect actual directory structure.
+
+---
+
+## 1. DOWNLOADS NEEDED
+
+- **jq Source Code**: Latest release tarball or `git clone https://github.com/jqlang/jq` (no architecture-specific adjustments needed).
+- **Prebuilt jq Binary**: Optional, for quick use/testing. Choose `linux64` binaries.
+- **Docker**: Already supported; ensure version ≥ 28.3.2 (already met).
+- **jq Docker Image**: `ghcr.io/jqlang/jq:latest` (use linux/amd64 tag if needed).
+- **Build Dependencies** (Debian/Ubuntu; all x86_64 compatible):
+  - `build-essential` (gcc, make, etc.)
+  - `libtool` (≥ 2.4)
+  - `autoconf` (≥ 2.69)
+  - `git` (≥ 2.0)
+  - Oniguruma (built-in with `--with-oniguruma=builtin`)
+  - Optional (if not using Docker or building docs):
+    - `automake` (≥ 1.11)
+    - `flex` and `bison` (dev builds)
+    - `python3` (≥ 3.6)
+    - `pip` or `pip3`
+    - `pipenv`
+    - `virtualenv` (optional)
+    - `sudo` (if needed outside Docker)
+- **No GPU/CUDA libraries required**.
+- **No ARM or non-x86_64 artifacts or dependencies.**
+- **No special memory/storage adjustments unless project is very large (jq is moderate in size).**
+
+---
+
+## 2. FILES TO CREATE
+
+- **Dockerfile**:
+  - Set `WORKDIR /home/cc/EnvGym/data/jqlang_jq` (matches actual path).
+  - Use `FROM debian:stable-slim` or `FROM ubuntu:22.04` as base (linux/amd64).
+  - For multi-stage build, ensure all stages specify `--platform=linux/amd64` as needed.
+- **.env**: Place in `/home/cc/EnvGym/data/jqlang_jq` (project root).
+- **config.mk**: In project root, for make options.
+- **test/package.json**: For jq test fixture (unchanged).
+- **build.log**: Build output log (unchanged).
+- **scripts/test-jq.sh**: For automated tests (optional).
+- **README.local.md**: For local notes (optional).
+- **docs/README.md, docs/Pipfile, docs/Pipfile.lock, docs/output/**: For documentation (unchanged).
+- **docs/jq.1**: Built manpage (unchanged).
+- **venv/**: Python venv for documentation (optional).
+- **.dockerignore**: To reduce Docker context (unchanged).
+- **Docker image artifact**: Minimal image with `/jq`, `/AUTHORS`, `/COPYING` (unchanged, but image must be linux/amd64).
+
+---
+
+## 3. NECESSARY TEST CASES IN THE CODEBASE
+
+- **All test cases remain the same**, with:
+  - **Docker image tests must specify/confirm `linux/amd64` platform** (use `--platform=linux/amd64` with `docker run/build` if running on a multi-arch host).
+  - **No cross-architecture (ARM/ARM64) tests needed**.
+  - **No GPU/acceleration tests**.
+  - **Test build and run within `/home/cc/EnvGym/data/jqlang_jq`** when using local host or volume-mounting in Docker.
+  - **Large file/memory tests**: Only needed if system RAM is very limited (not specified; assumed sufficient for jq builds).
+
+---
+
+## 4. COMPLETE TODO LIST (ADJUSTED)
+
+1. **Choose installation method**:
+   - Use Docker multi-stage build (recommended, matches host's capabilities and makes static/minimal images).
+   - If building outside Docker, ensure OS is Debian/Ubuntu x86_64.
+2. **Install prerequisite build tools (if building on host)**:
+   - On Ubuntu/Debian (x86_64):  
+     `sudo apt-get update && sudo apt-get install -y build-essential libtool autoconf git`
+   - Verify:  
+     `libtool --version`, `autoconf --version`, `git --version`
+   - (No ARM/other arch packages needed.)
+3. **Docker installed and running**:
+   - Confirm with `docker version` (should show 28.3.2).
+   - For all `docker build`/`docker run` commands, **add `--platform=linux/amd64`** if the host is multi-arch or on ARM hardware (not required if host is x86_64).
+4. **Install Python tooling (if building docs)**:
+   - `python3`, `pip`/`pip3`, `pipenv`, `virtualenv` (all x86_64 packages).
+   - Confirm with `which python3`, `pipenv --version`.
+5. **Clone jq repository or download release**:
+   - `git clone https://github.com/jqlang/jq.git`
+   - Place under `/home/cc/EnvGym/data/jqlang_jq`
+6. **Initialize submodules**:
+   - `git submodule update --init`
+7. **Set up Python environment in docs/** (if building docs):
+   - `cd docs/`
+   - `virtualenv -p /usr/bin/python3 venv/` (if used)
+   - `pipenv sync`
+8. **Run autoreconf (if building from git)**:
+   - `autoreconf -i`
+9. **Configure build options**:
+   - For Docker/static:  
+     `./configure --with-oniguruma=builtin --enable-static --enable-all-static --prefix=/usr/local --disable-docs`
+   - For normal build:  
+     `./configure --with-oniguruma=builtin`
+   - **Set `--prefix=/home/cc/EnvGym/data/jqlang_jq/install` if custom path is needed.**
+10. **Clean build artifacts (on upgrade)**:
+    - `make clean`
+11. **Compile jq**:
+    - `make -j$(nproc)` (multi-core build; safe and recommended on this host).
+    - `make -j$(nproc) | tee build.log`
+12. **Run tests**:
+    - `make check VERBOSE=yes`
+13. **Install jq**:
+    - `make install-strip` (Docker), or `sudo make install` (host).
+    - Test: `/home/cc/EnvGym/data/jqlang_jq/install/bin/jq --version` (if custom prefix).
+14. **Build Docker image**:
+    - `docker build --platform=linux/amd64 -t jq-custom .`  
+      (explicitly set platform for future-proofing)
+    - Ensure Dockerfile uses `WORKDIR /home/cc/EnvGym/data/jqlang_jq`.
+15. **Test Docker image**:
+    - `docker run --platform=linux/amd64 --rm jq-custom --version`
+    - `docker run --platform=linux/amd64 --rm -i -v $(pwd)/test:/test jq-custom '.' < /test/package.json`
+16. **Confirm image minimalism**:
+    - Image must be based on `scratch`, containing only `/jq`, `/AUTHORS`, `/COPYING`.
+17. **Build documentation (optional)**:
+    - `make jq.1`, `make tests/man.test`
+    - In `docs/`: `pipenv run python3 build_website.py`
+    - Serve: `python3 -m http.server -d output` (from `docs/`)
+18. **Pull and verify official jq Docker image (optional)**:
+    - `docker pull ghcr.io/jqlang/jq:latest`
+    - `docker run --platform=linux/amd64 --rm ghcr.io/jqlang/jq:latest --version`
+19. **Create test fixture JSON**:
+    - `test/package.json` as specified.
+20. **Write and run functionality tests**:
+    - Test in both host and Docker (as above).
+21. **Create automation scripts (optional)**:
+    - Place scripts in `/home/cc/EnvGym/data/jqlang_jq/scripts/`
+22. **Document local environment setup (optional)**:
+    - Use `/home/cc/EnvGym/data/jqlang_jq/README.local.md`
+23. **Set up environment variable file (optional)**:
+    - `.env` in project root. Use `JQ_INSTALL_PREFIX=/home/cc/EnvGym/data/jqlang_jq/install` if needed.
+24. **Final verification**:
+    - Ensure jq works from `/home/cc/EnvGym/data/jqlang_jq` and globally (if installed as such).
+    - Use `ldd $(which jq)` to confirm static build (should show "not a dynamic executable").
+    - For Docker, confirm volume mounts and file access work as expected.
+25. **Clean up**:
+    - Remove temporary build artifacts.
+    - Archive logs, deactivate/remove virtualenv if not needed.
+    - Prune unused Docker images as required.
+
+---
+
+**NOTES SPECIFIC TO HARDWARE/ENVIRONMENT:**
+
+- **No ARM, Apple Silicon/M1, or GPU-related instructions or images.**
+- **All Docker/image and build steps standardized to `linux/amd64` (x86_64).**
+- **Default to multi-core builds with `make -j$(nproc)` (safe and optimal on this hardware).**
+- **Set and maintain `WORKDIR /home/cc/EnvGym/data/jqlang_jq` in all relevant scripts/Dockerfiles for consistency.**
+- **No need to install or test CUDA, cuDNN, or GPU libraries.**
+- **No need for Homebrew/macOS instructions (unless cross-platform builds desired).**
+- **All file/directory paths updated to match actual working directory.**
+
+---
+
+**Summary of Adjustments:**
+- All steps, Dockerfiles, and scripts should use `/home/cc/EnvGym/data/jqlang_jq` as root/working directory.
+- Specify `--platform=linux/amd64` for Docker where appropriate.
+- No need for ARM or GPU support.
+- Multi-core build flags are recommended and supported.
+- No OS or architecture compatibility concerns (assuming host is x86_64 Linux).
+
+**End of Adjusted Plan**

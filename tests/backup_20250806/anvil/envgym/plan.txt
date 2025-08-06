@@ -1,0 +1,254 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu 22.04, /home/cc/EnvGym/data/anvil, No GPU) ===
+
+**Key Adjustments**
+- All container and binary builds must target `x86_64`/`amd64` (use `--platform=linux/amd64` for Docker).
+- All system and Docker base images should be `ubuntu:22.04` or other `amd64`-compatible images (no ARM, no CUDA, no nvidia/cuda images).
+- No GPU/CUDA dependencies or instructions.
+- Leverage large memory/storage for builds if needed.
+- Modern Docker (28.3.2) and BuildKit features are available.
+- Working directory for scripts/volumes: `/home/cc/EnvGym/data/anvil`.
+- No `nvidia-smi`, `nvidia/cuda`, or GPU-related packages.
+- Ensure all path references and Docker context COPY/WORKDIR settings are consistent with `/home/cc/EnvGym/data/anvil`.
+- Dockerfiles, scripts, and documentation must reflect these constraints.
+
+---
+
+## 1. DOWNLOADS NEEDED:
+
+- **Rust Toolchain**
+  - Use rustup to install/pin Rust toolchain version `1.88.0` (as in `rust-toolchain.toml`).
+  - Ensure `cargo` is present.
+  - Confirm Rust 2021 edition is supported.
+  - All builds/tests must use the `x86_64-unknown-linux-gnu` target (default for Ubuntu 22.04 on x86_64).
+  - _No cross-compilation for ARM or other platforms._
+
+- **Verus**
+  - Install as specified, ensure compatibility with x86_64.
+  - All Verus builds and binaries must match host and container architecture (x86_64).
+  - Use Ubuntu 22.04 as base for Verus Docker images.
+
+- **Git**
+  - Install standard `git` package (works on Ubuntu 22.04 x86_64).
+
+- **kubectl**
+  - Use `amd64` release binaries (no ARM64).
+  - Install per [official documentation](https://kubernetes.io/docs/tasks/tools/).
+
+- **Minikube or KinD**
+  - Download/install x86_64/amd64 binaries only.
+  - Confirm local Kubernetes cluster runs natively on x86_64.
+
+- **Docker**
+  - Use installed Docker 28.3.2.
+  - All Dockerfiles/images must specify `--platform=linux/amd64` if building/pushing on multi-arch hosts.
+  - _Do not use_ `nvidia-smi`, `--gpus`, or CUDA/NVIDIA runtime options.
+
+- **Python 3 and pip**
+  - Use Ubuntu 22.04 or `python:3.x-slim` (amd64) as base.
+  - No GPU/CUDA/PyTorch/TensorFlow-GPU requirements.
+
+- **pkg-config, libssl-dev**
+  - Install via apt for Ubuntu 22.04 (x86_64).
+  - Required for `openssl`/`warp` Rust dependencies.
+
+- **tabulate (Python package)**
+  - Install via pip3.
+
+- **Bash (or compatible shell)**
+  - Use `/bin/bash` (default in Ubuntu).
+
+- **Kubernetes cluster**
+  - Must run on x86_64.
+  - No GPU node provisioning.
+
+- **Controller deployments**
+  - Ensure built binaries/images are for Ubuntu 22.04 x86_64.
+  - When building in Docker, always use `--platform=linux/amd64` if any risk of cross-architecture.
+
+- **CRDs**
+  - No changes (YAML/JSON—arch-independent).
+
+- **Anvil Verus Container**
+  - Use `ghcr.io/anvil-verifier/anvil/verus:latest` (must be amd64).
+  - If pulling/pushing, use `--platform=linux/amd64`.
+
+- **Verus Standalone Docker Image**
+  - Build on Ubuntu 22.04 (amd64).
+  - No GPU or CUDA layers.
+
+- **Ubuntu 22.04 Base Image**
+  - All Dockerfiles must specify `FROM ubuntu:22.04` or compatible (amd64).
+
+**Rust Crate Dependencies:**  
+_No changes needed; all listed crates work on x86_64 targets._
+
+**System/Tooling Requirements:**  
+- All apt/yum installs assume Ubuntu 22.04 x86_64.
+- No GPU/CUDA tooling.
+- No ARM/ARM64 toolchain/install instructions.
+
+**Version compatibility requirements:**  
+- Confirm all binaries and toolchains are for x86_64.
+- Docker: multi-stage builds and BuildKit features supported.
+- Python 3: use Ubuntu or official python:3.x-slim (amd64).
+
+---
+
+## 2. FILES TO CREATE:
+
+- All file and directory references must use `/home/cc/EnvGym/data/anvil` as project root if absolute paths are needed.
+- For Dockerfiles, set
+  ```dockerfile
+  WORKDIR /home/cc/EnvGym/data/anvil
+  ```
+  at the start of each build context.
+- When copying files in Docker, ensure all path dependencies (`../verus/source/builtin`, etc.) are relative to build context; consider adjusting build context or using correct COPY commands.
+- All scripts and Dockerfiles must use `FROM ubuntu:22.04` or other `amd64` images.
+- **Do not** use or reference CUDA, GPU, or nvidia images.
+- No `nvidia-smi` commands or GPU driver checks.
+- If specifying Docker image platforms, always use `--platform=linux/amd64`.
+- If using `python:3.x-slim`, ensure it is the `amd64` variant.
+
+**Summary of Dockerfile Adjustments:**
+- Add at the top of each Dockerfile:
+  ```dockerfile
+  FROM --platform=linux/amd64 ubuntu:22.04
+  ```
+  or for Python images:
+  ```dockerfile
+  FROM --platform=linux/amd64 python:3.x-slim
+  ```
+- Set:
+  ```dockerfile
+  WORKDIR /home/cc/EnvGym/data/anvil
+  ```
+- For multi-stage builds, ensure every stage is `--platform=linux/amd64`.
+- No `RUN nvidia-smi` or similar steps.
+
+---
+
+## 3. NECESSARY TEST CASES IN THE CODEBASE:
+
+- All tests must be run and verified on x86_64 (amd64) architecture.
+- No GPU/CUDA-specific tests.
+- No ARM architecture tests.
+- Docker build/run/test commands must include `--platform=linux/amd64` if building on mixed-arch hosts, e.g.:
+  ```
+  docker build --platform=linux/amd64 -t <image> -f docker/controller/Dockerfile.local .
+  ```
+- For volume mounts or path references, use `/home/cc/EnvGym/data/anvil` as the canonical path.
+
+---
+
+## 4. COMPLETE TODO LIST (with hardware-specific adjustments):
+
+1. **Install Rust Toolchain**
+   - Use rustup (x86_64, Linux).
+   - Pin to `1.88.0` in `rust-toolchain.toml`.
+   - Confirm with `rustc --version`.
+   - Ensure all `cargo`/`rustc` calls target host architecture (x86_64).
+   - _No cross-compilation_.
+
+2. **Install Verus**
+   - Build/run for x86_64.
+   - Place sources at `/home/cc/EnvGym/data/verus/source/` or adjust all relative paths accordingly.
+
+3. **Install Docker**
+   - Use existing Docker 28.3.2.
+   - Always specify `--platform=linux/amd64` for build/push/run if necessary.
+   - _Do not use_ `nvidia` runtime, `nvidia-smi`, or any GPU flags.
+
+4. **Install Additional Tools**
+   - All via `apt` for Ubuntu 22.04 x86_64.
+   - No GPU/CUDA tool installs.
+
+5. **Set Up Kubernetes Cluster**
+   - Use Minikube/Kind for x86_64 only.
+   - No GPU node pools.
+
+6. **Clone Project Repository**
+   - Use `/home/cc/EnvGym/data/anvil` as main working directory.
+
+7. **Clone or Provide Verus Source**
+   - Ensure correct relative/absolute paths for `/home/cc/EnvGym/data/verus/source/`.
+
+8. **Create/Edit Configuration Files**
+   - In Dockerfiles, set:
+     ```dockerfile
+     WORKDIR /home/cc/EnvGym/data/anvil
+     ```
+   - All path dependencies must be resolved relative to this directory.
+   - All base images must be `ubuntu:22.04` or `python:3.x-slim` (amd64).
+   - Remove any references to CUDA, nvidia, or GPU-specific variables.
+
+9. **Build Rust Project, deps_hack, and Controller Binaries**
+   - All builds must target x86_64; no cross-compilation.
+   - Docker builds must use `--platform=linux/amd64` if not default.
+
+10. **Build Docker Images**
+    - Always use:
+      ```
+      docker build --platform=linux/amd64 ...
+      ```
+    - All images must be built for Ubuntu 22.04 (amd64).
+    - Remove any GPU or ARM/ARM64 image variants.
+
+11. **Install Rust Dependencies**
+    - No changes.
+
+12. **Deploy Controllers and CRDs**
+    - No changes.
+
+13. **Setup CI**
+    - Ensure all build/test jobs specify `x86_64`/`amd64` runners if using self-hosted runners.
+    - All CI Docker builds/tests must specify `--platform=linux/amd64`.
+
+14. **Write and Run Test Cases**
+    - Ensure all tests are run on x86_64.
+    - Skip/remove any GPU/CUDA/ARM tests.
+
+15. **End-to-End Test Verification**
+    - No changes.
+
+16. **Error Handling and Compatibility**
+    - Test on Ubuntu 22.04 x86_64 as primary target.
+    - Optionally test on macOS/Windows (x86_64).
+    - No ARM or GPU platforms.
+
+17. **Documentation and Verification**
+    - Update all setup/build/run instructions to clarify:
+      - All builds must target Ubuntu 22.04 x86_64 (amd64).
+      - Docker images must be built with `--platform=linux/amd64` as needed.
+      - No GPU/CUDA setup is required or supported.
+      - Working directory is `/home/cc/EnvGym/data/anvil` (update all code, scripts, and docs accordingly).
+    - Remove or clarify any GPU/ARM references.
+
+18. **Optional: Cluster Integration Testing**
+    - Ensure all cluster nodes are x86_64.
+    - Do not test with GPU nodes or ARM clusters.
+
+---
+
+### **Verification Methods (Adjusted)**
+
+- All CLI checks (`rustc --version`, `cargo build`, etc.) must output amd64/x86_64 versions.
+- All Docker images and containers must be built and run as `linux/amd64`.
+- All documentation and scripts must reference `/home/cc/EnvGym/data/anvil` as working/project directory if absolute paths are shown.
+- No GPU/CUDA-related errors or steps are present anywhere in the pipeline.
+- All local path dependencies are resolved with respect to the updated working directory.
+- All builds/tests fail cleanly if any part is not compatible with x86_64/Ubuntu 22.04.
+
+---
+
+## **Summary of Adjustments**
+
+- All builds, Dockerfiles, and scripts are now explicitly for x86_64/amd64, Ubuntu 22.04 (no ARM/GPU).
+- All Docker images use `--platform=linux/amd64` and `FROM ...:amd64` as appropriate.
+- No CUDA/NVIDIA/GPU tool installation or code paths.
+- All documentation, scripts, and config files use `/home/cc/EnvGym/data/anvil` as the canonical project root.
+- All local/relative path references in scripts, Dockerfiles, and documentation are consistent with this working directory.
+- All system and third-party packages are installed for Ubuntu 22.04 x86_64 only.
+
+---
+
+**Proceed with this adjusted plan to ensure seamless environment setup on your specified hardware.**

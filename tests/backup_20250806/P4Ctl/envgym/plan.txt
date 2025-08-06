@@ -1,0 +1,204 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu 22.04+, no GPU, /home/cc/EnvGym/data/P4Ctl) ===
+
+**Hardware/OS Details Incorporated:**
+- CPU: x86_64 (amd64); ARM not supported
+- No GPU: Remove any CUDA/NVIDIA references
+- OS: Ubuntu 22.04+ (recommend using latest LTS); Ubuntu 20.04 instructions remain for kernel compatibility, but update where relevant
+- Docker: Modern (v28.3.2); BuildKit, multi-stage builds supported
+- Working Directory: /home/cc/EnvGym/data/P4Ctl
+
+---
+
+1. **DOWNLOADS NEEDED**  
+   - **Python 3.7**  
+     - Official support for Python 3.7 is dropping; Ubuntu 22.04+ ships with 3.10+.  
+     - Use deadsnakes PPA or pyenv for 3.7 if necessary.  
+     - Download: https://www.python.org/downloads/release/python-370/  
+   - **Tofino Switch SDE 9.7.0**  
+     - No architecture issues; compatible with x86_64 only.  
+     - Download from Intel portal: https://www.intel.com/content/www/us/en/products/network-io/programmable-ethernet-switch/tofino.html  
+   - **BCC (BPF Compiler Collection) for Linux Kernel 5.15.0**  
+     - Confirm that Ubuntu 22.04 uses kernel 5.15.x (default); plan is compatible.  
+     - https://github.com/iovisor/bcc  
+   - **Bison 3.8.2**  
+     - May require manual build on Ubuntu 22.04 (default is 3.8.2, but confirm with `bison --version`).  
+   - **Flex 2.6.4**  
+     - Ubuntu 22.04 ships flex 2.6.4, so package manager install is sufficient.  
+   - **Scapy 2.4.5 (Python package)**  
+     - Install via pip: `pip install scapy==2.4.5`  
+   - **ncat (from nmap package)**  
+     - Install via package manager: `sudo apt install ncat`  
+   - **Make, build-essential, clang, llvm, etc.**  
+     - All tools available natively on x86_64 Ubuntu.  
+   - **(Optional) Docker**  
+     - Your Docker version is sufficient for builds, but not strictly necessary unless containerization is desired.  
+   - **(Optional) python3-bcc, bpfcc-tools, libbpfcc-dev, linux-headers-$(uname -r)**  
+     - All available for x86_64 Ubuntu 22.04.
+
+---
+
+2. **FILES TO CREATE / PATHS**  
+   - Use **/home/cc/EnvGym/data/P4Ctl** as the main project directory.  
+   - All relative paths (`~/bf-sde-9.7.0/`, etc.) should be adjusted or clarified:
+     - If running in Docker, use `/workspace` or `/project` as base.  
+     - If running natively, ensure all scripts reference `/home/cc/EnvGym/data/P4Ctl` correctly.
+   - `.env` file (at project root, i.e., `/home/cc/EnvGym/data/P4Ctl/.env`):  
+     ```
+     SDE=/home/cc/bf-sde-9.7.0/
+     SDE_INSTALL=/home/cc/bf-sde-9.7.0/install
+     PYTHONPATH=$SDE_INSTALL/lib/python3.7/site-packages:$PYTHONPATH
+     ```
+     *(Adjust SDE path if Tofino SDE is extracted elsewhere.)*
+
+---
+
+3. **NECESSARY TEST CASES**  
+   - No architecture-specific changes needed; x86_64 is the default/tested platform.
+   - All test cases as described remain valid.
+
+---
+
+4. **COMPLETE TODO LIST (ADJUSTED):**  
+
+**1. System Preparation**
+   - [ ] Update system: `sudo apt update && sudo apt upgrade`
+   - [ ] Confirm kernel version is 5.15.0 (Ubuntu 22.04 default is 5.15.x; Ubuntu 20.04.1 for legacy compatibility)
+   - [ ] Install build-essential: `sudo apt install build-essential`
+   - [ ] Install git, wget, curl if not present
+   - [ ] Install make: `sudo apt install make`
+
+**2. Install Dependencies**
+   - [ ] **Python 3.7 Setup**  
+         - On Ubuntu 22.04+, Python 3.7 is not in main repos. Use one of:  
+           - **a. Deadsnakes PPA:**  
+             ```
+             sudo add-apt-repository ppa:deadsnakes/ppa
+             sudo apt update
+             sudo apt install python3.7 python3.7-venv python3.7-distutils
+             ```
+           - **b. pyenv:**  
+             ```
+             curl https://pyenv.run | bash
+             export PATH="$HOME/.pyenv/bin:$PATH"
+             eval "$(pyenv init --path)"
+             pyenv install 3.7.17
+             pyenv global 3.7.17
+             ```
+           - **c. Use system Python 3.10+ if codebase supports it (update requirements if so).**
+         - [ ] Install pip for Python 3.7:  
+           ```
+           curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+           python3.7 get-pip.py
+           ```
+   - [ ] Install Scapy 2.4.5:  
+         ```
+         python3.7 -m pip install scapy==2.4.5
+         ```
+   - [ ] Install BCC and dependencies:  
+         ```
+         sudo apt install bpfcc-tools python3-bcc libbpfcc-dev linux-headers-$(uname -r)
+         ```
+   - [ ] Install Bison 3.8.2:  
+         - Ubuntu 22.04:  
+           ```
+           sudo apt install bison
+           # Confirm version with `bison --version` (should be 3.8.2)
+           ```
+         - If version is older, build from source.
+   - [ ] Install Flex 2.6.4:  
+         ```
+         sudo apt install flex
+         # Confirm version with `flex --version`
+         ```
+   - [ ] Install ncat:  
+         ```
+         sudo apt install ncat
+         ```
+   - [ ] Install clang, llvm, libelf-dev:  
+         ```
+         sudo apt install clang llvm libelf-dev
+         ```
+   - [ ] (Optional) Install Docker for containerized workflows.
+
+**3. Install Tofino SDE 9.7.0**
+   - [ ] Register and download SDE from Intel/Barefoot portal
+   - [ ] Extract to `/home/cc/bf-sde-9.7.0` (or adjust path accordingly)
+   - [ ] Follow official install instructions (extract, build, install)
+   - [ ] Verify presence of `p4_build.sh` and `run_switchd.sh` in SDE directory
+
+**4. Configure Environment Variables**
+   - [ ] Set SDE and SDE_INSTALL environment variables:
+     ```
+     export SDE=/home/cc/bf-sde-9.7.0/
+     export SDE_INSTALL=/home/cc/bf-sde-9.7.0/install
+     export PYTHONPATH=$SDE_INSTALL/lib/python3.7/site-packages:$PYTHONPATH
+     ```
+   - [ ] Add to `.env` or shell profile (`~/.bashrc` or `~/.profile`)
+   - [ ] Ensure scripts reference absolute or working-directory-correct paths.
+
+**5. Host Agent Setup**
+   - [ ] On each host, edit `host_agent/host_agent_ebpf.c` to set `TAGGED_TERMINAL` to correct bash process PID
+   - [ ] On each host, edit `host_agent/host_agent.py` to set correct network interface name
+   - [ ] Ensure both files are up to date
+
+**6. Prepare NetCL Rules**
+   - [ ] Write NetCL rules file (e.g., `rules.netcl`)
+   - [ ] Compile: `./netcl-compile -i rules.netcl -o compiled_rules`
+   - [ ] Paste `compiled_rules` contents into `switch/netcl.py`
+
+**7. Build NetCL Compiler**
+   - [ ] If code in `compiler/` is modified, rebuild:
+     ```
+     cd compiler/
+     make clean
+     make netcl
+     chmod +x netcl-compile
+     ```
+   - [ ] Refer to `compiler/README.md` for instructions
+
+**8. Build and Start P4 Switch**
+   - [ ] Build P4 program: `./p4_build.sh -p switch/p4control.p4`
+   - [ ] Start switchd: `./run_switchd.sh -p p4control`
+
+**9. Start Control Plane**
+   - [ ] Run: `python3.7 switch/controller.py` (ensure using Python 3.7 if required)
+   - [ ] Verify policies enforced
+
+**10. Start eBPF Host Agents**
+   - [ ] On each host, run: `python3.7 host_agent/host_agent.py`
+   - [ ] Verify eBPF programs attach successfully
+
+**11. Test and Verify Functionality**
+   - [ ] Use ncat and custom scripts to test functionality
+   - [ ] Confirm correct blocking/allowing of flows
+   - [ ] Check logs for errors
+
+**12. Error Handling and Troubleshooting**
+   - [ ] Check for missing dependencies, permissions, misconfigured environment variables
+   - [ ] Use `which` or `pip show` to verify binary locations and versions
+   - [ ] Review logs and output for errors
+
+**13. (Optional) Write and Run Test Cases**
+   - [ ] Add automated test scripts in `/home/cc/EnvGym/data/P4Ctl/tests/`
+   - [ ] Document and run tests
+
+**14. Documentation and Final Verification**
+   - [ ] Document all configuration and environment variables in `setup.md`
+   - [ ] Repeat setup on clean system for reproducibility
+   - [ ] Summarize verification/troubleshooting steps
+
+---
+
+**NOTES & KEY ADJUSTMENTS BASED ON HARDWARE INFO:**
+- All instructions assume x86_64 (amd64) architecture; no ARM or GPU-specific steps present.
+- GPU/CUDA/nvidia-docker steps are omitted (not needed).
+- Python 3.7 is required but not available by default on Ubuntu 22.04+; provide alternate install instructions.
+- All package installs are apt-compatible for x86_64 Ubuntu.
+- Docker can be used for reproducible builds; --platform=linux/amd64 is default (no override needed).
+- Adjust all working/project directory references to `/home/cc/EnvGym/data/P4Ctl`.
+- Check RAM/storage requirements for Tofino SDE and builds (minimum 16GB RAM recommended for SDE builds; ensure at least 20GB free disk).
+- Paths and file locations clarified for host environment (not container by default, but Docker is supported if desired).
+
+---
+
+**END OF ADJUSTED PLAN**

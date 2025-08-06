@@ -1,0 +1,20 @@
+current progress
+- Docker image based on Ubuntu 22.04 builds and runs successfully.
+- All essential system dependencies for headless browser testing and builds are installed.
+- Node.js 18.x (LTS), npm, git, and Deno are installed and verified.
+- Working directory is set to /home/cc/EnvGym/data/darkreader_darkreader.
+- package.json and package-lock.json are copied and npm install completes, including optional Linux-only dependencies.
+- The rest of the source code and configs are copied.
+- Optional Plus variant symlink creation is conditionally handled.
+- Full build (`npm run build:all`) runs during image build; no build errors reported.
+- Entrypoint is bash for flexible CI/CD use.
+- npm cache is cleaned for smaller image.
+- Image labels document the environment and purpose.
+
+next step
+- Add test execution steps to the Dockerfile, such as `RUN npm run test:all` and/or other relevant test/lint commands, to ensure automated validation within the image.
+- Optionally, add lint/code style checks: e.g., `RUN npm run lint && npm run code-style`.
+- (Optional) Add manual or automated documentation update steps if needed.
+- (Optional) Clean up any unnecessary files/artifacts after build and test stages.
+- Ensure the Dockerfile and build process document/echo Linux-only, x86_64-only, and no Safari/macOS/Windows support in README or build logs as per the plan.
+- (If applicable) Add CI-specific user/permissions or entrypoint adjustments for non-root operation.

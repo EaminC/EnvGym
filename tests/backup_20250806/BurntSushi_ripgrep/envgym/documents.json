@@ -1,0 +1,20 @@
+[
+  "README.md",
+  ".cargo/config.toml",
+  "Cargo.toml",
+  "Cargo.lock",
+  "rustfmt.toml",
+  "crates/cli/README.md",
+  "crates/globset/README.md",
+  "crates/grep/README.md",
+  "crates/ignore/README.md",
+  "crates/matcher/README.md",
+  "crates/pcre2/README.md",
+  "crates/printer/README.md",
+  "crates/searcher/README.md",
+  "crates/core/README.md",
+  "pkg/windows/README.md",
+  "benchsuite/runs/2018-01-08-archlinux-cheetah/README",
+  "benchsuite/runs/2020-10-14-archlinux-frink/README.md",
+  "benchsuite/runs/2022-12-16-archlinux-duff/README.md"
+]

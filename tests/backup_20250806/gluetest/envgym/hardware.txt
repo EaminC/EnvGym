@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/gluetest; project appears to reside under /home/cc/EnvGym/data with subdirectory gluetest; set WORKDIR accordingly
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.10-slim, etc.); avoid ARM-specific tags
+- GPU: No NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (e.g., no RUN apt-get install nvidia-driver or similar); ensure compatibility with Ubuntu 22.04; overlay2 is default storage; use WORKDIR /home/cc/EnvGym/data/gluetest
+- Docker Version: 28.3.2; BuildKit and buildx supported; --gpus flag not required or supported due to lack of NVIDIA GPU

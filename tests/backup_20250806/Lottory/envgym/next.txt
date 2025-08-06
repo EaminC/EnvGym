@@ -1,0 +1,23 @@
+current progress
+
+- Docker image successfully builds and runs on Ubuntu 22.04 (x86_64, CPU-only) using Dockerfile.
+- Python 3.7, pip, and all necessary build/system dependencies are installed.
+- deadsnakes PPA for Python 3.7 is added.
+- Python 3.7 virtual environment is created at /home/cc/EnvGym/data/Lottory/venv.
+- pip is upgraded inside the venv; torch==1.2.0+cpu and torchvision==0.4.0+cpu are installed via official CPU-only wheels.
+- requirements.txt is installed inside the venv (all dependencies should now be present).
+- The repository is cloned to /home/cc/EnvGym/data/Lottory.
+- Docker CMD is set to /bin/bash with environment configured to use the venv.
+
+next step
+
+- Verify and update .gitignore, .env, and requirements.txt in the repo as per plan (ensure no GPU/CUDA references).
+- Add test/ directory and basic test scripts (test_imports.py, test_main.py, test_archs.py).
+- (Optional) Add README.md with clear CPU-only and Python 3.7/Ubuntu 22.04 instructions, and TROUBLESHOOTING.md for common issues.
+- (Optional) Add config.yaml/json if advanced configuration is needed.
+- Add a Docker build/test step to run basic tests after setup:
+  - E.g., add `RUN . venv/bin/activate && python -c "import torch; print(torch.cuda.is_available())"` and basic test scripts to ensure CPU-only mode.
+- (Optional) Add pytest run in Dockerfile to verify test/ scripts pass.
+- Ensure the Dockerfile does not reference or install any GPU/CUDA components.
+- Document any known CPU-only or Python 3.7 issues in README.md or TROUBLESHOOTING.md.
+- (Optional) Clean up image size by removing unneeded build dependencies if desired.

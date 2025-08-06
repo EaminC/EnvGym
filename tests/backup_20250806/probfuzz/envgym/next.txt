@@ -1,0 +1,23 @@
+current progress
+
+- The Docker image builds and runs successfully using the provided Dockerfile.
+- The Dockerfile uses `python:3.8-slim` (compatible with plan requirements).
+- All required OS packages (build-essential, git, wget, etc.) are installed.
+- The project directory `/home/cc/EnvGym/data/probfuzz` is set as the working directory, and project files are copied in.
+- `install.sh` is checked, fixed for line endings/shebang, made executable, and its content printed for debug.
+- `install.sh` is executed with output captured and printed on failure; build stops if the script fails.
+- Jupyter Notebook is installed via pip.
+- CmdStan 2.33.1 is downloaded, built, and added to the PATH.
+- The container starts with a bash shell.
+- The most recent Docker build and runtime logs show successful completion.
+
+next step
+
+- Review and update `install.sh` and `requirements.txt` to ensure:
+  - All required Python dependencies (numpy, scipy, pandas, tqdm, pystan, pyro-ppl, edward, tensorflow==1.15) are listed and compatible.
+  - No unnecessary/extra packages are included.
+- Verify `config.json`, `models.json`, and template files exist with correct paths/content under `/home/cc/EnvGym/data/probfuzz`.
+- Ensure `.gitignore` exists and covers `output/`, Python/venv artifacts.
+- Add a Dockerfile step to run a basic test (e.g., `python probfuzz.py 1`) and check for output in `output_dir` to verify end-to-end setup.
+- (Optional) Clean up Dockerfile to remove unnecessary debug/print statements once validation is complete.
+- Document any OS or Docker-specific notes if not already done.

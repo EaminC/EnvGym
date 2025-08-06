@@ -1,0 +1,24 @@
+current progress
+
+- Dockerfile is present and correctly specifies `--platform=linux/amd64` with `node:18-bullseye-slim` as the base image.
+- Essential Linux development tools (git, vim, nano, curl, etc.) are installed.
+- Working directory is set to `/home/cc/EnvGym/data/iamkun_dayjs` as required.
+- `package.json` and `package-lock.json` are copied first for efficient Docker caching.
+- `npm ci` is used for reproducible dependency installation.
+- All project files are copied into the image.
+- Node and npm version checks are present and meet the platform requirements.
+- All shell scripts (`*.sh`) are set as executable.
+- Docker build and runtime logs show both build and runtime status as "Success."
+- No ARM/ARM64, GPU, CUDA, or NVIDIA references are present.
+- No platform or path errors reported.
+- Docker CMD is set to `bash`.
+
+next step
+
+- Review the Dockerfile for any unnecessary installed tools (e.g., `vim`, `nano`) if a slimmer image is desired.
+- If any pre-commit hooks or custom build scripts exist, confirm they are present and Linux shell compatible.
+- Ensure `.dockerignore` is present and excludes unnecessary files (e.g., `node_modules`, logs, local build artifacts).
+- Optionally uncomment and configure the `USER cc` line if non-root execution is desired and permissions allow.
+- Verify all scripts and project automation (build, test, lint, format) complete successfully within the container.
+- Document Docker usage and environment setup in `README.md` for clarity, highlighting Linux x86_64 compatibility.
+- No further changes are needed unless additional project-specific adjustments are required.

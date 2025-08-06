@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/rayon-rs_rayon; nested under /home/cc/EnvGym/data; check for local project dependencies
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, python:3.X-slim)
+- GPU: No NVIDIA GPU detected; CUDA images not applicable
+- Instruction Notes: No GPU instructions (e.g., no nvidia/cuda FROM, no --gpus); high CPU/memory available for multi-threaded builds; verify any project paths within /home/cc/EnvGym/data/rayon-rs_rayon
+- Docker Version: 28.3.2; BuildKit and multi-stage builds supported; --gpus flag available but not usable due to lack of NVIDIA GPU

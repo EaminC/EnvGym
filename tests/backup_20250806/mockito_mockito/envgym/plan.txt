@@ -1,0 +1,150 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR YOUR HARDWARE) ===
+
+**Hardware summary**:
+- CPU: x86_64 (amd64)
+- OS: Linux (assume Ubuntu 22.04 or compatible)
+- No GPU (do NOT use CUDA or NVIDIA-specific tooling/images)
+- Docker: Supported (version 28.3.2, BuildKit/buildx OK)
+- Working directory: `/home/cc/EnvGym/data/mockito_mockito`
+- Multi-core CPU available (concurrent builds/tests supported)
+- No mention of RAM/disk problems; assume adequate but monitor as needed
+
+**Key Adjustments**:
+- All base images, JDKs, and tools must be amd64/x86_64 compatible (no ARM, no CUDA)
+- All Docker and local paths must reflect `/home/cc/EnvGym/data/mockito_mockito`
+- Do not use or reference any GPU-specific tooling, flags, or images
+- Ensure all OS-level instructions are for Linux/Ubuntu, not Windows/macOS
+- For Docker, always use `--platform=linux/amd64` if building images
+- Ensure CI/build scripts, and tooling, avoid any architecture assumptions other than x86_64
+
+---
+
+#### 1. DOWNLOADS NEEDED
+
+- **Java Development Kit (JDK) 11, 17, and 21**  
+  - Install only x86_64/amd64 builds (e.g., Adoptium, Zulu, Oracle JDK, all support this).
+  - On Linux, use tar.gz archives or apt repositories as appropriate.
+  - For Docker, use images like `openjdk:11-jdk`, etc., with `--platform=linux/amd64`.
+  - No architecture or hardware changes needed; all planned Java versions are supported.
+  - Confirm `java -version` returns the correct version and architecture (`amd64`).
+- **Gradle Build Tool**  
+  - Gradle 8.14.2 is compatible with Linux x86_64.
+  - Use the Gradle Wrapper (`./gradlew`), which is OS-independent.
+- **Git**  
+  - Install via `apt` or download from [Git Downloads](https://git-scm.com/downloads).
+  - x86_64 build only.
+- **IDE**  
+  - IntelliJ IDEA/Fleet/Eclipse/Android Studio: all are available for Linux x86_64.
+  - Download Linux x86_64 versions.
+- **Android SDK and Emulator**  
+  - Only install x86_64 emulator images (do NOT use ARM or ARM64 images).
+  - For CI or Docker, use KVM acceleration (supported on x86_64).
+  - Set `ANDROID_HOME` and `local.properties` to directories under `/home/cc/EnvGym/data/mockito_mockito` as needed.
+- **Kotlin, Groovy, Jacoco, Checkstyle, Spotless, Codecov, Docker, Maven, Develocity, GitHub CLI, Emulator deps, Dependabot, all Gradle plugins/dependencies**  
+  - All are compatible with Linux x86_64, no changes needed.
+  - For Docker: always use `--platform=linux/amd64` for building and running images.
+  - Do not use any GPU-related dependencies.
+- **Paths and Directories**  
+  - All scripts, configuration, and example paths should use `/home/cc/EnvGym/data/mockito_mockito` as repo root.
+  - Avoid Windows- or macOS-specific file path conventions.
+
+---
+
+#### 2. FILES TO CREATE
+
+- No changes to the file list.
+- All directories and files should reside under `/home/cc/EnvGym/data/mockito_mockito` (or relative paths).
+- Update any absolute or example paths in documentation/scripts to use this root.
+- If any scripts create temp files or caches, ensure they are in `/tmp` or under the project directory (not `/var` or `/Users/...`).
+- For Dockerfiles or CI scripts, use `WORKDIR /home/cc/EnvGym/data/mockito_mockito` or similar.
+
+---
+
+#### 3. NECESSARY TEST CASES IN THE CODEBASE
+
+- All described test cases are valid.
+- **Ensure tests do NOT check for or require GPU hardware.**
+- For memory-intensive tests (e.g., `memory-tests`), if RAM is limited, consider lowering heap size or thread count in CI config.
+- For OSGi/Equinox/Android emulator tests:  
+  - Use only x86_64 builds/runtimes.
+  - For Android emulator, select x86_64 system images.
+  - For OSGi/Equinox, no special hardware dependencies.
+- For Docker-based tests, use `--platform=linux/amd64` and base images like `ubuntu:22.04` or `openjdk:XX-jdk` (not ARM, not CUDA).
+- If any test uses file system paths, ensure it supports Linux-style paths.
+
+---
+
+#### 4. COMPLETE TODO LIST
+
+**Key adjustments/notes:**
+
+1. **JDKs**  
+   - Only install x86_64 builds for JDK 11, 17, 21.
+   - Use tarballs or `apt` for Ubuntu/Linux.
+   - No ARM or non-x86_64 images.
+2. **Clone the repo**  
+   - Confirm all file paths are under `/home/cc/EnvGym/data/mockito_mockito`.
+3. **Gradle Wrapper**  
+   - No changes required.
+4. **Checkstyle, Spotless, JaCoCo, Codecov**  
+   - All compatible with Linux x86_64.
+5. **Android SDK/Emulator**  
+   - Use only x86_64 system images and KVM for acceleration.
+   - Do not use ARM images or expect HAXM (Mac/Windows) support.
+6. **Docker**  
+   - Always use `--platform=linux/amd64` for builds and runs.
+   - Use `ubuntu:22.04` or `openjdk:XX-jdk` (x86_64) as base images.
+   - Do not use or reference CUDA, GPU, or `nvidia/cuda` images.
+   - Remove any `--gpus` flags from Dockerfiles or scripts.
+7. **Paths/Directories**  
+   - All temp/output/cache/artifact directories should be inside `/home/cc/EnvGym/data/mockito_mockito` or `/tmp` (Linux).
+   - No Windows/macOS-specific paths.
+8. **IDE**  
+   - Download and install Linux x86_64 versions only.
+   - If using JetBrains Toolbox, set the install path to user home or `/home/cc/EnvGym/data/mockito_mockito/tools`.
+9. **CI/CD**  
+   - Any runners or Docker jobs use the `linux/amd64` platform.
+   - Memory settings: If you encounter OOM errors, reduce Gradle parallelism (e.g., `--max-workers=2`) in CI scripts.
+10. **Other tools**  
+    - All listed tools are available on Linux x86_64.
+    - Do not install or reference any GPU tools, CUDA, or ARM binaries.
+11. **Documentation, scripts, and troubleshooting**  
+    - Remove any references to Windows/macOS or GPU troubleshooting.
+    - Document only Linux/x86_64 workflows.
+    - For Docker, document the need for `--platform=linux/amd64` if multi-arch hosts are possible.
+
+---
+
+#### Error Handling & Verification
+
+- **All verifications should be performed on Linux x86_64 only.**
+- **AGP/Android emulator**: Use x86_64 system images, enable KVM, no ARM or GPU acceleration.
+- **Jacoco/coverage**: All tools compatible; no changes needed.
+- **Version catalog**: Ensure all dependencies are for x86_64-compatible platforms.
+- **CI builds**: Use only Linux runners, set `platform: linux/amd64` for Docker-based jobs.
+- **Documentation**: State that setup is for Linux x86_64; do not reference ARM, GPU, macOS, or Windows.
+
+---
+
+#### Completeness
+
+- All workflows, tools, and modules are compatible with Linux x86_64.
+- All system dependencies and runtime environments are available for Ubuntu x86_64.
+- Docker images and scripts explicitly target `linux/amd64`.
+- No ARM, GPU, CUDA, or non-x86_64 instructions remain.
+- All file paths and workspace directories are within `/home/cc/EnvGym/data/mockito_mockito` or its subdirectories.
+- Troubleshooting and documentation are focused on Linux x86_64 only.
+
+---
+
+**Summary of Required Adjustments:**
+- All tools, JDKs, Docker images, emulator images, and dependencies must be x86_64/amd64 compatible.
+- For Docker, always specify `--platform=linux/amd64`.
+- All file paths should be Linux-style, under `/home/cc/EnvGym/data/mockito_mockito`.
+- Remove any GPU/CUDA, ARM, Mac, or Windows references.
+- Document only Linux x86_64 workflows and troubleshooting.
+- If RAM/storage is limited, adjust Gradle/test parallelism and heap sizes as needed in CI.
+
+---
+
+**Proceed with the environment setup as described above, ensuring x86_64/Linux compatibility throughout.**

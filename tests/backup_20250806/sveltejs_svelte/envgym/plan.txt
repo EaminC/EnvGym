@@ -1,0 +1,173 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Linux/amd64, Docker, no GPU) ===
+
+**Key Hardware and Platform Considerations:**
+- **CPU Architecture:** x86_64 (Linux/amd64)
+- **Base Images:** node:XX-bullseye, node:XX-alpine, ubuntu:22.04 (all Linux/amd64 compatible)
+- **GPU:** None detected – CUDA/NVIDIA tooling/images not needed
+- **Docker:** Version 28.3.2 (full BuildKit/buildx support)
+- **Memory/Storage:** Not specified – assume sufficient for web/dev workloads, but see notes below
+- **Working Directory:** /home/cc/EnvGym/data/sveltejs_svelte
+- **No ARM or GPU-specific instructions/images/tools should be used**
+- **May use parallel builds for performance**
+
+---
+
+1. DOWNLOADS NEEDED
+
+   - **Node.js** (LTS >=18.18.0)
+     - Use official Linux/amd64 binaries, or node:18/20/22-bullseye or -alpine Docker images.
+     - Do NOT use ARM images (e.g., node:*-arm64) or ARM binaries.
+     - If using Docker, specify `--platform=linux/amd64` if needed for cross-building or CI consistency.
+     - Alpine images are smaller but may require additional build dependencies for some npm packages (e.g., `python3`, `build-base`, see [node-alpine docs](https://hub.docker.com/_/node)).
+   - **pnpm** (>=9.0.0, recommended 10.4.0 for lockfileVersion: 9)
+     - Install globally: `npm install -g pnpm@10.4.0`
+   - **npm** (bundled with Node.js)
+   - **Git** (latest stable)
+   - **VS Code or editor:** Native Linux/amd64 builds; install via package manager or download official binaries.
+   - **Browser:** Use Chrome, Firefox, Edge, or Safari for Linux/amd64; no ARM/Mac-only variants.
+   - **Prettier, ESLint, Svelte CLI, TypeScript, Vitest, Playwright, Rollup, and all other dependencies:** All compatible with Linux/x86_64.
+   - **Playwright Browsers:** When running `npx playwright install`, only Linux/amd64 browser binaries will be installed. (No ARM/Mac/Windows binaries.)
+     - If running inside Docker, run the install step as root or with appropriate permissions.
+     - If using Alpine, some Playwright browsers may require additional system dependencies (see below).
+   - **Rollup Plugins, dts-buddy, esbuild, etc.:** No special handling needed on x86_64/Linux.
+   - **No GPU-accelerated tools or libraries required; do not install CUDA, nvidia-docker, or similar.**
+   - **No ARM-specific dependencies or node-gyp options needed.**
+   - **All global tools and scripts are compatible with Linux/amd64.**
+
+   **Platform-specific notes:**
+   - **If using Docker:**
+     - Always use `FROM node:XX-bullseye` or `FROM node:XX-alpine` (not `arm64` variants).
+     - For fast CI, add `--platform=linux/amd64` to `docker build` if your CI runners are multi-arch.
+     - For Alpine, install build dependencies when needed:
+       ```Dockerfile
+       RUN apk add --no-cache python3 make g++ # for native modules
+       ```
+     - For Playwright in Docker/Alpine: see Playwright’s Docker docs for required system libraries.
+   - **No storage or memory-specific adjustments for typical SvelteJS web projects. If your project grows, monitor disk usage for node_modules, build outputs, and Playwright browser binaries.**
+
+---
+
+2. FILES TO CREATE
+
+   - **All file paths and directories remain correct for Linux/amd64.**
+     - Use forward slashes (`/`); no need for Windows path adjustments.
+     - No case-sensitivity problems (Linux is case-sensitive).
+     - All shell scripts and npm scripts should use Unix line endings (`\n`), not Windows (`\r\n`).
+   - **Working directory**: `/home/cc/EnvGym/data/sveltejs_svelte`
+     - All scripts, configs, and package paths should resolve from this root or use relative paths.
+   - **No changes required to .gitignore, .npmrc, or pnpm configs for Linux/amd64.**
+   - **Scripts in `packages/svelte/scripts/` should use `#!/usr/bin/env node` or `#!/bin/sh` shebangs for portability.**
+   - **No platform-specific adjustments to tsconfig files.**
+   - **If using Docker, set the default workdir:**
+     ```Dockerfile
+     WORKDIR /home/cc/EnvGym/data/sveltejs_svelte
+     ```
+   - **For Playwright, document that Playwright browser binaries are large; if storage is limited, clean up after tests:**
+     ```sh
+     rm -rf ~/.cache/ms-playwright
+     ```
+   - **No need to adjust for ARM Mac/Windows path conventions.**
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE
+
+   - **All tests and scripts will run on Linux/amd64 natively; no changes are required.**
+   - **Running in Docker/CI:**
+     - Use Linux/amd64 runners.
+     - If you build multi-platform images, always run tests on `amd64` images.
+   - **Memory:** Unless your tests require excessive RAM (not typical for Svelte/Node.js), no adjustment.
+   - **Playwright:** If running browser tests in CI or Docker, ensure system dependencies are installed. For Ubuntu 22.04-based images, these are usually present. For Alpine, reference [Playwright Dockerfile](https://github.com/microsoft/playwright/blob/main/utils/docker/Dockerfile.bionic) for a known-good list.
+   - **No GPU-specific test cases or libraries are required; do not include or test for CUDA/OpenCL/etc.**
+   - **Do not use any ARM/Apple Silicon–specific test runners or options.**
+   - **All file and directory case-sensitivity in tests is correct for Linux.**
+   - **No changes required for test file locations, imports, or exports.**
+   - **CI runners:** Ensure your CI pipeline uses Linux/amd64 runners (e.g., GitHub Actions `ubuntu-latest`, not MacOS or Windows).
+
+---
+
+4. COMPLETE TODO LIST (with platform/hardware adjustments)
+
+   1. **Install Node.js LTS (>=18.18.0):**
+      - Use official Linux/amd64 binary, or Docker images (`node:18-bullseye` recommended).
+      - If using Docker, set `--platform=linux/amd64` if multi-arch support is enabled or if running on Apple Silicon CI.
+   2. **Install pnpm globally:** `npm install -g pnpm@10.4.0`
+   3. **Install Git:** Use system package manager (`apt`, `dnf`, `apk`).
+   4. **Clone repository:** All paths are Linux-friendly.
+   5. **Check pnpm-workspace.yaml:** No changes for Linux.
+   6. **Install dependencies with `pnpm install`:**
+      - All dependencies and devDependencies in plan are compatible with Linux/amd64.
+      - For Alpine, if you encounter native module build errors, install build dependencies:
+        ```sh
+        apk add --no-cache python3 make g++
+        ```
+      - For Playwright, if using Docker/Alpine, add missing system dependencies as per Playwright docs.
+   7. **Ensure all files and configs exist:** No path case issues on Linux.
+   8. **Update documentation:** State that the environment is Linux/amd64. If Docker is used, show sample Dockerfile using node:XX-bullseye or node:XX-alpine.
+   9. **Configure rollup.config.js:** No changes; all supported Rollup plugins have Linux/amd64 prebuilds or build from source.
+   10. **Check all scripts:** No Windows/ARM-specific scripts; all should use Unix line endings and be executable.
+   11. **Ensure all scripts in `packages/svelte/scripts/` are executable:** `chmod +x packages/svelte/scripts/*`
+   12. **Ensure types/ and compiler/ directories are present:** No change.
+   13. **Check all subpath exports:** No change; Linux is case-sensitive, so verify file names and imports match exactly.
+   14. **Check type files:** No change.
+   15. **Check consumption in projects:** All Linux/amd64 Node.js consumers supported.
+   16. **Check main/module fields:** No change.
+   17. **Check dependencies in lockfile:** No change.
+   18. **Test, build, lint flows:** No change.
+   19. **.gitignore:** No change.
+   20. **.npmrc:** No change.
+   21. **Run and verify all scripts in Linux/amd64/Docker environment.**
+   22. **Run and verify all test cases:** No change.
+   23. **Run Playwright browser install:** In Docker, ensure required system libraries are installed. For Ubuntu, use:
+       ```Dockerfile
+       RUN apt-get update && apt-get install -y wget ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libcups2 libdbus-1-3 libdrm2 libgbm1 libnspr4 libnss3 libxcomposite1 libxdamage1 libxrandr2 xdg-utils
+       ```
+       For Alpine, install as per Playwright docs.
+   24. **Confirm all CI and local checks pass:** Use Linux/amd64 runners.
+   25. **Documentation:** State Linux/amd64 as the default/tested platform, and that no Mac/Windows/ARM/GPU-specific steps are required.
+   26. **Verification Methods:** No changes; all apply to Linux/amd64.
+   27. **Parallel builds:** You may use `pnpm install --workspace-concurrency=N` or similar for faster builds, as CPU count is high.
+
+---
+
+**ADDITIONAL PLATFORM-SPECIFIC GUIDANCE**
+
+- **Dockerfile Example (if needed):**
+  ```Dockerfile
+  FROM --platform=linux/amd64 node:20-bullseye
+  WORKDIR /home/cc/EnvGym/data/sveltejs_svelte
+
+  # Install system dependencies (for Playwright, etc.)
+  RUN apt-get update && apt-get install -y \
+      wget ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 \
+      libatk1.0-0 libcups2 libdbus-1-3 libdrm2 libgbm1 libnspr4 libnss3 libxcomposite1 libxdamage1 libxrandr2 xdg-utils
+
+  # Install pnpm and project dependencies
+  RUN npm install -g pnpm@10.4.0
+  COPY . .
+  RUN pnpm install
+
+  # Install Playwright browsers if needed
+  RUN npx playwright install
+
+  CMD ["pnpm", "run", "dev"]
+  ```
+- **Do NOT use `arm64` images or binaries.**
+- **No CUDA, nvidia-docker, or GPU-specific packages.**
+---
+
+**Summary of Adjustments**
+
+- All tools and dependencies are compatible with x86_64 (Linux/amd64); no ARM or GPU-specific versions needed.
+- All scripts, paths, and directories are Linux-native and case-sensitive.
+- Docker users: always use `--platform=linux/amd64` and node:XX-bullseye or -alpine (not arm64).
+- For Playwright and native modules, ensure system dependencies are present (especially in Alpine or Docker).
+- No storage/memory adjustment for typical dev workloads, but Playwright browser binaries can be large.
+- Documentation and onboarding should mention that this environment is tested and supported on Linux/amd64; no additional steps for ARM/GPU/Windows/Mac.
+- All test/build/lint flows are unchanged except for possible system dependency installs in minimal base images (e.g., Alpine).
+- Editors, tools, and CI runners should all be Linux/amd64.
+
+---
+
+**All other aspects of the original plan remain unchanged.**  
+The above adjustments ensure maximum compatibility and efficiency on your specified hardware and platform.

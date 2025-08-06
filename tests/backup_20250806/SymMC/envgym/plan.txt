@@ -1,0 +1,135 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+1. DOWNLOADS NEEDED:
+   - OpenJDK 1.8 (openjdk-8-jdk)
+     - Version: 1.8.x
+     - Required for Enhanced_Kodkod module
+     - Fully compatible with Ubuntu 22.04 x86_64
+   - Apache Ant
+     - Version: Latest (compatible with JDK 1.8)
+     - Required for building Java projects
+   - CMake
+     - Version: 3.22+ (Ubuntu 22.04 default is 3.22.1, meets 3.10+ requirement)
+     - Required for Enumerator_Estimator module build
+   - GCC or Clang (C++ compiler)
+     - Version: GCC 11 (default for Ubuntu 22.04, meets 7+ requirement)
+     - For building MiniSat-based Enumerator_Estimator
+   - MiniSat
+     - Version: Latest stable from https://github.com/niklasso/minisat
+     - Enumerator_Estimator depends on MiniSat core
+   - Git
+     - Version: Any modern version (Ubuntu 22.04 default is 2.34+)
+   - Python 3.x (optional, for scripting or running auxiliary scripts, if any)
+     - Python 3.10 is the default on Ubuntu 22.04; use as needed
+   - Operating System: Ubuntu 22.04 (x86_64, confirmed compatible with all tools)
+   - No GPU/CUDA/NVIDIA-specific downloads or libraries are needed
+   - No ARM/ARM64-only binaries (all x86_64/amd64 compatible)
+
+2. FILES TO CREATE:
+   - Enhanced_Kodkod/build.properties
+     - Description: Configuration file for Ant build, specifying Java source/target versions, output directories, etc.
+   - Enumerator_Estimator/CMakeLists.txt (if not present)
+     - Description: CMake configuration for building the C++ codebase, linking MiniSat, and specifying build targets.
+   - Enumerator_Estimator/build_config.sh (optional)
+     - Description: Shell script to automate environment checks, dependency installation, and CMake build steps.
+   - .env or environment.sh (project root, optional)
+     - Description: Shell script or dotenv file to export environment variables (e.g., JAVA_HOME, PATH updates for Java/Ant/CMake).
+   - test/ (directory)
+     - Description: Directory to contain all test scripts and sample input/output files for regression and functional testing.
+   - test/test_spec.als (example Alloy specification)
+     - Description: Minimal Alloy spec for testing translation pipeline.
+   - test/test_expected.cnf, test/test_expected.sym (expected SAT and symmetry outputs)
+     - Description: Reference outputs for verification.
+
+   - NOTE: Ensure all relative/absolute paths in scripts/configs use /home/cc/EnvGym/data/SymMC as the root working directory. For Docker, use WORKDIR /home/cc/EnvGym/data/SymMC as appropriate.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+   - Test 1: Enhanced_Kodkod translation
+     - Input: Minimal Alloy specification file
+     - Expected Output: Correctly generated SAT formula (.cnf) and symmetry info (.sym)
+   - Test 2: Enumerator_Estimator functionality
+     - Input: Sample .cnf and .sym files
+     - Output: Non-isomorphic model count, isomorphic count, and quantification metric
+     - Verification: Output values match expected results for known test cases
+   - Test 3: Build process
+     - Verify that both Enhanced_Kodkod and Enumerator_Estimator build successfully on a clean system
+   - Test 4: Error handling
+     - Provide invalid/malformed input files and verify software reports errors gracefully
+   - Test 5: End-to-end workflow
+     - Complete pipeline: spec → SAT/sym → enumeration/estimation
+     - Verify all outputs are produced, and intermediate files are generated as expected
+
+4. COMPLETE TODO LIST:
+   1. Install Java 1.8 (OpenJDK 8)
+      - Command: `sudo apt-get update && sudo apt-get install openjdk-8-jdk`
+      - Verification: `java -version` outputs 1.8.x
+   2. Install Apache Ant
+      - Command: `sudo apt-get install ant`
+      - Verification: `ant -version` outputs installed version
+   3. Install Git
+      - Command: `sudo apt-get install git`
+      - Verification: `git --version`
+   4. Install CMake
+      - Command: `sudo apt-get install cmake`
+      - Verification: `cmake --version` (should be 3.22.1 or later)
+   5. Install GCC or Clang
+      - Command: `sudo apt-get install build-essential`
+      - Verification: `gcc --version` (should be 11.x or newer)
+   6. Clone and/or build MiniSat
+      - Command: `git clone https://github.com/niklasso/minisat.git`
+      - Build: Follow MiniSat’s README (usually `make`)
+      - Verification: Run `minisat` executable and check for proper help message
+   7. Clone/download the SymMC repository
+      - Command: `git clone <SymMC-repo-url> /home/cc/EnvGym/data/SymMC`
+      - Verification: Repository folders (`Enhanced_Kodkod`, `Enumerator_Estimator`, `Datasets`) are present
+   8. Configure Java environment variables (if needed)
+      - Set `JAVA_HOME` to JDK 1.8 path
+      - Export `PATH` to include Java and Ant binaries
+      - Verification: `echo $JAVA_HOME` and `java -version`
+   9. Build Enhanced_Kodkod
+      - Command: `cd /home/cc/EnvGym/data/SymMC/Enhanced_Kodkod && ./build.sh`
+      - Verification: Build completes without error, relevant JAR/class files produced
+   10. Build Enumerator_Estimator
+       - Command: `cd /home/cc/EnvGym/data/SymMC/Enumerator_Estimator && ./build.sh`
+       - Verification: `cmake-build-release` folder created, executable present
+   11. Prepare configuration files
+       - Create or verify presence of `build.properties`, `CMakeLists.txt`, and scripts as outlined above
+       - Verification: Build and run scripts can locate all necessary configuration files
+   12. Prepare test directory and sample files
+       - Create `test/` directory under `/home/cc/EnvGym/data/SymMC`
+       - Add example Alloy spec, expected CNF, and sym files
+   13. Run functional tests
+       - a) Test Enhanced_Kodkod translation: `./run.sh test/test_spec.als test/output_cnf_dir test/output_sym_dir`
+       - b) Test Enumerator_Estimator: `./cmake-build-release/minisat -getmcFSB ...` etc.
+       - Verification: Outputs match expected results
+   14. Test error handling
+       - Run tools with invalid files and check for clear error messages
+   15. Run end-to-end workflow test
+       - Use sample spec, translate, enumerate, estimate, and verify all outputs
+   16. Document any platform-specific issues
+       - Note: For Mac/Homebrew or Windows (WSL/Msys2), adapt install commands accordingly. For Ubuntu 22.04 x86_64, the above is sufficient.
+   17. (Optional) Add Python 3.x if auxiliary scripts are present or planned
+       - Command: `sudo apt-get install python3`
+       - Verification: `python3 --version` (should be 3.10+)
+   18. Final verification: All modules build and run, test cases pass, outputs as expected
+
+5. ENVIRONMENT/HARDWARE-SPECIFIC NOTES:
+   - CPU Architecture: x86_64/amd64 confirmed; **no ARM/ARM64-only binaries or instructions needed**
+   - Memory/Storage: Ensure sufficient RAM (at least 4GB recommended for build and test); check `/home/cc/EnvGym/data/SymMC` has sufficient storage for build artifacts and datasets
+   - OS Compatibility: All dependencies and commands tailored for Ubuntu 22.04 x86_64
+   - GPU: **No NVIDIA GPU detected; do NOT use nvidia/cuda base images, --gpus flags, or CUDA libraries**
+   - Docker: If using Docker, set `WORKDIR /home/cc/EnvGym/data/SymMC` and copy project files accordingly; Docker 28.3.2 supports all needed features
+   - Multi-core Build: Optionally, add `-j$(nproc)` to `make` or CMake build commands to leverage all CPU cores, since no GPU is present
+
+6. PATHS AND DIRECTORIES:
+   - All commands, scripts, and configuration files should use `/home/cc/EnvGym/data/SymMC` as the root working directory
+   - Update any hard-coded paths in scripts or documentation to reflect this
+
+7. REMOVED/AVOIDED ITEMS (based on hardware info):
+   - No CUDA, cuDNN, or any GPU-acceleration library installations or instructions
+   - No ARM/ARM64-specific instructions
+   - No references to non-Ubuntu base images (e.g., Alpine, CentOS, etc.)
+   - No need for Windows-specific pathing or tools, unless explicitly supporting WSL/Msys2
+
+**Summary:**  
+The plan above is fully compatible with your x86_64 Ubuntu 22.04 environment, requires no GPU/ARM-specific steps, and aligns all install paths and instructions to your working directory. Storage and memory requirements should be checked but are not expected to be problematic for standard development systems. All Docker, path, and toolchain instructions are updated for your context.

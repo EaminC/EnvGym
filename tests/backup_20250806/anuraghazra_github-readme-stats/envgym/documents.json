@@ -1,0 +1,18 @@
+[
+  "readme.md",
+  "themes/README.md",
+  "docs/readme_cn.md",
+  "docs/readme_de.md",
+  "docs/readme_es.md",
+  "docs/readme_fr.md",
+  "docs/readme_it.md",
+  "docs/readme_ja.md",
+  "docs/readme_kr.md",
+  "docs/readme_nl.md",
+  "docs/readme_np.md",
+  "docs/readme_pt-BR.md",
+  "docs/readme_tr.md",
+  "package.json",
+  "package-lock.json",
+  "vercel.json"
+]

@@ -1,0 +1,101 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED for x86_64, No GPU, Debian/Ubuntu base, /home/cc/EnvGym/data/simdjson_simdjson) ===
+
+1. DOWNLOADS NEEDED:  
+   - Compilers:  
+     - GCC (g++) version 7 or higher (GCC 10 available via `gcc:10` Docker image; ensure `--platform=linux/amd64` for docker build/run commands)
+     - Clang (clang++) version 6 or higher (custom build from p2996 branch: https://github.com/bloomberg/clang-p2996.git)
+     - Visual Studio/Xcode not needed (target is Linux/x86_64 only)
+   - Command-line shell utilities: bash, zsh, etc.
+   - wget or curl (for downloads)
+   - CMake (3.10+; install via buster-backports for GCC 10 container)
+   - Ninja (for CMake/Ninja builds)
+   - Doxygen (optional, for documentation)
+   - Git
+   - Python 3.x
+   - make, subversion, unzip, binutils
+   - [Optional] Valgrind, lcov/gcov (for code coverage and memory checks; only on Linux)
+   - [Optional] Conan or vcpkg (if dependency management needed)
+   - rust-all (for Rust toolchain support as per p2996 Dockerfile)
+   - Additional system/dev libraries (p2996 dev container):
+     - ca-certificates, gnupg, zlib1g, unzip, subversion, libcurl4-openssl-dev, python3-dev, sudo, curl, binutils, linux-perf, vim
+   - Docker (for container-based builds/testing; Docker version 28.3.2, BuildKit supported; use `--platform=linux/amd64` for all images/commands)
+   - Node.js (version 10+), npm (ensure amd64 binaries if installing outside Docker)
+   - JavaScript/Node.js dependencies for large JSON generation:
+     - faker (npm package, version 4.1.0)
+     - fs (npm package, 0.0.1-security; present for lockfile/no-op—fs is built-in)
+   - Version compatibility requirements:
+     - Docker base images: Only use amd64 (x86_64) images:
+       - debian:12 for p2996 environment
+       - gcc:10 (Debian Buster-based) for alternate/test environment
+     - clang/clang++ custom build from p2996 branch
+     - rust-all and system packages: Use Debian/Ubuntu x86_64 repositories only
+     - Node.js and npm: Must be x86_64/amd64 builds
+     - All tools/utilities: Confirm x86_64/amd64 architecture; do not use ARM/AARCH64 builds
+   - **Removed:** CUDA/NVIDIA packages or any GPU-specific requirements.
+
+2. FILES TO CREATE:  
+   - All paths are relative to: `/home/cc/EnvGym/data/simdjson_simdjson`
+   - quickstart.cpp, simdjson.h, simdjson.cpp, twitter.json: As described; ensure they reside in the project root.
+   - (Optional) CMakeLists.txt, test_quickstart.cpp, .gitignore, README.local.md
+   - Dockerfile (p2996 toolchain/dev env): Path: ./p2996/Dockerfile
+   - Dockerfile (GCC 10/CMake test env): Path: ./tests/docker/Dockerfile
+   - JavaScript/Node.js project files: package.json, package-lock.json, generatelargejson.js, .npmrc, .gitignore, README, generated files as needed
+   - **Pathing Note:** Ensure all file paths in scripts and Dockerfiles use the correct working directory: `/home/cc/EnvGym/data/simdjson_simdjson`  
+   - **If moving code into Docker containers:** Use `WORKDIR /workspace` or `WORKDIR /app` inside Dockerfiles as preferred; mount project directory using `-v "$PWD":/workspace`.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All as previously described, with these clarifications:
+     - Test only x86_64/amd64 containers and environments
+     - No need to test on ARM, macOS, or Windows (unless cross-platform is specifically desired in the future)
+     - No CUDA/GPU or GPU-accelerated tests required
+     - Multi-core build tests (e.g., `make -j$(nproc)`) are permitted given hardware supports high CPU parallelism
+     - Large-memory tests are allowed (hardware provides large RAM)
+     - Storage-heavy tests (large JSON files) are permitted (ample storage)
+     - Cross-container compatibility: Only compare between p2996 (Debian 12/Clang) and gcc:10 (Debian Buster/GCC 10) containers, both on amd64
+
+4. COMPLETE TODO LIST (ADJUSTED):  
+   1. Install required compiler (g++, clang++); **Ensure all installations target x86_64/amd64.**
+      - For Docker, add `--platform=linux/amd64` to all `docker build` and `docker run` commands, e.g.:
+        - `docker build --platform=linux/amd64 ...`
+        - `docker run --platform=linux/amd64 ...`
+      - Use only official Debian/Ubuntu/gcc/clang images for amd64.
+   2. Install wget (or curl), CMake (from buster-backports for gcc:10), Git, Ninja, Python 3.x, and other tools as previously listed.  
+      - **Ensure package manager sources are for x86_64 only.**
+   3. Install Node.js and npm:
+      - Use official NodeSource or package manager repos for x86_64/amd64 binaries.
+      - Do not use ARM builds or ARM emulation.
+   4. Install JavaScript/Node.js dependencies for large JSON generation as before.
+   5. (Optional) Review .gitignore and scripts for correct path handling (project root is `/home/cc/EnvGym/data/simdjson_simdjson`)
+   6. (If using Docker) For all `docker build` and `docker run` commands, add `--platform=linux/amd64`. Example:
+      ```
+      docker build --platform=linux/amd64 --build-arg USER_NAME=<name> --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t p2996-dev -f p2996/Dockerfile .
+      docker run --platform=linux/amd64 -it --rm -v "$PWD":/workspace -w /workspace p2996-dev
+      ```
+      - Remove any references to ARM images, ARM emulation, or GPU flags (no `--gpus`, no CUDA).
+   7. (If using Docker) Set `WORKDIR /workspace` in Dockerfiles for consistency.
+   8. (Optional) Document in README/local notes that only x86_64/amd64 is supported in this deployment.
+   9. Continue with file downloads, sample code creation, builds, test runs, and validation as previously detailed.
+   10. All tests and builds may assume high RAM and storage (no special constraints).
+   11. (Optional) For very large JSON files or memory-intensive tests, document minimum suggested RAM (for reference: at least 8GB, more is available).
+   12. **No GPU, CUDA, or NVIDIA-specific instructions, packages, or tests. Remove any such steps if previously considered.**
+   13. All completion criteria, error handling, reproducibility, and documentation steps as previously stated, but with explicit x86_64-only focus.
+   14. (Optional) If using CI/CD or scripting, pass `--platform=linux/amd64` to all Docker commands as a safeguard.
+
+**Summary of Hardware-Driven Changes:**
+- All environments, Docker images, and tools must be x86_64/amd64 compatible (NO ARM/AARCH64, NO GPU/CUDA).
+- Docker commands must include `--platform=linux/amd64`.
+- Project root for all scripts/files is `/home/cc/EnvGym/data/simdjson_simdjson`. Ensure all relative paths in scripts, Dockerfiles, and documentation reflect this.
+- No GPU or GPU-specific packages, flags, or dependencies.
+- Ample RAM/storage allows for large files and parallel builds; tests for large JSONs are permitted (no need to artificially restrict).
+- Operating system: only Linux (Debian/Ubuntu) in containers, no Windows/macOS/ARM.
+- All other steps and checks remain as originally detailed, with environment and path adjustments as above.
+
+**COMPLETION CRITERIA (REITERATED):**
+- All needed files present in `/home/cc/EnvGym/data/simdjson_simdjson`
+- Code builds/runs/tests pass in both p2996 (Debian 12/Clang) and gcc:10 (Debian Buster/GCC 10) containers, both under amd64
+- Node.js scripts and dependencies work as described, with exact versions per package-lock.json
+- No ARM, CUDA, GPU, or non-x86_64 requirements
+- Documentation, scripts, and Dockerfiles accurately reflect amd64-only target and correct working directory
+
+**NOTE:**  
+If you relocate the project, update all file paths accordingly. If you add further containers, always ensure `--platform=linux/amd64` is specified and only use x86_64/amd64 base images.

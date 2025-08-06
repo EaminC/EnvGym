@@ -1,0 +1,170 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64/Linux, /home/cc/EnvGym/data/rayon-rs_rayon) ===
+
+**General Notes:**  
+- Your system is x86_64 (amd64), running on Linux, with no NVIDIA GPU (no CUDA support needed).  
+- Target directory is `/home/cc/EnvGym/data/rayon-rs_rayon` (nested under `/home/cc/EnvGym/data`). Ensure all paths and instructions reference this root, especially for Docker or automation.  
+- Docker is available (version 28.3.2, BuildKit, multi-stage builds supported), but no GPU flags or CUDA images should be used.  
+- High CPU/memory available—parallel builds and benchmarks are appropriate.  
+- Use only amd64-compatible base images (e.g., ubuntu:22.04, debian:bullseye, python:3.X-slim).  
+- All instructions assume a Linux OS.  
+- No ARM, Mac, or Windows-specific commands are needed, but note final verification for cross-platform compatibility (step 19).  
+- All project data/dependency paths should stay within `/home/cc/EnvGym/data/rayon-rs_rayon` or its subfolders.
+
+---
+
+**1. DOWNLOADS NEEDED:**  
+- Rust toolchain (rustc >=1.63.0, cargo):  
+   - Download from: https://rustup.rs/  
+   - Confirm installation for x86_64-unknown-linux-gnu target (default for Linux x86_64).  
+- Git:  
+   - Standard Linux install method (apt-get, yum, etc.); use https://git-scm.com/ if needed.  
+- (Optional for WebAssembly) wasm-pack & wasm-bindgen:  
+   - Only required if building WASM demos; these will target Linux host for build, not browser runtime.  
+- (Optional) IDE/editor:  
+   - If using VSCode or other editors, ensure they run on Linux/x86_64. rust-analyzer recommended.  
+- No GPU-specific packages or CUDA images needed; all computation is CPU-based.  
+- Ensure all required data files for benchmarks/demos are present and up-to-date in `/home/cc/EnvGym/data/rayon-rs_rayon/rayon-demo/data/`.  
+- All references to project-relative paths must use `/home/cc/EnvGym/data/rayon-rs_rayon` as the root.
+
+---
+
+**2. FILES TO CREATE:**  
+- All core files (`Cargo.toml`, `rust-toolchain.toml`, `.gitignore`, `README.md`, etc.) must be created or verified within `/home/cc/EnvGym/data/rayon-rs_rayon` as the working directory.  
+   - If using Docker, mount this directory in the container at `/workspace` or `/project` as appropriate.  
+- No GPU-related configuration or files needed.  
+- All demo/benchmark/example/data directories must reside under `/home/cc/EnvGym/data/rayon-rs_rayon/rayon-demo/` and its subfolders.  
+- (Optional for WebAssembly) If configuring WASM, ensure all scripts/configs use Linux-native tools.  
+- All documentation and references must use Linux paths (forward slashes, no Windows drive letters).
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**  
+- All test cases should be written to support multi-core CPU execution on Linux x86_64.  
+- No CUDA, OpenCL, or GPU-specific tests are needed.  
+- Disk-intensive or large-memory tests are acceptable if system resources permit, but document any minimum hardware recommendations in README.md.  
+- For WebAssembly fallback testing, ensure the fallback logic is verified on Linux host (browser-based testing is optional).  
+- All file paths in tests should be relative to `/home/cc/EnvGym/data/rayon-rs_rayon` (or use project-relative paths).  
+- Ensure tests for data presence, parseability, and licensing reference files in `/home/cc/EnvGym/data/rayon-rs_rayon/rayon-demo/data/`.
+
+---
+
+**4. COMPLETE TODO LIST (ADJUSTED):**
+
+1. **Install Rust toolchain (rustc >=1.63.0) via rustup**  
+   - Command:  
+     ```sh
+     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+     ```
+   - Ensure `rustc --version` reports >=1.63.0 and target is x86_64-unknown-linux-gnu.
+2. **Install Git**  
+   - On Ubuntu/Debian:  
+     ```sh
+     sudo apt-get update
+     sudo apt-get install -y git
+     ```
+   - Or use https://git-scm.com/ for Linux binaries.
+3. **Clone the Rayon repository or initialize your own Rust project**  
+   - Command:  
+     ```sh
+     git clone https://github.com/rayon-rs/rayon.git /home/cc/EnvGym/data/rayon-rs_rayon
+     ```
+   - Or, for a new project:  
+     ```sh
+     cd /home/cc/EnvGym/data
+     cargo new rayon-rs_rayon
+     ```
+   - All subsequent commands must be run from `/home/cc/EnvGym/data/rayon-rs_rayon`.
+4. **Configure Cargo.toml**  
+   - Add `rayon = "1.10"` under `[dependencies]`.
+   - No need to add rayon-core or internal plumbing modules directly.
+   - Verify with `cargo build` from the project root.
+5. **(Optional) Create rust-toolchain.toml**  
+   - Place in `/home/cc/EnvGym/data/rayon-rs_rayon`.
+   - Example content:
+     ```
+     [toolchain]
+     channel = "1.63.0"
+     ```
+6. **Set up .gitignore**  
+   - Ensure it ignores `target/`, `.DS_Store`, `*.swp`, `Cargo.lock` (for libraries), and any generated files in `rayon-demo/`.
+7. **(Optional for WebAssembly) Install wasm-pack and wasm-bindgen**  
+   - Command:
+     ```sh
+     cargo install wasm-pack
+     ```
+   - Confirm Linux x86_64 compatibility.
+8. **(Optional) Set up IDE/editor on Linux**  
+   - E.g., VSCode + rust-analyzer.
+9. **(For demos and benchmarks) Ensure `rayon-demo/` exists**  
+   - Directory: `/home/cc/EnvGym/data/rayon-rs_rayon/rayon-demo/`
+   - If missing, scaffold with `cargo new rayon-demo` inside the root project directory.
+10. **(For demo/benchmark data) Ensure `rayon-demo/data/` exists with all required files**  
+    - All paths: `/home/cc/EnvGym/data/rayon-rs_rayon/rayon-demo/data/`
+    - For TSP: `/home/cc/EnvGym/data/rayon-rs_rayon/rayon-demo/data/tsp/`
+    - Ensure presence of `README.md` files documenting data licensing and provenance.
+11. **Update top-level README.md and/or `rayon-demo/README.md`**  
+    - All instructions/paths must use Linux conventions, referencing `/home/cc/EnvGym/data/rayon-rs_rayon` as root.
+    - Document Linux dependencies and mention that all instructions assume x86_64 Linux.
+    - No references to Windows/Mac or GPU-specific instructions.
+12. **(For interactive/manual tests) Ensure `rayon-demo/examples/` exists**  
+    - Path: `/home/cc/EnvGym/data/rayon-rs_rayon/rayon-demo/examples/`
+    - Ensure `README.md` explains purpose and usage.
+    - Automated test runners must ignore this directory.
+13. **Write and run necessary test cases**  
+    - All tests must run on Linux x86_64, utilizing CPU parallelism.
+    - Use only stable Rayon APIs.
+    - Paths in test code must be relative to the project root, not hard-coded to other platforms.
+    - For any file-based tests, use `/home/cc/EnvGym/data/rayon-rs_rayon/rayon-demo/data/`.
+    - Command:  
+      ```sh
+      cargo test
+      ```
+14. **(For demos and benchmarks) Build and run applications**  
+    - Example commands (from project root):  
+      ```sh
+      cd rayon-demo
+      cargo run --release -- nbody visualize
+      cargo run --release -- tsp solve data/tsp/dj10.tsp
+      ```
+    - All paths must be valid under Linux/X86_64 and within the `/home/cc/EnvGym/data/rayon-rs_rayon` tree.
+15. **(Optional for WebAssembly) Configure and test WASM builds**  
+    - Build:  
+      ```sh
+      wasm-pack build
+      ```
+    - Confirm all tool versions are for Linux x86_64.
+16. **Document the environment and usage instructions in README.md**  
+    - State explicitly: all instructions assume Linux x86_64 (amd64).
+    - Note that no GPU or CUDA hardware is required or supported.
+    - Paths and CLI commands should reflect Linux conventions.
+17. **(For contributors) Review license terms and ensure compliance**  
+    - No adjustments needed for hardware, but document any Linux-specific licensing caveats if applicable.
+18. **Verify presence and currency of internal protocol documentation**  
+    - All referenced files must exist within `/home/cc/EnvGym/data/rayon-rs_rayon`, and all documentation paths should use Linux (forward slash) conventions.
+19. **Final verification: Perform clean build/test on another OS**  
+    - Run all build and test steps on a different Linux system (or Docker container based on Ubuntu/Debian amd64).
+    - Document any platform-specific caveats for other OSes (macOS, Windows) in README.md, but main instructions should assume Linux/x86_64.
+
+---
+
+**Key Adjustments for Your Hardware:**
+
+- All instructions, paths, and scripts are targeted at Linux x86_64 in `/home/cc/EnvGym/data/rayon-rs_rayon`.
+- No GPU/CUDA support or instructions; ignore any GPU-specific flags or dependencies.
+- Use only amd64-compatible base images if using Docker.
+- Emphasize Linux and x86_64 compatibility in documentation and code.
+- All automated and manual tests, builds, and data file operations must use Linux paths and be runnable within `/home/cc/EnvGym/data/rayon-rs_rayon` or its subfolders.
+- No ARM/Mac/Windows-specific logic or instructions required.
+- If using Docker, mount `/home/cc/EnvGym/data/rayon-rs_rayon` as a volume for builds/tests; do not use --gpus or nvidia/cuda images.
+
+---
+
+**Summary:**  
+Your environment setup plan is compatible with your current hardware. The main adjustments are:  
+- Use Linux/x86_64-only instructions and paths.  
+- Exclude all GPU/CUDA or non-amd64 architecture dependencies.  
+- Ensure all scripts, builds, and documentation use `/home/cc/EnvGym/data/rayon-rs_rayon` as the root and Linux filesystem conventions.  
+- If using Docker, select amd64 base images and mount the correct directory; do not use --gpus or CUDA images.  
+- Document these choices in your README.md for clarity and future contributors.
+
+=== END OF ADJUSTED PLAN ===

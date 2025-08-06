@@ -1,0 +1,15 @@
+current progress
+- The environment setup plan has been fully reviewed and confirmed compatible for x86_64, Ubuntu 22.04, and no GPU.
+- Docker build and runtime have completed successfully using the current Dockerfile, which installs required system packages, sets the correct working directory, installs optional Rust components (clippy, rustfmt), and builds the workspace in release mode.
+- Cargo.toml files and all source code are copied into the Docker image; workspace member manifests are included.
+- The Dockerfile does not copy Cargo.lock (commented out) due to its absence.
+- No reported issues with the current Docker container build and execution.
+
+next step
+- Double-check that all workspace member directories and their Cargo.toml files are explicitly copied if not already handled by the generic `COPY . .` (adjust/add COPY lines if new members are added).
+- If a Cargo.lock file is generated (after a successful local build), uncomment or add `COPY Cargo.lock ./` for reproducible builds.
+- Optionally, add a `.dockerignore` file to exclude unnecessary files/directories (e.g., `target/`, `.git/`, `*.swp`, `*.tmp`) to optimize build context.
+- If you want to run tests automatically in the Docker image, add `RUN cargo test --workspace --release` after the build step.
+- Review and prune any redundant or duplicate COPY instructions if the generic `COPY . .` already includes all necessary files.
+- Ensure all path dependencies in Cargo.toml use correct relative paths, especially after Docker context changes.
+- No further changes are needed unless additional workspace members or dependencies are added.
