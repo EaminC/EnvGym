@@ -1,66 +1,66 @@
 #!/bin/bash
 
-# 备份脚本：从EnvBench/scripts目录备份envbench.sh文件到data目录
-# 用法：./backup_envbench.sh
+# Backup script: Backup envbench.sh files from EnvBench/scripts directory to data directory
+# Usage: ./backup_envbench.sh
 
-# 设置路径
+# Set paths
 DATA_DIR="$(pwd)"
 ENVBENCH_SCRIPTS_DIR="$(dirname "$(pwd)")/EnvBench/scripts"
 
-echo "开始备份envbench.sh文件..."
-echo "数据目录: $DATA_DIR"
-echo "源目录: $ENVBENCH_SCRIPTS_DIR"
+echo "Starting to backup envbench.sh files..."
+echo "Data directory: $DATA_DIR"
+echo "Source directory: $ENVBENCH_SCRIPTS_DIR"
 
-# 检查源目录是否存在
+# Check if source directory exists
 if [ ! -d "$ENVBENCH_SCRIPTS_DIR" ]; then
-    echo "错误: 源目录不存在: $ENVBENCH_SCRIPTS_DIR"
+    echo "Error: Source directory does not exist: $ENVBENCH_SCRIPTS_DIR"
     exit 1
 fi
 
-# 计数器
+# Counters
 backed_up_count=0
 skipped_count=0
 
-# 遍历EnvBench/scripts目录下的所有子目录
+# Iterate through all subdirectories in EnvBench/scripts directory
 for script_dir in "$ENVBENCH_SCRIPTS_DIR"/*/; do
     if [ -d "$script_dir" ]; then
         repo_name=$(basename "$script_dir")
         
-        # 检查是否存在envbench.sh
+        # Check if envbench.sh exists
         script_file="$script_dir/envbench.sh"
         
         if [ -f "$script_file" ]; then
-            # 检查目标repo目录是否存在
+            # Check if target repo directory exists
             target_repo_dir="$DATA_DIR/$repo_name"
             
             if [ -d "$target_repo_dir" ]; then
-                # 创建envgym目录
+                # Create envgym directory
                 target_envgym_dir="$target_repo_dir/envgym"
                 mkdir -p "$target_envgym_dir"
                 
-                # 复制文件
+                # Copy file
                 target_file="$target_envgym_dir/envbench.sh"
                 
                 if [ ! -f "$target_file" ]; then
                     cp "$script_file" "$target_file"
-                    echo "✓ 已备份: EnvBench/scripts/$repo_name/envbench.sh -> $repo_name/envgym/envbench.sh"
+                    echo "✓ Backed up: EnvBench/scripts/$repo_name/envbench.sh -> $repo_name/envgym/envbench.sh"
                     ((backed_up_count++))
                 else
-                    echo "⚠ 跳过: $repo_name (目标文件已存在)"
+                    echo "⚠ Skipped: $repo_name (target file already exists)"
                     ((skipped_count++))
                 fi
             else
-                echo "✗ 跳过: $repo_name (目标repo目录不存在)"
+                echo "✗ Skipped: $repo_name (target repo directory does not exist)"
                 ((skipped_count++))
             fi
         else
-            echo "✗ 跳过: $repo_name (未找到envbench.sh)"
+            echo "✗ Skipped: $repo_name (envbench.sh not found)"
             ((skipped_count++))
         fi
     fi
 done
 
 echo ""
-echo "备份完成！"
-echo "成功备份: $backed_up_count 个文件"
-echo "跳过: $skipped_count 个目录" 
+echo "Backup completed!"
+echo "Successfully backed up: $backed_up_count files"
+echo "Skipped: $skipped_count directories" 
