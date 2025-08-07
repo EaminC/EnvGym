@@ -1,19 +1,44 @@
 # EnvGym - Multi-Language Development Environment Platform
 
-EnvGym is an integrated development environment platform that supports multiple programming languages and development tools, designed to provide a consistent development experience for AI-assisted coding and research.
+EnvGym is an integrated development environment platform that supports multiple programming languages and development tools, designed to provide a consistent development experience for AI-assisted coding and research. The platform operates through a three-stage pipeline: **EnvBoot**, **EnvGym**, and **EnvBench**.
 
 ![EnvGym Overview](https://github.com/user-attachments/assets/6664c32c-5e32-4712-b5f9-71b37e457be3)
+
+## System Architecture
+
+EnvGym operates through three distinct stages:
+
+### 1. EnvBoot - Hardware Resource Management
+- **Hardware Requirement Analysis**: Automatically analyzes codebase requirements
+- **Resource Reservation**: Allocates appropriate hardware resources (CPU, GPU, RAM, OS)
+- **SSH Access Provisioning**: Provides secure access to allocated resources
+- **Environment Initialization**: Sets up base development environment
+
+### 2. EnvGym - Environment Building & Iteration
+- **Repository Analysis**: Scans and analyzes target repositories
+- **Dockerfile Generation**: Creates and modifies environment configurations
+- **Hardware-Aware Planning**: Optimizes configurations for available hardware
+- **Iterative Improvement**: Continuous refinement through build-test cycles
+- **Status Tracking**: Monitors and reports environment setup progress
+
+### 3. EnvBench - Benchmarking & Validation
+- **Environment Testing**: Comprehensive testing of built environments
+- **Performance Benchmarking**: Evaluates environment performance and compatibility
+- **Dependency Validation**: Ensures all required dependencies are properly installed
+- **Report Generation**: Detailed reports on environment quality and readiness
 
 ## Features
 
 - 🤖 **AI-Powered Agents**: Advanced AI agents for code generation, analysis, and automation
 - 🐍 **Python Ecosystem**: Complete Python development environment with agent-squad integration
-- ☕ **Java Support**: Enterprise-level development environment
+- ☕ **Java Support**: Enterprise-level development environment with Maven/Gradle support
 - 🦀 **Rust Integration**: System programming and high-performance applications
 - 🐹 **Go Development**: Cloud-native and microservices development
 - 🔧 **Multiple Tools**: Integrated development tools including Aider and more
 - 🐳 **Containerized**: Docker support for easy deployment and environment isolation
 - 📊 **Research-Ready**: Pre-configured with multiple research repositories and datasets
+- 🔄 **Iterative Optimization**: Continuous environment improvement through automated testing
+- 📈 **Performance Monitoring**: Real-time performance tracking and optimization
 
 ## Quick Start
 
@@ -21,7 +46,8 @@ EnvGym is an integrated development environment platform that supports multiple 
 
 - **Conda/Miniconda**: For Python environment management
 - **Git**: For repository management
-- **Docker** (optional): For containerized deployment
+- **Docker**: For containerized deployment and environment testing
+- **SSH Access**: For remote development environments
 
 ### One-Click Setup
 
@@ -45,6 +71,7 @@ The setup script will automatically:
 - Install all Python dependencies
 - Create `.env` file and prompt for your Forge API key (only manual input required!)
 - Download research repositories
+- Initialize the EnvGym system
 
 3. **Activate the environment and start using**:
 
@@ -55,8 +82,6 @@ conda activate envgym
 cd data/exli
 python ../../Agent/agent.py
 ```
-
-That's it! The setup script handles everything automatically except your Forge API key input.
 
 ### Manual Installation
 
@@ -103,10 +128,79 @@ EnvGym/
 ├── python/                  # Python packages and libraries
 │   └── src/agent_squad/     # Multi-agent orchestration
 ├── data/                    # Research repositories and datasets
+│   ├── alibaba_fastjson2/   # Java JSON processing library
+│   ├── exli/               # Example research repository
+│   └── ...                 # Other research repositories
 ├── requirements.txt         # Python dependencies
 ├── setup.sh                 # One-click setup script
 └── README.md               # This file
 ```
+
+## Usage Examples
+
+### Environment Building with EnvGym
+
+```bash
+# Navigate to a repository
+cd data/alibaba_fastjson2
+
+# Run environment analysis and building
+python ../../Agent/agent.py --mode=envgym
+
+# This will:
+# 1. Analyze the repository structure
+# 2. Generate appropriate Dockerfile
+# 3. Build and test the environment
+# 4. Provide benchmarking results
+```
+
+### Running AI Agents
+
+```bash
+# Activate the environment
+conda activate envgym
+
+# Run the main agent
+cd data/exli
+python ../../Agent/agent.py
+```
+
+### Docker Environment Testing
+
+```bash
+# Test Dockerfile configurations
+cd data/alibaba_fastjson2
+./simple_dockerfile_test.sh
+
+# This will compare different Dockerfile configurations
+# and provide detailed analysis reports
+```
+
+### Python Development
+
+```bash
+cd python
+pip install -e .
+python -m pytest tests/
+```
+
+## Research Integration
+
+EnvGym is designed to support various research workflows:
+
+1. **Automated Environment Setup**: Automatically configure development environments for research projects
+2. **Multi-Language Support**: Work seamlessly across different programming languages
+3. **Performance Benchmarking**: Evaluate and optimize environment performance
+4. **Dependency Management**: Automated dependency resolution and conflict handling
+5. **Containerized Development**: Isolated development environments for reproducible research
+
+### Supported Research Areas
+
+- **Machine Learning**: TensorFlow, PyTorch, scikit-learn environments
+- **Data Science**: Jupyter, pandas, numpy, matplotlib setups
+- **System Programming**: Rust, C++, Go development environments
+- **Web Development**: Node.js, Python web frameworks
+- **Mobile Development**: React Native, Flutter environments
 
 ## Configuration
 
@@ -127,49 +221,33 @@ The platform includes several integrated development tools:
 - **Agent Squad**: Multi-agent system orchestration
 - **Compatibility Tools**: Support for multiple programming languages
 - **Docker Integration**: Containerized development environments
+- **Environment Testing**: Automated environment validation and benchmarking
 
-## Usage Examples
+## Troubleshooting
 
-### Running AI Agents
+### Common Issues
 
-```bash
-# Activate the environment
-conda activate envgym
+1. **Conda environment creation fails**:
+   - Ensure conda is properly installed and in your PATH
+   - Try updating conda: `conda update conda`
 
-# Run the main agent
-cd data/exli
-python ../../Agent/agent.py
-```
+2. **API key errors**:
+   - Verify your Forge API key is correctly set in the `.env` file
+   - Check that the key has sufficient permissions
 
-### Python Development
+3. **Docker build failures**:
+   - Ensure Docker is running and accessible
+   - Check available disk space for image building
+   - Verify network connectivity for pulling base images
 
-```bash
-cd python
-pip install -e .
-python -m pytest tests/
-```
+4. **Permission errors on scripts**:
+   - Make scripts executable: `chmod +x setup.sh`
+   - Ensure you have write permissions in the project directory
 
-### Working with Research Repositories
-
-The `data/` directory contains multiple research repositories that are automatically cloned:
-
-- **RelTR**: Relation Transformer for scene graph generation
-- **FEMU**: FPGA-based NVMe SSD emulator
-- **TabPFN**: Tabular data prediction with transformers
-- **RSNN**: Recurrent spiking neural networks
-- **And many more...**
-
-Each repository can be used for experimentation and research.
-
-## Research Integration
-
-EnvGym is designed to support various research workflows:
-
-1. **Code Analysis**: Analyze existing codebases with AI assistance
-2. **Automated Testing**: Generate and run tests across multiple languages
-3. **Performance Optimization**: Identify and optimize performance bottlenecks
-4. **Documentation Generation**: Automatically generate documentation
-5. **Multi-Language Support**: Work seamlessly across different programming languages
+5. **Environment testing failures**:
+   - Check Docker daemon status
+   - Verify base image availability
+   - Review Dockerfile syntax and dependencies
 
 ## Contributing
 
@@ -183,24 +261,6 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for deta
 4. Add tests for new functionality
 5. Ensure all tests pass
 6. Submit a pull request
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Conda environment creation fails**:
-
-   - Ensure conda is properly installed and in your PATH
-   - Try updating conda: `conda update conda`
-
-2. **API key errors**:
-
-   - Verify your Forge API key is correctly set in the `.env` file
-   - Check that the key has sufficient permissions
-
-3. **Permission errors on scripts**:
-   - Make scripts executable: `chmod +x setup.sh`
-   - Ensure you have write permissions in the project directory
 
 ## License
 
@@ -232,3 +292,5 @@ This project builds upon and integrates several open-source tools and research p
 - Aider and other AI-assisted coding tools
 - The various research repositories included in our dataset
 - The open-source community for their invaluable contributions
+- Docker and containerization technologies
+- The research community for providing diverse codebases for testing and validation
