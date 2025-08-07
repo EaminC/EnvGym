@@ -27,6 +27,12 @@ EnvGym operates through three distinct stages:
 - **Dependency Validation**: Ensures all required dependencies are properly installed
 - **Report Generation**: Detailed reports on environment quality and readiness
 
+## System Flow Diagram
+
+![EnvGym System Flow](EnvGym.drawio.svg)
+
+*The diagram above illustrates the complete workflow from codebase input through EnvBoot resource allocation, EnvGym environment building and iteration, to EnvBench testing and reporting.*
+
 ## Features
 
 - 🤖 **AI-Powered Agents**: Advanced AI agents for code generation, analysis, and automation
