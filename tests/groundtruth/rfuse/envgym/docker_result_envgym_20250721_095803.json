@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_095803",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753091879",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.18kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.2s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb\n#4 DONE 0.0s\n\n#5 [2/6] RUN apt-get update &&     apt-get install -y --no-install-recommends         build-essential         cmake         git         curl         wget         python3         python3-pip         python3-venv         python3-setuptools         python3-wheel         pkg-config         libssl-dev         libffi-dev         ca-certificates         && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [3/6] WORKDIR /home/cc/EnvGym/data/rfuse\n#6 CACHED\n\n#7 [internal] load build context\n#7 transferring context: 5.05MB 3.2s done\n#7 DONE 3.3s\n\n#8 [4/6] COPY requirements.txt ./\n#8 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::ft2m2tricss5e5q8cpufp098v: \"/requirements.txt\": not found\n------\n > [4/6] COPY requirements.txt ./:\n------\nenvgym.dockerfile:29\n--------------------\n  27 |     \n  28 |     # Optionally copy requirements and source code; adjust as needed\n  29 | >>> COPY requirements.txt ./\n  30 |     \n  31 |     # Install Python dependencies in a virtual environment for isolation\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::ft2m2tricss5e5q8cpufp098v: \"/requirements.txt\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,100 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu/Debian, /home/cc/EnvGym/data/grpc_grpc-go) ===
+
+**NOTES ON HARDWARE:**
+- CPU: x86_64 (amd64); do not use ARM64 images or binaries by default; target `linux/amd64` for Docker builds and local binaries.
+- No GPU: Ignore CUDA/NVIDIA dependencies or flags.
+- OS: Use Ubuntu 22.04, Debian (bullseye/bullseye-slim), or `golang:1.x-bullseye` base images.
+- Docker: v28.3.2; supports BuildKit, Compose v2; no experimental features.
+- Working Directory: `/home/cc/EnvGym/data/grpc_grpc-go`; all absolute paths and Docker contexts must reflect this.
+- Storage: Ensure sufficient disk for large Go modules and Docker layers; monitor if running CI locally.
+- RAM: Not specified, but unless system is extremely memory-constrained, no major changes needed. If you know your memory is below 4 GB, consider limiting `make -j` parallelism and Docker resource usage.
+- Filesystem: extfs/overlay2; no special constraints for Go or Docker.
+
+---
+
+1. DOWNLOADS NEEDED (adjusted):
+
+   - **Go Programming Language**: Download amd64 (x86_64) binaries ONLY. Do not attempt ARM64 Go installations on this machine. Test Go 1.23 and 1.24 for CI compatibility.
+   - **Git**: Latest stable. For Ubuntu/Debian: `apt-get install git`.
+   - **GNU Make**: Latest available via `apt-get install make`.
+   - **protoc** (Protocol Buffers Compiler): Download x86_64/amd64 release. For Ubuntu/Debian, prefer official `.deb` or extract from official zip.
+   - **Protobuf Plugins**:
+     - Install via `go install` using amd64 Go toolchain. Ensure `$GOPATH/bin` or Go 1.17+ `$HOME/go/bin` is in `$PATH`.
+   - **QEMU user-static emulator**: Install only if you need to run/test ARM64 containers. For your x86_64 host, `docker run --platform=linux/arm64` will require QEMU, but normal development is on amd64.
+   - **Docker**: Already present. Ensure you use amd64 base images (see below).
+   - **Build tools**: For Ubuntu: `apt-get install build-essential`.
+   - **VPN Client**: If required, ensure it supports x86_64 Linux.
+   - **Code Editor/IDE**: VSCode, GoLand, etc. (x86_64).
+   - **Code coverage tools, static analysis, shell utilities**: Install for amd64; no ARM-specific binaries.
+   - **Go/OpenTelemetry/Prometheus/AWS/Google Cloud/Other Go Dependencies**: All are architecture-independent Go modules. When building Docker images, ensure Go modules are downloaded for amd64.
+   - **System Packages**: For SSL/TLS, networking: `apt-get install openssl ca-certificates libssl-dev`.
+   - **Codecov CLI, CodeQL CLI**: Download amd64 binaries.
+   - **(NEW)** When pulling container images, always use `--platform=linux/amd64` (e.g., in Dockerfiles or CI).
+   - **(NEW)** When running qemu-based cross-arch tests, be aware performance may be much slower on x86_64 host. If you do not require ARM64 emulation locally, you may skip QEMU installation.
+
+2. FILES TO CREATE (adjustments):
+
+   - **go.mod/go.sum**, **examples/go.mod/go.sum**, **gcp/observability/go.mod/go.sum**: No change; but always operate in `/home/cc/EnvGym/data/grpc_grpc-go` and subdirs.
+   - **.gitignore**: No change, but ensure ignore patterns work in the full path context.
+   - **Makefile**: Default `GOARCH=amd64`. Document that all targets build for amd64 unless explicitly cross-compiling. If adding cross-arch targets, require QEMU.
+   - **Dockerfiles**:
+     - Always specify `FROM ... --platform=linux/amd64` or use amd64 images (e.g., `FROM golang:1.24-bullseye`).
+     - Set `WORKDIR /home/cc/EnvGym/data/grpc_grpc-go` as appropriate.
+     - Avoid use of `--gpus` flag or CUDA/NVIDIA images.
+   - **Workflow files**: In GitHub Actions, always use `runs-on: ubuntu-latest` (amd64) unless testing ARM64 in matrix builds. For local Docker Compose, ensure no ARM64 images are specified unless for QEMU/CI tests.
+   - **README/CONTRIBUTING**:
+     - Document that the default/local development environment is x86_64/amd64.
+     - If users want to test ARM64, instruct them to use QEMU and Docker cross-platform, but note this is optional.
+     - If any references to ARM64 setup exist, mark them as "advanced/optional" for CI or cross-platform validation only.
+   - **Scripts**:
+     - All scripts should assume `GOARCH=amd64` by default.
+     - If supporting cross-arch builds, require explicit flags (e.g., `GOARCH=arm64 make build`).
+     - Use `/home/cc/EnvGym/data/grpc_grpc-go` as working path in scripts if absolute paths are needed.
+
+3. NECESSARY TEST CASES (adjustments):
+
+   - All tests should run on amd64 (default).
+   - For cross-arch (ARM64) tests, mark these as optional/CI-only. If running locally, document the need for QEMU and performance caveats.
+   - In Docker-based tests, always specify `--platform=linux/amd64` unless explicitly testing ARM64.
+   - No GPU-specific cases are needed.
+   - For coverage and analysis, no adjustment needed.
+
+4. TODO LIST (adjustments):
+
+   1. Download and install Go (≥1.23) for amd64. Use official tarball or `apt` if available.
+   2. Install Git, Make, build-essential, openssl, ca-certificates, libssl-dev for x86_64/amd64 via `apt`.
+   3. Download protoc for x86_64/amd64.
+   4. Install all Go tools via Go's amd64 toolchain.
+   5. Install Docker if not present (ensure version ≥28.3.2).
+   6. QEMU user-static: **OPTIONAL** for local ARM64 testing. Document as such. If installed, use `apt-get install qemu-user-static`.
+   7. All Makefile/Dockerfile/CI targets default to amd64 (`GOARCH=amd64`).
+   8. All Docker builds use `--platform=linux/amd64` and compatible base images (`golang:1.x-bullseye`, `ubuntu:22.04`, etc.).
+   9. Paths in scripts/workflows/Makefiles are relative to `/home/cc/EnvGym/data/grpc_grpc-go` as root.
+   10. Documentation (README, CONTRIBUTING) must note that local dev is on amd64, ARM64 support is for CI/optional.
+   11. No CUDA, NVIDIA, or GPU-specific steps, flags, or base images anywhere.
+   12. (Optional) For parallel builds, you may use `make -jN` where N is number of logical CPUs, but be aware of system memory.
+   13. All module and coverage scripts, dependency checks, etc., as before, but assume amd64 unless stated otherwise.
+   14. All workflow YAML files (`.github/workflows/*`) must assume `runs-on: ubuntu-latest` (amd64) for all jobs, unless deliberately testing QEMU/ARM64 in the matrix.
+   15. If disk or memory is tight, suggest users prune unused Docker images/layers and limit parallel jobs in Make/tests.
+
+5. VERIFICATION METHODS (adjustments):
+
+   - When building/running Docker images or containers, always check image architecture: `docker inspect --format '{{.Os}}/{{.Architecture}}'`.
+   - All `go build`, `go test`, etc., default to amd64.
+   - `uname -m` must output `x86_64` or `amd64`. If not, revisit installation steps.
+   - If QEMU/ARM64 tests are run, ensure `qemu-aarch64-static` is present and properly registered.
+   - All scripts and workflows should include checks for `GOARCH` and warn if not equal to `amd64` unless explicitly overridden.
+   - No references to GPU, ARM-only, or CUDA-specific tooling in any documentation or workflows for this environment.
+
+---
+
+**SUMMARY OF ADJUSTMENTS:**
+- All builds, tests, and Docker images are for amd64 (x86_64) by default.
+- ARM64/QEMU setup marked as optional for CI/cross-arch testing only.
+- No GPU- or CUDA-related steps or dependencies.
+- Use Ubuntu/Debian/Go base images for amd64 only.
+- Document and enforce `/home/cc/EnvGym/data/grpc_grpc-go` as the root for all scripts and Docker contexts.
+- All scripts, Makefile, workflow steps, and documentation updated to clarify architecture and avoid ARM64/GPU confusion.
+- Monitor system resources as needed, but normal Go/Docker workflows should be fine for standard RAM/disk.
+
+**ALL OTHER PARTS OF THE PLAN REMAIN AS IN THE ORIGINAL, ADJUSTED TO THE ABOVE ARCHITECTURE AND DIRECTORY CONTEXT.**

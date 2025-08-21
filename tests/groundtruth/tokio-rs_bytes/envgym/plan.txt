@@ -1,0 +1,87 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**[Summary of Adjustments based on Hardware Information]**
+
+- Architecture is x86_64 (amd64); all requirements and base images should target this architecture.
+- No GPU or CUDA; ignore any GPU or CUDA-specific options.
+- Use Linux (Ubuntu/Debian preferred) for development and CI, as per base image suggestion.
+- Docker version is modern (28.3.2, BuildKit supported).
+- Project is in /home/cc/EnvGym/data/tokio-rs_bytes, possibly in a nested directory; ensure all relative paths in scripts/configs are correct.
+- Multi-core CPU optimizations are possible, but memory and storage are not specified—excessively large tests or builds should be avoided unless hardware specs are confirmed.
+
+---
+
+1. **DOWNLOADS NEEDED:**
+
+   - **Rust toolchain**: Use stable, latest version, but pin at least 1.57 (enforced via `rust-version` in Cargo.toml and `msrv` in clippy.toml).
+       - For x86_64-unknown-linux-gnu (default for Linux on amd64).
+       - `rustup` and `cargo` to be installed via official channels or base image (e.g., rust:latest or via rustup on Ubuntu/Debian).
+   - **Clippy and Rustfmt:** Install via `rustup component add clippy rustfmt`.
+   - **Nightly toolchain:** For documentation build with docsrs flag (`rustup toolchain install nightly`).
+   - **Git:** Install latest stable (`apt-get install git` or via base image).
+   - **Make (optional):** Install if scripting is required (`apt-get install make`); skip for minimal setups.
+   - **Visual Studio Build Tools:** Not required for Linux (ignore all Windows-specific instructions).
+   - **Documentation tools:** `rustdoc` included with Rust.
+   - **Crates/Tools:** As listed; all are Linux/x86_64 compatible.
+   - **CI tools:** Use GitHub Actions or local runners; ensure runners are x86_64 Linux (as per base image).
+   - **Bytes 1.x compatibility:** Confirmed for x86_64 Linux.
+
+2. **FILES TO CREATE:**
+
+   - **Cargo.toml:** All metadata and feature sections as listed; ensure `[package]` paths (readme, license, etc.) match `/home/cc/EnvGym/data/tokio-rs_bytes` or correct subdirectory.
+   - **src/lib.rs or src/main.rs:** Ensure location is `/home/cc/EnvGym/data/tokio-rs_bytes/src/`.
+   - **.gitignore:** Standard Rust patterns.
+   - **rust-toolchain.toml:** Pin to stable and nightly; use x86_64-unknown-linux-gnu target.
+   - **tests/** directory: At `/home/cc/EnvGym/data/tokio-rs_bytes/tests/`.
+   - **LICENSE, README.md, CHANGELOG.md, clippy.toml:** At project root.
+   - **.cargo/config.toml, .github/workflows/ci.yml:** Optional, but ensure any path references are correct for the nested directory.
+   - **[lints.rust] and [package.metadata.docs.rs]:** As previously described.
+
+3. **NECESSARY TEST CASES IN THE CODEBASE:**
+
+   - All code/tests should target x86_64-unknown-linux-gnu.
+   - No need for Windows, macOS, or ARM-specific tests—focus on Linux/amd64 compatibility.
+   - No CUDA/GPU-specific code or tests.
+   - For cross-platform testing, restrict the matrix to Linux; optionally include macOS/Windows if remote CI runners are available, but not required by hardware.
+   - Memory-intensive and large tests should be avoided if RAM is limited (assume standard developer workstation/server unless more info is provided).
+
+4. **COMPLETE TODO LIST (ADJUSTED):**
+
+   1. **Install Rust** (using rustup), ensuring version >= 1.57 for x86_64-unknown-linux-gnu.
+       - Verify: `rustc --version`, `cargo --version`
+   2. **Install components:** `rustup component add clippy rustfmt`
+   3. **Install nightly toolchain:** `rustup toolchain install nightly`
+   4. **Install Git:** `apt-get install git` or ensure present in base image.
+   5. **Initialize/clone repo:** In `/home/cc/EnvGym/data/tokio-rs_bytes`; verify with `git status`
+   6. **Create/update Cargo.toml:** Ensure correct metadata; paths to README, LICENSE, etc., are relative to project root.
+   7. **Create src/lib.rs or src/main.rs:** In `/home/cc/EnvGym/data/tokio-rs_bytes/src/`; include example code.
+   8. **Create .gitignore:** At project root.
+   9. **Create LICENSE:** MIT license at project root.
+   10. **Create README.md:** At project root; document features, usage, and environment-specific notes (e.g., "Tested on x86_64 Linux").
+   11. **Create CHANGELOG.md:** At project root.
+   12. **Create tests/** directory:** At project root.
+   13. **Create clippy.toml:** At project root with `msrv = "1.57"`.
+   14. **Create rust-toolchain.toml:** Pin stable and nightly for x86_64-unknown-linux-gnu.
+   15. **.cargo/config.toml (optional):** Use for custom settings; ensure target is x86_64-unknown-linux-gnu if specified.
+   16. **.github/workflows/ci.yml (optional):** If used, set up jobs for Linux/amd64 only; use Ubuntu runners.
+   17. **Test documentation build:** `RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc`
+   18. **Test no_std mode:** `cargo build --no-default-features`
+   19. **Test with feature flags:** `cargo test --features "serde"`, `cargo test --features "extra-platforms"`
+   20. **Test dev-dependency scenarios:** `cargo test --all-features`
+   21. **Test lint configuration:** `cargo clippy`
+   22. **Test cross-platform builds:** Only Linux/amd64 required; macOS/Windows optional if remote CI is configured.
+   23. **Run clippy and rustfmt:** `cargo clippy`, `cargo fmt -- --check`
+   24. **Commit and push:** Use Git; verify paths are correct from `/home/cc/EnvGym/data/tokio-rs_bytes`
+   25. **Tag and publish release:** `cargo publish --dry-run`
+   26. **Document environment-specific notes:** In README, note x86_64 Linux focus, Docker 28.3.2 support, and any path specifics (project lives in a nested directory).
+
+**NOTES:**
+
+- All instructions, CI config, and scripts should assume an x86_64 Linux environment.
+- No GPU, CUDA, or Windows-specific instructions are needed.
+- Paths in configs/scripts must be adjusted if the project is not at the filesystem root.
+- If Docker is used, base images should be `rust:latest`, `ubuntu:22.04`, or `debian:bullseye` (amd64 tags).
+- If using Docker, set the build context to `/home/cc/EnvGym/data/tokio-rs_bytes`.
+- If memory or storage limitations are encountered, reduce test/build parallelism and avoid large test datasets.
+
+---

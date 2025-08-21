@@ -1,0 +1,23 @@
+current progress
+- Docker image builds and runs successfully with Ubuntu 22.04, x86_64, no GPU, all commands executed as non-root user "cc".
+- All key system dependencies are installed via apt, including Rust (1.72.0 via rustup), git, build tools, MUSL, PCRE2, binutils, python3, dpkg-dev, and benchmarking/search tools (grep, ag, sift, ugrep, platinum_searcher installed from GitHub).
+- Shell completions and ripgrep config file are created in correct Linux locations.
+- User environment variables and locales are set appropriately.
+- Project files are copied into the image with correct ownership.
+- Rust toolchain and rustfmt are installed and set to version 1.72.0.
+- .cargo/config.toml is created for static builds with musl.
+- cargo-deb is installed.
+- ripgrep is built in release mode; shell completions for bash, zsh, and fish are generated and placed.
+- No Windows/macOS-specific steps or tools are present.
+- Docker context/file copy and working directory setup are correct.
+- All installation steps match the adjusted plan for Linux/x86_64 Docker environment.
+
+next step
+- Ensure all referenced subdirectories (crates/, benchsuite/, deployment/) are present in the Docker context and actually copied into the image.
+- Verify and, if needed, update Cargo.toml to set `edition = "2021"` and `rust-version = "1.72"`.
+- Check if all benchmarking, integration, and static linking tests are present and runnable inside the container; run `cargo test` and static linking checks (`ldd target/x86_64-unknown-linux-musl/release/rg`).
+- Allocate sufficient memory to the Docker container for meaningful benchmarking (adjust Docker run settings if needed).
+- Document any hardware/resource limitations for benchmarking compared to reference systems if applicable.
+- Ensure README and documentation inside the image reflect Linux/x86_64-only support and usage.
+- If packaging/distribution is needed, run `cargo deb` to produce .deb packages and verify output.
+- If using CI, confirm Linux/x86_64 runner configuration is present (if not, add as needed).

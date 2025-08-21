@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/tokio-rs_bytes; project appears to be in a nested subdirectory, likely a Rust or similar project (tokio-rs_bytes)
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible base images (e.g., ubuntu:22.04, debian:bullseye, rust:latest)
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: No GPU-specific instructions (no nvidia/cuda); multi-core CPU optimizations possible; file copy/build context is /home/cc/EnvGym/data/tokio-rs_bytes
+- Docker Version: 28.3.2; supports BuildKit; --gpus flag available but not usable without NVIDIA GPU/driver

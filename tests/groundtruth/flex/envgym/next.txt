@@ -1,0 +1,22 @@
+current progress
+- Docker build and runtime are successful on Ubuntu 22.04, Linux x86_64, with no errors.
+- System-level build tools and required utilities (wget, curl, git, build-essential, gcc, g++, make, dpkg, locales, unzip, etc.) are installed via apt.
+- Locale is set to en_US.UTF-8 for compatibility.
+- Miniconda (Linux x86_64) is downloaded and installed at /home/cc/miniconda3. Conda is configured with conda-forge channel and strict priority.
+- Conda installation is verified; optional conda update included.
+- requirements.txt and .gitignore are copied into the container.
+- Directories /home/cc/EnvGym/data/flex/projects, /tool/logs, /tool/config are created with correct paths.
+- Shell initialization for conda is set in /etc/profile; entrypoint is bash with --login.
+- No Python, R, conda environment, or FLEX project dependencies are yet installed (environment.yml is not present or used).
+- No FLEX repository or codebase files (other than .gitignore and requirements.txt) are present in the image.
+- No conda environment ("flex-env") is created yet.
+
+next step
+1. Copy environment.yml into the Docker image (uncomment/add the relevant COPY and RUN lines).
+2. Create the "flex-env" conda environment using environment.yml and clean up conda caches.
+3. Clone or copy the FLEX repository codebase into /home/cc/EnvGym/data/flex so all required files (README.md, tool/, scripts, etc.) are available.
+4. Ensure correct file and directory permissions after codebase copy.
+5. Verify that the conda environment activates and all dependencies (Python 3.8, R, r-eva, pip, and all Python/R packages) are installed.
+6. (Optional) Run setup/test scripts to validate installation within the Docker build or as a test stage.
+7. (Optional) Copy tool/config/local.env if you wish to provide local overrides.
+8. Document any issues encountered during dependency installation or environment creation.

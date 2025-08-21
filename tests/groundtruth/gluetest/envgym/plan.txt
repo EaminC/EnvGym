@@ -1,0 +1,200 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, Ubuntu 22.04, No GPU, WORKDIR: /home/cc/EnvGym/data/gluetest) ===
+
+**Key Adjustments:**
+- All instructions and paths are aligned for Ubuntu 22.04 on x86_64 (amd64).
+- No GPU/CUDA components or drivers are included.
+- All images, binaries, and tools explicitly selected for x86_64/amd64.
+- WORKDIR is set to `/home/cc/EnvGym/data/gluetest`.
+- Shell/Bash script usage assumes a Linux (Ubuntu) shell.
+- Emphasize local system setup; Docker-specific notes included where relevant.
+- Paths are all Linux-style (`/`), and file permissions commands are included where relevant.
+- Storage and memory requirements are flagged for user review, but not explicitly set due to lack of provided resource limits.
+
+---
+
+1. DOWNLOADS NEEDED: 
+
+   - **GraalVM (Java 17, version 17.0.7-graal, x86_64/amd64 Linux)**
+     - Required for glue code integration and GraalPython.
+     - Install via SDKMAN! (recommended, works natively on Ubuntu 22.04 x86_64).
+     - Do not use ARM or other architectures.
+   - **SDKMAN!**
+     - Tool to install/manage GraalVM.
+     - Install per https://sdkman.io/install (works on Ubuntu 22.04).
+   - **GraalVM Python Component**
+     - Install using `gu install python` after GraalVM is set up.
+   - **Maven**
+     - Required to build and test Java projects.
+     - Use Ubuntu package manager (`apt install maven`) or download from https://maven.apache.org/download.html.
+     - Ensure version is compatible with Java 17 (Ubuntu 22.04 default is Maven 3.6+).
+   - **Python 3.11.4 (x86_64, Ubuntu)**
+     - For running translated Python tests/scripts.
+     - Use `pyenv` or official installer (recommended: `pyenv install 3.11.4`).
+   - **pip**
+     - Should come with Python install.
+   - **pytest (latest stable)**
+     - Install via `pip install pytest`.
+   - **Other Python dependencies**
+     - Check for requirements.txt or audit scripts, add as needed.
+   - **Git**
+     - For version control. Install via `sudo apt install git` if needed.
+   - **Bash Shell**
+     - Native on Ubuntu; all shell scripts will run without issue.
+   - **(Optional) Docker**
+     - Since Docker 28.3.2 is available, optional for containerized builds. Use only amd64-compatible base images (e.g., `ubuntu:22.04`, `python:3.11-slim`, etc.). Do not use any ARM or GPU-specific tags.
+
+2. FILES TO CREATE: 
+
+   - **requirements.txt**
+     - Path: `/home/cc/EnvGym/data/gluetest/requirements.txt`
+     - Content: List all Python dependencies, at minimum:
+       ```
+       pytest
+       ```
+   - **.env.example**
+     - Path: `/home/cc/EnvGym/data/gluetest/.env.example`
+     - Content: Document environment variables as needed; add placeholder if none.
+   - **README.local.md**
+     - Path: `/home/cc/EnvGym/data/gluetest/README.local.md`
+     - Content: Document local setup steps, known issues, troubleshooting, and platform notes (include note: "Tested on Ubuntu 22.04 x86_64").
+   - **.gitignore**
+     - Path: `/home/cc/EnvGym/data/gluetest/.gitignore`
+     - Content:
+       ```
+       __pycache__/
+       *.pyc
+       .DS_Store
+       target/
+       .idea/
+       .vscode/
+       generated/
+       *.log
+       .env
+       ```
+   - **scripts/coverage/cover_local.py**
+     - Ensure present for coverage measurement.
+   - **scripts/generate_glue.py**
+     - Ensure present for glue code generation.
+   - **run.sh**
+     - Path: `/home/cc/EnvGym/data/gluetest/run.sh`
+     - Ensure script has executable permissions: `chmod +x run.sh`.
+
+3. NECESSARY TEST CASES IN THE CODEBASE: 
+
+   - **Original Java Unit Tests**
+     - Located in `commons-cli` and `commons-csv` subdirs.
+   - **Translated Python Unit Tests**
+     - Located in `commons-cli-python` and `commons-csv-python`.
+   - **GraalVM Glue Code Integration Tests**
+     - Located in `commons-cli-graal` and `commons-csv-graal`.
+   - **Coverage Script Tests**
+     - Ensure `scripts/coverage/cover_local.py` functions and measures coverage on x86_64/Ubuntu 22.04.
+   - **Glue Generator Tests**
+     - Ensure `scripts/generate_glue.py` works as intended.
+   - **Client Collector Script Tests**
+     - Ensure `scripts/clients/selenium.py` and `scripts/clients/bash_script_version.sh` run on Ubuntu and output data correctly.
+
+4. COMPLETE TODO LIST: 
+
+   1. **Install SDKMAN!**
+      - Run: `curl -s "https://get.sdkman.io" | bash`
+      - After install, restart the shell or source profile.
+      - Verify: `sdk version`
+   
+   2. **Install GraalVM Java 17 (17.0.7-graal, x86_64)**
+      - Run: `sdk install java 17.0.7-graal`
+      - Verify: `java -version` (should show GraalVM, version 17.0.7, x86_64)
+      - If version not found, use `sdk list java` to choose the closest supported GraalVM 17 x86_64.
+   
+   3. **Install GraalVM Python Component**
+      - Run: `gu install python`
+      - Verify: `graalpython --version`
+   
+   4. **Install Maven**
+      - Recommended: `sudo apt-get update && sudo apt-get install maven`
+      - Verify: `mvn -v`
+   
+   5. **Install Python 3.11.4**
+      - Install pyenv: `curl https://pyenv.run | bash`
+      - Install Python: `pyenv install 3.11.4`
+      - Set local version: `pyenv local 3.11.4`
+      - If pyenv not preferred, use deadsnakes PPA or download from python.org binaries for x86_64.
+      - Verify: `python --version`
+   
+   6. **Set Up Python Virtual Environment**
+      - Run: `python -m venv venv`
+      - Activate: `. venv/bin/activate`
+      - Verify: Shell prompt shows `(venv)`
+   
+   7. **Install Python Dependencies**
+      - Update/create `requirements.txt` as needed.
+      - Run: `pip install -r requirements.txt`
+      - Verify: `pytest --version`
+   
+   8. **Clone/Download Project Repository**
+      - `git clone <repo-url> /home/cc/EnvGym/data/gluetest`
+      - Verify folders: `commons-cli`, `commons-csv`, etc.
+   
+   9. **Create/Review Configuration Files**
+      - Ensure existence and correctness of `.gitignore`, `requirements.txt`, `.env.example`, and `README.local.md`.
+   
+   10. **Run Java Tests**
+       - `mvn -f commons-cli/pom.xml test -Drat.skip`
+       - `mvn -f commons-csv/pom.xml test -Drat.skip`
+       - Verify: All tests pass.
+   
+   11. **Run Translated Python Tests**
+       - `pytest commons-cli-python`
+       - `pytest commons-csv-python`
+   
+   12. **Run GraalVM Glue Code Integration Tests**
+       - `mvn -f commons-cli-graal/pom.xml test -Drat.skip`
+       - `mvn -f commons-csv-graal/pom.xml test -Drat.skip`
+   
+   13. **Run Full Automation Script**
+       - `bash run.sh`
+       - Ensure script is executable: `chmod +x run.sh`
+   
+   14. **Measure Coverage**
+       - `python scripts/coverage/cover_local.py`
+   
+   15. **Run Glue Automation**
+       - `python scripts/generate_glue.py`
+       - Output should appear in `generated/commons-cli` and `generated/commons-csv`.
+   
+   16. **Collect Clients**
+       - `python scripts/clients/selenium.py`
+       - `bash scripts/clients/bash_script_version.sh`
+   
+   17. **Review and Update Documentation**
+       - Update `README.local.md` with system-specific notes (e.g., "Tested on Ubuntu 22.04 x86_64, no GPU").
+   
+   18. **Platform-Specific Checks**
+       - No GPU: Do not include CUDA/nvidia drivers or references.
+       - All shell scripts are Linux-compatible; no Windows-specific instructions needed.
+       - Use Linux path separators.
+       - All base images and tools must be `amd64`/`x86_64` compatible.
+   
+   19. **Final Verification**
+       - Repeat running `bash run.sh`, verify all steps on `/home/cc/EnvGym/data/gluetest`.
+   
+   20. **Error Logging and Troubleshooting**
+       - Collect logs if any step fails.
+       - Confirm all tools installed for x86_64/Ubuntu 22.04.
+
+**Additional Notes:**
+- **Memory/Storage**: Ensure at least 8GB RAM and >5GB free disk space for GraalVM, Maven builds, and Python environments (review system resources if issues occur).
+- **DOCKER (OPTIONAL)**: If containerizing, use `--platform=linux/amd64` and base images like `ubuntu:22.04` or `python:3.11-slim`. Do not use any ARM or GPU-specific images/tags. Set `WORKDIR /home/cc/EnvGym/data/gluetest` in Dockerfile.
+- **No GPU**: Omit any GPU/CUDA libraries or dependencies.
+
+---
+
+**Summary of main changes:**  
+- Ensured all instructions target Linux x86_64/amd64 (no ARM, no GPU).
+- All file paths use Linux style and point to `/home/cc/EnvGym/data/gluetest`.
+- Confirmed that all tools/packages are compatible with Ubuntu 22.04 and x86_64.
+- Docker notes updated for correct platform; no --gpus usage.
+- No Windows-specific or GPU-specific steps included.  
+- Shell scripts and permissions are set for Linux.
+
+This adjusted plan guarantees compatibility and optimal operation on your specified hardware and OS.

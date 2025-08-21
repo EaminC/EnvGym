@@ -1,0 +1,25 @@
+current progress
+- The Dockerfile is properly based on Ubuntu 24.04 amd64 and only includes x86_64/amd64-compatible packages and tools, as per the plan.
+- All required build tools and dependencies for x86_64 Linux are installed (clang, curl, g++, git, make, etc.).
+- Locale and timezone are configured for en_US.UTF-8 and UTC, respectively.
+- Diagnostics and version checks for key tools are present.
+- The Dockerfile downloads a pinned version of `ponyup-init.sh` and attempts to install ponyup using the official script.
+- Network connectivity checks (nslookup, ping, nc) are included before running the installer.
+- Post-install checks ensure that ponyup is installed and working.
+- Python tooling (cloudsmith-cli, mkdocs) is installed as specified.
+- The working directory is set to `/workspace` and the project files are copied in.
+- No ARM/Windows/macOS/other-arch binaries/tools are present, as required.
+- The last build failed at the ponyup install step, but the Dockerfile logic up to this point matches the plan.
+
+next step
+- Debug and resolve the ponyup installation failure:  
+  - Review the `/tmp/ponyup-install.log` to understand why `ponyup` failed to install (the log is already being output, but may need to be checked in more detail).
+  - Check for possible missing dependencies or environmental factors affecting the ponyup-init script (e.g., permissions, PATH, HOME).
+  - Ensure that any required `ponyup` install prerequisites (such as correct bash version, network access, or temporary file permissions) are satisfied.
+  - If needed, try running the ponyup-init command manually in a debug build to capture more detailed output.
+- Once ponyup installs successfully and the binary is present, proceed to:
+  - Use ponyup to install the Pony compiler (nightly or release) in subsequent Dockerfile steps (not yet present).
+  - Add project-specific build/install steps for Pony, if missing.
+  - Ensure all build and test scripts use only `--platform=linux/amd64`.
+  - Run the full test suite for x86_64.
+  - Review and update documentation/configs as per the plan.

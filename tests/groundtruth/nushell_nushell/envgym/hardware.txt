@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/nushell_nushell; project likely located in a nested data directory; context path should be set accordingly.
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:buster, python:3.x-slim); avoid ARM images.
+- GPU: No available NVIDIA GPU detected; do not use CUDA or nvidia/cuda base images.
+- Instruction Notes: No GPU-specific instructions (e.g., RUN nvidia-smi or CUDA installs); ensure instructions are tailored for Ubuntu 22.04; storage and memory constraints are not limiting.
+- Docker Version: 28.3.2; supports BuildKit and latest Dockerfile syntax; no support for --gpus flag due to missing NVIDIA runtime.

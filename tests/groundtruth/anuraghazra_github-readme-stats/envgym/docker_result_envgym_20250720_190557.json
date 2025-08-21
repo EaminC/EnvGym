@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_190557",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753038356",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 710B done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/node:18-bullseye\n#2 DONE 0.3s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/8] FROM docker.io/library/node:18-bullseye@sha256:0d9e9a8dcd5a83ea737ed92227a6591a31ad70c8bb722b0c51aff7ae23a88b6a\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 144.05kB 0.0s done\n#5 DONE 0.0s\n\n#6 [5/8] COPY package.json package-lock.json* yarn.lock* ./\n#6 CACHED\n\n#7 [2/8] WORKDIR /home/cc/EnvGym/data/anuraghazra_github-readme-stats\n#7 CACHED\n\n#8 [3/8] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         vim         nano     && rm -rf /var/lib/apt/lists/*\n#8 CACHED\n\n#9 [6/8] RUN npm install express --save\n#9 CACHED\n\n#10 [4/8] RUN corepack enable && corepack prepare yarn@stable --activate\n#10 CACHED\n\n#11 [7/8] RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi\n#11 CACHED\n\n#12 [8/8] COPY . .\n#12 DONE 0.0s\n\n#13 exporting to image\n#13 exporting layers 0.1s done\n#13 writing image sha256:581fb6d1e80c0aacf66cc6276dfb2bce1b053d4e662d44b87f5ba3bb9a7b9eb0 done\n#13 naming to docker.io/library/envgym_test_1753038356 done\n#13 DONE 0.1s\n"
+  },
+  "run": {
+    "success": true,
+    "stdout": "[dotenv@17.2.0] injecting env (0) from .env (tip: ⚙️  write to custom object with { processEnv: myObject })\n",
+    "stderr": ""
+  }
+}

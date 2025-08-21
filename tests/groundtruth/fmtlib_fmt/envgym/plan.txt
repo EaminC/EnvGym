@@ -1,0 +1,189 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Hardware/Software Basis:**  
+- CPU Architecture: x86_64 (amd64)
+- OS: Ubuntu 22.04, Debian bullseye, or other modern amd64 Linux
+- No NVIDIA GPU (ignore CUDA/NVIDIA tooling)
+- Docker: Modern (v28+), supports BuildKit, multi-stage builds, etc.
+- Working Directory: `/home/cc/EnvGym/data/fmtlib_fmt` (use as project root in all scripts and Dockerfile)
+- High build parallelism possible
+- Target platform: Linux/amd64 (`--platform=linux/amd64`)
+- Assume standard disk/memory for modern dev VMs (adapt if you know your RAM/disk is unusually small/large)
+
+---
+
+**1. DOWNLOADS NEEDED:**  
+_(All tools must be compatible with x86_64 Linux on Ubuntu 22.04/Debian bullseye; default package managers will provide correct binaries.)_
+
+- **C++ Compiler:**  
+  - GCC >= 7.1.0 or Clang >= 8.0 (Clang >= 8.0 required for fuzzing; GCC or MSVC >= 2019 otherwise)  
+  - C++17 or newer required (C++20 recommended, both GCC & Clang in Ubuntu 22.04/Debian bullseye support this)  
+  - On this hardware/OS, recommend installing both GCC and Clang for full compatibility/testing.
+- **CMake >= 3.10** (Ubuntu 22.04: 3.22+, Debian bullseye: 3.18+, both sufficient)
+- **Git**  
+- **Python 3.x** (optional, for benchmark scripts)  
+- **Ninja** (optional, for faster parallel builds; fully supported)  
+- **fmtlib/fmt** (the library itself)  
+- **Bazel** (install as needed, version as in `.bazelversion` from `support/bazel/`; works on x86_64/amd64 Linux)  
+- **format-benchmark** (optional, for full benchmarking)  
+- **clang-tidy >= 18** (optional, for code migration checks; Ubuntu 22.04 default repo may have older clang-tidy, use LLVM apt repo for >=18)  
+- **CTest** (bundled with CMake)  
+- **Doxygen** (optional, for docs)  
+- **valgrind** or **AddressSanitizer** (both supported, no GPU required)  
+- **Bazel Central Registry** (for Bzlmod dependencies if using Bazel)  
+- **LLVM libFuzzer** (comes with clang; supported on amd64 Linux)  
+- **Bash** (for scripts, always present)  
+- **(Optional/Recommended for fuzzing) Linux (Debian/Ubuntu preferred)**  
+- **(Optional) Sanitizer tools (UBSan, etc.)**  
+- **(NEW) Ability to execute build scripts and CMake modules from `support/` (no extra downloads, but ensure scripts use correct absolute/relative paths compatible with `/home/cc/EnvGym/data/fmtlib_fmt`)**
+
+**Tool installation notes:**  
+- All required tools are available via apt on Ubuntu 22.04/Debian bullseye; for clang-tidy >=18, add LLVM apt repo.
+- _No_ Windows/macOS/NVIDIA GPU/NVIDIA runtime/CUDA instructions are required or relevant.
+- All scripts should assume `/home/cc/EnvGym/data/fmtlib_fmt` as root when referencing relative paths.
+- Use `--platform=linux/amd64` for any Docker/container builds.
+
+---
+
+**2. FILES TO CREATE:**  
+_(No specific changes, but all paths and scripts must use `/home/cc/EnvGym/data/fmtlib_fmt` as root. No Windows/macOS-specific files needed.)_  
+
+- `CMakeLists.txt` (ensure any hardcoded paths use `${CMAKE_SOURCE_DIR}` or similar, never Windows/macOS paths)
+- `test/` directory
+- `.clang-tidy` (optional, for code checks)
+- `.gitignore` (no Windows/macOS/IDE ignores needed unless using cross-platform editors)
+- `README.md` (update instructions to reference Linux paths, e.g. `/home/cc/EnvGym/data/fmtlib_fmt`)
+- `LICENSE` (unchanged)
+- `doc/` directory (optional)
+- `ci/` or workflows directory (optional, CI configs should use Linux runners)
+- Bazel integration files (`BUILD.bazel`, `MODULE.bazel`, `WORKSPACE.bazel`, `.bazelversion`)
+- (Optional) `Doxyfile`
+- (Optional) Bazel dependency example files
+- `test/fuzzing/README.md`
+- `test/fuzzing/build.sh` (ensure `/bin/bash` shebang; use Linux bashisms only)
+- `support/README`
+- CMake modules and build scripts in `support/` (ensure they run on Linux/x86_64; avoid platform-dependent code)
+- (Optional) Add documentation/examples for build scripts/modules in `support/`
+- (Optional) Add fuzzer-specific instructions and troubleshooting to `README.md` or reference `test/fuzzing/README.md`
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**  
+_All test cases remain relevant. Ensure any platform checks default to Linux/x86_64 and skip Windows/macOS-specific edge cases._
+
+- Basic formatting
+- File output
+- Chrono/date/time formatting
+- Container formatting
+- Color and style formatting
+- Compile-time format string checks
+- Error handling
+- Header-only configuration
+- Unicode/locale edge cases
+- **Cross-platform compatibility:**  
+  - Only Linux/x86_64 is required here; do not require tests to pass/run on Windows/macOS.
+- Performance regression tests (optional)
+- Fuzzing (ensure fuzzers are built and executed on Linux/amd64)
+- Bazel build/test integration (Linux paths only)
+- Build support integration (test any CMake modules/scripts in `support/`)
+- (If any build script in `support/` performs code generation or setup, add test(s) to validate outputs)
+
+---
+
+**4. COMPLETE TODO LIST:**  
+**Adjustments are highlighted in bold.**
+
+1. **Install required tools** (using `apt` on Ubuntu 22.04/Debian bullseye):
+   - `sudo apt update`
+   - `sudo apt install build-essential clang cmake git python3 ninja-build doxygen valgrind`
+   - **For clang-tidy >=18:**  
+     - Add LLVM APT repo:  
+       ```
+       wget https://apt.llvm.org/llvm.sh
+       chmod +x llvm.sh
+       sudo ./llvm.sh 18
+       sudo apt install clang-tidy-18
+       ```
+   - **For Bazel:**  
+     - Follow [official Bazel Linux installation guide](https://bazel.build/install/ubuntu).
+   - **No GPU/CUDA/NVIDIA-specific packages required.**
+   - **Use only x86_64/amd64 binaries.**
+2. Clone the fmt library:
+   - `git clone --recursive https://github.com/fmtlib/fmt.git /home/cc/EnvGym/data/fmtlib_fmt`
+   - `cd /home/cc/EnvGym/data/fmtlib_fmt`
+   - Verify codebase presence as before.
+3. (Optional) Clone format-benchmark for benchmarks.
+4. Create or review `CMakeLists.txt`:  
+   - Ensure `project()` and all references use `${CMAKE_SOURCE_DIR}` or absolute paths based on `/home/cc/EnvGym/data/fmtlib_fmt`.
+   - Do not include Windows/macOS-specific logic.
+5. (Optional) Set up Bazel build support:
+   - Copy Bazel files to project root as before.
+   - No need to adjust for non-Linux OS.
+6. Create `.gitignore`:
+   - No need for Windows/macOS/IDE-specific patterns unless such tools are used on Linux.
+   - Ignore any outputs from scripts in `support/` if they generate intermediates in Linux filesystems.
+7. (Optional) Create `.clang-tidy`:
+   - If using, ensure `clang-tidy` is version 18 or above (see install instructions above).
+8. Configure build environment (CMake):
+   - `mkdir build && cd build`
+   - `cmake .. -G Ninja` (if Ninja is desired and installed)
+   - `cmake --build . -j$(nproc)` (**use high parallelism**)
+   - Verify build success as before.
+   - Ensure CMake modules in `support/` are being found via Linux paths.
+9. Configure and build fuzzers:
+   - `cd /home/cc/EnvGym/data/fmtlib_fmt/test/fuzzing`
+   - `bash build.sh` (ensure script uses correct root paths)
+   - (Alternatively) manual build as above; use Clang, not GCC, for fuzzers.
+   - Verify fuzzer binaries as before.
+   - Note: All instructions assume **Linux (Ubuntu/Debian) only.**
+10. Run fuzzers:
+    - Set sanitizer environment variables as needed.
+    - Run as described, using Linux shell commands.
+    - No Windows/macOS-specific notes needed.
+11. (Optional) Configure build environment (Bazel):
+    - Ensure Bazel files are present.
+    - `bazel build //...`
+    - `bazel test //...`
+    - All Bazel actions occur under `/home/cc/EnvGym/data/fmtlib_fmt`.
+12. Write and/or review test cases in `test/` as before.
+13. Validate build support files in `support/` as before.
+14. (Optional) Run benchmarks.
+15. (Optional) Run migration checks:
+    - `clang-tidy-18` (if installed per above).
+16. (Optional) Run memory checks:
+    - Use `valgrind` or AddressSanitizer as supported on Linux/x86_64.
+17. (Optional) Generate documentation with Doxygen.
+18. (Optional) Configure CI/CD:
+    - **Use only Linux runners** (e.g., Ubuntu 22.04, Debian bullseye)
+    - No Windows/macOS CI required.
+    - If Docker is used for CI, use `ubuntu:22.04` or `debian:bullseye` as base and set `WORKDIR /home/cc/EnvGym/data/fmtlib_fmt`.
+19. Verify cross-platform compatibility:
+    - **Only Linux/x86_64 required for this environment.**
+    - No need to verify on Windows/macOS or ARM.
+    - All scripts, tests, and builds should work on Ubuntu 22.04/Debian bullseye x86_64.
+20. Document environment setup steps in `README.md`:
+    - **Show all paths relative to `/home/cc/EnvGym/data/fmtlib_fmt`**
+    - All examples and build/run instructions are for Linux, not Windows/macOS.
+    - CI/CD and Docker instructions (if included) should use Linux images and `WORKDIR /home/cc/EnvGym/data/fmtlib_fmt`.
+21. Final verification:
+    - All instructions/tests/commands should assume Linux/x86_64, using `/home/cc/EnvGym/data/fmtlib_fmt` as root.
+    - Confirm all tests pass and builds succeed in this environment.
+    - No GPU/CUDA/NVIDIA runtime checks/requirements.
+    - No Windows/macOS/ARM-specific builds/tests required.
+
+---
+
+**Additional Notes:**  
+- **Memory/Storage:** If you have limited RAM (e.g., <2GB), reduce build parallelism (`-j2` or remove `-j` flag from build commands). For standard dev VMs (>=4GB RAM), use full parallelism (`-j$(nproc)`).
+- **Storage:** The build and source trees are moderate in size (<500MB); ensure at least 2GB free for all builds, tests, and fuzzing outputs.
+- **Pathing:** All scripts, CMake configs, and documentation must use `/home/cc/EnvGym/data/fmtlib_fmt` as the root project directory.
+- **Docker:** If using Docker, always set `WORKDIR /home/cc/EnvGym/data/fmtlib_fmt` and use `ubuntu:22.04` or `debian:bullseye` base images. No CUDA/NVIDIA images or runtime needed.
+
+---
+
+**Summary of Adjustments:**  
+- _Removed all Windows/macOS/GPU/CUDA/NVIDIA/ARM/ARM64/other-arch-specific content or requirements._
+- _Clarified all tool/package requirements are satisfied on Ubuntu 22.04/Debian bullseye x86_64 via apt or official upstreams._
+- _All instructions, scripts, and documentation should use `/home/cc/EnvGym/data/fmtlib_fmt` as the project root path._
+- _Builds/tests/fuzzers must be verified only on Linux/x86_64._
+- _All cross-platform, GPU, or other-arch caveats are omitted as not relevant to this hardware._

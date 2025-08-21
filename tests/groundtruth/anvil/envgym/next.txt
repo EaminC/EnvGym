@@ -1,0 +1,25 @@
+current progress
+
+- The Dockerfile uses the correct base image (`FROM --platform=linux/amd64 ubuntu:22.04`), setting the platform and Ubuntu version as required.
+- The working directory is set to `/home/cc/EnvGym/data/anvil` as specified in the plan.
+- All required system dependencies (including `git`, `pkg-config`, `libssl-dev`, `python3`, `python3-pip`, `bash`, etc.) are installed for Ubuntu 22.04 x86_64.
+- `kubectl` and `minikube` are installed as x86_64/amd64 binaries.
+- Rustup is installed and pinned to toolchain 1.88.0, with the correct target (`x86_64-unknown-linux-gnu`).
+- `cargo` and `rustc` presence/versions are verified.
+- The Python `tabulate` package is installed.
+- Environment variables and shell are set appropriately.
+- Locale settings are defined.
+- Verus installation steps are present but commented out, awaiting further instructions or source availability.
+- The Docker build and runtime have both succeeded according to the provided log.
+
+next step
+
+- Uncomment and complete the Verus installation section to ensure Verus is built and available inside the container. For this, either:
+  - Copy or clone the Verus source into `/home/cc/EnvGym/data/verus/source` within the image, and
+  - Build Verus with `cargo build --release` as appropriate.
+- If project source files are needed inside the image for further builds/tests, uncomment and adjust the `COPY . /home/cc/EnvGym/data/anvil` line.
+- If the image will be used for running the controller or other binaries, add the necessary build and copy steps for those binaries.
+- Review and update any additional application-specific dependencies or steps as needed (e.g., for controller, CRDs, etc.).
+- Verify all path and COPY commands are consistent with `/home/cc/EnvGym/data/anvil`.
+- Remove any remaining commented or unused GPU/CUDA/ARM references if present.
+- If not already done, update related documentation and scripts to reflect the finalized Dockerfile and build context.

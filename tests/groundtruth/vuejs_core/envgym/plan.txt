@@ -1,0 +1,98 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64 Linux, /home/cc/EnvGym/data/vuejs_core) ===
+
+**Key Adjustments Based on Hardware Information**
+
+- All instructions, paths, Dockerfile references, and runtime assumptions are now tailored for:
+  - x86_64/amd64 architecture (no ARM, no GPU, no CUDA)
+  - A Linux OS (Ubuntu 22.04 or Alpine base recommended for Docker)
+  - Working directory: /home/cc/EnvGym/data/vuejs_core (use this as project root/WORKDIR)
+  - No GPU acceleration or special hardware requirements
+  - Sufficient RAM/CPU assumed for modern Node.js builds, but no explicit high-memory or parallel build requirements enforced
+  - Use only Linux/amd64-compatible binaries and containers
+
+---
+
+1. DOWNLOADS NEEDED  
+   - Node.js  
+     - Required: >=18.12.0, ideally >=18.18.0 or >=20.0.0; must support Node.js 22.x for full compatibility (Netlify)
+     - Use official Linux x64 binaries or node:alpine/ubuntu images for Docker
+     - Do **not** use ARM or ARM64 images (use only amd64/x86_64)
+     - For Docker, use: `--platform=linux/amd64` if scripting multi-platform builds
+     - Verify: `node -v`
+   - pnpm  
+     - Required: v10.12.4 (ensure Linux x64 compatibility)
+     - Install with `npm install -g pnpm@10.12.4` _inside the container or on Linux host_
+     - Verify: `pnpm -v`
+   - npm  
+     - Included with Node.js (Linux x64)
+   - Git  
+     - Latest stable version for Linux
+     - Install via `apt-get install git` or `apk add git` in Docker; verify with `git --version`
+   - Code editor  
+     - Linux support (e.g., VSCode, Neovim, Vim, Sublime); no Windows/Mac-only instructions
+   - Browsers  
+     - Chrome/Firefox recommended (Linux builds); for Docker, use headless or install as needed; do **not** assume Mac/Windows browser paths
+   - [Optional] Yarn, Vue Devtools, Serve (all must be Linux x64 compatible)
+   - All CLI/build tools  
+     - Use only Linux-compatible packages (npm, pnpm) and ensure no binaries are required for unsupported architectures (no ARM64, no GPU)
+   - All dependencies  
+     - No changes needed, but confirm that any native modules (e.g., esbuild) are installed for x86_64/Linux only
+
+2. FILES TO CREATE  
+   - All paths use `/home/cc/EnvGym/data/vuejs_core` as the root directory
+   - Use **forward-slash** paths everywhere (Linux convention)
+   - All files, subdirectories, and scripts must be created under `/home/cc/EnvGym/data/vuejs_core` or its subfolders
+   - Dockerfile (if used):  
+     - Place in `/home/cc/EnvGym/data/vuejs_core` or parent as needed for build context
+     - Set `WORKDIR /home/cc/EnvGym/data/vuejs_core`
+     - Use `FROM node:22-alpine` or `FROM node:22-bullseye` (or similar)  
+     - Add `--platform=linux/amd64` to `docker build` if building on a non-amd64 host
+     - Do **not** use any NVIDIA/CUDA/GPU-related images or instructions
+   - All other file content and structure:  
+     - No changes needed, but ensure all scripts assume Linux paths and shells (`/bin/sh` or `/bin/bash`)
+     - Any absolute path references in scripts should use `/home/cc/EnvGym/data/vuejs_core` as the root
+
+3. NECESSARY TEST CASES IN THE CODEBASE  
+   - No changes needed to test strategies, **except**:
+     - Do not include any tests requiring Windows/Mac-specific binaries or GPU hardware
+     - Ensure all local development/test scripts run in a Linux shell environment
+     - If testing browser builds, use headless Chrome/Firefox compatible with Linux x64 (install via apt or npm as needed)
+     - Any CI/CD test or workflow must specify `runs-on: ubuntu-latest` (for GitHub Actions) or equivalent Linux runners
+     - Docker-based tests (if any) must use `--platform=linux/amd64` to avoid ARM/ARM64 issues
+
+4. COMPLETE TODO LIST  
+   - All steps remain, but with these Linux/x86_64/amd64-specific clarifications:
+     - Installation steps for Node.js, pnpm, Git, etc. should use Linux package managers or official x64 binaries
+     - Any Dockerfile or containerization step:
+       - Use `FROM node:X.Y-alpine` or `FROM node:X.Y-bullseye` (X.Y >= 18.18.0, ideally 20 or 22)
+       - Always specify `--platform=linux/amd64` if building on multi-arch Docker hosts
+       - Never use ARM, ARM64, or GPU-specific base images
+       - Set `WORKDIR` to `/home/cc/EnvGym/data/vuejs_core`
+     - If using Docker Compose or other orchestration, ensure all services use Linux/amd64 images only
+     - All install scripts, type-checks, and builds are done in `/home/cc/EnvGym/data/vuejs_core`
+     - If any step references `/usr/local/bin`, `/usr/bin`, etc., those must exist on Linux (modify for Alpine/Ubuntu as needed)
+     - Any references to OS-specific scripts or paths (e.g., `.bat` files, `C:\`, Mac `.app` bundles) must be omitted or replaced with Linux equivalents
+     - If using systemd, process management, or shell scripts, use Linux conventions only
+     - Any mention of "open" commands for browsers (e.g., `open` on Mac) should use `xdg-open` (Linux) in docs/scripts
+     - Storage: Ensure sufficient disk space in `/home/cc/EnvGym/data/vuejs_core` for all node_modules, builds, and outputs (estimate: 2–5 GB)
+     - Memory: If running large builds/tests, ensure swap is configured or avoid memory-intensive parallel builds on low-memory systems
+     - All documentation (README.md, comments, etc.) should acknowledge Linux/x86_64 as the reference environment
+
+---
+
+**ENVIRONMENT-SPECIFIC NOTES (Linux/x86_64, /home/cc/EnvGym/data/vuejs_core):**
+
+- All node, pnpm, and npm commands should assume Linux shell
+- All project paths are relative to `/home/cc/EnvGym/data/vuejs_core`
+- If containerizing, always use `--platform=linux/amd64` for Docker
+- No GPU-specific or ARM/ARM64-specific dependencies or instructions
+- For browser-based testing (e.g., Puppeteer, Playwright), ensure correct Linux dependencies are installed (e.g., `apt-get install -y chromium` if needed)
+- If using CI/CD, configure Linux runners (ubuntu-latest) and avoid OS-specific steps
+- All build and test scripts should be shell/Bash (no PowerShell, .bat, or Mac-only scripts)
+- For file system permissions, ensure user running commands has write access to `/home/cc/EnvGym/data/vuejs_core` and subfolders
+
+---
+
+**Otherwise, all package, subpackage, and workspace configuration, scripts, and validation steps remain as in the original plan, with the above hardware/OS/arch clarifications applied throughout.**
+
+**END OF ADJUSTED PLAN**

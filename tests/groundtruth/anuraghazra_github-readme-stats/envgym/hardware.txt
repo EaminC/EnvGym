@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/anuraghazra_github-readme-stats; standard Linux user directory; project likely Node.js/JavaScript-based (from repo name)
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Official amd64 images (e.g., ubuntu:22.04, node:*, python:*, debian:*, alpine:*, etc.)
+- GPU: No NVIDIA GPU detected; no CUDA base image needed; Matrox G200eW3 does not support GPU compute workloads
+- Instruction Notes: No GPU-specific Dockerfile instructions; multi-core CPU can leverage parallel build steps; no ARM support needed; use Linux-appropriate instructions; project path should match WORKDIR
+- Docker Version: 28.3.2; BuildKit supported; --gpus flag available but not usable without NVIDIA driver/hardware

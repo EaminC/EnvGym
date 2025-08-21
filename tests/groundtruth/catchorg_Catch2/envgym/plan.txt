@@ -1,0 +1,174 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (For x86_64 Linux, No GPU, Docker, /home/cc/EnvGym/data/catchorg_Catch2 as context) ===
+
+1. DOWNLOADS NEEDED:  
+   - C++ Compiler  
+     - GCC (recommended: 9, 11, or 13; minimum: 7.2) or Clang (recommended: 13+; minimum: 5.0)  
+     - Confirm via `gcc --version` or `clang --version`.  
+     - MSVC/Visual Studio/Apple Clang: **NOT APPLICABLE** (Linux only)  
+   - CMake (≥ 3.19 recommended; ≥ 3.16 minimum)  
+   - Meson Build System (≥ 0.54.1)  
+   - Ninja (recommended for Meson/CMake)  
+   - Git (latest stable from OS repo or PPA)  
+   - Catch2 (v3, latest release or devel branch)  
+   - Python 3.x (for build scripts, Catch2 self-tests, Meson, and Conan support)  
+     - AppVeyor-specific Python 3.5: **NOT APPLICABLE** (Linux only)  
+   - Code coverage tools:  
+     - gcov/lcov (for GCC)  
+     - llvm-cov (for Clang, if needed)  
+     - OpenCppCoverage, codecov Python package: **NOT APPLICABLE** (Windows-specific)  
+   - Conan (≥ 1.53.0, required for `conanfile.py`)  
+   - vcpkg: **OPTIONAL; only if needed**  
+   - Doxygen: **OPTIONAL**  
+   - CPack (bundled with CMake): **OPTIONAL**  
+   - pkg-config: **OPTIONAL**  
+   - Bazel Build System  
+     - Bazel (latest stable, must be ≥ 6.0.0 for MODULE.bazel)  
+     - Bazelisk, Buildifier, Buildozer: **OPTIONAL/RECOMMENDED**  
+   - Bazel Modules System  
+     - Ensure Bazel ≥ 6.0.0; automatic download of `bazel_skylib`, `rules_cc`, `rules_license`  
+   - PowerShell/MSBuild: **NOT APPLICABLE** (Windows-specific)  
+   - Codecov configuration support:  
+     - Ensure tools (lcov/gcov/llvm-cov) can generate coverage in Linux-compatible formats  
+     - codecov Python package: **OPTIONAL** (for uploading coverage if needed in CI)  
+
+2. FILES TO CREATE:  
+   - CMakeLists.txt  
+   - CMakePresets.json  
+   - meson.build  
+   - meson_options.txt  
+   - tests/test_main.cpp  
+   - .gitignore  
+   - conanfile.py  
+   - [Optional] conanfile.txt or vcpkg.json  
+   - [Optional] .github/workflows/ci.yml  
+   - [Optional] Doxyfile  
+   - [Optional] README_BUILD.md  
+   - [Optional] extras/ and CMake/ directories  
+   - [Optional] docs/ directory  
+   - BUILD.bazel  
+   - src/catch2/catch_user_config.hpp.in  
+   - LICENSE.MIT  
+   - .bazelrc  
+   - [Optional] WORKSPACE  
+   - [Optional] .bazelignore  
+   - MODULE.bazel  
+   - [Optional] Bazel `BUILD` files in subdirectories  
+   - [Windows/AppVeyor-specific files]: **SKIP**  
+     - appveyor.yml, tools/misc/installOpenCppCoverage.ps1, tools/misc/appveyorBuildConfigurationScript.bat, tools/misc/appveyorTestRunScript.bat, tools/scripts/generateAmalgamatedFiles.py (**Do not create unless you plan to run Windows CI from Linux**)  
+   - codecov.yml  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All Linux-relevant tests and build system integrations (CMake, Meson, Bazel, Conan)  
+   - Coverage validation using `gcov`, `lcov`, `llvm-cov` as appropriate  
+   - Windows-specific/Visual Studio/AppVeyor/MSVC/MSBuild/PowerShell-specific tests: **SKIP**  
+   - Ensure coverage exclusions and thresholds from `codecov.yml` are validated in Linux CI  
+   - Conan packaging and build validation for GCC/Clang  
+   - CMake/Conan/C++ version matrix for GCC/Clang only  
+   - Amalgamated file generation via Python (ensure Python 3.x is available)  
+   - [Optional] vcpkg integration tests (if used)  
+
+4. COMPLETE TODO LIST (LINUX/x86_64-FOCUSED):  
+   1. Install C++ compiler:  
+       - Ubuntu/Debian: `apt-get install build-essential gcc-11 g++-11 clang-13` (or required versions)  
+       - Verify: `g++ --version`, `clang++ --version`  
+   2. Install CMake (≥ 3.19 recommended):  
+       - `apt-get install cmake` (or use official Kitware APT repo for latest)  
+   3. Install Meson (≥ 0.54.1):  
+       - `apt-get install meson` or `pip install meson`  
+   4. Install Ninja:  
+       - `apt-get install ninja-build`  
+   5. Install Git  
+   6. Install Python 3.x (`apt-get install python3 python3-pip`)  
+   7. Install Conan (`pip3 install "conan>=1.53.0,<2.0"`)  
+       - Verify: `conan --version`  
+   8. Clone Catch2 repository (use correct subdirectory if in `/home/cc/EnvGym/data/catchorg_Catch2`)  
+   9. [Optional] Install vcpkg  
+   10. [Optional] Install code coverage tools:  
+       - `apt-get install lcov` (for gcov/lcov)  
+       - For Clang: `apt-get install llvm`  
+       - codecov Python package: `pip3 install codecov` (optional)  
+   11. [Optional] Install Doxygen  
+   12. [Optional] Install pkg-config  
+   13. Install Bazel (≥ 6.0.0)  
+       - Use Bazel official install instructions for Linux/x86_64  
+       - [Recommended] Bazelisk, Buildifier  
+   14. Configure Bazel modules system (MODULE.bazel)  
+   15. Create/update `.bazelrc` for Linux/GCC/Clang configs  
+   16. Create project folder structure in `/home/cc/EnvGym/data/catchorg_Catch2`:  
+       - `/src/catch2`, `/tests`, `/extern`, `/build`, `/examples`, `/fuzzing`, `/docs`, `/extras`, `/CMake`, `/tools/scripts`, `/tools/misc`  
+   17. Create/update LICENSE.MIT  
+   18. Create/update CMakeLists.txt  
+   19. Create/update meson.build  
+   20. Create/update meson_options.txt  
+   21. Create CMakePresets.json  
+   22. Create tests/test_main.cpp  
+   23. Create .gitignore  
+   24. [Optional] Create CI workflow file at .github/workflows/ci.yml  
+       - Ensure jobs are targeted at Ubuntu runners; remove Windows/AppVeyor matrix  
+   25. [Optional] Create Doxyfile  
+   26. [Optional] Create README_BUILD.md  
+       - Document Linux/Docker usage, coverage, Conan, Bazel, CMake, Meson, vcpkg (if used)  
+       - Remove AppVeyor/Windows instructions  
+   27. [Optional] Set up and document usage of extras/ and docs/ directories  
+   28. Create/update BUILD.bazel  
+   29. Create/update src/catch2/catch_user_config.hpp.in  
+   30. Create/update MODULE.bazel  
+   31. [Optional] Create/verify WORKSPACE  
+   32. Create/verify .bazelignore  
+   33. [Optional] Create Bazel test targets for all relevant test binaries  
+   34. [New] Create/update conanfile.py  
+       - Ensure export, options, and compiler checks for Linux (GCC/Clang)  
+   35. Build project:  
+       - CMake: `cmake --preset=basic-tests` or `all-tests`, `cmake --build build`  
+       - Meson: `meson setup builddir -Dtests=true`, `ninja -C builddir`  
+       - Bazel: Use platform/compiler configs per `.bazelrc`  
+       - Conan:  
+           - `conan install . --output-folder=build --build=missing`  
+           - `conan build . --build-folder=build`  
+           - Validate with multiple compilers (GCC, Clang)  
+       - **AppVeyor/MSBuild/VS/Windows: SKIP**  
+   36. Run tests:  
+       - CMake: `ctest --test-dir build`  
+       - Meson: `meson test -C builddir`  
+       - Bazel: `bazel test --config=linux //tests:all`  
+       - Conan:  
+           - Validate test builds and installations using Conan-generated CMake toolchain and dependencies  
+       - **AppVeyor scripts: SKIP**  
+   37. [Optional] Run benchmarks  
+   38. Check code coverage:  
+       - Use gcov/lcov or llvm-cov as appropriate  
+       - Ensure coverage reports respect ignore list and thresholds in `codecov.yml`  
+       - Validate coverage status reporting in CI pipelines and Codecov comment/report generation  
+   39. [Optional] Generate documentation with Doxygen  
+   40. [Optional] Validate CI/CD pipeline:  
+       - Ensure successful builds and tests on GitHub Actions (Ubuntu runners only)  
+       - Validate Codecov report integration and that PRs/patches meet patch threshold requirements  
+       - Validate Conan build/packaging process and test installation using generated packages  
+   41. [Optional] Package project using CPack  
+   42. [Optional] Validate pkg-config integration  
+   43. [Optional] Test install process (Meson, etc.)  
+   44. [Optional] Clean build artifacts  
+
+   [Additional Linux-/Docker-specific steps:]  
+   - If building in Docker:  
+     - Set `WORKDIR /home/cc/EnvGym/data/catchorg_Catch2`  
+     - Use `COPY . .` (adjust context if project is in subdirectory)  
+     - Use `--platform=linux/amd64` for builds (if using multi-arch Docker)  
+     - Use `RUN make -j$(nproc)` or similar for parallel builds  
+     - Ensure Docker image base is `ubuntu:22.04`, `debian:bullseye`, or `alpine:latest` (choose based on package availability; Ubuntu/Debian recommended for best toolchain support)  
+   - Ensure sufficient storage and RAM for large builds and parallelization  
+   - Validate all paths and scripts are correct for `/home/cc/EnvGym/data/catchorg_Catch2` (relative or absolute as appropriate)  
+   - Exclude all Windows/AppVeyor/PowerShell/MSVC/MSBuild logic, scripts, and matrix configurations from the plan and documentation  
+   - Document and maintain only Linux (x86_64) build, test, coverage, packaging, and CI/CD flows  
+
+---  
+**Summary of Adjustments:**  
+- All Windows-, MSVC-, AppVeyor-, PowerShell-, and Visual Studio-specific items are removed or marked as SKIP/NOT APPLICABLE.  
+- Only Linux/x86_64 (GCC/Clang) is targeted; adjust install/test/build/CI steps accordingly.  
+- Use `gcov/lcov` and optionally `llvm-cov` for coverage; never OpenCppCoverage.  
+- Docker-specific context and path notes are added.  
+- Use only base images and tools compatible with x86_64/amd64; no CUDA/NVIDIA/GPU logic or dependencies.  
+- Emphasize parallel build usage to take advantage of many CPU cores.  
+- All documentation and scripts should be Linux-centric (no instructions for Windows paths, batch files, or PowerShell).  
+- Ensure Conan/CMake/Bazel/Meson flows are tested for GCC/Clang only.  
+- Project structure, file paths, and context are correct for `/home/cc/EnvGym/data/catchorg_Catch2` in Docker or bare metal Linux.

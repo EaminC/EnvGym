@@ -1,0 +1,21 @@
+current progress
+- Docker image builds and runs successfully on x86_64 (CPU-only, no CUDA, no GPU).
+- Python 3.10-slim base image is used, matching plan requirements.
+- System dependencies, Git, and build tools are installed.
+- Pip, setuptools, and wheel are upgraded.
+- TabPFN repository is shallow-cloned into the correct workdir.
+- Main and dev dependencies (including torch CPU-only) are installed via editable mode.
+- Additional development dependencies (types-pyyaml, types-psutil, commitizen, check-jsonschema) are installed.
+- Pre-commit is installed and hooks are set up if config is present.
+- The Dockerfile is fully CPU/Linux/x86_64 compliant, with no CUDA/GPU/ARM instructions.
+- The image shows Python and pip version upon startup and runs bash.
+- The current Dockerfile matches steps 1–12 and partially step 13 of the plan.
+
+next step
+- Ensure `.pre-commit-config.yaml` and `.github/workflows/` with `dependabot.yml` are present in the repository before build (steps 10–11).
+- Run `pre-commit run --all-files` in the Dockerfile or in a container to verify hooks are correctly enforced (step 16).
+- Add test execution: run `pytest tests/` in the Dockerfile or in a container to ensure automated tests pass (step 17).
+- Add code quality checks: run `ruff check .` and `mypy src/ tests/` (steps 18–19).
+- (Optional) Add documentation build: `mkdocs build` (step 20).
+- (Optional) Add commands to test main TabPFN functionality and model operations (steps 21–27).
+- Update `.gitignore` and finalize documentation for contributors (steps 28–30) as needed.

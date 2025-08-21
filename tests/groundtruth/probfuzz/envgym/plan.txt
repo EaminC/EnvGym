@@ -1,0 +1,146 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR HARDWARE) ===
+
+**Hardware Context:**  
+- Directory: /home/cc/EnvGym/data/probfuzz (nested under EnvGym/data)
+- Architecture: x86_64 (amd64), Linux
+- OS: Assume Ubuntu 22.04 or similar
+- GPU: None (skip CUDA/NVIDIA/CUDA dependencies)
+- Docker: Supported, but not required unless containerizing
+- Multi-core CPU available (enable multi-threading optimizations)
+- No ARM or macOS-specific considerations
+
+---
+
+1. **DOWNLOADS NEEDED:**
+
+   - **Python 3.8+** (preferably 3.8–3.10; avoid Python 3.11+ due to some compatibility issues with PyStan and TensorFlow 1.x)
+     - Install via OS package manager or download from python.org.
+   - **pip** (Python package manager)
+   - **Stan (CmdStan or PyStan)**
+     - CmdStan: install via official Linux instructions (https://mc-stan.org/users/interfaces/cmdstan.html)
+     - PyStan: `pip install pystan` (ensure matching Python version; PyStan 2.x for Python 3.8/3.9)
+     - Use only amd64 builds, no ARM64
+   - **Edward (Deprecated)**  
+     - `pip install edward`
+     - **TensorFlow 1.x**: `pip install tensorflow==1.15`
+     - Avoid TensorFlow 2.x; only CPU version needed (no `tensorflow-gpu`)
+   - **Pyro**  
+     - `pip install pyro-ppl`
+   - **Python dependencies:**  
+     - numpy  
+     - scipy  
+     - pandas  
+     - tqdm  
+     - pystan  
+     - pyro-ppl  
+     - edward  
+     - tensorflow==1.15  
+     - (Any additional dependencies specified in install.sh or requirements.txt)
+   - **Git** (for version control; install via `apt-get install git` if missing)
+   - **Virtualenv or conda** (optional, for isolated Python environment)
+   - **Jupyter Notebook** (optional, for interactive development)
+   - **Bash** (for install.sh; native on Linux)
+   - **Multi-threading:** Supported on multi-core x86_64 CPUs (enable `max_threads > 1` if desired)
+   - **No CUDA, cuDNN, or NVIDIA-specific packages required**
+
+2. **FILES TO CREATE:**
+
+   - **config.json**  
+     - Path: `/home/cc/EnvGym/data/probfuzz/config.json`  
+     - All keys and structure as in baseline plan.  
+     - Use forward slashes for paths (Linux default).
+     - `output_dir` should be set as a relative or absolute path under `/home/cc/EnvGym/data/probfuzz` (e.g., `"output_dir": "output"` or full path).
+   - **models.json**  
+     - Path: `/home/cc/EnvGym/data/probfuzz/models.json`
+     - No path changes needed.
+   - **install.sh**  
+     - Path: `/home/cc/EnvGym/data/probfuzz/install.sh`
+     - Remove any CUDA or GPU package installs.
+     - Example:
+       ```sh
+       #!/bin/bash
+       set -e
+       pip install numpy scipy pandas tqdm pystan pyro-ppl edward tensorflow==1.15
+       echo "Install successful"
+       ```
+   - **requirements.txt**  
+     - Path: `/home/cc/EnvGym/data/probfuzz/requirements.txt`
+     - Ensure all dependencies are compatible with Python 3.8/3.9 and x86_64.
+   - **.gitignore**  
+     - Path: `/home/cc/EnvGym/data/probfuzz/.gitignore`
+     - Add `output/` (or whatever `output_dir` is set to) and Python/venv artifacts.
+   - **Template files:**  
+     - Paths as referenced in config.json under "templates"
+     - All should be under `/home/cc/EnvGym/data/probfuzz/language/templates/` or similar.
+   - **No Windows/WSL-specific scripts or paths needed** (assume native Linux).
+
+3. **NECESSARY TEST CASES IN THE CODEBASE:**
+
+   - All as in original plan, with these clarifications:
+     - Only test on Linux/x86_64 (no Windows/WSL/ARM tests needed)
+     - Multi-threading tests: Confirm CPU core count with `nproc` and set `max_threads` accordingly (do not exceed available cores)
+     - No GPU-related tests
+     - All paths should be verified under `/home/cc/EnvGym/data/probfuzz`
+     - Confirm sufficient disk space for output_dir—at least several GB free
+
+4. **COMPLETE TODO LIST:**
+
+   1. **Install Python 3.8 or 3.9** (3.6 and 3.7 are EOL; 3.10+ may have issues with some packages)
+      - Verification: `python3 --version` (should report 3.8.x or 3.9.x)
+   2. **(Optional) Set up virtual environment**  
+      - Use `python3 -m venv venv` in `/home/cc/EnvGym/data/probfuzz`
+      - Activate: `source venv/bin/activate`
+   3. **Clone/download the project** into `/home/cc/EnvGym/data/probfuzz`
+   4. **Create/update config.json** as above, ensuring all paths are correct for Linux (no Windows-style backslashes)
+   5. **Create/update models.json**
+   6. **Create/update template files** under correct subdirectory
+   7. **Create/update install.sh** (no GPU/CUDA, no Windows-specific logic)
+      - Make script executable: `chmod +x install.sh`
+   8. **Run `./install.sh`** (not `sudo`; use virtualenv or user pip if permissions needed)
+      - Verification: "Install successful" and `pip list` shows all packages
+   9. **Install Stan backend**  
+      - CmdStan: Follow official install, set PATH in .bashrc if needed
+      - PyStan: `pip install pystan`
+   10. **Install Edward and TensorFlow 1.15**  
+       - Only CPU version needed
+   11. **Install Pyro**
+   12. **(Optional) Install Jupyter**
+   13. **Create requirements.txt**
+   14. **Create .gitignore**
+   15. **Run `./probfuzz.py 1`** and verify outputs in `output_dir`
+   16. **Run additional tests**
+   17. **Document any OS-specific notes** (Linux only; note working directory is nested under `/home/cc/EnvGym/data/probfuzz`)
+   18. **(Optional) Set up CI** (GitHub Actions: use `ubuntu-latest` runner)
+   19. **Test error handling**
+   20. **Final verification:** `./probfuzz.py 5` and check outputs
+
+---
+
+**NOTES AND ADJUSTMENTS FOR THIS HARDWARE:**
+
+- **CPU architecture:** All tools and dependencies must be x86_64/amd64 compatible (default for Ubuntu/Debian).
+- **Memory/storage:** Ensure system has at least 4GB RAM and several GB free disk for data/output.
+- **OS compatibility:** All instructions assume Linux (Ubuntu 22.04 or similar); no Windows/WSL/ARM/OSX adaptations required.
+- **No GPU:** Do not install `tensorflow-gpu`, CUDA, cuDNN, or nvidia/cuda Docker images. If using Docker, select only `python:3.8-slim` or `ubuntu:22.04` images.
+- **Working directory:** All instructions, scripts, and configs should use `/home/cc/EnvGym/data/probfuzz` as the project root and relative paths beneath it.
+- **Parallel execution:** You may enable multi-threading; set `max_threads` up to the number of CPU cores (check `nproc`).
+- **PATH and permissions:** Ensure any installed tools (e.g., CmdStan) are in the PATH for the `cc` user.
+
+---
+
+**Summary Table of Key Adjustments**
+
+| Setting/Step             | Adjustment for Hardware                |
+|--------------------------|----------------------------------------|
+| Python version           | Use 3.8 or 3.9; avoid 3.11+           |
+| GPU/CUDA                 | Not needed; install only CPU packages  |
+| Architecture             | x86_64 only; no ARM/M1/MacOS support   |
+| OS-specific steps        | Linux only; remove Windows/WSL notes   |
+| Working directory        | Use `/home/cc/EnvGym/data/probfuzz`    |
+| install.sh               | No GPU/CUDA steps; Linux bash only     |
+| Multi-threading          | Enable if CPU has multiple cores       |
+| Docker (if used)         | Use `amd64` images only                |
+
+---
+
+**End of Adjusted Plan**

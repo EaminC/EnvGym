@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_165905",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753030744",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 568B done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/node:18-bullseye\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/8] FROM docker.io/library/node:18-bullseye@sha256:0d9e9a8dcd5a83ea737ed92227a6591a31ad70c8bb722b0c51aff7ae23a88b6a\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 69.95kB 0.0s done\n#5 DONE 0.0s\n\n#6 [6/8] COPY package.json package-lock.json* yarn.lock* ./\n#6 CACHED\n\n#7 [2/8] WORKDIR /home/cc/EnvGym/data/anuraghazra_github-readme-stats\n#7 CACHED\n\n#8 [3/8] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         vim         nano     && rm -rf /var/lib/apt/lists/*\n#8 CACHED\n\n#9 [4/8] RUN corepack enable && corepack prepare yarn@stable --activate\n#9 CACHED\n\n#10 [5/8] RUN npm install -g vercel\n#10 CACHED\n\n#11 [7/8] RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi\n#11 CACHED\n\n#12 [8/8] COPY . .\n#12 DONE 0.1s\n\n#13 exporting to image\n#13 exporting layers 0.1s done\n#13 writing image sha256:400f4694ee5c8b981b9e43c1bfb06b499a0b325859a4b05817779d20a336b0ad done\n#13 naming to docker.io/library/envgym_test_1753030744 done\n#13 DONE 0.1s\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": "node:internal/errors:496\n    ErrorCaptureStackTrace(err);\n    ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /home/cc/EnvGym/data/anuraghazra_github-readme-stats/express.js\n    at new NodeError (node:internal/errors:405:5)\n    at packageResolve (node:internal/modules/esm/resolve:916:9)\n    at moduleResolve (node:internal/modules/esm/resolve:973:20)\n    at defaultResolve (node:internal/modules/esm/resolve:1206:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:404:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:373:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:250:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:76:39)\n    at link (node:internal/modules/esm/module_job:75:36) {\n  code: 'ERR_MODULE_NOT_FOUND'\n}\n\nNode.js v18.20.8\n"
+  }
+}

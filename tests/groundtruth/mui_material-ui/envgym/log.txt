@@ -1,0 +1,15 @@
+=== Docker Execution Log - 20250721_091652 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753089411
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+ERROR: failed to build: failed to solve: process "/bin/sh -c groupadd -g $GID $USER &&     useradd -m -u $UID -g $GID -s /bin/bash $USER" did not complete successfully: exit code: 4
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

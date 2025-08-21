@@ -1,0 +1,16 @@
+current progress
+- Dockerfile sets up an Ubuntu 22.04 environment with GCC-11, Clang-13, latest CMake (3.25+ from Kitware), Meson (≥0.54.1), Ninja, Python 3.x, Conan (≥1.53,<2.0), codecov, Git, lcov, llvm/llvm-cov, pkg-config, Doxygen, Bazelisk, Buildifier, and project structure at /home/cc/EnvGym/data/catchorg_Catch2.
+- All specified Linux/x86_64 tools and dependencies (excluding optional vcpkg/CPack) are installed.
+- Docker image builds and runs successfully.
+- The project files are copied into the correct context.
+- Environment variables and default shell are set for reproducibility and compatibility.
+- Versions for key tools are displayed for debugging.
+
+next step
+- Review and update the Dockerfile to ensure any recently added or planned optional tools (such as vcpkg or CPack) are included only if needed for your workflow.
+- If Bazel BUILD files, MODULE.bazel, .bazelrc, or project structure have changed, ensure the Dockerfile COPY step and context accurately reflect the required files and folders.
+- If you need to support a non-root user, uncomment and adjust the user setup section.
+- Remove any unused optional installation steps to keep the image lean.
+- Confirm that any future modifications to the project structure (new directories or files) are mirrored in the Docker context for COPY.
+- If building in CI, consider adding cleanup steps to reduce image size (e.g., apt-get clean, rm -rf /var/lib/apt/lists/*).
+- No further required changes unless the plan/tools or project structure changes.

@@ -1,0 +1,20 @@
+current progress
+- Docker image built and run successfully with the provided Dockerfile on x86_64 Linux (no GPU).
+- Base image is `python:3.11-slim`, matching the plan.
+- System and locale dependencies installed as required.
+- Working directory `/home/cc/EnvGym/data/Baleen` created and set.
+- Micromamba installed to `/opt/conda` and added to `PATH` (for Conda-based env management).
+- All source code copied into the image.
+- Dependencies installed via pip from `BCacheSim/install/requirements.txt` (if present).
+- JupyterLab installed via pip.
+- Required directories (`runs`, `tmp`, `notebooks/figs`, `data`) ensured.
+- Dataset trace download script (`data/get-tectonic.sh`) run if present.
+- Jupyter port 8888 exposed.
+- Default shell set to bash; container starts with bash shell.
+
+next step
+- Modify the Dockerfile to create and activate the Conda environment using micromamba and the provided `BCacheSim/install/env_cachelib-py-3.11.yaml` file, instead of (or in addition to) pip installs.
+- Ensure the environment is activated for subsequent RUN steps, Jupyter, and default container entrypoint (e.g., use `micromamba run -n cachelib-py-3.11 ...` or update `ENTRYPOINT`/`CMD`).
+- Optionally, clean up any redundant pip installs if Conda env covers all dependencies.
+- (If needed) Add commands to verify the Python and environment versions within the Docker build.
+- Ensure the final image runs JupyterLab (or a bash shell) within the activated Conda environment by default.

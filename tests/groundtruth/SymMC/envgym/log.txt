@@ -1,0 +1,29 @@
+=== Docker Execution Log - 20250721_090250 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753088566
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+78 |
+79 | >>> RUN if [ ! -f Enhanced_Kodkod/build.sh ]; then \
+80 | >>>       echo "build.sh missing in Enhanced_Kodkod!"; \
+81 | >>>       ls -l Enhanced_Kodkod || true; \
+82 | >>>       exit 1; \
+83 | >>>     fi && \
+84 | >>>     if [ ! -f Enhanced_Kodkod/build.xml ]; then \
+85 | >>>       echo "build.xml missing in Enhanced_Kodkod!"; \
+86 | >>>       ls -l Enhanced_Kodkod || true; \
+87 | >>>       exit 1; \
+88 | >>>     fi && \
+89 | >>>     if [ ! -d Enhanced_Kodkod/src ]; then \
+90 | >>>       echo "src directory missing in Enhanced_Kodkod!"; \
+91 | >>>       ls -l Enhanced_Kodkod || true; \
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

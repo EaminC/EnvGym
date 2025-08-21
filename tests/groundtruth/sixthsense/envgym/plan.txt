@@ -1,0 +1,174 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (FOR x86_64, UBUNTU 22.04, NO GPU, DOCKER-CAPABLE) ===
+
+1. DOWNLOADS NEEDED: 
+   - Python 3.6 or higher  
+     - **Recommended: Python 3.8.x for Ubuntu 22.04 compatibility** (Python 3.6 is not in default repos for Ubuntu 22.04; Python 3.8 or 3.10 is preferable for compatibility)
+   - Conda (Miniconda or Anaconda, latest version, x86_64 Linux)
+   - pip (latest version)
+   - Git (latest version, for repository management)
+   - **Ubuntu 22.04 64-bit** (current base image; tested on 18.04, but all dependencies are compatible with 22.04)
+   - CSV data files from: https://zenodo.org/record/6388301
+   - All Python dependencies specified in requirements.txt:
+     - scikit-learn
+     - numpy
+     - matplotlib
+     - pandas
+     - jsonpickle
+     - nearpy
+     - treeinterpreter
+     - cleanlab
+   - Any additional system libraries required by the above Python packages (see below for 22.04 package names)
+   - (Optional) pytest or unittest (for running test cases)
+
+2. FILES TO CREATE: 
+   - environment.yml
+     - Location: project root
+     - Content: YAML file specifying **Python 3.8** and all dependencies from requirements.txt under pip
+     - Updated to explicitly list all newly provided packages
+   - requirements.txt
+     - Location: project root
+     - Content: As provided (ensure these 8 packages are listed, one per line)
+   - .env.example
+     - Location: project root
+     - Content: Placeholder for environment variables (if any are needed)
+   - .gitignore
+     - Location: project root
+     - Content: Standard Python ignores, plus project directories (plots/, models/, results/)
+   - csvs/
+     - Location: project root
+     - Content: Empty folder; user to populate with downloaded csvs
+   - plots/, models/, results/
+     - Location: project root
+     - Content: mkdir as per instructions
+   - tests/
+     - Location: project root
+     - Content: Contains test_*.py files for test cases (one for each scenario, including all new dependencies)
+   - (Optional) README.md
+     - Location: project root
+     - Content: Document updated environment setup steps and any new requirements
+
+3. NECESSARY TEST CASES IN THE CODEBASE: 
+   - Test dependency installation:
+     - Verify all packages from requirements.txt (scikit-learn, numpy, matplotlib, pandas, jsonpickle, nearpy, treeinterpreter, cleanlab) are importable
+   - Test train.py CLI:
+     - Verify script runs with --help and lists all options
+     - Test script fails gracefully with missing/incorrect arguments
+   - Test data loading:
+     - Confirm train.py can load sample csv files from csvs/
+     - Verify correct error messages for missing/malformed csv files
+   - Test directory creation:
+     - Ensure plots/, models/, results/ are created automatically or handled if missing
+   - Test basic run:
+     - Run train.py with minimal valid arguments (using small dummy csv files) and check for successful completion
+   - Test output generation:
+     - Verify that results are saved in results/ and plots/ as per arguments
+   - Test feature importance extraction:
+     - Run train.py with --tree and --special; check for expected output
+   - Test threshold modification:
+     - Change thresholds in train.py, run, and verify that results reflect the new settings
+   - Test for compatibility and correct functioning of all new dependencies:
+     - Write tests that import and use each new package to ensure correct installation and no conflicts
+     - For example, test cleanlab functionality if used in project code
+     - Test nearpy and treeinterpreter usage if present in codebase
+   - Test cross-platform compatibility:
+     - Attempt running on Windows/Mac (if feasible); verify basic functionality and note any issues
+
+4. COMPLETE TODO LIST: 
+   1. Install Conda (Miniconda or Anaconda) for **x86_64 Linux** if not already installed.
+      - Verification: conda --version returns a valid version.
+   2. Clone or download the SixthSense repository to `/home/cc/EnvGym/data/sixthsense`.
+      - Verification: repo directory contains README.md and train.py.
+   3. Download CSV data files from https://zenodo.org/record/6388301 and place them in the `csvs/` directory at project root.
+      - Verification: csvs/ contains .csv files as referenced in README.md.
+   4. Create the required output directories:
+      - mkdir -p plots models results
+      - Verification: All three directories exist and are writable.
+   5. Create environment.yml based on provided requirements.txt and **Python 3.8** (not 3.6).
+      - Sample content:
+        ```
+        name: sixthsense-env
+        channels:
+          - defaults
+        dependencies:
+          - python=3.8
+          - pip
+          - pip:
+              - scikit-learn
+              - numpy
+              - matplotlib
+              - pandas
+              - jsonpickle
+              - nearpy
+              - treeinterpreter
+              - cleanlab
+        ```
+      - Verification: environment.yml exists at project root and lists all required packages.
+   6. Ensure requirements.txt exists at project root and matches the provided content (the 8 packages, one per line).
+      - Verification: requirements.txt present and contents match above.
+   7. Create .gitignore to exclude output directories and Python cache.
+      - Sample content:
+        ```
+        __pycache__/
+        *.pyc
+        *.pyo
+        .DS_Store
+        plots/
+        models/
+        results/
+        ```
+      - Verification: .gitignore exists and is populated.
+   8. Create and activate the conda environment:
+      - conda env create -f environment.yml
+      - conda activate sixthsense-env
+      - Verification: python --version shows 3.8.x; all dependencies are importable in Python REPL.
+   9. Install any missing system-level dependencies required by the Python packages.  
+      **For Ubuntu 22.04, use updated package names:**
+      - sudo apt-get update
+      - sudo apt-get install -y build-essential python3-dev libblas-dev liblapack-dev gfortran libopenblas-dev libatlas-base-dev
+        - **Note:** `libpython3-dev` is replaced by `python3-dev` on Ubuntu 22.04.
+      - Verification: No installation errors.
+   10. (If needed) Run pip install -r requirements.txt (inside conda env, if not handled by environment.yml).
+       - Verification: All packages install without error.
+   11. Create tests/ directory and add test_*.py files for each test case listed above, including import and basic usage test for all new dependencies.
+       - Verification: pytest or unittest runs and reports tests.
+   12. Run train.py --help to verify CLI works.
+       - Verification: CLI help message displays all options.
+   13. Run a sample training command with test csv files.
+       - Verification: Results and plots are generated; no errors in console.
+   14. Run feature importance extraction command and verify correct output.
+   15. Modify thresholds in train.py and confirm that output changes as expected.
+   16. (Optional) Test on other OS (Windows/Mac) in a virtual environment.
+       - Verification: Document any OS-specific issues and solutions.
+   17. Document any environment variables needed in .env.example (if applicable).
+       - Verification: .env.example is present and updated.
+   18. Final verification: All steps above completed, main functionality works, and environment can be re-created from scratch with these instructions.
+
+5. DOCKER/CONTAINER-SPECIFIC NOTES (if using Docker):  
+   - Use a base image of `ubuntu:22.04`, `python:3.8-slim`, or `continuumio/miniconda3` (x86_64/amd64 only).
+   - **Do not use ARM images** (no Apple Silicon or ARM64, as hardware is x86_64).
+   - **Do not use nvidia/cuda or any GPU-specific images or instructions.**
+   - No need to install CUDA or run `nvidia-smi`.
+   - If building in Docker, set:
+     ```
+     WORKDIR /home/cc/EnvGym/data/sixthsense
+     ```
+   - Ensure that all commands, file paths, and COPY instructions use `/home/cc/EnvGym/data/sixthsense` as the project root.
+   - Use BuildKit features as desired (Docker version 28.3.2 supports them).
+   - Large RAM/CPU available; no resource constraints expected.
+   - Ensure all directories (plots/, models/, results/, csvs/, tests/) are created with correct permissions (for root or user as needed).
+
+6. PATHS AND DIRECTORIES:  
+   - All references to project root should use: `/home/cc/EnvGym/data/sixthsense`
+   - All subdirectories (plots/, models/, results/, csvs/, tests/) are relative to this root.
+   - Data files to be placed in `/home/cc/EnvGym/data/sixthsense/csvs/`
+   - Output files will be in `/home/cc/EnvGym/data/sixthsense/plots/`, `/models/`, `/results/`
+
+7. SUMMARY OF KEY CHANGES:
+   - **Python version updated to 3.8** for Ubuntu 22.04 compatibility.
+   - **System packages updated for Ubuntu 22.04** (`python3-dev` instead of `libpython3-dev`).
+   - **Explicitly state x86_64/amd64 only; do not use ARM or GPU-specific instructions/images.**
+   - **OS compatibility: tested and targeted for Ubuntu 22.04.**
+   - **All file paths updated for /home/cc/EnvGym/data/sixthsense as project root.**
+   - All other plan steps remain as originally designed.
+
+**The above plan is now fully compatible with your x86_64, Ubuntu 22.04, no-GPU, Docker-enabled environment.**

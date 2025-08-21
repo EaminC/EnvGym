@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/tokio-rs_tokio; likely a Rust project, directory is on extfs, parent is /home/cc/EnvGym/data
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, debian:bullseye, rust:1.x-buster)
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA base images not applicable
+- Instruction Notes: No GPU-specific instructions (no --gpus, no nvidia/cuda images); multi-core builds supported; use systemd cgroup v2 if needed; ample memory and storage for large builds/caches
+- Docker Version: 28.3.2; BuildKit supported; Docker Compose v2 supported; --platform supported; GPU features not available

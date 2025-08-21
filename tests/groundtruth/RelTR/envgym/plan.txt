@@ -1,0 +1,155 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN FOR: CPU-ONLY, UBUNTU 22.04, x86_64, DOCKER, NO GPU ===
+
+1. DOWNLOADS NEEDED:  
+   - Anaconda or Miniconda (latest version) — for environment management.  
+   - Python 3.6.x (as required by the project; conda will handle this; note: Python 3.6 is EOL and not available in default Ubuntu 22.04 repositories—use conda or pyenv).  
+   - PyTorch 1.6.0 and torchvision 0.7.0 (**CPU-ONLY VERSIONS; do NOT install or reference CUDA or cudatoolkit**).  
+   - matplotlib (latest compatible with Python 3.6).  
+   - scipy 1.5.2 (or latest compatible).  
+   - pycocotools (from GitHub: cocodataset/cocoapi, PythonAPI subdirectory).  
+   - **Cython** (for building Cython extensions).  
+   - **numpy** (needed for Cython extension building).  
+   - git (latest version) — for cloning repositories and pycocotools.  
+   - GCC and related build tools (for compiling code in `lib/fpn/make.sh` and Cython extension).  
+   - **DO NOT install CUDA drivers/toolkit or any GPU dependencies.**  
+   - Visual Genome images ([Part1](https://cs.stanford.edu/people/rak248/VG_100K_2/images.zip) and [Part2](https://cs.stanford.edu/people/rak248/VG_100K_2/images2.zip)).  
+   - Visual Genome COCO-format annotations.  
+   - Open Images V6 annotations and images (as per original plan).  
+   - (Optional) Google Drive access for pretrained CPU-compatible model checkpoints (if available).  
+   - (Optional) Jupyter Notebook.  
+   - unzip utility (Linux: install `unzip` if not present).  
+
+   **Version compatibility requirements:**  
+   - All Python dependencies must be compatible with Python 3.6.  
+   - All packages must be available for x86_64/amd64 architecture and Linux Ubuntu 22.04 base.  
+   - Cython and numpy versions should be compatible with Python and each other.  
+   - No CUDA or GPU-specific packages should be referenced (e.g., do NOT use `cudatoolkit` in conda/pip commands).  
+
+2. FILES TO CREATE:  
+   - `environment.yml`:  
+     - Ensure no references to `cudatoolkit` or any GPU packages.  
+     - PyTorch and torchvision CPU-only versions (see install commands below).  
+   - `.env.example`, `requirements.txt`, and other files as in original plan.  
+   - All dataset directories and paths as previously specified.  
+   - **No GPU/driver or device-specific files/configs needed.**  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Environment sanity check:  
+     - Omit CUDA availability checks or ensure they pass gracefully on CPU-only systems (i.e., `torch.cuda.is_available()` should return `False` and code should not fail).  
+   - Inference/training/evaluation/dataset loading/test compilation: unchanged, but ensure code paths do NOT require a GPU.  
+   - C/Cython extension compilation: unchanged (will use GCC in Ubuntu 22.04).  
+   - **Test that the code runs correctly on CPU-only (no `--gpus` flag or checks for GPU devices).**  
+   - **Document and handle any code paths that explicitly require a GPU, or provide fallback/skip for CPU-only.**  
+   - All dataset preparation, annotation, and renaming workflows: unchanged.  
+
+4. COMPLETE TODO LIST (ADJUSTED):  
+   1. Install Anaconda or Miniconda (if not already installed).  
+      - Verification: `conda --version`  
+   2. Clone the RelTR repository:  
+      - `git clone https://github.com/yrcong/RelTR.git`  
+      - `cd RelTR`  
+      - Verification: Confirm main files present.  
+   3. Create and activate the conda environment:  
+      - Create `environment.yml` (see below for adjusted content).  
+      - `conda env create -f environment.yml`  
+      - `conda activate reltr`  
+      - Verification: `python --version` and `conda list`  
+   4. Install PyTorch and torchvision (**CPU-only, no cudatoolkit**):  
+      ```
+      conda install pytorch==1.6.0 torchvision==0.7.0 cpuonly -c pytorch
+      ```
+      - Verification:  
+        ```
+        python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+        ```
+        → Should print `False` for CUDA.  
+   5. Install matplotlib:  
+      - `conda install matplotlib`  
+      - Verification: `python -c "import matplotlib"`  
+   6. Install scipy:  
+      - `conda install scipy=1.5.2`  
+      - Verification: `python -c "import scipy; print(scipy.__version__)"`  
+   7. Install pycocotools:  
+      - `pip install -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'`  
+      - Verification: `python -c "import pycocotools"`  
+   8. Install Cython and numpy:  
+      - `conda install cython numpy`  
+      - Verification: `python -c "import Cython; import numpy"`  
+   9. Install GCC and build tools:  
+      - `sudo apt-get update && sudo apt-get install -y build-essential`  
+      - Verification: `gcc --version`  
+   10. Compile C/CUDA extensions:  
+       - `cd lib/fpn`  
+       - `sh make.sh`  
+       - Verification: Check for `.so` files and no errors.  
+   11. Compile Cython extension:  
+       - `cd lib/fpn/box_intersections_cpu`  
+       - `python setup.py build_ext --inplace`  
+       - Verification: Presence of `bbox_cython.*.so`, import in Python.  
+   12. Prepare Visual Genome dataset:  
+       - Download, unzip, and organize as described.  
+   13. Prepare Open Images V6 dataset:  
+       - Download, unzip, and organize as described.  
+   14. Download pretrained models (**CPU-compatible if available**):  
+       - If only GPU checkpoints are available, you may need to convert or run inference in CPU mode (verify compatibility).  
+   15. (Optional) Install Jupyter:  
+       - `conda install jupyter`  
+       - Verification: `jupyter notebook --version`  
+   16. Run environment sanity check script:  
+       - All dependencies import, `torch.cuda.is_available()` is `False`, code does not require CUDA.  
+   17. Run inference, training, evaluation test cases as listed above (on CPU).  
+   18. Test dataset loading for both datasets as above.  
+   19. Test dataset annotation/renaming workflow as above.  
+   20. Test Cython extension integration as above.  
+   21. (Optional) Set up `.env` file for custom paths.  
+   22. (Optional) Test configuration on another x86_64 Linux system (no GPU).  
+   23. Document any additional steps or issues.  
+
+**ENVIRONMENT.YML (ADJUSTED EXAMPLE):**
+```yaml
+name: reltr
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.6
+  - pytorch=1.6.0
+  - torchvision=0.7.0
+  - cpuonly
+  - matplotlib
+  - scipy=1.5.2
+  - cython
+  - numpy
+  - pip
+  - pip:
+      - git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI
+```
+
+**ADDITIONAL NOTES & TIPS:**  
+- **No GPU or CUDA references anywhere:** Omit all CUDA-related steps, variables, or Dockerfile lines.  
+- **Docker users:** Use only x86_64/amd64 base images (e.g., `ubuntu:22.04` or `python:3.6-slim-buster`), and do not use `--gpus` or NVIDIA runtime.  
+- **If using Dockerfile:**  
+  - Install build-essential, git, conda, and unzip via `apt` as needed.  
+  - Use local project path `/home/cc/EnvGym/data/RelTR` as the working directory.  
+- **If code has hard GPU dependencies:**  
+  - Patch or provide instructions for CPU-only execution.  
+  - Ensure all test cases and scripts can run without a GPU.  
+- **Memory/storage:**  
+  - Ensure sufficient disk space for large datasets (tens of GB for Visual Genome, Open Images).  
+- **Python 3.6 note:**  
+  - Not available in Ubuntu 22.04 system Python. Must use conda or pyenv.  
+- **All dataset paths:**  
+  - No changes needed; `/home/cc/EnvGym/data/RelTR` is a standard, deep home directory—no path issues expected.  
+- **C/Cython extension builds:**  
+  - Fully supported on x86_64 Ubuntu 22.04; GCC and build-essential suffice.  
+- **No Windows-specific steps needed.**  
+
+**SUMMARY OF CHANGES:**  
+- Removed all CUDA, cudatoolkit, and GPU-specific installation/verification steps.  
+- Explicitly require and verify CPU-only versions of PyTorch/torchvision.  
+- Added clarity for Ubuntu 22.04 and x86_64/amd64 compatibility.  
+- Highlighted importance of using conda for Python 3.6 on Ubuntu 22.04.  
+- Confirmed all other steps remain unchanged, provided they do not assume GPU presence.  
+
+**Proceed with this plan for a robust, CPU-only, x86_64, Ubuntu 22.04-compatible RelTR environment setup.**

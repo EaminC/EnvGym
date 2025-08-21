@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250721_090521",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1753088720",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.70kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:1ec65b2719518e27d4d25f104d93f9fac60dc437f81452302406825c46fcc9cb\n#4 DONE 0.0s\n\n#5 [ 5/14] RUN rm -rf /home/cc/miniconda3\n#5 CACHED\n\n#6 [ 2/14] WORKDIR /home/cc/EnvGym/data/flex\n#6 CACHED\n\n#7 [ 3/14] RUN apt-get update &&     apt-get install -y --no-install-recommends       wget       curl       git       build-essential       ca-certificates       gcc       g++       make       dpkg       locales       bzip2       libglib2.0-0       libxext6       libsm6       libxrender1       unzip       && rm -rf /var/lib/apt/lists/*\n#7 CACHED\n\n#8 [ 4/14] RUN locale-gen en_US.UTF-8\n#8 CACHED\n\n#9 [ 6/14] RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh &&     bash /tmp/miniconda.sh -b -p /home/cc/miniconda3 &&     rm /tmp/miniconda.sh &&     /home/cc/miniconda3/bin/conda clean -afy\n#9 CACHED\n\n#10 [internal] load build context\n#10 transferring context: 66B done\n#10 DONE 0.0s\n\n#11 [ 7/14] RUN /home/cc/miniconda3/bin/conda config --add channels conda-forge --yes &&     /home/cc/miniconda3/bin/conda config --set channel_priority strict --yes\n#11 0.599 usage: conda [-h] [-v] [--no-plugins] [-V] COMMAND ...\n#11 0.599 conda: error: unrecognized arguments: --yes\n#11 ERROR: process \"/bin/sh -c $CONDA_DIR/bin/conda config --add channels conda-forge --yes &&     $CONDA_DIR/bin/conda config --set channel_priority strict --yes\" did not complete successfully: exit code: 2\n------\n > [ 7/14] RUN /home/cc/miniconda3/bin/conda config --add channels conda-forge --yes &&     /home/cc/miniconda3/bin/conda config --set channel_priority strict --yes:\n0.599 usage: conda [-h] [-v] [--no-plugins] [-V] COMMAND ...\n0.599 conda: error: unrecognized arguments: --yes\n------\nenvgym.dockerfile:49\n--------------------\n  48 |     # Ensure conda is up to date and configure channels, with robust handling\n  49 | >>> RUN $CONDA_DIR/bin/conda config --add channels conda-forge --yes && \\\n  50 | >>>     $CONDA_DIR/bin/conda config --set channel_priority strict --yes\n  51 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c $CONDA_DIR/bin/conda config --add channels conda-forge --yes &&     $CONDA_DIR/bin/conda config --set channel_priority strict --yes\" did not complete successfully: exit code: 2\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

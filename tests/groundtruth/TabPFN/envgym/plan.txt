@@ -1,0 +1,156 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64, CPU-only, Linux, Docker, /home/cc/EnvGym/data/TabPFN) ===
+
+**Key Hardware/Env Notes:**
+- Architecture: x86_64 (amd64 only; do not use ARM-based images)
+- OS: Linux (Ubuntu 22.04 or similar recommended)
+- GPU: None (CPU-only; no CUDA, no nvidia-smi, no GPU base images)
+- Memory: Large; suitable for multi-threaded builds
+- Docker: v28.3.2+; supports BuildKit, --platform=linux/amd64
+- Project Directory: /home/cc/EnvGym/data/TabPFN
+
+---
+
+**1. DOWNLOADS NEEDED:**  
+_(Adjusted for CPU-only, x86_64, Linux, no CUDA)_
+
+- **Python**:  
+  - Version: 3.9, 3.10, 3.11, 3.12, or 3.13 (3.10 recommended for best library compatibility)
+    - _Do NOT use 3.8 or below_
+    - _If using Docker, use `python:3.10-slim` or `python:3.11-slim` as base image_
+- **pip**: Latest version recommended
+- **setuptools** and **wheel**: Required for build-system (always install/upgrade)
+- **Git**
+- **CUDA Toolkit**: _SKIP — NOT NEEDED_ (no GPU present)
+- **Python Dependencies** (from `pyproject.toml`):  
+  - torch >=2.1, <3 (_CPU-only version will be installed by pip automatically if no CUDA_)
+  - scikit-learn >=1.2.0, <1.7
+  - typing_extensions >=4.4.0
+  - scipy >=1.11.1, <2
+  - pandas >=1.4.0, <3
+  - einops >=0.2.0, <0.9
+  - huggingface-hub >=0.0.1, <1
+- **tabpfn** Python package (latest, via PyPI or local repo)
+- **Development dependencies** ([dev] optional-dependencies, `.pre-commit-config.yaml`):
+  - pre-commit, ruff, mypy, pytest, onnx, psutil
+  - mkdocs, mkdocs-material, mkdocs-autorefs, mkdocs-gen-files, mkdocs-literate-nav, mkdocs-glightbox, mkdocstrings[python], markdown-exec[ansi], mike, black
+  - types-pyyaml, types-psutil, commitizen, check-jsonschema
+- **Optional**:
+  - TabPFN Extensions repository (for advanced features)
+  - TabPFN model checkpoint files (for offline use)
+  - Visual C++ Build Tools: _SKIP (Windows only, not needed on Linux)_
+
+---
+
+**2. FILES TO CREATE:**  
+_(No changes needed, but ensure all paths are relative to `/home/cc/EnvGym/data/TabPFN` if scripting)_
+
+- .venv/ or venv/ (Python virtual environment directory)
+- pyproject.toml
+- requirements.txt (optional)
+- requirements-dev.txt (optional)
+- setup.cfg (optional)
+- .pre-commit-config.yaml (REQUIRED)
+- pytest.ini or conftest.py (optional)
+- scripts/download_all_models.py
+- .env (optional)
+- .gitignore (update to ignore venv/, model files, build outputs, etc.)
+- LICENSE
+- mkdocs.yml (optional: for documentation)
+- .github/workflows/ and .github/dependabot.yml (REQUIRED for pre-commit hooks)
+- Other config files as required (see original)
+- All paths should be Linux-style, absolute or relative to `/home/cc/EnvGym/data/TabPFN`
+
+---
+
+**3. NECESSARY TEST CASES IN THE CODEBASE:**  
+_(No hardware-specific changes needed, but note testing for GPU/CUDA is not required or applicable)_
+
+- All original test cases except:
+  - **GPU-related tests**: Only test on CPU; ensure all "test on CPU-only system" pass
+- **ONNX export**: Only test CPU-based export
+- **Internal memory tool**: Test on Linux (Windows-only checks can be omitted)
+- **No CUDA/Visual C++ Build Tools tests**: Omit
+- **Device selection**: Ensure model runs on CPU and does not attempt to use CUDA
+
+---
+
+**4. COMPLETE TODO LIST:**  
+_(Edits in **bold** or [comments])_
+
+1. **Install Python 3.9–3.13** (e.g., via apt, pyenv, or Docker base image; 3.10 recommended)
+    - `python --version` to verify
+    - [If using Docker, start with `python:3.10-slim` or `python:3.11-slim`]
+2. pip install/upgrade (pip --version)
+3. Install setuptools and wheel:  
+   - `pip install --upgrade pip setuptools wheel`
+4. **SKIP: CUDA Toolkit installation.**  
+   - **Do NOT install CUDA or nvidia-cuda-toolkit; do NOT run nvidia-smi.**
+   - If using Docker, do NOT use `nvidia/cuda` base images or `--gpus` flag.
+5. Install Git (`git --version`)
+6. Create a new Python virtual environment:  
+   - `python -m venv venv`  
+   - Activate: `source venv/bin/activate`
+   - [If using Docker, you may use the system Python or create a venv inside the container]
+7. Clone the TabPFN repository:  
+   - `git clone https://github.com/PriorLabs/TabPFN.git --depth 1`
+   - `cd TabPFN` (ensure in `/home/cc/EnvGym/data/TabPFN`)
+8. Install TabPFN and all dependencies:  
+   - `pip install -e ".[dev]"`  
+   - `pip install types-pyyaml types-psutil commitizen check-jsonschema`  
+   - **Torch will auto-detect CPU-only and install appropriate wheel**
+9. (Optional) Install TabPFN Extensions:  
+   - `git clone https://github.com/priorlabs/tabpfn-extensions.git`
+   - `pip install -e tabpfn-extensions`
+10. Ensure `.pre-commit-config.yaml` is present and correct
+11. Ensure `.github/workflows/` and `.github/dependabot.yml` exist (for pre-commit)
+12. Install and configure pre-commit:  
+    - `pre-commit install`
+13. (Optional, for offline use) Download TabPFN checkpoints:  
+    - `python scripts/download_all_models.py`
+14. (Optional) Set environment variable for model cache:  
+    - `export TABPFN_MODEL_CACHE_DIR=/path/to/dir` or use `.env`
+15. **SKIP: Visual C++ Build Tools installation — not needed on Linux.**
+16. Run initial pre-commit check  
+    - `pre-commit run --all-files`
+17. Run automated tests:  
+    - `pytest tests/`
+18. Run code quality checks:  
+    - `ruff check .`
+19. Run type checking:  
+    - `mypy src/ tests/`  
+    - `pyright`
+20. (Optional) Build and check documentation:  
+    - `mkdocs build`
+21. Test main TabPFN functionality (all on CPU):
+    - Run example code from README and verify outputs
+22. (Optional) Test AutoTabPFNClassifier (if extensions installed)
+23. (Optional) Test model save/load cycle
+24. (Optional) Test missing data handling
+25. (Optional) Test ONNX export (CPU only)
+26. (Optional) Test internal memory tool (**on Linux**; Windows-only checks not required)
+27. **Test on CPU-only system only; GPU tests not required.**
+    - Model should run and select CPU device
+28. Document and resolve errors
+29. Update `.gitignore` as needed (ignore venv/, model cache, build outputs, etc.)
+30. (For contributors) Ensure all checks pass before commit
+
+---
+
+**Additional CPU/Linux/Docker-specific notes:**
+- When scripting or in Dockerfiles, always use `WORKDIR /home/cc/EnvGym/data/TabPFN`
+- When specifying images, always use amd64-compatible base images (never ARM or CUDA images)
+- No CUDA or Visual C++ Build Tools steps required anywhere
+- If using Docker, add `--platform=linux/amd64` to `docker build` for consistency  
+  (e.g., `docker build --platform=linux/amd64 ...`)
+- For PyTorch, pip will install the correct CPU-only version automatically; do not add extra index URLs or CUDA-specific wheels
+
+---
+
+**Summary of main adjustments:**  
+- **All CUDA and GPU-specific steps/tests are omitted**
+- **Visual C++ Build Tools (Windows-only) steps omitted**
+- **All paths, base images, and commands are for x86_64 Linux only**
+- **Ensure all pre-commit and test steps are CPU-compatible**
+- **No ARM/Apple Silicon support; do not use ARM base images**
+- **If using Docker, always use amd64 and CPU-only images**
+- **No NVIDIA, CUDA, or GPU dependencies or checks anywhere**

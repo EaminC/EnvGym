@@ -1,0 +1,174 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (for x86_64 CPU-only, Ubuntu 22.04, no GPU, Docker v28.3.2, WORKDIR=/home/cc/EnvGym/data/Lottory) ===
+
+**Summary of Adjustments:**
+- No CUDA or GPU-specific steps (all instructions assume CPU-only).
+- Ensure all base images, dependencies, and commands are compatible with Ubuntu 22.04 (x86_64).
+- All paths reference `/home/cc/EnvGym/data/Lottory`.
+- Use platform flag if building containers: `--platform=linux/amd64`.
+- Ensure enough disk space (standard data science install; recommend at least 5GB free).
+- All tools and packages must support Python 3.7 on Ubuntu 22.04.
+- No ARM-specific steps; this is strictly for x86_64 systems.
+- No NVIDIA/nvidia-docker/cuda/cudnn steps or dependencies.
+- Multi-core CPU can be leveraged for faster build/test but not required to configure.
+
+---
+
+### 1. DOWNLOADS NEEDED
+
+- **Python 3.7 (strongly recommended; project is built/tested with Python 3.7)**
+  - On Ubuntu 22.04, Python 3.7 is not default. You must install it explicitly (see TODOs).
+- **pip (compatible with Python 3.7)**
+- **PyTorch==1.2.0 (must be exactly 1.2.0 per requirements.txt)**
+  - Use a CPU-only wheel (no cuda).
+  - **DO NOT** install CUDA Toolkit or any CUDA packages; all PyTorch installs should be CPU-only.
+- **torchvision==0.4.0 (must be exactly 0.4.0 per requirements.txt)**
+- **Git**
+- **All Python packages as per requirements.txt (strict version pins)**
+  - cycler==0.10.0
+  - kiwisolver==1.1.0
+  - matplotlib==3.1.1
+  - numpy==1.17.2
+  - pandas==0.25.1
+  - Pillow==6.2.0
+  - protobuf==3.9.2
+  - pyparsing==2.4.2
+  - python-dateutil==2.8.0
+  - pytz==2019.2
+  - scipy==1.3.1
+  - seaborn==0.9.0
+  - six==1.12.0
+  - tensorboardX==1.8
+  - tqdm==4.36.1
+- (Optional for plotting) matplotlib, seaborn (already required)
+- (Optional for logging/visualization): tensorboardX==1.8 (already required)
+- (Optional for code/test management): pytest (add to requirements.txt if used for tests, otherwise install separately)
+- (Optional for code style): pre-commit, flake8, black (install as needed, not in requirements.txt)
+
+---
+
+### 2. FILES TO CREATE
+
+- **.env (in project root):** Only include non-GPU environment variables if needed (e.g., for experiment configuration).  
+  - Remove/comment out CUDA_VISIBLE_DEVICES as it is not relevant on CPU-only.
+- **requirements.txt:** Must match strictly; no GPU/cuda packages.
+- **.gitignore:** Standard Python ignores, plus `/dumps`, `/plots`, `/saves`, `*.pyc`, `__pycache__/`.
+- **README.md:**  
+  - Clearly state "This environment is CPU-only (no CUDA, no GPU support)."
+  - Document that Python 3.7 is required, and provide Ubuntu 22.04-specific installation notes.
+- **config.yaml or config.json** (optional for advanced configuration)
+- **test/** directory:
+  - test/test_imports.py
+  - test/test_main.py
+  - test/test_archs.py
+- (Optional) .pre-commit-config.yaml
+- (Optional) TROUBLESHOOTING.md with Ubuntu/Python 3.7/CPU-only notes.
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE
+
+- **Test installation:**
+  - All dependencies with pinned versions in requirements.txt can be installed in a fresh Python 3.7 environment on Ubuntu 22.04, x86_64, with no GPU support.
+  - Check for correct Python and PyTorch versions (3.7.x, 1.2.0).
+- **Test script execution:**  
+  - Run `python3 main.py` as normal.
+- **Test GPU/CPU compatibility:**  
+  - Run with `torch.cuda.is_available()` and verify it prints `False` (or code works gracefully if GPU is not present).
+  - Ensure all code paths run correctly when only CPU is available.
+  - **Do not** test with CUDA or GPU-only code paths.
+- **Test combine_plots.py:** as before.
+- **Test for missing/incorrect configuration:** as before.
+- **Test plotting, logging, data handling:** as before.
+- **Test for version mismatches:** as before.
+- **(Optional) Run pytest on test/ directory:** as before.
+
+---
+
+### 4. COMPLETE TODO LIST
+
+1. **Install Python 3.7 (ensure it is the active Python version).**
+   - On Ubuntu 22.04, Python 3.7 is not included by default. Install as follows:
+     ```sh
+     sudo apt-get update
+     sudo apt-get install -y software-properties-common
+     sudo add-apt-repository ppa:deadsnakes/ppa
+     sudo apt-get update
+     sudo apt-get install -y python3.7 python3.7-venv python3.7-dev
+     ```
+     - Verification: `python3.7 --version` should output Python 3.7.x.
+2. **Set up Python 3.7 as default for the project (optional but recommended for consistency):**
+   - Use a virtual environment:
+     ```sh
+     python3.7 -m venv venv
+     source venv/bin/activate
+     ```
+     - Verification: `which python` should point to the venv.
+3. **Install pip for Python 3.7 if not present:**
+   - Inside venv:
+     ```sh
+     curl https://bootstrap.pypa.io/pip/3.7/get-pip.py -o get-pip.py
+     python get-pip.py
+     ```
+     - Verification: `pip --version` references Python 3.7 site-packages.
+4. **Clone the repository via Git:**
+   ```sh
+   git clone https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch.git /home/cc/EnvGym/data/Lottory
+   cd /home/cc/EnvGym/data/Lottory
+   ```
+   - Verification: Directory structure matches README.md.
+5. **Upgrade pip:**
+   ```sh
+   pip install --upgrade pip
+   ```
+6. **Install all Python dependencies exactly as pinned:**
+   - Use a CPU-only PyTorch 1.2.0 wheel:
+     ```sh
+     pip install torch==1.2.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+     pip install torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+     pip install -r requirements.txt
+     ```
+     - Or, edit requirements.txt so torch and torchvision lines are `torch==1.2.0+cpu` and `torchvision==0.4.0+cpu` if using PyPI/extra-index-url.
+   - **Do not install any CUDA or GPU packages.**
+   - Verification: No install errors. Run:
+     ```sh
+     python -c "import torch, torchvision, matplotlib, seaborn, pandas, numpy, tensorboardX"
+     ```
+7. **Skip CUDA Toolkit and all GPU-specific instructions.**
+   - No CUDA install.
+   - No NVIDIA drivers.
+   - Remove any reference to `CUDA_VISIBLE_DEVICES` in `.env` or code.
+   - Verification: `python -c "import torch; print(torch.cuda.is_available())"` prints `False`.
+8. **Create .env file only if needed for generic environment variables; do not include CUDA settings.**
+9. **Review and update .gitignore as needed.**
+10. **Verify requirements.txt matches exactly the provided list (CPU-only).**
+    - If changes are made, repeat step 6.
+    - Verification: Install in fresh venv.
+11. **(Optional) Create config.yaml or config.json if used.**
+12. **Create and run basic tests in `test/` directory as described.**
+    - Verification: `pytest test/` passes.
+13. **Run a full training session on a supported dataset/architecture, as in README.md.**
+    - Verification: Output files (weights, logs, plots) are created as expected; training completes without error on CPU.
+14. **Run combine_plots.py after generating results.**
+    - Verification: Combined plots created in `/plots/lt/combined_plots/`.
+15. **(Optional) Test adding a new architecture or dataset as per README.md.**
+16. **Test matplotlib and seaborn plotting (CPU-only).**
+17. **Test tensorboardX logging (CPU-only).**
+18. **Document any Ubuntu 22.04, Python 3.7, or CPU-only issues in README.md or TROUBLESHOOTING.md.**
+    - E.g.: "If you see 'torch.cuda.is_available() returns False', this is expected for CPU-only."
+19. **(Optional) Set up pre-commit hooks, as needed.**
+20. **(Optional) Set up CI for automated environment setup and test execution (on CPU runners).**
+21. **Final verification:**
+    - On a fresh Ubuntu 22.04 x86_64 VM with no GPU, repeat all steps above to ensure reproducibility.
+
+---
+
+**NOTES:**
+- All instructions and files should refer to `/home/cc/EnvGym/data/Lottory` as the working directory.
+- If using Docker, specify `--platform=linux/amd64` and use a CPU-only base image (e.g., `python:3.7-slim-buster` for compatibility).
+- No GPU/CUDA-related files, environment variables, or code paths should be referenced.
+- If codebase contains GPU-only code, ensure CPU fallback is handled or document limitations in README.md.
+- If storage or RAM is limited, monitor during install and first run; standard data science environments typically require at least 5GB disk, 2GB RAM for small datasets.
+
+---
+
+**End of adjusted plan.**

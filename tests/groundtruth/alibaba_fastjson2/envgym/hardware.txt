@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/alibaba_fastjson2; project located within EnvGym/data, directory name alibaba_fastjson2
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.X-slim, debian:buster); no native CUDA images required
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA runtime or base image not applicable
+- Instruction Notes: No GPU-related instructions needed (omit nvidia/cuda, no --gpus flag required); ensure all packages support amd64; sufficient CPU/memory for parallel builds; working directory in /home/cc/EnvGym/data/alibaba_fastjson2, set WORKDIR accordingly
+- Docker Version: 28.3.2; BuildKit supported; supports multi-stage builds; --gpus flag available but unnecessary without NVIDIA GPU

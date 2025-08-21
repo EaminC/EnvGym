@@ -1,0 +1,21 @@
+current progress
+
+- Docker image builds and runs successfully on x86_64 Linux, targeting the correct architecture and OS.
+- Base image is rust:latest, suitable for Linux/amd64.
+- All required system dependencies (git, ca-certificates, build-essential, curl, make) are installed.
+- Working directory is set correctly to the nested project path: /home/cc/EnvGym/data/tokio-rs_bytes.
+- Cargo.toml, clippy.toml, src/, tests/, README.md, LICENSE, CHANGELOG.md, and .gitignore are copied into the image.
+- Rust stable toolchain (>=1.57) and nightly toolchain for x86_64-unknown-linux-gnu are installed.
+- Clippy and rustfmt are installed for both stable and nightly toolchains.
+- Rust, Cargo, and Clippy versions are verified.
+- Dependencies are fetched and cached.
+- The default CMD is set to bash.
+
+next step
+
+- Add steps to copy any missing configuration files if relevant (e.g., rust-toolchain.toml, .cargo/config.toml, .github/workflows/ci.yml) if they exist.
+- Optionally, run automated tests, lint checks, and formatting checks as part of the Docker build or as a separate stage (e.g., `RUN cargo test --all-features`, `RUN cargo clippy`, `RUN cargo fmt -- --check`).
+- If using Docker for CI, consider multi-stage builds to separate build/test artifacts from the final image.
+- Ensure documentation build is tested (e.g., `RUN RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc`).
+- Review and optimize the Dockerfile for caching and build speed (e.g., copy only necessary files before dependency fetch, then the rest).
+- Make sure all paths and features in the Dockerfile align with project structure and plan requirements.

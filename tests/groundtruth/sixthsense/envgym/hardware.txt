@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/sixthsense; project located under /home/cc/EnvGym/data, directory name sixthsense
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Ubuntu:22.04, python:3.x-slim, or other amd64-compatible images; avoid ARM images
+- GPU: No NVIDIA GPU detected; CUDA not applicable; do not use nvidia/cuda base images
+- Instruction Notes: No GPU-specific instructions (no RUN nvidia-smi or CUDA installs); use default WORKDIR; large memory and CPU available
+- Docker Version: 28.3.2; supports BuildKit and modern Dockerfile features; --gpus flag not applicable

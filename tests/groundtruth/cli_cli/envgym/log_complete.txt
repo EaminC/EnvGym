@@ -1,0 +1,142 @@
+=== Docker Execution Log - 20250720_114817 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753012085
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 3.24kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for mcr.microsoft.com/devcontainers/go:1.24
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/9] FROM mcr.microsoft.com/devcontainers/go:1.24@sha256:1202710896e06f795a709535742b184a807e696b786423e46141d932777e29cc
+#4 DONE 0.0s
+
+#5 [2/9] WORKDIR /home/cc/EnvGym/data/cli_cli
+#5 CACHED
+
+#6 [4/9] RUN type gh >/dev/null 2>&1 || (     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg |         dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg &&     chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg &&     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" |         tee /etc/apt/sources.list.d/github-cli.list > /dev/null &&     apt-get update &&     DEBIAN_FRONTEND=noninteractive apt-get install -y gh &&     rm -rf /var/lib/apt/lists/* )
+#6 CACHED
+
+#7 [3/9] RUN apt-get update &&     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends     git     curl     wget     jq     make     tar     gzip     zip     dpkg     rpm     lsb-release     ca-certificates     apt-transport-https     software-properties-common     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [5/9] RUN COSIGN_VERSION=$(curl -s https://api.github.com/repos/sigstore/cosign/releases/latest | jq -r .tag_name | sed 's/^v//') &&     curl -L -o /usr/local/bin/cosign https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 &&     chmod +x /usr/local/bin/cosign
+#8 CACHED
+
+#9 [6/9] RUN GORELEASER_VERSION=$(curl -s https://api.github.com/repos/goreleaser/goreleaser/releases/latest | jq -r .tag_name | sed 's/^v//') &&     curl -L -o /usr/local/bin/goreleaser https://github.com/goreleaser/goreleaser/releases/download/v${GORELEASER_VERSION}/goreleaser_Linux_x86_64 &&     chmod +x /usr/local/bin/goreleaser
+#9 CACHED
+
+#10 [7/9] RUN GOLANGCI_LINT_VERSION=$(curl -s https://api.github.com/repos/golangci/golangci-lint/releases/latest | jq -r .tag_name) &&     curl -L https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}/golangci-lint-${GOLANGCI_LINT_VERSION#v}-linux-amd64.tar.gz |     tar zx -C /tmp &&     mv /tmp/golangci-lint-*/golangci-lint /usr/local/bin/golangci-lint &&     chmod +x /usr/local/bin/golangci-lint &&     rm -rf /tmp/golangci-lint-*
+#10 CACHED
+
+#11 [8/9] RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&     DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs &&     rm -rf /var/lib/apt/lists/*
+#11 0.267 [38;5;79m2025-07-20 11:48:06 - Installing pre-requisites[0m
+#11 0.326 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#11 0.338 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#11 0.339 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+#11 0.355 Get:4 https://cli.github.com/packages stable InRelease [3917 B]
+#11 0.378 Get:5 https://dl.yarnpkg.com/debian stable InRelease
+#11 0.404 Get:6 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+#11 0.514 Get:7 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [756 B]
+#11 0.514 Get:8 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [272 kB]
+#11 0.542 Get:9 https://cli.github.com/packages stable/main amd64 Packages [343 B]
+#11 0.595 Get:10 https://dl.yarnpkg.com/debian stable/main all Packages [10.9 kB]
+#11 0.606 Get:11 https://dl.yarnpkg.com/debian stable/main amd64 Packages [10.9 kB]
+#11 1.577 Fetched 9363 kB in 1s (7321 kB/s)
+#11 1.577 Reading package lists...
+#11 2.112 Reading package lists...
+#11 2.598 Building dependency tree...
+#11 2.688 Reading state information...
+#11 2.817 apt-transport-https is already the newest version (2.6.1).
+#11 2.817 ca-certificates is already the newest version (20230311+deb12u1).
+#11 2.817 curl is already the newest version (7.88.1-10+deb12u12).
+#11 2.817 gnupg is already the newest version (2.2.40-1.1).
+#11 2.817 0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+#11 2.984 Hit:1 http://deb.debian.org/debian bookworm InRelease
+#11 2.984 Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+#11 2.985 Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+#11 2.991 Hit:4 https://cli.github.com/packages stable InRelease
+#11 3.040 Hit:5 https://dl.yarnpkg.com/debian stable InRelease
+#11 3.051 Get:6 https://deb.nodesource.com/node_22.x nodistro InRelease [12.1 kB]
+#11 3.281 Get:7 https://deb.nodesource.com/node_22.x nodistro/main amd64 Packages [7349 B]
+#11 3.298 Fetched 19.5 kB in 0s (54.3 kB/s)
+#11 3.298 Reading package lists...
+#11 3.792 [1;34m2025-07-20 11:48:09 - Repository configured successfully.[0m
+#11 3.793 [38;5;79m2025-07-20 11:48:09 - To install Node.js, run: apt-get install nodejs -y[0m
+#11 3.794 [38;5;79m2025-07-20 11:48:09 - You can use N|solid Runtime as a node.js alternative[0m
+#11 3.795 [1;32m2025-07-20 11:48:09 - To install N|solid Runtime, run: apt-get install nsolid -y 
+#11 3.795 [0m
+#11 3.802 Reading package lists...
+#11 4.295 Building dependency tree...
+#11 4.384 Reading state information...
+#11 4.510 The following NEW packages will be installed:
+#11 4.510   nodejs
+#11 4.625 0 upgraded, 1 newly installed, 0 to remove and 1 not upgraded.
+#11 4.625 Need to get 37.0 MB of archives.
+#11 4.625 After this operation, 225 MB of additional disk space will be used.
+#11 4.625 Get:1 https://deb.nodesource.com/node_22.x nodistro/main amd64 nodejs amd64 22.17.1-1nodesource1 [37.0 MB]
+#11 5.637 Fetched 37.0 MB in 1s (73.5 MB/s)
+#11 5.660 Selecting previously unselected package nodejs.
+#11 5.660 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 28537 files and directories currently installed.)
+#11 5.674 Preparing to unpack .../nodejs_22.17.1-1nodesource1_amd64.deb ...
+#11 5.675 Unpacking nodejs (22.17.1-1nodesource1) ...
+#11 7.108 Setting up nodejs (22.17.1-1nodesource1) ...
+#11 7.115 Processing triggers for man-db (2.11.2-2) ...
+#11 DONE 8.2s
+
+#12 [9/9] RUN go version
+#12 0.193 go version go1.24.5 linux/amd64
+#12 DONE 0.2s
+
+#13 exporting to image
+#13 exporting layers
+#13 exporting layers 2.9s done
+#13 writing image sha256:537b9984776bcda26aad1820d7ab0818d56be4c7e1592140c7ea0f4da7971287 done
+#13 naming to docker.io/library/envgym_test_1753012085 done
+#13 DONE 2.9s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

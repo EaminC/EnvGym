@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250721_100812 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753092488
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+27 |
+28 |     # Optionally copy requirements and source code; adjust as needed
+29 | >>> COPY requirements.txt ./
+30 |
+31 |     # Install Python dependencies in a virtual environment for isolation
+--------------------
+ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::x4gzso8zxziwoq3z3vuolmd0h: "/requirements.txt": not found
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

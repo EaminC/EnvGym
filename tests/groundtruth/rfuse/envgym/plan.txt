@@ -1,0 +1,67 @@
+**Adjusted Environment Setup Plan**
+
+1. **Base Image Selection**
+   - Use only amd64-compatible base images such as `ubuntu:22.04`, `python:3.X-slim`, or `debian:buster`.
+   - Do **not** use any ARM-based or multi-arch images unless specifically required for x86_64.
+   - Ensure Docker builds use the recommended platform flag:  
+     ```
+     docker build --platform=linux/amd64 ...
+     ```
+
+2. **GPU and CUDA**
+   - Do **not** use CUDA, cuDNN, or any GPU/accelerator-related base images or libraries.
+   - Omit any Dockerfile instructions that reference `nvidia/cuda`, the `--gpus` flag, or GPU drivers.
+   - Remove or comment out any lines that install GPU toolkits (e.g., `apt-get install cuda-toolkit-*`).
+
+3. **WORKDIR and Paths**
+   - Set the working directory in Dockerfile and scripts to:  
+     ```
+     WORKDIR /home/cc/EnvGym/data/rfuse
+     ```
+   - Mount host directories accordingly when running containers, e.g.:
+     ```
+     docker run -v /home/cc/EnvGym/data/rfuse:/home/cc/EnvGym/data/rfuse ...
+     ```
+
+4. **Build and Development Tools**
+   - Ensure installation of only x86_64-compatible tools.
+   - Use multi-core build optimizations (e.g., `make -j$(nproc)`).
+   - Do **not** include ARM emulation tools or instructions.
+
+5. **Operating System Compatibility**
+   - Confirm all dependencies and packages are compatible with Ubuntu 22.04 or Debian Buster on x86_64.
+   - Avoid any references to Windows or macOS-specific dependencies.
+   - Ensure all shell scripts use Unix line endings.
+
+6. **Memory and Storage**
+   - (Assuming no specific RAM/storage constraints given)  
+     If your application has large memory/storage requirements, check host system limits and adjust Docker resource allocation accordingly.
+   - Document required disk and RAM usage for the environment if known.
+
+7. **Docker Version and BuildKit**
+   - Since Docker 28.3.2 with BuildKit is available, leverage BuildKit in builds:
+     ```
+     export DOCKER_BUILDKIT=1
+     ```
+   - Use syntax and features compatible with Docker 28.3.2.
+
+8. **Platform and Architecture**
+   - Explicitly set platform in your Docker builds:
+     ```
+     --platform=linux/amd64
+     ```
+   - Do not include ARM or other architecture support.
+
+9. **Documentation**
+   - Reflect all above adjustments in your `README.md` or setup instructions.
+   - Clearly state that this environment is for x86_64 (amd64) CPUs with **no GPU support**.
+
+---
+
+**Summary of Key Adjustments:**
+- Only support amd64 images and tools.
+- Remove all GPU/CUDA/NVIDIA/GPU driver dependencies/instructions.
+- Set and use `/home/cc/EnvGym/data/rfuse` as the working/project directory.
+- Leverage multi-core CPU optimizations.
+- Use Docker BuildKit features; no ARM or GPU flags.
+- Update documentation to reflect these constraints.

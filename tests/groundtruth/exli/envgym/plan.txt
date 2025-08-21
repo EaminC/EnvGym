@@ -1,0 +1,189 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN FOR /home/cc/EnvGym/data/exli (x86_64, NO GPU, UBUNTU 22.04/amd64) ===
+
+**Summary of Changes:**
+- Explicitly enforce x86_64/amd64 compatibility in all base images and binaries.
+- Remove any CUDA/NVIDIA/GPU-related dependencies or instructions.
+- Ensure COPY context and working directory use the correct paths for nested data-centric directory.
+- Confirm all tools and binaries are available for amd64 (no ARM or other arch).
+- Leverage available RAM/CPU for build parallelism, but no other constraints.
+- Minor clarifications for Docker build context, user setup, and file locations.
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - **Base image:**  
+     - Use `ubuntu:22.04` (amd64) explicitly:  
+       - In Dockerfile: `FROM ubuntu:22.04@sha256:<digest>` or `FROM ubuntu:22.04`  
+       - (Do NOT use ARM, CUDA, or GPU-enabled base images.)
+     - If using `docker buildx`, enforce platform: `--platform=linux/amd64`  
+   - **Docker:**  
+     - No changes needed; Docker 28.3.2 is compatible.  
+   - **Miniconda:**  
+     - Use Miniconda installer for x86_64 Linux: `Miniconda3-latest-Linux-x86_64.sh`  
+     - Do NOT use ARM or aarch64 installer.  
+   - **Python 3.9+ (via Conda):**  
+     - Use x86_64/amd64 Miniconda environment.  
+   - **Java 8 (OpenJDK 8.0.302-open via SDKMAN):**  
+     - Only install the x86_64/amd64 version.  
+     - SDKMAN installs correct architecture by default in x86_64 containers.  
+   - **Maven 3.8.3+:**  
+     - Confirm apt or SDKMAN provides amd64 version; do NOT use ARM builds.  
+   - **All other system packages:**  
+     - Only select packages available for Ubuntu 22.04/amd64.  
+     - No GPU/NVIDIA/CUDA libraries should be installed (no `cuda*`, `nvidia*`, `libnvidia*` in apt-get install).  
+   - **Firefox & Geckodriver:**  
+     - Install Ubuntu/apt version for amd64.  
+     - For Geckodriver, download `geckodriver-v0.31.0-linux64.tar.gz` only.  
+   - **UniversalMutator, EvoSuite, Randoop:**  
+     - Use x86_64/amd64 Java JARs; not arch-dependent.  
+   - **Python packages:**  
+     - All are pip/conda and cross-platform; no GPU versions (avoid e.g. `torch` with CUDA).  
+   - **SDKMAN:**  
+     - Standard install; works on amd64 Ubuntu.  
+   - **Other tools:**  
+     - Only select amd64-compatible tools.  
+   - **No GPU-specific/pytorch/tensorflow/cuda/cuDNN, etc.**  
+   - **No changes needed for Java dependencies, as all are Java-based and JVM-arch will match Java 8 install.**
+
+2. FILES TO CREATE:  
+   - **Dockerfile:**  
+     - Start with `FROM ubuntu:22.04` (amd64)  
+     - If using BuildKit/buildx, ensure `--platform=linux/amd64` is specified (either in Dockerfile or build command).  
+     - Use `WORKDIR /home/itdocker/` (or project root as needed).  
+     - When using `COPY . .`, ensure build context is set to `/home/cc/EnvGym/data/exli` or the relevant project root.  
+       - If the project is in a nested directory, invoke `docker build` from `/home/cc/EnvGym/data/exli` to ensure context correctness.  
+       - Avoid copying unnecessary large data directories (e.g., `COPY ./src ./src` rather than `COPY . .` if needed).  
+     - No references to GPU, CUDA, or nvidia packages.  
+     - All RUN/apt-get install steps should only install CPU-compatible packages.  
+     - No changes needed for user setup, but ensure that `/home/itdocker/` is created in the container and maps to the correct context.  
+   - **prepare-conda-env.sh, environment.yml, setup.py, pom.xml, etc.:**  
+     - No changes needed for arch, but note:  
+       - Any binary Python dependencies (none listed here) must be available in x86_64 builds.  
+       - If future changes introduce binary wheels, ensure they are available for manylinux/x86_64.  
+   - **.env, config.yaml:**  
+     - If using absolute paths, ensure they are correct within the container (e.g., `/home/itdocker/` as home).  
+     - Adjust any hardcoded paths from `/home/cc/EnvGym/...` to `/home/itdocker/` if necessary, since container user and host user differ.  
+   - **README.md:**  
+     - Note:  
+       - "This Docker image is for x86_64/amd64 Linux only. Not compatible with ARM or GPU-enabled hardware."  
+       - "No GPU acceleration is required or supported."  
+       - "If running on Mac/Windows, use Docker Desktop with an amd64 engine."  
+     - Update build/run instructions to clarify build context:  
+       - E.g., "Run `docker build --platform=linux/amd64 -t exli .` from the project root (`/home/cc/EnvGym/data/exli`)."  
+   - **.gitignore, install scripts, etc.:**  
+     - No changes; just ensure no host-absolute-paths leak into code/scripts.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - No GPU/CUDA-specific tests.  
+   - All tests should run on CPU-only systems (the environment has no GPU).  
+   - Paths in tests should use `$HOME` or `/home/itdocker/` rather than host-specific directories.  
+   - If any test scripts reference `/home/cc/...`, refactor to use `$HOME` or relative paths.  
+   - All Java/Python tests are CPU-compatible; no changes needed.
+
+4. COMPLETE TODO LIST:  
+
+   1. **Install Docker (if not already installed):**  
+      - No changes; Docker 28.3.2 is supported.
+
+   2. **Clone ExLi repository and set build context:**  
+      - Ensure you are in `/home/cc/EnvGym/data/exli` before building Docker, so that `COPY . .` includes all project files (if using nested directories).
+      - If project root is nested, specify correct Docker build context.
+
+   3. **Build Docker image:**  
+      - Command: `docker build --platform=linux/amd64 -t exli .`
+      - (If using Docker Desktop, ensure you are using an amd64 engine.)
+      - Ensure all binaries and libraries are x86_64 compatible.
+      - No references to CUDA, nvidia, or GPU in Dockerfile.
+
+   4. **Run Docker container:**  
+      - Command: `docker run -it exli /bin/bash`
+      - Container starts as user `itdocker`, home directory is `/home/itdocker/`.
+
+   5. **Verify tools and environment inside the container:**  
+      - All verification commands remain the same.
+      - Confirm `uname -m` returns `x86_64`.
+      - For `python`, `conda`, `java`, `mvn`, etc., confirm all are x86_64 binaries (`file $(which java)` etc. if in doubt).
+      - No GPU/CUDA/nvidia tools should be present.
+
+   6. **Verify cloned repositories:**  
+      - Ensure they are present under `/home/itdocker/`.
+
+   7. **Verify installation of Python environment:**  
+      - As before; ensure all pip/conda packages install for x86_64 (all listed are pure Python or have x86_64 wheels).
+
+   8. **Verify Java and other tool installations:**  
+      - As before; Java and Maven are CPU-arch neutral as long as JVM is x86_64.
+
+   9. **Build and verify `java/raninline` Maven module:**  
+      - No changes.
+
+   10. **Build and verify `jacoco-extension` Maven module:**  
+       - No changes.
+
+   11. **Verify install scripts:**  
+       - Ensure all bash scripts do not reference host-specific paths like `/home/cc/...`; use `$HOME` or `/home/itdocker/`.
+
+   12. **[Optional] Configure `.env` and `config.yaml` files:**  
+       - Ensure all paths are container-correct.
+
+   13. **Initialize Git repository, configure `.gitignore`:**  
+       - No changes.
+
+   14. **Run initial ExLi commands on a sample project:**  
+       - No changes.
+
+   15. **Write and run unit/integration tests:**  
+       - No changes.
+
+   16. **Test error scenarios:**  
+       - No changes.
+
+   17. **Test compatibility:**  
+       - Confirm all steps run on amd64/x86_64 Linux Docker engine.
+       - No support for ARM, Apple Silicon, or GPU-enabled Docker images.
+
+   18. **Document all configuration steps and troubleshooting in README.md:**  
+       - Add note: "This environment is designed for x86_64/amd64 Linux. ARM and GPU support is not provided."
+       - Add instructions for correct build context and copying only required files if large data directories are present.
+
+   19. **[Optional] Set up CI/CD pipeline:**  
+       - Ensure CI runners use amd64/x86_64 Linux runners.
+       - No GPU runners required.
+
+   20. **Clean up:**  
+       - No changes.
+
+   21. **Final verification:**  
+       - No changes.
+
+   22. **Backup or export Docker image and Conda environment:**  
+       - Note that exported image is only compatible with x86_64/amd64 hosts.
+
+   23. **[Additional recommended checks]:**  
+       - Explicitly verify no nvidia/cuda/cudnn/gpu packages are installed:  
+         - `dpkg -l | grep -E 'cuda|nvidia'` should return nothing.
+       - For all binaries, verify architecture:  
+         - `file $(which java)` should contain "x86-64".
+         - `file $(which python)` likewise.
+       - Confirm Dockerfile does not refer to CUDA or ARM images.
+       - Confirm all COPY and RUN commands use correct context and paths (relative to `/home/cc/EnvGym/data/exli` and `/home/itdocker/` inside container).
+
+---
+
+**NOTES:**
+- **NO GPU/CUDA/NVIDIA:** Do NOT install or refer to any GPU-related packages or drivers.
+- **x86_64/amd64 ONLY:** All images, binaries, and scripts must be compatible with x86_64 (amd64) Linux.
+- **No ARM, Apple Silicon, or other architectures supported.**
+- **Use correct Docker build context:** If your project root is `/home/cc/EnvGym/data/exli`, run `docker build` from that directory to ensure correct context for COPY commands.
+- **No data leakage:** Do not COPY large datasets into the image unless necessary; if needed, use `.dockerignore` to exclude.
+- **Paths:** Use container paths (`/home/itdocker/`) in scripts; avoid leaking host-specific paths into Dockerfiles or scripts.
+- **Memory and CPU:** No explicit constraints; take advantage of available resources for parallel builds (e.g., Maven `-T` flag) if desired.
+- **README.md:** Clearly state arch/OS requirements and lack of GPU support.
+
+---
+
+**In summary:**  
+Your plan is already compatible with x86_64/amd64, CPU-only, Ubuntu 22.04 environments.  
+The above changes and clarifications ensure no accidental inclusion of GPU/CUDA or ARM/Apple Silicon dependencies, correct build context use, and explicit x86_64/amd64 compatibility throughout the environment setup.  
+No storage or RAM constraints are imposed, so you may use parallel or multistage builds if desired.  
+Just ensure all context paths, binaries, and dependencies are for amd64, and that no host-specific (e.g., `/home/cc/...`) paths appear in scripts/configs inside the container.

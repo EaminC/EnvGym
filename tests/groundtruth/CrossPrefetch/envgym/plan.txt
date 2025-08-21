@@ -1,0 +1,104 @@
+**Adjusted Environment Setup Plan**
+
+1. **Base Image**
+   - Use an x86_64-compatible image such as `ubuntu:22.04` or `python:3.10-slim` (no CUDA/NVIDIA required).
+   - Example:  
+     ```Dockerfile
+     FROM python:3.10-slim
+     # or
+     FROM ubuntu:22.04
+     ```
+   - Add `--platform=linux/amd64` to `docker build` if building on a non-amd64 host.
+
+2. **Working Directory**
+   - Set working directory to `/app` or to a suitable subdirectory reflecting your project structure.  
+     ```Dockerfile
+     WORKDIR /app
+     ```
+   - If project code/data is in `/home/cc/EnvGym/data/CrossPrefetch`, copy or mount this path as `/app` inside container.
+
+3. **GPU and CUDA**
+   - **Do NOT** use any CUDA/NVIDIA-specific base images or dependencies.
+   - **Do NOT** use `--gpus` flags or install GPU libraries.
+   - Remove any `nvidia-*`, `cudatoolkit`, or similar GPU-related packages from install scripts.
+
+4. **CPU and Memory Usage**
+   - Large memory and multi-core CPU are available:  
+     - Enable multi-threaded build processes and set parallelization flags where possible (e.g., `make -j$(nproc)`).
+     - For Python, consider using libraries that can leverage multiple cores (e.g., `joblib`, `multiprocessing`).
+   - No need to optimize for low-memory environments.
+
+5. **Operating System Compatibility**
+   - Ensure all packages and dependencies are compatible with Ubuntu 22.04 LTS.
+   - Use `apt-get` or `pip` to install dependencies as needed.
+   - Avoid installing systemd unless your application requires it as PID 1 (e.g., for services).
+
+6. **Development Tools**
+   - Install necessary development tools for building and debugging (e.g., `build-essential`, `git`, `vim`), making sure they are compatible with Ubuntu 22.04.
+   - Example:
+     ```Dockerfile
+     RUN apt-get update && apt-get install -y \
+         build-essential \
+         git \
+         vim \
+         && rm -rf /var/lib/apt/lists/*
+     ```
+
+7. **Storage**
+   - Ensure there is sufficient disk space for your data and dependencies.
+   - Clean up package caches after installation to minimize image size.
+
+8. **Copying Files**
+   - Copy only necessary source code, scripts, and data into the image to keep it lean.
+   - Example:
+     ```Dockerfile
+     COPY . /app
+     ```
+
+9. **Entrypoint and CMD**
+   - Define your entrypoint and command as appropriate for your application.
+   - If running as a background service and systemd is needed, use relevant Docker options.
+
+10. **Docker Build**
+    - Use BuildKit for efficient builds.
+    - Use `--platform=linux/amd64` if building cross-platform.
+    - Example:
+      ```sh
+      DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t crossprefetch-app .
+      ```
+
+**Summary of Key Adjustments**
+- Removed all GPU/NVIDIA/CUDA references and dependencies.
+- Ensured base images and dependencies are x86_64/amd64 and Ubuntu 22.04 compatible.
+- Set correct working directory (`/app`).
+- Leveraged available CPU/memory resources for builds and runtime.
+- Ensured storage and cleanup best practices.
+- Verified development tools and package compatibility.
+
+**Ready-to-use Dockerfile Skeleton:**
+```Dockerfile
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY . /app
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+CMD ["python", "main.py"]
+```
+
+**Build Command:**
+```sh
+DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t crossprefetch-app .
+```
+
+**Notes:**
+- No GPU dependencies or instructions included.
+- All paths, tools, and dependencies are now compatible with the provided hardware and operating system.

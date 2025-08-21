@@ -1,0 +1,26 @@
+current progress
+
+- The Dockerfile follows the plan: uses `FROM ubuntu:22.04` (amd64), no ARM or GPU dependencies.
+- All required build and runtime dependencies are installed via `apt` (build-essential, libssl-dev, etc.).
+- Locale is set to en_US.UTF-8.
+- Nushell 0.92.1 x86_64 is downloaded and installed directly from release binaries.
+- Nushell installation is verified with `nu --version`.
+- Rust toolchain is set up with rustup, version 1.86.0 is installed and set as default.
+- Rust tools `cross` and `typos-cli` are installed via cargo.
+- Git and wget are installed.
+- Working directory is set to `/home/cc/EnvGym/data/nushell_nushell`.
+- Scripts are copied and `.sh` files are made executable.
+- The full project is copied into the image.
+- Shell is set to `/bin/bash -c`.
+- No ARM, GPU, or CUDA steps are present.
+- Docker build and runtime logs show success.
+
+next step
+
+- Remove the explicit Nushell version pin (`ENV NUSHELL_VERSION=0.92.1`) if you want to always use the latest stable, or keep as-is if specific version is required.
+- Optionally, add/verify `--platform=linux/amd64` in your Docker build command (not in Dockerfile) for explicit platform targeting, per plan.
+- Consider cleaning up any commented-out `ENTRYPOINT` or `CMD` if not in use, or set appropriately if container should start with a shell or Nushell.
+- Review if PowerShell (`pwsh`) is needed; if so, add its installation step.
+- Ensure all required scripts and config files are present in `./scripts` and correctly referenced.
+- Double-check that no ARM/musl/GPU-related steps or packages are present anywhere else in the build context.
+- No further Dockerfile changes are strictly necessary based on the plan; proceed to full project-specific build/test steps inside the container.

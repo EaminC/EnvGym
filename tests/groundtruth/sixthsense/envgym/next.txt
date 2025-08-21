@@ -1,0 +1,25 @@
+current progress
+
+- The Docker image builds and runs successfully on x86_64 Ubuntu 22.04 with no GPU.
+- The base image is `continuumio/miniconda3:latest`.
+- System-level dependencies for scientific Python are installed as per plan (using Ubuntu 22.04 package names).
+- The working directory is correctly set to `/home/cc/EnvGym/data/sixthsense`.
+- `requirements.txt` is copied and pip-installed directly; `environment.yml` is missing.
+- The entire repository is copied after installing Python requirements.
+- Required directories (`plots`, `models`, `results`, `csvs`, `tests`) are created with open permissions.
+- The default command is set to bash.
+- There is no use of ARM or GPU-specific images/instructions.
+- No conda environment is created or activated (because `environment.yml` is missing).
+- No explicit handling of `.env.example` or `.gitignore` in the Dockerfile.
+
+next step
+
+- Add `environment.yml` to the project root and update the Dockerfile to:
+  - Copy `environment.yml` before installing dependencies.
+  - Create and activate the conda environment using `environment.yml` (replace pip install step).
+  - Update the PATH or use `SHELL` to ensure all subsequent steps run inside the conda environment.
+  - Optionally, clean up the Dockerfile to remove direct pip install of `requirements.txt` unless needed for additional pip-only dependencies.
+- Verify that the conda environment uses Python 3.8 as specified in the plan.
+- Ensure all dependencies are installed via conda/pip in the new environment.
+- (Optional) Add COPY steps for `.env.example` and `.gitignore` if relevant for containerized development workflows.
+- Test that the container still builds and runs as expected, and all dependencies are importable within the conda environment.

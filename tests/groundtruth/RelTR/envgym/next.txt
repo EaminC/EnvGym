@@ -1,0 +1,19 @@
+current progress
+
+- Docker image builds and runs successfully on Ubuntu 22.04 base.
+- All required system dependencies, Miniconda, and git are installed.
+- Working directory `/home/cc/EnvGym/data/RelTR` is created.
+- Miniconda is installed and cleaned up.
+- RelTR repository is cloned (including submodules).
+- Conda configuration is set.
+- `environment.yml` is referenced in comments but not yet added or used.
+- The `reltr` conda environment is referenced in environment variables, but not yet created or activated.
+- No Python dependencies or project-specific conda environment is installed yet.
+- No dataset preparation or further project setup steps are included.
+
+next step
+
+- Add `environment.yml` to the Docker build context and uncomment the corresponding `ADD environment.yml .` and `RUN conda env create -f environment.yml` lines in the Dockerfile.
+- Ensure the conda environment is properly created and activated (the `reltr` environment).
+- Optionally, verify installation by adding tests/import checks (e.g., import torch, check torch.cuda.is_available()).
+- Continue with dataset download/preparation and C/Cython extension compilation steps as per the full plan, if to be included in the Docker image.

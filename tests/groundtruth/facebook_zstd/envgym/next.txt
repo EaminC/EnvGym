@@ -1,0 +1,20 @@
+current progress
+
+- The environment setup plan has been fully adjusted and tailored for x86_64 Linux with no GPU, using only relevant tools and paths.
+- The current Dockerfile is based on `ubuntu:22.04`, uses the correct `WORKDIR`, and installs all required build tools and dependencies for zstd and benchmarking (lz4, brotli, etc.).
+- Optional tools (meson, conan) are installed via pip; vcpkg install is commented out.
+- The Docker build succeeds, and the image runs the `zstd` CLI, confirming build correctness.
+- The project files are being copied in from the build context.
+- The `make` build step completes successfully; the default container command prints the zstd version, which works as expected.
+
+next step
+
+- (Optional but recommended) Uncomment or add a test step in the Dockerfile to run `make check` or other test scripts after building, ensuring the containerized build passes all test cases:
+  ```
+  RUN make check
+  ```
+  Or add additional test commands as per the plan.
+- (Optional) Clean up build artifacts or temporary files after build/tests to minimize image size.
+- (Optional) If you want to support running other commands in the container, consider changing the `CMD` to a more flexible entrypoint (e.g., `ENTRYPOINT ["./zstd"]`).
+- Review if any further optional tools (vcpkg, additional benchmarking libraries) are needed and uncomment/install as appropriate.
+- Ensure documentation is updated to reflect the finalized Dockerfile and usage instructions.

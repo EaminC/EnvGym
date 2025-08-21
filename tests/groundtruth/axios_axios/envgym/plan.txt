@@ -1,0 +1,161 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (For Linux x86_64, No GPU, /home/cc/EnvGym/data/axios_axios) ===
+
+**Hardware/OS Context**  
+- Architecture: x86_64 (amd64)  
+- OS: Linux (Ubuntu or generic, standard userland)  
+- No GPU: Ignore CUDA, nvidia/cuda, and related instructions  
+- Docker: Version 28.3.2, BuildKit supported, --platform=linux/amd64 if needed  
+- Working directory: /home/cc/EnvGym/data/axios_axios  
+- Standard dev tools available for Linux; no macOS/Windows-specific instructions needed
+
+---
+
+#### 1. DOWNLOADS NEEDED
+
+- **Node.js**:  
+  - Use official Node.js Linux x64 (amd64) binaries or Docker images (e.g., node:18-bullseye or node:20-bookworm).
+  - Do not use ARM or ARM64 images (no aarch64/arm64).
+  - Minimum: Node.js v10+, Recommended: v18.x or higher for best compatibility.
+  - If using Docker, specify `--platform=linux/amd64` if running on multi-arch host.
+
+- **npm** (bundled with Node.js) or **yarn**, **pnpm**, or **bun**:  
+  - All supported on x86_64 Linux.
+  - No platform-specific caveats; choose npm (default, pre-installed with Node.js).
+
+- **Git, Gulp, Rollup, Webpack, etc.**:  
+  - All open-source tools available for Linux x86_64.
+  - No hardware-specific limitations.
+  - Use apt, dnf, yum, or as devDependencies in package.json as appropriate.
+  - All npm packages listed are platform-independent.
+
+- **Bower**: (Optional, for legacy browser support)  
+  - Available for Linux x86_64 via npm.
+
+- **Browsers for Karma**:  
+  - On Linux, install via apt:
+      - Chrome: Use Google Chrome or Chromium for karma-chrome-launcher.
+      - Firefox: Use official Firefox.
+      - Safari: Not available on Linux, skip karma-safari-launcher in local runs, only for Sauce Labs.
+      - Headless modes for Chrome and Firefox are supported.
+
+- **Sauce Labs**:  
+  - No hardware restrictions; remote browser testing service.
+
+- **Other npm/devDependencies**:  
+  - All listed packages/platforms supported on Linux x86_64.  
+  - No GPU dependencies; do not install or reference nvidia/cuda, tensorflow-gpu, etc.
+
+---
+
+#### 2. FILES TO CREATE
+
+- **Paths and Directory Structure**:
+    - All relative paths are compatible with Linux file system layout.
+    - Use `/home/cc/EnvGym/data/axios_axios` as the project root.
+    - No Windows/macOS-specific pathing (`\` or `C:\`), only `/`.
+    - No case-insensitivity issues on Linux; be careful with capitalization.
+
+- **.gitignore, .npmignore, bower.json, etc.**  
+    - No changes for Linux.
+    - All ignore patterns are POSIX compatible.
+    - Ensure no `.DS_Store` or `.idea` unless using JetBrains IDE on Linux.
+
+- **Browser Testing Configs**:
+    - `karma.conf.cjs`:  
+        - Set browsers to ChromeHeadless and FirefoxHeadless for local/CI Linux runs.
+        - Skip Safari for local runs (not available on Linux).
+        - Document in README.md that Safari local tests are unavailable on Linux; use Sauce Labs for cross-browser.
+    - Document in README/CONTRIBUTING.md that some browser tests (Safari) are only available via Sauce Labs from Linux.
+
+- **No GPU/Hardware-Specific Files**:
+    - Omit any GPU, CUDA, or nvidia-specific configuration files or scripts.
+
+- **All other file requirements unchanged.**
+
+---
+
+#### 3. NECESSARY TEST CASES IN THE CODEBASE
+
+- **Cross-Platform/OS Notes**:
+    - All tests and scripts should run on Linux x86_64 without modification.
+    - If any scripts reference Windows batch files (`.bat`) or macOS shell scripts, ensure Linux Bash equivalents are available (not expected in this plan).
+    - For browser tests:  
+        - On Linux, restrict local browser matrix to ChromeHeadless and FirefoxHeadless.
+        - Document Safari local limitation in README.
+        - Sauce Labs coverage for Safari, IE, Edge, etc., remains as planned.
+
+- **Test Coverage/Resource Use**:
+    - No GPU tests or CUDA features; all tests are CPU-bound and compatible with x86_64.
+    - If running in low-memory environments (e.g., CI runners), ensure test scripts can be run with `--max-old-space-size` for node if needed (not expected for this project size).
+
+---
+
+#### 4. COMPLETE TODO LIST
+
+**General Adjustments for Linux x86_64 (No GPU):**
+
+1. **Node.js Installation**  
+    - Use official Linux x64 binaries or Docker images:  
+      - e.g., `curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs`  
+      - Or Docker: `docker run --platform=linux/amd64 -it --rm -v $PWD:/workspace -w /workspace node:18 bash`  
+    - No ARM, no GPU, no Windows/macOS binaries.
+
+2. **Browser Installation (for local Karma tests)**  
+    - Chrome/Chromium:  
+      - `sudo apt-get install -y chromium-browser` (or use Google Chrome .deb as needed)
+    - Firefox:
+      - `sudo apt-get install -y firefox`
+    - Safari: Not available on Linux; skip for local tests, use Sauce Labs for remote.
+
+3. **No CUDA/GPU Steps**  
+    - Do NOT install or reference CUDA or NVIDIA tools.
+
+4. **All test scripts, build scripts, and npm scripts remain unchanged** unless they reference unavailable browsers (e.g., Safari) locally, in which case:
+    - Document in README/CONTRIBUTING.md that such tests require Sauce Labs or a macOS runner.
+
+5. **No Windows/macOS-specific Instructions**  
+    - Remove or ignore any instructions that reference Windows PowerShell, macOS-specific utilities, or drive letters.
+
+6. **No ARM64 or multi-arch caveats**  
+    - Do not attempt to run or build on ARM/ARM64 images or hosts.
+    - If using Docker, always specify `--platform=linux/amd64` if multi-arch host (e.g., Apple Silicon) to ensure x86_64 compatibility.
+
+7. **File Paths**  
+    - All relative; no change needed for `/home/cc/EnvGym/data/axios_axios`.
+    - Document in README/CONTRIBUTING.md that the default working directory is `/home/cc/EnvGym/data/axios_axios`.
+
+8. **Resource Usage**  
+    - Ensure at least 2GB RAM for full build/test if possible.
+    - Disk usage is moderate (<1GB for full node_modules and build outputs).
+
+9. **CI Example**  
+    - If providing CI examples, use Ubuntu runners and do not use macOS/Windows runners unless cross-browser testing is needed on those platforms.
+
+10. **.npmignore, .gitignore, and all ignore patterns**  
+    - No changes; patterns are POSIX and Linux compatible.
+
+11. **README/CONTRIBUTING.md Documentation**  
+    - Add notes:
+        - Safari browser testing is only available via Sauce Labs from Linux.
+        - The default setup is for Linux x86_64; for ARM/Mac/Windows, adapt instructions as needed.
+        - No GPU or CUDA steps are necessary or supported.
+        - If using Docker, specify `--platform=linux/amd64` if host is multi-arch or on Apple Silicon.
+
+12. **Other Steps**  
+    - All other instructions, test cases, build steps, and documentation remain unchanged and are compatible with Linux x86_64 with no GPU.
+
+---
+
+#### SUMMARY OF ADJUSTMENTS
+
+- All tools and dependencies are compatible with Linux x86_64.
+- No GPU or CUDA dependencies or steps present or required.
+- All browser tests should be run with ChromeHeadless/FirefoxHeadless locally; Safari only via Sauce Labs.
+- File paths, scripts, and ignore patterns are POSIX compliant and suitable for `/home/cc/EnvGym/data/axios_axios`.
+- Docker instructions (if used) should specify `--platform=linux/amd64`.
+- Documentation (README/CONTRIBUTING) should note Safari local limitation and platform context.
+- No other changes required.
+
+---
+
+**Proceed with environment setup as detailed, with the above Linux/x86_64/GPU-less adjustments integrated.**

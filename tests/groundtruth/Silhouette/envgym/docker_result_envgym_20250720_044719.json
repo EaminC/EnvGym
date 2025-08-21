@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_044719",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752985339",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "Docker build timeout (5 minutes)"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

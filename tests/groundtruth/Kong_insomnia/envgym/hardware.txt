@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/Kong_insomnia; project located within a nested data directory, likely Python or ML/data workflows
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.x-slim); no CUDA-based images required
+- GPU: No NVIDIA GPU detected; CUDA or GPU support not applicable
+- Instruction Notes: No GPU-related instructions (no FROM nvidia/cuda), image can assume high CPU and RAM availability, set WORKDIR to /home/cc/EnvGym/data/Kong_insomnia as needed
+- Docker Version: 28.3.2; BuildKit, Buildx, and Compose supported, --gpus flag not applicable

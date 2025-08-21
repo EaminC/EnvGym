@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250720_041432",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1752984872",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.88kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/python:3.11-slim\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/12] FROM docker.io/library/python:3.11-slim@sha256:139020233cc412efe4c8135b0efe1c7569dc8b28ddd88bddb109b764f8977e30\n#4 DONE 0.0s\n\n#5 [ 2/12] RUN apt-get update &&     apt-get install -y --no-install-recommends         git         curl         ca-certificates         bash         build-essential         wget         bzip2         libglib2.0-0         libxext6         libsm6         libxrender1         locales         tzdata &&     rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [ 3/12] RUN echo \"en_US.UTF-8 UTF-8\" > /etc/locale.gen &&     locale-gen\n#6 CACHED\n\n#7 [ 4/12] RUN mkdir -p /home/cc/EnvGym/data/Baleen\n#7 CACHED\n\n#8 [ 5/12] WORKDIR /home/cc/EnvGym/data/Baleen\n#8 CACHED\n\n#9 [ 6/12] RUN curl -Ls https://micro.mamba.pm/install.sh | bash -s -- -b -p /opt/conda\n#9 CACHED\n\n#10 [internal] load build context\n#10 transferring context: 173.73kB 0.0s done\n#10 DONE 0.0s\n\n#11 [ 7/12] RUN ls -l /opt/conda/bin && /opt/conda/bin/micromamba --version && echo \"Micromamba in PATH: /opt/conda/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"\n#11 0.205 ls: cannot access '/opt/conda/bin': No such file or directory\n#11 ERROR: process \"/bin/sh -c ls -l /opt/conda/bin && /opt/conda/bin/micromamba --version && echo \\\"Micromamba in PATH: $PATH\\\"\" did not complete successfully: exit code: 2\n------\n > [ 7/12] RUN ls -l /opt/conda/bin && /opt/conda/bin/micromamba --version && echo \"Micromamba in PATH: /opt/conda/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\":\n0.205 ls: cannot access '/opt/conda/bin': No such file or directory\n------\nenvgym.dockerfile:37\n--------------------\n  35 |     RUN curl -Ls https://micro.mamba.pm/install.sh | bash -s -- -b -p $MAMBA_ROOT_PREFIX\n  36 |     ENV PATH=\"/opt/conda/bin:${PATH}\"\n  37 | >>> RUN ls -l /opt/conda/bin && /opt/conda/bin/micromamba --version && echo \"Micromamba in PATH: $PATH\"\n  38 |     \n  39 |     # Copy local source code into image\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c ls -l /opt/conda/bin && /opt/conda/bin/micromamba --version && echo \\\"Micromamba in PATH: $PATH\\\"\" did not complete successfully: exit code: 2\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

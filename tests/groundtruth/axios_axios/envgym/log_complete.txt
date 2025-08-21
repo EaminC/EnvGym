@@ -1,0 +1,136 @@
+=== Docker Execution Log - 20250720_211130 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1753045852
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.00kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:18-bullseye
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/7] FROM docker.io/library/node:18-bullseye@sha256:0d9e9a8dcd5a83ea737ed92227a6591a31ad70c8bb722b0c51aff7ae23a88b6a
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 907.93kB 0.0s done
+#5 DONE 0.0s
+
+#6 [2/7] WORKDIR /home/cc/EnvGym/data/axios_axios
+#6 CACHED
+
+#7 [3/7] RUN apt-get update &&     apt-get install -y --no-install-recommends       git       ca-certificates       curl       wget       gnupg       build-essential       python3       python3-pip       chromium       chromium-driver       firefox-esr       xvfb       xauth       fonts-liberation       libappindicator3-1       libasound2       libatk-bridge2.0-0       libatk1.0-0       libcups2       libdbus-1-3       libdrm2       libgbm1       libgtk-3-0       libnspr4       libnss3       libx11-xcb1       libxcomposite1       libxdamage1       libxrandr2       libxss1       libxtst6       lsb-release       xdg-utils       --no-install-suggests &&     ln -sf /usr/bin/chromium /usr/bin/chromium-browser &&     apt-get clean && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [4/7] RUN npm install -g bower
+#8 CACHED
+
+#9 [5/7] COPY . .
+#9 DONE 0.2s
+
+#10 [6/7] RUN npm ci
+#10 5.780 npm warn deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+#10 6.094 npm warn deprecated source-map-url@0.4.1: See https://github.com/lydell/source-map-url#deprecated
+#10 6.247 npm warn deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
+#10 6.341 npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+#10 6.360 npm warn deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+#10 6.418 npm warn deprecated samsam@1.3.0: This package has been deprecated in favour of @sinonjs/samsam
+#10 6.495 npm warn deprecated vm2@3.9.19: The library contains critical security issues and should not be used for production! The maintenance of the project has been discontinued. Consider migrating your code to isolated-vm.
+#10 6.559 npm warn deprecated querystring@0.2.0: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
+#10 6.943 npm warn deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+#10 7.625 npm warn deprecated har-validator@5.1.5: this library is no longer supported
+#10 9.367 npm warn deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap.
+#10 10.09 npm warn deprecated chokidar@2.1.8: Chokidar 2 does not receive security updates since 2019. Upgrade to chokidar 3 with 15x fewer dependencies
+#10 11.20 npm warn deprecated chokidar@2.1.8: Chokidar 2 does not receive security updates since 2019. Upgrade to chokidar 3 with 15x fewer dependencies
+#10 13.74 npm warn deprecated core-js@2.6.12: core-js@<3.4 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Please, upgrade your dependencies to the actual version of core-js.
+#10 16.94 
+#10 16.94 > axios@1.10.0 prepare
+#10 16.94 > husky install && npm run prepare:hooks
+#10 16.94 
+#10 16.99 husky - Git hooks installed
+#10 17.12 
+#10 17.12 > axios@1.10.0 prepare:hooks
+#10 17.12 > npx husky set .husky/commit-msg "npx commitlint --edit $1"
+#10 17.12 
+#10 17.53 husky - created .husky/commit-msg
+#10 17.59 
+#10 17.59 added 2112 packages, and audited 2113 packages in 17s
+#10 17.59 
+#10 17.59 218 packages are looking for funding
+#10 17.59   run `npm fund` for details
+#10 17.67 
+#10 17.67 75 vulnerabilities (3 low, 26 moderate, 37 high, 9 critical)
+#10 17.67 
+#10 17.67 To address issues that do not require attention, run:
+#10 17.67   npm audit fix
+#10 17.67 
+#10 17.67 To address all issues possible (including breaking changes), run:
+#10 17.67   npm audit fix --force
+#10 17.67 
+#10 17.67 Some issues need review, and may require choosing
+#10 17.67 a different dependency.
+#10 17.67 
+#10 17.67 Run `npm audit` for details.
+#10 DONE 18.9s
+
+#11 [7/7] RUN npm run build
+#11 0.354 
+#11 0.354 > axios@1.10.0 build
+#11 0.354 > gulp clear && cross-env NODE_ENV=production rollup -c -m
+#11 0.354 
+#11 0.817 [GITHUB_TOKEN is not defined]
+#11 0.820 [21:11:12] Using gulpfile /home/cc/EnvGym/data/axios_axios/gulpfile.js
+#11 0.821 [21:11:12] Starting 'clear'...
+#11 0.827 [21:11:12] Finished 'clear' after 5.65 ms
+#11 1.148 [36m
+#11 1.148 [1m./index.js[22m → [1mdist/esm/axios.js[22m...[39m
+#11 1.472 [32mcreated [1mdist/esm/axios.js[22m in [1m324ms[22m[39m
+#11 1.472 [36m
+#11 1.472 [1m./index.js[22m → [1mdist/esm/axios.min.js[22m...[39m
+#11 2.580 Created bundle axios.min.js: 35.59 kB → 13.82 kB (gzip)
+#11 2.612 [32mcreated [1mdist/esm/axios.min.js[22m in [1m1.1s[22m[39m
+#11 2.613 [36m
+#11 2.613 [1m./lib/axios.js[22m → [1mdist/axios.js[22m...[39m
+#11 4.347 [32mcreated [1mdist/axios.js[22m in [1m1.7s[22m[39m
+#11 4.347 [36m
+#11 4.347 [1m./lib/axios.js[22m → [1mdist/axios.min.js[22m...[39m
+#11 6.349 Created bundle axios.min.js: 54.45 kB → 18.9 kB (gzip)
+#11 6.369 [32mcreated [1mdist/axios.min.js[22m in [1m2s[22m[39m
+#11 6.369 [36m
+#11 6.369 [1m./lib/axios.js[22m → [1mdist/browser/axios.cjs[22m...[39m
+#11 6.551 [32mcreated [1mdist/browser/axios.cjs[22m in [1m182ms[22m[39m
+#11 6.551 [36m
+#11 6.551 [1m./lib/axios.js[22m → [1mdist/node/axios.cjs[22m...[39m
+#11 6.780 [32mcreated [1mdist/node/axios.cjs[22m in [1m229ms[22m[39m
+#11 DONE 6.8s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 11.3s done
+#12 writing image sha256:87a54c248e088716de7d075e4b45acc419fc28edb7a56b2db26adc045f61cb6a done
+#12 naming to docker.io/library/envgym_test_1753045852 done
+#12 DONE 11.3s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

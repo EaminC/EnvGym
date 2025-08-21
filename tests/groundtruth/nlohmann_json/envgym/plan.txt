@@ -1,0 +1,109 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR: x86_64, Linux, Ubuntu 22.04/Debian Bullseye, NO GPU, WORKDIR /home/cc/EnvGym/data/nlohmann_json) ===
+
+**Key Hardware/Environment Constraints:**
+- CPU: x86_64 (amd64); NO ARM support needed; NO Apple Silicon/MacOS builds on this host.
+- GPU: None; CUDA/Nvidia tools/containers not applicable here.
+- OS: Ubuntu 22.04/Debian Bullseye; all tooling must be compatible with these.
+- Directory: /home/cc/EnvGym/data/nlohmann_json; non-root user context expected.
+- Docker: Version 28.3.2+; modern BuildKit features available.
+- Storage/RAM: Not specified, but plan for moderate RAM (≥ 4GB) and sufficient storage for header-only/project builds, Python venvs, and documentation artifacts.
+- Multi-core builds possible (e.g., make -j96), but actual parallelism should match host's available CPU cores.
+
+---
+
+1. **DOWNLOADS NEEDED (Adjusted):**
+   - **C++ Compilers (Linux/x86_64 only):**
+     - GCC ≥ 4.8 (Ubuntu 22.04 default: GCC 11.x; install GCC 12/13/14 via [PPA or source](https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test) if needed for testing legacy/latest)
+     - Clang ≥ 3.4 (Ubuntu 22.04 default: Clang 14.x; install 15–20 as needed via LLVM APT repos)
+     - Intel C++ Compiler (icpc): Only if running Intel CI containers; not pre-installed or available in standard Ubuntu repo. **Skip unless using special container images.**
+     - **CUDA/Nvidia:** *Skip* (no GPU, no CUDA driver on host or in Docker; do not install CUDA toolkit or containers)
+     - **Apple Clang/MSVC/Windows/MinGW/ClangCL/Visual Studio:** Not applicable on Linux/x86_64; *skip installation and test matrix on this hardware*.
+     - **Emscripten:** Optional, can be used for WebAssembly builds, but ensure host has enough RAM (≥4GB recommended). Install via setup-emsdk or apt.
+   - **Build Tools:**
+     - CMake ≥ 3.5 (Ubuntu 22.04 default: 3.22.1; C++ Modules need ≥ 3.28, so install from [Kitware APT repo](https://apt.kitware.com/) or build from source as in plan if modules needed.)
+     - Meson ≥ 0.53; Ninja; available via apt or pip.
+     - Bazel: Download latest stable for Linux/x86_64; use Bazelisk for version management if desired.
+     - Make, unzip, git, lcov, valgrind: available via apt.
+   - **Python:**
+     - Python 3.10+ (Ubuntu 22.04: Python 3.10); Python 2.7 is EOL and not installed by default—ensure scripts (e.g., amalgamate.py) are Python 3 compatible, or install Python 2 via apt if absolutely needed.
+     - All pip requirements as detailed, install using pip3/venv under project directory for non-root, e.g., `/home/cc/EnvGym/data/nlohmann_json/.venv`.
+   - **Node/JS tools, mkcert, etc.:** Install via apt or download as required.
+   - **MkDocs, documentation tools, static analysis tools:** Install via pip3.
+   - **Docker/OCI Images:** Use only x86_64/amd64 images (e.g., `gcc:latest`, `silkeh/clang:latest`, etc.). *Do not run ARM-specific or Apple Silicon images*.
+   - **[Skip] ARM/Cirrus CI Docker images:** Not needed on this hardware.
+   - **[Skip] AppVeyor/Windows/Visual Studio specific tools:** Not applicable to this host.
+   - **[Skip] MacPorts/Homebrew/MacOS specific tools:** Not applicable to this host.
+   - **[Optional] Swift toolchain/SPM:** Not installable or usable natively on Linux unless targeting Swift for Linux, which is rare and not standard for nlohmann/json. *Skip unless specifically testing Swift for Linux.*
+
+2. **FILES TO CREATE (Adjusted):**
+   - All files as listed, but:
+     - `.github/external_ci/appveyor.yml` and Windows/MSVC/MinGW/ClangCL configs: *Do not attempt to build or test on this hardware*.
+     - `Package.swift`/SPM: Only include if planning to publish or test SPM for Swift on Linux. Otherwise, SPM is mainly for macOS/iOS.
+     - **All CMake, Meson, Bazel, Python, and documentation files are applicable.**
+     - All source, test, tools, and documentation structure as described is appropriate. Use the `/home/cc/EnvGym/data/nlohmann_json` as root.
+     - `.gitignore` should match output directories for local builds (e.g., `build/`, `docs/mkdocs/site/`, `.venv/`, `bazel-*`, `.bazelrc`, etc.).
+
+3. **NECESSARY TEST CASES IN THE CODEBASE (Adjusted):**
+   - **Linux/x86_64-only build/test matrix**: Only run GCC/Clang/Emscripten, NOT MSVC/MinGW/Windows/AppleClang.
+   - Do not test CUDA, GPU, or ARM code paths.
+   - All CI/CD, static analysis, documentation, code formatting, REUSE, and other tests are applicable.
+   - For tools requiring CMake ≥ 3.28 (e.g., C++ modules), ensure it's available per above.
+   - If you run Bazel or Meson, use Linux/x86_64 settings.
+   - Do not attempt to run Windows/Visual Studio, Apple, or ARM-specific tests.
+   - SPM tests: Only run if Swift for Linux is installed and intended to be used.
+   - **Memory/CPU-intensive tests:** Avoid `-j96` unless actual CPU count is 96; set `make -j$(nproc)` or similar for safe parallelism.
+
+4. **COMPLETE TODO LIST (Adjusted):**
+   1. **C++ Compiler:** Install GCC/Clang via `apt` or from source (as per compatibility needs).
+      - Test with `g++ --version`, `clang++ --version`.
+      - *Skip* Windows/Apple toolchains.
+   2. **CMake:** Install via `apt` (3.22.1) or newer as needed for modules (Kitware APT or source build as in plan). `cmake --version` to verify.
+   3. **Meson/Ninja:** `sudo apt install meson ninja-build` or `pip install meson ninja`.
+   4. **Bazel:** Download Bazel for Linux/x86_64. Use Bazelisk or manual download.
+   5. **[Optional] Swift:** Only install Swift for Linux if SPM support is needed/tested on this host. Otherwise, *skip*.
+   6. **C++ Modules (if used):** Ensure CMake ≥ 3.28.
+   7. **nlohmann/json:** Download as described.
+   8. **Python:** Install Python 3.10 (default); use `python3 -m venv .venv` in project root; install all requirements as user or in venv.
+      - If Python 2.7 is required for legacy scripts, install via `sudo apt install python2` and adjust scripts if possible for Python 3.
+   9. **Python packages:** Use pip3/venv as above for all requirements.
+   10. **MkDocs configuration:** All documentation steps apply. Use local paths and ensure all nav/plugin references are present.
+   11. **MkDocs local build:** Use `mkdocs build -f docs/mkdocs/mkdocs.yml`; fix as needed.
+   12. **Documentation publishing workflow:** Only applicable if publishing from this host.
+   13. **Environment variables for plugins:** Set as needed; document in local setup.
+   14. **Redirects, docs, assets:** All applicable.
+   15. **Dependabot:** Only Python and GitHub Actions dependencies can be updated on this host; SPM/Meson/Bazel dependency automation is not supported by Dependabot, but keep config up to date.
+   16. **mkcert:** Install via apt or download.
+   17. **amalgamate.py:** Download or clone as needed.
+   18. **GDB Pretty Printer/Natvis:** GDB is available; Natvis is for MSVC/Windows and *not applicable on Linux*.
+   19. **serve_header.py:** Use as needed.
+   20. **Project structure:** Use `/home/cc/EnvGym/data/nlohmann_json` as root for all directories.
+   21. **CMake/Meson/Bazel config:** All applicable; use local paths.
+   22. **Testing:** All CTest/Meson/Bazel/Python tests as described. *Do not attempt to run Windows/Apple/ARM-specific tests*.
+   23. **Static analysis:** astyle, cppcheck, cpplint, clang-tidy, etc. via apt or pip.
+   24. **Docset generation:** Only if Dash/Zeal/Velocity is installed on Linux.
+   25. **CI/CD:** Only run Linux/x86_64 pipeline jobs. If using Docker, ensure containers are x86_64 images; do not use ARM/Apple images.
+   26. **.gitignore:** Update to ignore build artifacts as generated on Linux; ensure `.venv/` is ignored if using Python venvs.
+   27. **Memory/coverage tools:** valgrind, lcov via apt.
+   28. **Code coverage:** Use lcov/genhtml as available; Coveralls upload if desired.
+   29. **Error handling & verification:** All applicable.
+   30. **Installation/packaging:** CMake/Meson/Bazel packaging as described; CPack is available on Linux.
+   31. **SPM/Swift:** *Skip* unless Swift for Linux is to be tested/used.
+   32. **Bazel/Meson coexistence:** All commands and configs should use Linux/x86_64 toolchains.
+   33. **Cirrus CI/ARM:** *Skip* unless you plan to test on ARM runners elsewhere.
+
+---
+
+**Summary of Adjustments:**
+- SKIP all Windows/MSVC, MinGW, Apple Clang, Xcode, ARM, and CUDA-specific tooling, files, and test matrix on this hardware.
+- DO NOT install or run CUDA/Nvidia tools, ARM images, or Apple/Windows-specific build tools.
+- SPM/Swift: Only relevant if you explicitly want to build/test Swift for Linux. Otherwise, skip install and testing.
+- Use `/home/cc/EnvGym/data/nlohmann_json` as project root in all scripts and configs.
+- Use only x86_64/amd64 Docker images and toolchains in local builds and CI.
+- For multi-core builds, use `make -j$(nproc)` or similar to avoid overconsumption of system resources.
+- Ensure all Python tooling uses Python 3.10+ and is installed to user or venv directory (not system-wide).
+- All documentation, static analysis, and test steps otherwise apply as described to Linux/x86_64.
+
+---
+
+**Proceed with the above plan for your hardware and environment.**  
+If in future you deploy on ARM, Windows, macOS, or GPU-enabled hosts, revisit and include the relevant sections.

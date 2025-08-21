@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data/CrossPrefetch; project directory likely contains code/data for CrossPrefetch, use WORKDIR /app or appropriate subdirectory
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64-compatible images (e.g., ubuntu:22.04, python:3.10-slim, etc.); no GPU-specific/cuda base required
+- GPU: No NVIDIA GPU detected; CUDA/NVIDIA images not applicable
+- Instruction Notes: No GPU-related instructions; large memory and CPU resources available; multi-core build and parallelization possible; use systemd as init if needed; ensure compatibility with Ubuntu 22.04 LTS environment
+- Docker Version: 28.3.2; BuildKit and buildx supported; --gpus flag and GPU builds not applicable
