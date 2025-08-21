@@ -91,5 +91,6 @@ data/*
 # 但保留下载脚本和必要文档
 !data/down_one.sh
 !data/down_all.sh
+!data/copy_envbench_scripts.sh
 
 miniconda.sh
