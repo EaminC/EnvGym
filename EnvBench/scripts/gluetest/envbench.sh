@@ -711,19 +711,34 @@ if [ -f "run.sh" ]; then
     fi
 fi
 
-# Test generate_glue.py script
+# Test generate_glue.py script and verify output
 if [ -f "scripts/generate_glue.py" ]; then
     print_status "PASS" "scripts/generate_glue.py exists"
     
-    # Test if it can be executed
     if command -v python3 &> /dev/null; then
-        if timeout 30s python3 -c "import sys; sys.path.append('scripts'); exec(open('scripts/generate_glue.py').read())" >/dev/null 2>&1; then
-            print_status "PASS" "scripts/generate_glue.py can be executed"
+        # Run once, capture both exit code and output
+        output=$(timeout 360s python3 -c "import sys; sys.path.append('scripts'); exec(open('scripts/generate_glue.py').read())" 2>&1)
+        exit_code=$?
+        
+        # Test 1: Check if script finished within 6 minutes
+        if [ $exit_code -eq 0 ]; then
+            print_status "PASS" "scripts/generate_glue.py completed within 6 minutes"
         else
-            print_status "WARN" "scripts/generate_glue.py execution failed"
+            print_status "FAIL" "scripts/generate_glue.py timed out or failed"
+        fi
+        
+        # Test 2: Check for BUILD FAIL in output (only if we have output)
+        if [ $exit_code -ne 124 ]; then  # 124 = timeout exit code
+            if echo "$output" | grep -iq "BUILD FAIL"; then
+                print_status "FAIL" "scripts/generate_glue.py output contains build failures"
+            else
+                print_status "PASS" "scripts/generate_glue.py output clean (no build failures)"
+            fi
+        else
+            print_status "FAIL" "scripts/generate_glue.py timed out - no output to analyze"
         fi
     else
-        print_status "WARN" "python3 not available for script execution test"
+        print_status "FAIL" "python3 not available for script execution test"
     fi
 else
     print_status "FAIL" "scripts/generate_glue.py not found"
@@ -976,4 +991,4 @@ print_status "INFO" "Example: bash run.sh"
 echo ""
 print_status "INFO" "For more information, see README.md"
 
-print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/gluetest gluetest-env-test /bin/bash" 
+print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/gluetest gluetest-env-test /bin/bash"
