@@ -3,14 +3,26 @@
 # Fairify Environment Benchmark Test Script
 # This script tests the environment setup for Fairify neural network fairness verification
 
-# Color codes for output
+# Don't exit on error - continue testing even if some tests fail
+# set -e  # Exit on any error
+trap 'echo -e "\n\033[0;31m[ERROR] Script interrupted by user\033[0m"; exit 1' INT TERM
+
+# Function to ensure clean exit
+cleanup() {
+    echo -e "\n\033[0;34m[INFO] Cleaning up...\033[0m"
+    # Kill any background processes
+    jobs -p | xargs -r kill
+    exit 1
+}
+
+# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Initialize counters
+# Test result counters
 PASS_COUNT=0
 FAIL_COUNT=0
 WARN_COUNT=0
@@ -30,21 +42,19 @@ EOF
     echo -e "${BLUE}[INFO]${NC} Results written to $json_file"
 }
 
-# Check if envgym.dockerfile exists (only when not in Docker container)
-if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
-    if [ ! -f "envgym/envgym.dockerfile" ]; then
-        echo -e "${RED}[CRITICAL ERROR]${NC} envgym/envgym.dockerfile does not exist"
-        echo -e "${RED}[RESULT]${NC} Benchmark score: 0 (Dockerfile missing)"
-        # Write 0 0 0 to JSON
-        PASS_COUNT=0
-        FAIL_COUNT=0
-        WARN_COUNT=0
-        write_results_to_json
-        exit 1
-    fi
+# Check if envgym.dockerfile exists
+if [ ! -f "envgym/envgym.dockerfile" ]; then
+    echo -e "${RED}[CRITICAL ERROR]${NC} envgym/envgym.dockerfile does not exist"
+    echo -e "${RED}[RESULT]${NC} Benchmark score: 0 (Dockerfile missing)"
+    # Write 0 0 0 to JSON
+    PASS_COUNT=0
+    FAIL_COUNT=0
+    WARN_COUNT=0
+    write_results_to_json
+    exit 1
 fi
 
-# Function to print status with color
+# Function to print status with colors
 print_status() {
     local status=$1
     local message=$2
@@ -67,31 +77,54 @@ print_status() {
     esac
 }
 
-# Cleanup function
-cleanup() {
-    echo "Cleaning up..."
-    # Kill any background processes
-    jobs -p | xargs -r kill
-    # Remove temporary files
-    rm -f docker_build.log
-    # Stop and remove Docker container if running
-    docker stop fairify-env-test 2>/dev/null || true
-    docker rm fairify-env-test 2>/dev/null || true
-    exit 0
+# Function to check if command exists
+check_command() {
+    local cmd=$1
+    local name=${2:-$1}
+    if command -v "$cmd" &> /dev/null; then
+        print_status "PASS" "$name is available"
+        return 0
+    else
+        print_status "FAIL" "$name is not available"
+        return 1
+    fi
 }
 
-# Set up signal handlers
-trap cleanup SIGINT SIGTERM
+# Function to check Python version
+check_python_version() {
+    if command -v python3 &> /dev/null; then
+        local python_version=$(python3 --version 2>&1)
+        local python_major=$(echo "${python_version:-}" | cut -d' ' -f2 | cut -d'.' -f1)
+        local python_minor=$(echo "${python_version:-}" | cut -d' ' -f2 | cut -d'.' -f2)
+        if [ -n "${python_major:-}" ] && [ "${python_major:-}" -eq 3 ] && [ -n "${python_minor:-}" ] && [ "${python_minor:-}" -ge 7 ]; then
+            print_status "PASS" "Python version >= 3.7 (${python_version:-})"
+        else
+            print_status "WARN" "Python version should be >= 3.7 (${python_version:-})"
+        fi
+    else
+        print_status "FAIL" "Python3 not found"
+    fi
+}
+
+# Function to check conda version
+check_conda_version() {
+    if command -v conda &> /dev/null; then
+        local conda_version=$(conda --version 2>&1)
+        print_status "PASS" "Conda is available: $conda_version"
+    else
+        print_status "WARN" "Conda is not available"
+    fi
+}
 
 # Check if we're running inside Docker container
 if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
-    echo "Running inside Docker container - proceeding with environment test..."
+    echo -e "${BLUE}[INFO]${NC} Running inside Docker container - proceeding with environment test..."
 else
-    echo "Not running in Docker container - building and running Docker test..."
+    echo -e "${BLUE}[INFO]${NC} Not running in Docker container - building and running Docker test..."
     
     # Check if Docker is available
     if ! command -v docker &> /dev/null; then
-        echo "ERROR: Docker is not installed or not in PATH"
+        echo -e "${RED}[ERROR]${NC} Docker is not installed or not in PATH"
         # Write 0 0 0 to JSON
         PASS_COUNT=0
         FAIL_COUNT=0
@@ -102,7 +135,7 @@ else
     
     # Check if we're in the right directory
     if [ ! -f "envgym/envgym.dockerfile" ]; then
-        echo "ERROR: envgym.dockerfile not found. Please run this script from the Fairify project root directory."
+        echo -e "${RED}[ERROR]${NC} envgym.dockerfile not found. Please run this script from the Fairify project root directory."
         # Write 0 0 0 to JSON
         PASS_COUNT=0
         FAIL_COUNT=0
@@ -112,40 +145,15 @@ else
     fi
     
     # Build Docker image
-    echo "Building Docker image..."
+    echo -e "${BLUE}[INFO]${NC} Building Docker image..."
     if ! docker build -f envgym/envgym.dockerfile -t fairify-env-test .; then
         echo -e "${RED}[CRITICAL ERROR]${NC} Docker build failed"
         echo -e "${RED}[RESULT]${NC} Benchmark score: 0 (Docker build failed)"
-        # Only write 0 0 0 to JSON if the file doesn't exist or is empty
-        if [ ! -f "envgym/envbench.json" ] || [ ! -s "envgym/envbench.json" ]; then
-            PASS_COUNT=0
-            FAIL_COUNT=0
-            WARN_COUNT=0
-            write_results_to_json
-        fi
-        exit 1
-    fi
-    
-    # Run this script inside Docker container
-    echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/Fairify" fairify-env-test bash -c "
-        # Set up signal handling in container
-        trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        source /opt/conda/etc/profile.d/conda.sh && conda activate fairify && ./envgym/envbench.sh
-    "
-    exit 0
-fi
-
-echo "=========================================="
-echo "Fairify Environment Benchmark Test"
-echo "=========================================="
-
-# Analyze Dockerfile if build failed
-if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
-    if [ -f "envgym/envgym.dockerfile" ]; then
+        
+        # Analyze Dockerfile if build failed
         echo ""
-        echo "Analyzing Dockerfile..."
-        echo "----------------------"
+        echo -e "${BLUE}Analyzing Dockerfile...${NC}"
+        echo -e "${BLUE}----------------------${NC}"
         
         # Check Dockerfile structure
         if grep -q "FROM" envgym/envgym.dockerfile; then
@@ -234,226 +242,81 @@ if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
         else
             print_status "WARN" "Dockerfile存在一些问题，建议修复后重新构建。"
         fi
-        echo ""
-    else
-        print_status "FAIL" "envgym.dockerfile not found"
+        
+        # Write results to JSON
+        write_results_to_json
+        exit 1
     fi
-fi
-
-echo "1. Checking System Dependencies..."
-echo "--------------------------------"
-# Check Python3
-if command -v python3 &> /dev/null; then
-    python_version=$(python3 --version 2>&1)
-    print_status "PASS" "Python3 is available: $python_version"
     
-    # Check Python version (should be 3.7 or higher)
-    python_major=$(echo $python_version | cut -d' ' -f2 | cut -d'.' -f1)
-    python_minor=$(echo $python_version | cut -d' ' -f2 | cut -d'.' -f2)
-    if [ -n "$python_major" ] && [ "$python_major" -eq 3 ] && [ -n "$python_minor" ] && [ "$python_minor" -ge 7 ]; then
-        print_status "PASS" "Python version is 3.7 or higher"
-    else
-        print_status "WARN" "Python version should be 3.7 or higher (found: $python_major.$python_minor)"
-    fi
-else
-    print_status "FAIL" "Python3 is not available"
+    # Run this script inside Docker container
+    echo -e "${BLUE}[INFO]${NC} Running environment test in Docker container..."
+    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/Fairify" --entrypoint="" fairify-env-test bash -c "
+        # Set up signal handling in container
+        trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
+        source /opt/conda/etc/profile.d/conda.sh
+        conda activate fairify
+        cd /home/cc/EnvGym/data/Fairify
+        bash envgym/envbench.sh
+    "
+    exit 0
 fi
 
-# Check pip3
-if command -v pip3 &> /dev/null; then
-    pip_version=$(pip3 --version 2>&1)
-    print_status "PASS" "pip3 is available: $pip_version"
-else
-    print_status "FAIL" "pip3 is not available"
-fi
+echo -e "${BLUE}==========================================${NC}"
+echo -e "${BLUE}Fairify Environment Benchmark Test${NC}"
+echo -e "${BLUE}==========================================${NC}"
 
-# Check conda
-if command -v conda &> /dev/null; then
-    conda_version=$(conda --version 2>&1)
-    print_status "PASS" "Conda is available: $conda_version"
-else
-    print_status "WARN" "Conda is not available"
-fi
+echo -e "${BLUE}1. Checking System Dependencies...${NC}"
+echo -e "${BLUE}--------------------------------${NC}"
+check_command "python3" "Python3"
+check_command "pip3" "pip3"
+check_command "git" "Git"
+check_command "bash" "Bash"
+check_command "curl" "curl"
+check_command "wget" "wget"
 
-# Check Git
-if command -v git &> /dev/null; then
-    git_version=$(git --version 2>&1)
-    print_status "PASS" "Git is available: $git_version"
-else
-    print_status "FAIL" "Git is not available"
-fi
+# Python version check
+check_python_version
 
-# Check bash
-if command -v bash &> /dev/null; then
-    bash_version=$(bash --version 2>&1 | head -n 1)
-    print_status "PASS" "Bash is available: $bash_version"
-else
-    print_status "FAIL" "Bash is not available"
-fi
-
-# Check curl
-if command -v curl &> /dev/null; then
-    print_status "PASS" "curl is available"
-else
-    print_status "FAIL" "curl is not available"
-fi
-
-# Check wget
-if command -v wget &> /dev/null; then
-    print_status "PASS" "wget is available"
-else
-    print_status "WARN" "wget is not available"
-fi
+# Conda version check
+check_conda_version
 
 echo ""
-echo "2. Checking Project Structure..."
-echo "-------------------------------"
+echo -e "${BLUE}2. Checking Project Structure...${NC}"
+echo -e "${BLUE}-------------------------------${NC}"
+[ -f "requirements.txt" ] && print_status "PASS" "requirements.txt exists" || print_status "FAIL" "requirements.txt missing"
+[ -f "README.md" ] && print_status "PASS" "README.md exists" || print_status "FAIL" "README.md missing"
+[ -f "INSTALL.md" ] && print_status "PASS" "INSTALL.md exists" || print_status "FAIL" "INSTALL.md missing"
+[ -f "LICENSE" ] && print_status "PASS" "LICENSE exists" || print_status "FAIL" "LICENSE missing"
+[ -f "STATUS.md" ] && print_status "PASS" "STATUS.md exists" || print_status "FAIL" "STATUS.md missing"
+
 # Check main directories
-if [ -d "src" ]; then
-    print_status "PASS" "src directory exists"
-else
-    print_status "FAIL" "src directory not found"
-fi
+[ -d "src" ] && print_status "PASS" "src directory exists" || print_status "FAIL" "src directory missing"
+[ -d "models" ] && print_status "PASS" "models directory exists" || print_status "FAIL" "models directory missing"
+[ -d "data" ] && print_status "PASS" "data directory exists" || print_status "FAIL" "data directory missing"
+[ -d "utils" ] && print_status "PASS" "utils directory exists" || print_status "FAIL" "utils directory missing"
+[ -d "stress" ] && print_status "PASS" "stress directory exists" || print_status "FAIL" "stress directory missing"
+[ -d "relaxed" ] && print_status "PASS" "relaxed directory exists" || print_status "FAIL" "relaxed directory missing"
+[ -d "targeted" ] && print_status "PASS" "targeted directory exists" || print_status "FAIL" "targeted directory missing"
+[ -d "targeted2" ] && print_status "PASS" "targeted2 directory exists" || print_status "FAIL" "targeted2 directory missing"
 
-if [ -d "models" ]; then
-    print_status "PASS" "models directory exists"
-else
-    print_status "FAIL" "models directory not found"
-fi
-
-if [ -d "data" ]; then
-    print_status "PASS" "data directory exists"
-else
-    print_status "FAIL" "data directory not found"
-fi
-
-if [ -d "utils" ]; then
-    print_status "PASS" "utils directory exists"
-else
-    print_status "FAIL" "utils directory not found"
-fi
-
-if [ -d "stress" ]; then
-    print_status "PASS" "stress directory exists"
-else
-    print_status "FAIL" "stress directory not found"
-fi
-
-if [ -d "relaxed" ]; then
-    print_status "PASS" "relaxed directory exists"
-else
-    print_status "FAIL" "relaxed directory not found"
-fi
-
-if [ -d "targeted" ]; then
-    print_status "PASS" "targeted directory exists"
-else
-    print_status "FAIL" "targeted directory not found"
-fi
-
-if [ -d "targeted2" ]; then
-    print_status "PASS" "targeted2 directory exists"
-else
-    print_status "FAIL" "targeted2 directory not found"
-fi
-
-# Check key files
-if [ -f "requirements.txt" ]; then
-    print_status "PASS" "requirements.txt exists"
-else
-    print_status "FAIL" "requirements.txt not found"
-fi
-
-if [ -f "README.md" ]; then
-    print_status "PASS" "README.md exists"
-else
-    print_status "FAIL" "README.md not found"
-fi
-
-if [ -f "INSTALL.md" ]; then
-    print_status "PASS" "INSTALL.md exists"
-else
-    print_status "FAIL" "INSTALL.md not found"
-fi
-
-if [ -f "LICENSE" ]; then
-    print_status "PASS" "LICENSE exists"
-else
-    print_status "FAIL" "LICENSE not found"
-fi
-
-if [ -f "STATUS.md" ]; then
-    print_status "PASS" "STATUS.md exists"
-else
-    print_status "FAIL" "STATUS.md not found"
-fi
-
-# Check src files
-if [ -f "src/fairify.sh" ]; then
-    print_status "PASS" "src/fairify.sh exists"
-else
-    print_status "FAIL" "src/fairify.sh not found"
-fi
-
-if [ -d "src/GC" ]; then
-    print_status "PASS" "src/GC directory exists"
-else
-    print_status "FAIL" "src/GC directory not found"
-fi
-
-if [ -d "src/AC" ]; then
-    print_status "PASS" "src/AC directory exists"
-else
-    print_status "FAIL" "src/AC directory not found"
-fi
-
-if [ -d "src/BM" ]; then
-    print_status "PASS" "src/BM directory exists"
-else
-    print_status "FAIL" "src/BM directory not found"
-fi
+# Check src subdirectories
+[ -d "src/GC" ] && print_status "PASS" "src/GC directory exists" || print_status "FAIL" "src/GC directory missing"
+[ -d "src/AC" ] && print_status "PASS" "src/AC directory exists" || print_status "FAIL" "src/AC directory missing"
+[ -d "src/BM" ] && print_status "PASS" "src/BM directory exists" || print_status "FAIL" "src/BM directory missing"
 
 # Check model directories
-if [ -d "models/german" ]; then
-    print_status "PASS" "models/german directory exists"
-else
-    print_status "FAIL" "models/german directory not found"
-fi
-
-if [ -d "models/adult" ]; then
-    print_status "PASS" "models/adult directory exists"
-else
-    print_status "FAIL" "models/adult directory not found"
-fi
-
-if [ -d "models/bank" ]; then
-    print_status "PASS" "models/bank directory exists"
-else
-    print_status "FAIL" "models/bank directory not found"
-fi
+[ -d "models/german" ] && print_status "PASS" "models/german directory exists" || print_status "FAIL" "models/german directory missing"
+[ -d "models/adult" ] && print_status "PASS" "models/adult directory exists" || print_status "FAIL" "models/adult directory missing"
+[ -d "models/bank" ] && print_status "PASS" "models/bank directory exists" || print_status "FAIL" "models/bank directory missing"
 
 # Check data directories
-if [ -d "data/german" ]; then
-    print_status "PASS" "data/german directory exists"
-else
-    print_status "FAIL" "data/german directory not found"
-fi
-
-if [ -d "data/adult" ]; then
-    print_status "PASS" "data/adult directory exists"
-else
-    print_status "FAIL" "data/adult directory not found"
-fi
-
-if [ -d "data/bank" ]; then
-    print_status "PASS" "data/bank directory exists"
-else
-    print_status "FAIL" "data/bank directory not found"
-fi
+[ -d "data/german" ] && print_status "PASS" "data/german directory exists" || print_status "FAIL" "data/german directory missing"
+[ -d "data/adult" ] && print_status "PASS" "data/adult directory exists" || print_status "FAIL" "data/adult directory missing"
+[ -d "data/bank" ] && print_status "PASS" "data/bank directory exists" || print_status "FAIL" "data/bank directory missing"
 
 echo ""
-echo "3. Checking Environment Variables..."
-echo "-----------------------------------"
+echo -e "${BLUE}3. Checking Environment Variables...${NC}"
+echo -e "${BLUE}-----------------------------------${NC}"
 # Check Python environment
 if [ -n "${PYTHONPATH:-}" ]; then
     print_status "PASS" "PYTHONPATH is set: $PYTHONPATH"
@@ -493,8 +356,8 @@ else
 fi
 
 echo ""
-echo "4. Testing Python Environment..."
-echo "-------------------------------"
+echo -e "${BLUE}4. Testing Python Environment...${NC}"
+echo -e "${BLUE}-------------------------------${NC}"
 # Test Python3
 if command -v python3 &> /dev/null; then
     print_status "PASS" "python3 is available"
@@ -517,8 +380,8 @@ else
 fi
 
 echo ""
-echo "5. Testing Package Management..."
-echo "-------------------------------"
+echo -e "${BLUE}5. Testing Package Management...${NC}"
+echo -e "${BLUE}-------------------------------${NC}"
 # Test pip3
 if command -v pip3 &> /dev/null; then
     print_status "PASS" "pip3 is available"
@@ -562,8 +425,8 @@ else
 fi
 
 echo ""
-echo "6. Testing Package Installation..."
-echo "----------------------------------"
+echo -e "${BLUE}6. Testing Package Installation...${NC}"
+echo -e "${BLUE}----------------------------------${NC}"
 # Test package installation
 if command -v pip3 &> /dev/null && [ -f "requirements.txt" ]; then
     print_status "PASS" "pip3 and requirements.txt are available"
@@ -579,8 +442,8 @@ else
 fi
 
 echo ""
-echo "7. Testing Fairify Dependencies..."
-echo "----------------------------------"
+echo -e "${BLUE}7. Testing Fairify Dependencies...${NC}"
+echo -e "${BLUE}----------------------------------${NC}"
 # Test Z3 solver
 if command -v python3 &> /dev/null; then
     if timeout 30s python3 -c "import z3; print('Z3 version:', z3.get_version_string())" >/dev/null 2>&1; then
@@ -615,8 +478,8 @@ else
 fi
 
 echo ""
-echo "8. Testing Fairify Scripts..."
-echo "-----------------------------"
+echo -e "${BLUE}8. Testing Fairify Scripts...${NC}"
+echo -e "${BLUE}-----------------------------${NC}"
 # Test fairify.sh script
 if [ -f "src/fairify.sh" ] && [ -x "src/fairify.sh" ]; then
     print_status "PASS" "src/fairify.sh exists and is executable"
@@ -659,8 +522,8 @@ else
 fi
 
 echo ""
-echo "9. Testing Fairify Python Modules..."
-echo "------------------------------------"
+echo -e "${BLUE}9. Testing Fairify Python Modules...${NC}"
+echo -e "${BLUE}------------------------------------${NC}"
 # Test if verification scripts exist and can be imported
 if [ -f "src/GC/Verify-GC.py" ]; then
     print_status "PASS" "src/GC/Verify-GC.py exists"
@@ -693,8 +556,8 @@ else
 fi
 
 echo ""
-echo "10. Testing Model and Data Files..."
-echo "-----------------------------------"
+echo -e "${BLUE}10. Testing Model and Data Files...${NC}"
+echo -e "${BLUE}-----------------------------------${NC}"
 # Test if model files exist
 if [ -d "models/german" ] && [ "$(ls -A models/german 2>/dev/null)" ]; then
     print_status "PASS" "models/german contains files"
@@ -734,8 +597,8 @@ else
 fi
 
 echo ""
-echo "11. Testing Virtual Environment..."
-echo "----------------------------------"
+echo -e "${BLUE}11. Testing Virtual Environment...${NC}"
+echo -e "${BLUE}----------------------------------${NC}"
 # Test virtual environment creation
 if command -v python3 &> /dev/null; then
     print_status "PASS" "python3 is available for virtual environment testing"
@@ -751,8 +614,8 @@ else
 fi
 
 echo ""
-echo "12. Testing Documentation..."
-echo "----------------------------"
+echo -e "${BLUE}12. Testing Documentation...${NC}"
+echo -e "${BLUE}----------------------------${NC}"
 # Test if documentation files are readable
 if [ -r "README.md" ]; then
     print_status "PASS" "README.md is readable"
@@ -779,13 +642,13 @@ else
 fi
 
 echo ""
-echo "=========================================="
-echo "Environment Benchmark Test Complete"
-echo "=========================================="
+echo -e "${BLUE}==========================================${NC}"
+echo -e "${BLUE}Environment Benchmark Test Complete${NC}"
+echo -e "${BLUE}==========================================${NC}"
 echo ""
-echo "Summary:"
-echo "--------"
-echo "This script has tested:"
+echo -e "${BLUE}Summary:${NC}"
+echo -e "${BLUE}--------${NC}"
+echo -e "${BLUE}This script has tested:${NC}"
 echo "- System dependencies (Python3 3.7+, pip3, conda, git, bash)"
 echo "- Project structure (src/, models/, data/, utils/, stress/, relaxed/, targeted/)"
 echo "- Environment variables (PYTHONPATH, VIRTUAL_ENV, CONDA_DEFAULT_ENV, PATH)"
@@ -806,12 +669,21 @@ FINAL_FAIL_COUNT=$FAIL_COUNT
 FINAL_WARN_COUNT=$WARN_COUNT
 
 echo ""
-echo "=========================================="
-echo "Test Results Summary"
-echo "=========================================="
+echo -e "${BLUE}==========================================${NC}"
+echo -e "${BLUE}Test Results Summary${NC}"
+echo -e "${BLUE}==========================================${NC}"
 echo -e "${GREEN}PASS: $FINAL_PASS_COUNT${NC}"
 echo -e "${RED}FAIL: $FINAL_FAIL_COUNT${NC}"
 echo -e "${YELLOW}WARN: $FINAL_WARN_COUNT${NC}"
+echo ""
+total_tests=$(($FINAL_PASS_COUNT + $FINAL_FAIL_COUNT + $FINAL_WARN_COUNT))
+if [ $total_tests -gt 0 ]; then
+    score_percentage=$(($FINAL_PASS_COUNT * 100 / total_tests))
+else
+    score_percentage=0
+fi
+print_status "INFO" "Environment Score: ${score_percentage}% ($FINAL_PASS_COUNT/$total_tests tests passed)"
+echo ""
 
 # Write results to JSON using the final counts
 PASS_COUNT=$FINAL_PASS_COUNT

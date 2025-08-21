@@ -954,6 +954,10 @@ print_status "INFO" "Example: docker run --rm nushell-env-test cargo build"
 print_status "INFO" "Example: docker run --rm nushell-env-test nu --version"
 echo ""
 print_status "INFO" "For more information, see README.md and https://github.com/nushell/nushell"
+
+# Write results to JSON
+write_results_to_json
+
 exit 0
 fi
 

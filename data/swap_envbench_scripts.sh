@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Copy EnvBench Scripts - Implementation Script
-# This script copies envbench.sh files from EnvBench/scripts/xxx/ to tests/backup_20250806/xxx/envgym/
-# Only copies if the target has envgym.dockerfile and handles file comparison for overwrites
+# This script copies envbench.sh files from EnvBench/scripts/xxx/ to tests/groundtruth/xxx/envgym/
+# Only copies if the target envgym folder exists and handles file comparison for overwrites
 
 # Color codes for output
 RED='\033[0;31m'
@@ -12,9 +12,9 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Initialize counters
-SUCCESS_COUNT=0  # c - has dockerfile and substituted with different envbench
-FAIL_COUNT=0     # a - does NOT have backup_20250806.../envgym.dockerfile  
-NO_EFFECT_COUNT=0 # b - has dockerfile but identical envbench.sh
+SUCCESS_COUNT=0  # c - has envgym folder and substituted with different envbench
+FAIL_COUNT=0     # a - does NOT have tests/groundtruth/xxx/envgym/ folder
+NO_EFFECT_COUNT=0 # b - has envgym folder but identical envbench.sh
 TOTAL_REPOS=0
 
 echo "=========================================="
@@ -28,8 +28,8 @@ if [ ! -d "EnvBench/scripts" ]; then
     exit 1
 fi
 
-if [ ! -d "tests/backup_20250806" ]; then
-    echo -e "${RED}ERROR: tests/backup_20250806 directory not found.${NC}"
+if [ ! -d "tests/groundtruth" ]; then
+    echo -e "${RED}ERROR: tests/groundtruth directory not found.${NC}"
     exit 1
 fi
 
@@ -43,7 +43,7 @@ for repo_dir in EnvBench/scripts/*/; do
     
     repo_name=$(basename "$repo_dir")
     source_envbench="$repo_dir/envbench.sh"
-    target_dockerfile="tests/groundtruth/$repo_name/envgym/envgym.dockerfile"
+    target_envgym_dir="tests/groundtruth/$repo_name/envgym"
     target_envbench="tests/groundtruth/$repo_name/envgym/envbench.sh"
     
     TOTAL_REPOS=$((TOTAL_REPOS + 1))
@@ -54,14 +54,14 @@ for repo_dir in EnvBench/scripts/*/; do
         continue
     fi
     
-    # Check if target dockerfile exists
-    if [ ! -f "$target_dockerfile" ]; then
-        echo -e "${RED}[$repo_name]${NC} FAIL - No envgym.dockerfile found"
+    # Check if target envgym directory exists
+    if [ ! -d "$target_envgym_dir" ]; then
+        echo -e "${RED}[$repo_name]${NC} FAIL - No envgym directory found"
         FAIL_COUNT=$((FAIL_COUNT + 1))
         continue
     fi
     
-    # Dockerfile exists, now check if we need to copy envbench.sh
+    # envgym directory exists, now check if we need to copy envbench.sh
     if [ -f "$target_envbench" ]; then
         # Target envbench.sh exists, compare files
         if cmp -s "$source_envbench" "$target_envbench"; then
@@ -99,8 +99,8 @@ echo "Final Statistics"
 echo "=========================================="
 echo -e "Total repositories scanned: ${BLUE}$TOTAL_REPOS${NC}"
 echo ""
-echo -e "${GREEN}SUCCESS: $SUCCESS_COUNT${NC} (Dockerfile detected and substituted with different envbench.sh)"
-echo -e "${RED}FAIL: $FAIL_COUNT${NC} (No envgym.dockerfile in tests/groundtruth/<repo_name>/envgym/)"
+echo -e "${GREEN}SUCCESS: $SUCCESS_COUNT${NC} (Swapped envbench.sh)"
+echo -e "${RED}FAIL: $FAIL_COUNT${NC} (No envgym folder in tests/groundtruth/<repo_name>/)"
 echo -e "${YELLOW}NO-EFFECT: $NO_EFFECT_COUNT${NC} (Identical envbench.sh, no need to swap)"
 echo ""
 

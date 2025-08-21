@@ -128,10 +128,15 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/flex" flex-env-test bash -c "
+    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/flex" --entrypoint="" flex-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
+        # Source conda environment
+        source /etc/profile
+        # Use base environment since flex-env doesn't exist
+        conda activate base
+        cd /home/cc/EnvGym/data/flex
+        bash envgym/envbench.sh
     "
     exit 0
 fi

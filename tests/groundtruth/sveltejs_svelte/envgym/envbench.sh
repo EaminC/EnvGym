@@ -125,7 +125,7 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/sveltejs_svelte" svelte-env-test bash -c "
+    docker run --rm --memory=4g --cpus=2 --network=host -v "$(pwd):/home/cc/EnvGym/data/sveltejs_svelte" svelte-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
         ./envgym/envbench.sh

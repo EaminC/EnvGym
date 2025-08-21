@@ -136,10 +136,13 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/elastic_logstash" elastic-logstash-env-test bash -c "
+    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/elastic_logstash" --entrypoint="" elastic-logstash-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
+        # Source environment variables
+        source /etc/profile.d/envgym_java.sh
+        cd /home/cc/EnvGym/data/elastic_logstash
+        bash envgym/envbench.sh
     "
     exit 0
 fi
@@ -179,11 +182,15 @@ fi
 # Gradle version check
 if command -v gradle &> /dev/null; then
     gradle_version=$(gradle --version | grep "Gradle" | head -1 | awk '{print $2}')
-    gradle_major=$(echo $gradle_version | cut -d'.' -f1)
-    if [ "$gradle_major" -ge 8 ]; then
-        print_status "PASS" "Gradle version >= 8 ($gradle_version)"
+    if [ -n "$gradle_version" ] && [ "$gradle_version" != "to" ]; then
+        gradle_major=$(echo "$gradle_version" | cut -d'.' -f1)
+        if [ -n "$gradle_major" ] && [ "$gradle_major" -ge 8 ]; then
+            print_status "PASS" "Gradle version >= 8 ($gradle_version)"
+        else
+            print_status "WARN" "Gradle version < 8 ($gradle_version)"
+        fi
     else
-        print_status "WARN" "Gradle version < 8 ($gradle_version)"
+        print_status "WARN" "Could not determine Gradle version"
     fi
 fi
 

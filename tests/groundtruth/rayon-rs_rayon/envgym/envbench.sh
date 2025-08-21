@@ -125,10 +125,11 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/rayon-rs_rayon" rayon-env-test bash -c "
+    docker run --rm -v "$(pwd):/workspace" rayon-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
+        cd /workspace
+        bash envgym/envbench.sh
     "
     exit 0
 fi
@@ -707,8 +708,8 @@ fi
 echo ""
 echo "9. Testing Rayon Docker Functionality..."
 echo "---------------------------------------"
-# Test if Docker container can run basic commands
-if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+# Test if Docker container can run basic commands (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
     # Test Rust in Docker
     if docker run --rm rayon-env-test rustc --version >/dev/null 2>&1; then
         print_status "PASS" "Rust works in Docker container"
@@ -778,6 +779,8 @@ if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
     else
         print_status "FAIL" "README.md is not accessible in Docker container"
     fi
+else
+    print_status "INFO" "Skipping Docker functionality tests (running inside container)"
 fi
 
 echo ""

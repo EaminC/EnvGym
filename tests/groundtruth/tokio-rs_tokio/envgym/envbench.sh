@@ -125,10 +125,12 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/tokio-rs_tokio" tokio-env-test bash -c "
+    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/tokio-rs_tokio" --entrypoint="" tokio-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
+        source /home/cc/.cargo/env
+        cd /home/cc/EnvGym/data/tokio-rs_tokio
+        bash envgym/envbench.sh
     "
     exit 0
 fi
@@ -607,8 +609,8 @@ fi
 echo ""
 echo "7. Testing Tokio-rs Tokio Docker Functionality..."
 echo "------------------------------------------------"
-# Test if Docker container can run basic commands
-if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+# Test if Docker container can run basic commands (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
     # Test if Docker container can execute commands
     if docker run --rm tokio-env-test ls --version >/dev/null 2>&1; then
         print_status "PASS" "Docker container can execute basic commands"
@@ -691,13 +693,15 @@ if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
         print_status "INFO" "Docker build succeeded, but container runtime has architecture compatibility issues"
         print_status "INFO" "This may be due to platform/architecture mismatch between host and container"
     fi
+else
+    print_status "INFO" "Skipping Docker functionality tests (running inside container)"
 fi
 
 echo ""
 echo "8. Testing Tokio-rs Tokio Build Process..."
 echo "------------------------------------------"
-# Test if Docker container can run build commands
-if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+# Test if Docker container can run build commands (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
     # Test if Docker container can execute commands
     if docker run --rm tokio-env-test ls --version >/dev/null 2>&1; then
         # Test if project directories are accessible
@@ -761,6 +765,8 @@ if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
         print_status "INFO" "Docker build succeeded, but container runtime has architecture compatibility issues"
         print_status "INFO" "This may be due to platform/architecture mismatch between host and container"
     fi
+else
+    print_status "INFO" "Skipping Docker build tests (running inside container)"
 fi
 
 echo ""

@@ -125,10 +125,11 @@ else
     
     # Run this script inside Docker container
     echo "Running environment test in Docker container..."
-    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/probfuzz" probfuzz-env-test bash -c "
+    docker run --rm -v "$(pwd):/home/cc/EnvGym/data/probfuzz" --entrypoint="" probfuzz-env-test bash -c "
         # Set up signal handling in container
         trap 'echo -e \"\n\033[0;31m[ERROR] Container interrupted\033[0m\"; exit 1' INT TERM
-        ./envgym/envbench.sh
+        cd /home/cc/EnvGym/data/probfuzz
+        bash envgym/envbench.sh
     "
     exit 0
 fi
@@ -886,8 +887,8 @@ fi
 echo ""
 echo "10. Testing ProbFuzz Docker Functionality..."
 echo "-------------------------------------------"
-# Test if Docker container can run basic commands
-if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+# Test if Docker container can run basic commands (only when not in Docker container)
+if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
     # Test Python in Docker
     if docker run --rm probfuzz-env-test python --version >/dev/null 2>&1; then
         print_status "PASS" "Python works in Docker container"
@@ -999,6 +1000,8 @@ if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
     else
         print_status "FAIL" "models.json is not accessible in Docker container"
     fi
+else
+    print_status "INFO" "Skipping Docker functionality tests (running inside container)"
 fi
 
 echo ""
