@@ -89,8 +89,6 @@ keys/
 # data 目录 - 忽略所有内容除了下载脚本
 data/*
 # 但保留下载脚本和必要文档
-!data/down_one.sh
-!data/down_all.sh
-!data/swap_envbench_scripts.sh
+!data/*.sh
 
 miniconda.sh
