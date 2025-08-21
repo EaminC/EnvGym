@@ -67,6 +67,37 @@ print_status() {
     esac
 }
 
+# Function to print proportional status with scoring
+print_proportional_status() {
+    local actual=$1
+    local total=$2
+    local max_points=$3
+    local message=$4
+    
+    # Calculate proportional score and round to nearest integer
+    local score=$(echo "scale=2; ($actual * $max_points) / $total" | bc -l 2>/dev/null || echo "0")
+    local rounded_score=$(printf "%.0f" "$score" 2>/dev/null || echo "0")
+    
+    # Ensure score is within bounds
+    if [ "$rounded_score" -gt "$max_points" ]; then
+        rounded_score=$max_points
+    elif [ "$rounded_score" -lt "0" ]; then
+        rounded_score=0
+    fi
+    
+    # Add to PASS_COUNT (treating as positive achievement)
+    PASS_COUNT=$((PASS_COUNT + rounded_score))
+    
+    # Print with color based on performance
+    if [ $actual -eq $total ]; then
+        echo -e "${GREEN}[PASS]${NC} $message (Score: $rounded_score/$max_points)"
+    elif [ $actual -gt $((total / 2)) ]; then
+        echo -e "${YELLOW}[PARTIAL]${NC} $message (Score: $rounded_score/$max_points)"  
+    else
+        echo -e "${RED}[LOW]${NC} $message (Score: $rounded_score/$max_points)"
+    fi
+}
+
 # Cleanup function
 cleanup() {
     echo "Cleaning up..."
@@ -727,13 +758,11 @@ if [ -f "scripts/generate_glue.py" ]; then
             print_status "FAIL" "scripts/generate_glue.py timed out or failed"
         fi
         
-        # Test 2: Check for BUILD FAIL in output (only if we have output)
+        # Test 2: Count BUILD SUCCESS messages and score proportionally (only if we have output)
         if [ $exit_code -ne 124 ]; then  # 124 = timeout exit code
-            if echo "$output" | grep -iq "BUILD FAIL"; then
-                print_status "FAIL" "scripts/generate_glue.py output contains build failures"
-            else
-                print_status "PASS" "scripts/generate_glue.py output clean (no build failures)"
-            fi
+            # Count BUILD SUCCESS messages
+            success_count=$(echo "$output" | grep -c "BUILD SUCCESS" 2>/dev/null || echo "0")
+            print_proportional_status $success_count 34 5 "BUILD SUCCESS analysis ($success_count/34 successful builds)"
         else
             print_status "FAIL" "scripts/generate_glue.py timed out - no output to analyze"
         fi
