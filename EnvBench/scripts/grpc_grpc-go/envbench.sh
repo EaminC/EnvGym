@@ -3,6 +3,18 @@
 # gRPC-Go Environment Benchmark Test Script
 # This script tests the environment setup for gRPC-Go: A high performance, open source, general RPC framework
 
+# Export PATH to include common locations for protoc plugins
+export PATH=$PATH:/go/bin:/root/go/bin:/usr/local/go/bin
+
+# Explicitly set GOPATH if not set
+if [ -z "$GOPATH" ]; then
+    export GOPATH=$(go env GOPATH 2>/dev/null || echo "/go")
+    echo "Setting GOPATH to $GOPATH"
+fi
+
+# Add GOPATH/bin to PATH
+export PATH=$PATH:$GOPATH/bin
+
 # Color codes for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -401,6 +413,12 @@ fi
 echo ""
 echo "3. Testing Protocol Buffers Environment..."
 echo "-----------------------------------------"
+# Show plugin locations for debugging
+echo "Plugin locations:"
+echo "protoc: $(which protoc 2>/dev/null || echo 'not found')"
+echo "protoc-gen-go: $(which protoc-gen-go 2>/dev/null || echo 'not found')"
+echo "protoc-gen-go-grpc: $(which protoc-gen-go-grpc 2>/dev/null || echo 'not found')"
+echo "PATH: $PATH"
 
 # Test protoc
 if command -v protoc &> /dev/null; then
@@ -420,58 +438,45 @@ service TestService {
 }
 EOF
     
-    # Try multiple methods for protoc code generation
-    PROTOC_SUCCESS=0
-    # Method 1: Standard approach
-    if timeout 30s protoc --proto_path=/tmp/proto_test --go_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
+        # Test protoc code generation with proto_path flag - capture errors
+    ERROR_LOG=$(mktemp)
+    if timeout 30s protoc --proto_path=/tmp/proto_test --go_out=/tmp/proto_test /tmp/proto_test/test.proto 2> $ERROR_LOG; then
         print_status "PASS" "protoc can generate Go code"
-        PROTOC_SUCCESS=1
-    # Method 2: Specify plugin path if available
-    elif [ -x "$(go env GOPATH)/bin/protoc-gen-go" ] && \
-         timeout 30s PATH="$(go env GOPATH)/bin:$PATH" protoc --proto_path=/tmp/proto_test --go_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
-        print_status "PASS" "protoc can generate Go code (using GOPATH plugin)"
-        PROTOC_SUCCESS=1
-    # Method 3: Try with module paths
-    elif timeout 30s protoc --proto_path=/tmp/proto_test --go_out=module=testpkg:/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
-        print_status "PASS" "protoc can generate Go code (using module path)"
-        PROTOC_SUCCESS=1
     else
         print_status "FAIL" "protoc cannot generate Go code"
+        echo "Error details:"
+        cat $ERROR_LOG
+        # Check for common issues
+        if grep -q "program not found" $ERROR_LOG; then
+            echo "The protoc-gen-go plugin was not found in PATH"
+            echo "PATH=$PATH"
+            echo "Looking for plugin in GOPATH:"
+            find "$(go env GOPATH)" -name "protoc-gen-go" 2>/dev/null || echo "Not found"
+        fi
     fi
     
-    # Try multiple methods for gRPC code generation
-    GRPC_SUCCESS=0
-    # Method 1: Standard approach
-    if timeout 30s protoc --proto_path=/tmp/proto_test --go-grpc_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
-        print_status "PASS" "protoc can generate Go gRPC code"
-        GRPC_SUCCESS=1
-    # Method 2: Specify plugin path if available
-    elif [ -x "$(go env GOPATH)/bin/protoc-gen-go-grpc" ] && \
-         timeout 30s PATH="$(go env GOPATH)/bin:$PATH" protoc --proto_path=/tmp/proto_test --go-grpc_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
-        print_status "PASS" "protoc can generate Go gRPC code (using GOPATH plugin)"
-        GRPC_SUCCESS=1
-    # Method 3: Try with module paths
-    elif timeout 30s protoc --proto_path=/tmp/proto_test --go-grpc_out=module=testpkg:/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
-        print_status "PASS" "protoc can generate Go gRPC code (using module path)"
-        GRPC_SUCCESS=1
-    else
-        print_status "FAIL" "protoc cannot generate Go gRPC code"
-    fi
-    
-    if [ $PROTOC_SUCCESS -eq 1 ] || [ $GRPC_SUCCESS -eq 1 ]; then
+    # Test protoc-gen-go-grpc code generation with proto_path flag - capture errors
+    ERROR_LOG=$(mktemp)
+    if timeout 30s protoc --proto_path=/tmp/proto_test --go-grpc_out=/tmp/proto_test /tmp/proto_test/test.proto 2> $ERROR_LOG; then
         print_status "PASS" "protoc can generate Go gRPC code"
         
         # Verify generated files
         if [ -f "/tmp/proto_test/testpkg/test.pb.go" ] || [ -f "/tmp/proto_test/test.pb.go" ]; then
             print_status "PASS" "Go protobuf file successfully generated"
+            # Show where the file was generated
+            find /tmp/proto_test -name "*.pb.go" | xargs ls -la
         else
             print_status "FAIL" "Go protobuf file not found after generation"
+            echo "Looking for generated files:"
+            find /tmp/proto_test -type f | xargs ls -la
         fi
         
         if [ -f "/tmp/proto_test/testpkg/test_grpc.pb.go" ] || [ -f "/tmp/proto_test/test_grpc.pb.go" ]; then
             print_status "PASS" "Go gRPC file successfully generated"
         else
             print_status "FAIL" "Go gRPC file not found after generation"
+            echo "Looking for generated files:"
+            find /tmp/proto_test -type f | xargs ls -la
         fi
     else
         print_status "FAIL" "protoc cannot generate Go gRPC code"
@@ -538,72 +543,94 @@ fi
 echo ""
 echo "6. Testing Examples Compilation..."
 echo "----------------------------------"
-    # Test compilation of examples with proportional scoring
-    if [ -d "examples" ] && command -v go &> /dev/null; then
-        print_status "PASS" "examples directory exists and go is available"
+# Test compilation of examples with proportional scoring
+if [ -d "examples" ] && command -v go &> /dev/null; then
+    print_status "PASS" "examples directory exists and go is available"
+    
+    # Debug Go environment
+    echo "Go environment details:"
+    go env GOPATH
+    go env GO111MODULE
+    go env GOMOD
+    
+    # Set GO111MODULE explicitly
+    export GO111MODULE=on
+    echo "Setting GO111MODULE=on"
+    
+    # Set up example test variables
+    EXAMPLES=(
+        "helloworld"
+        "route_guide"
+        "features/authentication"
+        "features/compression"
+        "features/encryption/TLS"
+        "features/load_balancing"
+        "features/metadata"
+    )
+    
+    SUCCESSFUL_BUILDS=0
+    TOTAL_EXAMPLES=${#EXAMPLES[@]}
+    
+    # Create temporary directory for build logs
+    BUILD_LOGS=$(mktemp -d)
+    
+    for example in ${EXAMPLES[@]}; do
+        echo "Testing example: ${example}"
         
-        # Set up example test variables
-        EXAMPLES=(
-            "helloworld"
-            "route_guide"
-            "features/authentication"
-            "features/compression"
-            "features/encryption/TLS"
-            "features/load_balancing"
-            "features/metadata"
-        )
-        
-        SUCCESSFUL_BUILDS=0
-        TOTAL_EXAMPLES=${#EXAMPLES[@]}
-        
-        # First try to download example dependencies
-        echo "Downloading example dependencies..."
+        # Create a backup of go.mod if it exists to restore it later
         if [ -f "examples/go.mod" ]; then
-            (cd examples && go mod download) >/dev/null 2>&1
+            cp examples/go.mod examples/go.mod.bak
         fi
         
-        for example in ${EXAMPLES[@]}; do
-            echo "Testing example: ${example}"
+        # Ensure go.mod exists and is initialized
+        if [ -d "examples/${example}" ]; then
+            # Debug example structure
+            echo "Example directory structure:"
+            ls -la "examples/${example}"
             
-            # First navigate to the example directory to handle module dependencies
-            if [ -d "examples/${example}" ]; then
-                # Check if directory has server and client subdirectories
-                if [ -d "examples/${example}/greeter_server" ] || [ -d "examples/${example}/server" ]; then
-                    # Try different build approaches
-                    
-                    # Determine server directory name (either greeter_server or server)
-                    SERVER_DIR="greeter_server"
-                    if [ ! -d "examples/${example}/greeter_server" ] && [ -d "examples/${example}/server" ]; then
-                        SERVER_DIR="server"
-                    fi
-                    
-                    # Determine client directory name (either greeter_client or client)
-                    CLIENT_DIR="greeter_client"
-                    if [ ! -d "examples/${example}/greeter_client" ] && [ -d "examples/${example}/client" ]; then
-                        CLIENT_DIR="client"
-                    fi
-                    
-                    # Try different build methods
-                    if (cd examples/${example} && timeout 60s go build -o /dev/null ./${SERVER_DIR}) >/dev/null 2>&1; then
-                        print_status "PASS" "${example} server builds successfully"
-                        
-                        # Test client compilation
-                        if (cd examples/${example} && timeout 60s go build -o /dev/null ./${CLIENT_DIR}) >/dev/null 2>&1; then
-                            print_status "PASS" "${example} client builds successfully"
-                            ((SUCCESSFUL_BUILDS++))
-                        else
-                            print_status "FAIL" "${example} client build failed"
-                        fi
-                    else
-                        print_status "FAIL" "${example} server build failed"
-                    fi
+            # Test server compilation with error capture
+            SERVER_ERROR_LOG="${BUILD_LOGS}/${example//\//_}_server_error.log"
+            echo "Building server..."
+            if timeout 60s go build -o /dev/null ./examples/${example}/*server/*.go > "${SERVER_ERROR_LOG}" 2>&1; then
+                print_status "PASS" "${example} server builds successfully"
+                
+                # Test client compilation with error capture
+                CLIENT_ERROR_LOG="${BUILD_LOGS}/${example//\//_}_client_error.log"
+                echo "Building client..."
+                if timeout 60s go build -o /dev/null ./examples/${example}/*client/*.go > "${CLIENT_ERROR_LOG}" 2>&1; then
+                    print_status "PASS" "${example} client builds successfully"
+                    ((SUCCESSFUL_BUILDS++))
                 else
-                    print_status "FAIL" "${example} missing server/client directories"
+                    print_status "FAIL" "${example} client build failed"
+                    echo "Client build error details:"
+                    cat "${CLIENT_ERROR_LOG}" || echo "No error log available"
                 fi
             else
-                print_status "FAIL" "${example} directory not found"
+                print_status "FAIL" "${example} server build failed"
+                echo "Server build error details:"
+                cat "${SERVER_ERROR_LOG}" || echo "No error log available"
+                
+                # Try with alternative approach - compile in example directory
+                echo "Trying alternative build approach in example directory..."
+                if [ -d "examples/${example}/*server" ]; then
+                    (cd "examples/${example}/*server" && timeout 60s go build -o /dev/null . > "${SERVER_ERROR_LOG}.alt" 2>&1)
+                    if [ $? -eq 0 ]; then
+                        print_status "PASS" "${example} server builds successfully with alternative approach"
+                    else
+                        echo "Alternative server build also failed:"
+                        cat "${SERVER_ERROR_LOG}.alt" || echo "No error log available"
+                    fi
+                fi
             fi
-        done
+        else
+            print_status "FAIL" "examples/${example} directory not found"
+        fi
+        
+        # Restore original go.mod if we backed it up
+        if [ -f "examples/go.mod.bak" ]; then
+            mv examples/go.mod.bak examples/go.mod
+        fi
+    done
     
     # Score proportionally based on successful builds
     print_proportional_status $SUCCESSFUL_BUILDS $TOTAL_EXAMPLES 15 "Examples build test ($SUCCESSFUL_BUILDS/$TOTAL_EXAMPLES examples build successfully)"
@@ -624,12 +651,6 @@ if command -v go &> /dev/null && [ -d "examples/helloworld" ]; then
     
     # Start the helloworld server in the background with timeout
     echo "Starting helloworld server..."
-    
-    # First try downloading dependencies for helloworld
-    if [ -f "examples/go.mod" ]; then
-        (cd examples && go mod download) >/dev/null 2>&1
-    fi
-    
     cd examples/helloworld
     timeout 120s go run ./greeter_server/main.go -port 50051 > $SERVER_LOG 2>&1 &
     SERVER_PID=$!
@@ -861,37 +882,47 @@ func main() {
 }
 EOF
 
-    # Test the incremental steps
+# Test the incremental steps
 echo "Testing Level 1: Protocol Buffer Generation..."
 if command -v protoc &> /dev/null; then
-    # Try with explicit PATH to include GOPATH/bin
-    if [ -x "$(go env GOPATH)/bin/protoc-gen-go" ] && [ -x "$(go env GOPATH)/bin/protoc-gen-go-grpc" ]; then
-        PATH="$(go env GOPATH)/bin:$PATH"
-    fi
-    
-    if timeout 30s protoc --proto_path=$TEST_DIR --go_out=$TEST_DIR --go-grpc_out=$TEST_DIR $TEST_DIR/simple.proto; then
+    ERROR_LOG=$(mktemp)
+    if timeout 30s protoc --proto_path=$TEST_DIR --go_out=$TEST_DIR --go-grpc_out=$TEST_DIR $TEST_DIR/simple.proto 2> $ERROR_LOG; then
         print_status "PASS" "Level 1: Proto file compiled successfully"
+        
+        # Show generated files
+        echo "Generated files:"
+        find $TEST_DIR -name "*.pb.go" | xargs ls -la
         
         echo "Testing Level 2: Code Compilation..."
         cd $TEST_DIR
         
+        # Debug environment
+        echo "Go environment in test directory:"
+        go env
+        
         # Attempt to fix import paths if needed
         if [ -f "$TEST_DIR/simple/simple.pb.go" ]; then
-            # Create a more complete go.mod with explicit versions
+            # Create go.mod with more dependencies
             echo "module simplerpc" > go.mod
             echo "go 1.16" >> go.mod
             echo "require (" >> go.mod
             echo "    google.golang.org/grpc v1.45.0" >> go.mod
             echo "    google.golang.org/protobuf v1.28.0" >> go.mod
-            echo "    google.golang.org/genproto v0.0.0-20220222213610-43724f9ea8cf" >> go.mod
+            echo "    github.com/golang/protobuf v1.5.2" >> go.mod
+            echo "    google.golang.org/genproto v0.0.0-20220218161850-94dd64e39d7c" >> go.mod
             echo ")" >> go.mod
+            echo "replace google.golang.org/grpc => google.golang.org/grpc v1.45.0" >> go.mod
+            
+            # Show go.mod content
+            echo "Created go.mod:"
+            cat go.mod
             
             # Download dependencies
-            go mod download >/dev/null 2>&1
+            echo "Downloading dependencies..."
+            go mod download
             
-            # Simplify server code to use fewer dependencies
-            cat > server/main.go << EOF
-package main
+            # Completely rewrite server code for better import compatibility
+            echo 'package main
 
 import (
 	"context"
@@ -902,10 +933,12 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Define server type implementing the generated interface
 type server struct {
 	pb.UnimplementedGreeterServer
 }
 
+// Implement SayHello method
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
@@ -917,16 +950,13 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
-	log.Println("Server started")
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-}
-EOF
+}' > server/main.go
 
-            # Simplify client code
-            cat > client/main.go << EOF
-package main
+            # Completely rewrite client code for better import compatibility
+            echo 'package main
 
 import (
 	"context"
@@ -953,19 +983,28 @@ func main() {
 		log.Fatalf("could not greet: %v", err)
 	}
 	log.Printf("Greeting: %s", r.GetMessage())
-}
-EOF
-
+}' > client/main.go
+            
             # Create symlink to make imports work
             mkdir -p simplerpc
             ln -sf $TEST_DIR/simple simplerpc/simple
             
-            # Try to build server
-            if timeout 60s go build -o /tmp/grpc_incremental_server ./server >/dev/null 2>&1; then
+            # Check if symlink was created successfully
+            if [ -L "simplerpc/simple" ]; then
+                echo "Symlink created successfully"
+                ls -la simplerpc/simple
+            else
+                echo "Failed to create symlink"
+            fi
+            
+            # Try to build server with error capture
+            SERVER_ERROR_LOG=$(mktemp)
+            if timeout 60s go build -o /tmp/grpc_incremental_server ./server > $SERVER_ERROR_LOG 2>&1; then
                 print_status "PASS" "Level 2: Server compilation successful"
                 
-                # Try to build client
-                if timeout 60s go build -o /tmp/grpc_incremental_client ./client >/dev/null 2>&1; then
+                # Try to build client with error capture
+                CLIENT_ERROR_LOG=$(mktemp)
+                if timeout 60s go build -o /tmp/grpc_incremental_client ./client > $CLIENT_ERROR_LOG 2>&1; then
                     print_status "PASS" "Level 2: Client compilation successful"
                     
                     echo "Testing Level 3: Basic gRPC Server-Client Operation..."
@@ -999,6 +1038,27 @@ EOF
                     print_proportional_status 3 3 15 "Incremental gRPC functionality test (3/3 levels completed)"
                 else
                     print_status "FAIL" "Level 2: Client compilation failed"
+                    echo "Client build error details:"
+                    cat $CLIENT_ERROR_LOG
+                    
+                    # Try a simplified client
+                    echo "Attempting to build a simplified client..."
+                    echo 'package main
+import (
+    "fmt"
+    "google.golang.org/grpc"
+)
+func main() {
+    fmt.Println("Simple client")
+    grpc.NewServer()
+}' > simple_client.go
+                    
+                    if timeout 30s go build -o /tmp/simple_client ./simple_client.go; then
+                        print_status "PASS" "Simplified client builds - issue is with generated code"
+                    else
+                        print_status "FAIL" "Simplified client also fails - issue is with Go setup"
+                    fi
+                    
                     # Score partial progress
                     print_proportional_status 1 3 15 "Incremental gRPC functionality test (1/3 levels completed)"
                 fi
@@ -1006,17 +1066,42 @@ EOF
                 rm -f /tmp/grpc_incremental_server /tmp/grpc_incremental_client
             else
                 print_status "FAIL" "Level 2: Server compilation failed"
+                echo "Server build error details:"
+                cat $SERVER_ERROR_LOG
+                
+                # Try a simplified server
+                echo "Attempting to build a simplified server..."
+                echo 'package main
+import (
+    "fmt"
+    "google.golang.org/grpc"
+)
+func main() {
+    fmt.Println("Simple server")
+    grpc.NewServer()
+}' > simple_server.go
+                
+                if timeout 30s go build -o /tmp/simple_server ./simple_server.go; then
+                    print_status "PASS" "Simplified server builds - issue is with generated code"
+                else
+                    print_status "FAIL" "Simplified server also fails - issue is with Go setup"
+                fi
+                
                 # Score partial progress
                 print_proportional_status 1 3 15 "Incremental gRPC functionality test (1/3 levels completed)"
             fi
         else
             print_status "FAIL" "Generated pb.go file not found"
+            echo "Looking for generated files:"
+            find $TEST_DIR -type f -name "*.go" | sort
             print_proportional_status 1 3 15 "Incremental gRPC functionality test (1/3 levels completed)"
         fi
         
         cd -
     else
         print_status "FAIL" "Level 1: Proto file compilation failed"
+        echo "Proto compilation error details:"
+        cat $ERROR_LOG
         print_proportional_status 0 3 15 "Incremental gRPC functionality test (0/3 levels completed)"
     fi
 else
