@@ -420,15 +420,15 @@ service TestService {
 }
 EOF
     
-    # Test protoc code generation
-    if timeout 30s protoc --go_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
+    # Test protoc code generation with proto_path flag
+    if timeout 30s protoc --proto_path=/tmp/proto_test --go_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
         print_status "PASS" "protoc can generate Go code"
     else
         print_status "FAIL" "protoc cannot generate Go code"
     fi
     
-    # Test protoc-gen-go-grpc code generation
-    if timeout 30s protoc --go-grpc_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
+    # Test protoc-gen-go-grpc code generation with proto_path flag
+    if timeout 30s protoc --proto_path=/tmp/proto_test --go-grpc_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
         print_status "PASS" "protoc can generate Go gRPC code"
         
         # Verify generated files
@@ -572,8 +572,26 @@ if command -v go &> /dev/null && [ -d "examples/helloworld" ]; then
     # Wait for server to start
     echo "Waiting for server to start..."
     for i in {1..10}; do
-        if lsof -i :50051 | grep -q 50051 2>/dev/null; then
-            print_status "PASS" "gRPC server started successfully"
+        # Use netstat or ss if lsof is not available
+        if command -v lsof &> /dev/null; then
+            if lsof -i :50051 | grep -q 50051 2>/dev/null; then
+                print_status "PASS" "gRPC server started successfully"
+                break
+            fi
+        elif command -v netstat &> /dev/null; then
+            if netstat -tuln | grep -q ":50051" 2>/dev/null; then
+                print_status "PASS" "gRPC server started successfully"
+                break
+            fi
+        elif command -v ss &> /dev/null; then
+            if ss -tuln | grep -q ":50051" 2>/dev/null; then
+                print_status "PASS" "gRPC server started successfully"
+                break
+            fi
+        else
+            # If no tools available, just wait and assume it started
+            sleep 2
+            print_status "WARN" "Cannot verify server start - no lsof/netstat/ss available"
             break
         fi
         sleep 1
@@ -780,7 +798,7 @@ EOF
 # Test the incremental steps
 echo "Testing Level 1: Protocol Buffer Generation..."
 if command -v protoc &> /dev/null; then
-    if timeout 30s protoc --go_out=$TEST_DIR --go-grpc_out=$TEST_DIR $TEST_DIR/simple.proto; then
+    if timeout 30s protoc --proto_path=$TEST_DIR --go_out=$TEST_DIR --go-grpc_out=$TEST_DIR $TEST_DIR/simple.proto; then
         print_status "PASS" "Level 1: Proto file compiled successfully"
         
         echo "Testing Level 2: Code Compilation..."
@@ -788,9 +806,21 @@ if command -v protoc &> /dev/null; then
         
         # Attempt to fix import paths if needed
         if [ -f "$TEST_DIR/simple/simple.pb.go" ]; then
+            # Create go.mod to help with imports
+            echo "module simplerpc" > go.mod
+            echo "go 1.16" >> go.mod
+            echo "require (" >> go.mod
+            echo "    google.golang.org/grpc v1.45.0" >> go.mod
+            echo "    google.golang.org/protobuf v1.28.0" >> go.mod
+            echo ")" >> go.mod
+            
             # Fix imports in server and client
-            sed -i 's|pb "simple"|pb "'"$TEST_DIR"'/simple"|' server/main.go
-            sed -i 's|pb "simple"|pb "'"$TEST_DIR"'/simple"|' client/main.go
+            sed -i 's|pb "simple"|pb "simplerpc/simple"|' server/main.go
+            sed -i 's|pb "simple"|pb "simplerpc/simple"|' client/main.go
+            
+            # Create symlink to make imports work
+            mkdir -p simplerpc
+            ln -sf $TEST_DIR/simple simplerpc/simple
             
             # Try to build server
             if timeout 60s go build -o /tmp/grpc_incremental_server ./server >/dev/null 2>&1; then
