@@ -67,6 +67,51 @@ print_status() {
     esac
 }
 
+# Function to print proportional status with scoring
+print_proportional_status() {
+    local actual=$1
+    local total=$2
+    local max_points=$3
+    local message=$4
+    
+    # Pure bash arithmetic approach - more reliable across environments
+    # Calculate score using integer arithmetic
+    if [ "$total" -ne "0" ]; then
+        # Use bc for floating point if available
+        if command -v bc &>/dev/null; then
+            # Calculate with bc but ensure we get a value (or default to 0)
+            local raw_score=$(echo "scale=6; ($actual * $max_points) / $total" | bc 2>/dev/null || echo "0")
+            # Round to nearest integer by adding 0.5 and truncating
+            local rounded_score=$(echo "$raw_score + 0.5" | bc | cut -d. -f1)
+        else
+            # Fallback to bash arithmetic (less precise)
+            local pct=$(( actual * 100 / total ))
+            local rounded_score=$(( pct * max_points / 100 ))
+        fi
+    else
+        local rounded_score=0
+    fi
+    
+    # Ensure score is within bounds
+    if [ "$rounded_score" -gt "$max_points" ]; then
+        rounded_score=$max_points
+    elif [ "$rounded_score" -lt "0" ]; then
+        rounded_score=0
+    fi
+    
+    # Add to PASS_COUNT (treating as positive achievement)
+    PASS_COUNT=$((PASS_COUNT + rounded_score))
+    
+    # Print with color based on performance
+    if [ "$actual" -eq "$total" ]; then
+        echo -e "${GREEN}[PASS]${NC} $message (Score: $rounded_score/$max_points)"
+    elif [ "$actual" -gt "$((total / 2))" ]; then
+        echo -e "${YELLOW}[PARTIAL]${NC} $message (Score: $rounded_score/$max_points)"  
+    else
+        echo -e "${RED}[LOW]${NC} $message (Score: $rounded_score/$max_points)"
+    fi
+}
+
 # Cleanup function
 cleanup() {
     echo "Cleaning up..."
@@ -74,6 +119,8 @@ cleanup() {
     jobs -p | xargs -r kill
     # Remove temporary files
     rm -f docker_build.log
+    # Remove temporary test directories
+    rm -rf fmt_test_build fmt_test_header_only fmt_test_shared fmt_basic_test
     # Stop and remove Docker container if running
     docker stop fmtlib-env-test 2>/dev/null || true
     docker rm fmtlib-env-test 2>/dev/null || true
@@ -196,24 +243,6 @@ if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
             print_status "WARN" "ninja-build not found"
         fi
         
-        if grep -q "doxygen" envgym/envgym.dockerfile; then
-            print_status "PASS" "doxygen found"
-        else
-            print_status "WARN" "doxygen not found"
-        fi
-        
-        if grep -q "valgrind" envgym/envgym.dockerfile; then
-            print_status "PASS" "valgrind found"
-        else
-            print_status "WARN" "valgrind not found"
-        fi
-        
-        if grep -q "bazel" envgym/envgym.dockerfile; then
-            print_status "PASS" "bazel found"
-        else
-            print_status "WARN" "bazel not found"
-        fi
-        
         if grep -q "COPY" envgym/envgym.dockerfile; then
             print_status "PASS" "COPY instruction found"
         else
@@ -236,13 +265,13 @@ if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
         print_status "INFO" "Dockerfile Environment Score: $dockerfile_score% ($PASS_COUNT/$total_dockerfile_checks checks passed)"
         print_status "INFO" "PASS: $PASS_COUNT, FAIL: $((FAIL_COUNT)), WARN: $((WARN_COUNT))"
         if [ $FAIL_COUNT -eq 0 ]; then
-            print_status "INFO" "Dockerfile结构良好，建议检查依赖版本和构建产物。"
+            print_status "INFO" "Dockerfile structure looks good."
         else
-            print_status "WARN" "Dockerfile存在一些问题，建议修复后重新构建。"
+            print_status "WARN" "Dockerfile has some issues that should be fixed."
         fi
         echo ""
     else
-        print_status "FAIL" "envgym.dockerfile not found"
+        print_status "FAIL" "envgym/envgym.dockerfile not found"
     fi
 fi
 
@@ -320,746 +349,364 @@ else
     print_status "FAIL" "Bash is not available"
 fi
 
-# Check curl
-if command -v curl &> /dev/null; then
-    print_status "PASS" "curl is available"
-else
-    print_status "FAIL" "curl is not available"
-fi
-
-# Check wget
-if command -v wget &> /dev/null; then
-    print_status "PASS" "wget is available"
-else
-    print_status "WARN" "wget is not available"
-fi
-
-# Check python3
-if command -v python3 &> /dev/null; then
-    python_version=$(python3 --version 2>&1)
-    print_status "PASS" "Python3 is available: $python_version"
-else
-    print_status "WARN" "Python3 is not available"
-fi
-
-# Check doxygen
-if command -v doxygen &> /dev/null; then
-    doxygen_version=$(doxygen --version 2>&1)
-    print_status "PASS" "Doxygen is available: $doxygen_version"
-else
-    print_status "WARN" "Doxygen is not available"
-fi
-
-# Check valgrind
-if command -v valgrind &> /dev/null; then
-    valgrind_version=$(valgrind --version 2>&1)
-    print_status "PASS" "Valgrind is available: $valgrind_version"
-else
-    print_status "WARN" "Valgrind is not available"
-fi
-
-# Check bazel
-if command -v bazel &> /dev/null; then
-    bazel_version=$(bazel --version 2>&1)
-    print_status "PASS" "Bazel is available: $bazel_version"
-else
-    print_status "WARN" "Bazel is not available"
-fi
-
 echo ""
-echo "2. Checking Project Structure..."
-echo "-------------------------------"
-# Check main directories
-if [ -d "include" ]; then
-    print_status "PASS" "include directory exists"
-else
-    print_status "FAIL" "include directory not found"
-fi
-
-if [ -d "include/fmt" ]; then
-    print_status "PASS" "include/fmt directory exists"
-else
-    print_status "FAIL" "include/fmt directory not found"
-fi
-
-if [ -d "src" ]; then
-    print_status "PASS" "src directory exists"
-else
-    print_status "FAIL" "src directory not found"
-fi
-
-if [ -d "test" ]; then
-    print_status "PASS" "test directory exists"
-else
-    print_status "FAIL" "test directory not found"
-fi
-
-if [ -d "support" ]; then
-    print_status "PASS" "support directory exists"
-else
-    print_status "FAIL" "support directory not found"
-fi
-
-if [ -d "doc" ]; then
-    print_status "PASS" "doc directory exists"
-else
-    print_status "FAIL" "doc directory not found"
-fi
-
-# Check key files
-if [ -f "CMakeLists.txt" ]; then
-    print_status "PASS" "CMakeLists.txt exists"
-else
-    print_status "FAIL" "CMakeLists.txt not found"
-fi
-
-if [ -f "README.md" ]; then
-    print_status "PASS" "README.md exists"
-else
-    print_status "FAIL" "README.md not found"
-fi
-
-if [ -f "LICENSE" ]; then
-    print_status "PASS" "LICENSE exists"
-else
-    print_status "FAIL" "LICENSE not found"
-fi
-
-if [ -f ".gitignore" ]; then
-    print_status "PASS" ".gitignore exists"
-else
-    print_status "FAIL" ".gitignore not found"
-fi
-
-# Check include files
-if [ -f "include/fmt/format.h" ]; then
-    print_status "PASS" "include/fmt/format.h exists"
-else
-    print_status "FAIL" "include/fmt/format.h not found"
-fi
-
-if [ -f "include/fmt/base.h" ]; then
-    print_status "PASS" "include/fmt/base.h exists"
-else
-    print_status "FAIL" "include/fmt/base.h not found"
-fi
-
-if [ -f "include/fmt/core.h" ]; then
-    print_status "PASS" "include/fmt/core.h exists"
-else
-    print_status "FAIL" "include/fmt/core.h not found"
-fi
-
-if [ -f "include/fmt/format-inl.h" ]; then
-    print_status "PASS" "include/fmt/format-inl.h exists"
-else
-    print_status "FAIL" "include/fmt/format-inl.h not found"
-fi
-
-if [ -f "include/fmt/printf.h" ]; then
-    print_status "PASS" "include/fmt/printf.h exists"
-else
-    print_status "FAIL" "include/fmt/printf.h not found"
-fi
-
-if [ -f "include/fmt/chrono.h" ]; then
-    print_status "PASS" "include/fmt/chrono.h exists"
-else
-    print_status "FAIL" "include/fmt/chrono.h not found"
-fi
-
-if [ -f "include/fmt/color.h" ]; then
-    print_status "PASS" "include/fmt/color.h exists"
-else
-    print_status "FAIL" "include/fmt/color.h not found"
-fi
-
-if [ -f "include/fmt/compile.h" ]; then
-    print_status "PASS" "include/fmt/compile.h exists"
-else
-    print_status "FAIL" "include/fmt/compile.h not found"
-fi
-
-if [ -f "include/fmt/ranges.h" ]; then
-    print_status "PASS" "include/fmt/ranges.h exists"
-else
-    print_status "FAIL" "include/fmt/ranges.h not found"
-fi
-
-if [ -f "include/fmt/std.h" ]; then
-    print_status "PASS" "include/fmt/std.h exists"
-else
-    print_status "FAIL" "include/fmt/std.h not found"
-fi
-
-# Check source files
-if [ -f "src/fmt.cc" ]; then
-    print_status "PASS" "src/fmt.cc exists"
-else
-    print_status "FAIL" "src/fmt.cc not found"
-fi
-
-if [ -f "src/format.cc" ]; then
-    print_status "PASS" "src/format.cc exists"
-else
-    print_status "FAIL" "src/format.cc not found"
-fi
-
-if [ -f "src/os.cc" ]; then
-    print_status "PASS" "src/os.cc exists"
-else
-    print_status "FAIL" "src/os.cc not found"
-fi
-
-# Check test files
-if [ -f "test/format-test.cc" ]; then
-    print_status "PASS" "test/format-test.cc exists"
-else
-    print_status "FAIL" "test/format-test.cc not found"
-fi
-
-if [ -f "test/base-test.cc" ]; then
-    print_status "PASS" "test/base-test.cc exists"
-else
-    print_status "FAIL" "test/base-test.cc not found"
-fi
-
-if [ -f "test/printf-test.cc" ]; then
-    print_status "PASS" "test/printf-test.cc exists"
-else
-    print_status "FAIL" "test/printf-test.cc not found"
-fi
-
-if [ -f "test/chrono-test.cc" ]; then
-    print_status "PASS" "test/chrono-test.cc exists"
-else
-    print_status "FAIL" "test/chrono-test.cc not found"
-fi
-
-if [ -f "test/compile-test.cc" ]; then
-    print_status "PASS" "test/compile-test.cc exists"
-else
-    print_status "FAIL" "test/compile-test.cc not found"
-fi
-
-if [ -f "test/CMakeLists.txt" ]; then
-    print_status "PASS" "test/CMakeLists.txt exists"
-else
-    print_status "FAIL" "test/CMakeLists.txt not found"
-fi
-
-# Check support files
-if [ -f "support/docopt.py" ]; then
-    print_status "PASS" "support/docopt.py exists"
-else
-    print_status "FAIL" "support/docopt.py not found"
-fi
-
-if [ -f "support/release.py" ]; then
-    print_status "PASS" "support/release.py exists"
-else
-    print_status "FAIL" "support/release.py not found"
-fi
-
-if [ -f "support/printable.py" ]; then
-    print_status "PASS" "support/printable.py exists"
-else
-    print_status "FAIL" "support/printable.py not found"
-fi
-
-echo ""
-echo "3. Checking Environment Variables..."
+echo "2. Checking Required Project Files..."
 echo "-----------------------------------"
-# Check C++ environment
-if [ -n "${CC:-}" ]; then
-    print_status "PASS" "CC is set: $CC"
-else
-    print_status "WARN" "CC is not set"
-fi
 
-if [ -n "${CXX:-}" ]; then
-    print_status "PASS" "CXX is set: $CXX"
-else
-    print_status "WARN" "CXX is not set"
-fi
+# Check key files and directories (reduced from previous version to avoid "free scores")
+required_dirs=("include/fmt" "src" "test")
+required_count=0
+found_count=0
 
-if [ -n "${CFLAGS:-}" ]; then
-    print_status "PASS" "CFLAGS is set: $CFLAGS"
-else
-    print_status "WARN" "CFLAGS is not set"
-fi
+for dir in "${required_dirs[@]}"; do
+    if [ -d "$dir" ]; then
+        print_status "PASS" "$dir directory exists"
+        ((found_count++))
+    else
+        print_status "FAIL" "$dir directory not found"
+    fi
+    ((required_count++))
+done
 
-if [ -n "${CXXFLAGS:-}" ]; then
-    print_status "PASS" "CXXFLAGS is set: $CXXFLAGS"
-else
-    print_status "WARN" "CXXFLAGS is not set"
-fi
+critical_files=("CMakeLists.txt" "include/fmt/format.h" "include/fmt/core.h" "src/format.cc")
+for file in "${critical_files[@]}"; do
+    if [ -f "$file" ]; then
+        print_status "PASS" "$file exists"
+        ((found_count++))
+    else
+        print_status "FAIL" "$file not found"
+    fi
+    ((required_count++))
+done
 
-if [ -n "${LDFLAGS:-}" ]; then
-    print_status "PASS" "LDFLAGS is set: $LDFLAGS"
-else
-    print_status "WARN" "LDFLAGS is not set"
-fi
-
-# Check PATH
-if echo "$PATH" | grep -q "gcc"; then
-    print_status "PASS" "gcc is in PATH"
-else
-    print_status "WARN" "gcc is not in PATH"
-fi
-
-if echo "$PATH" | grep -q "g++"; then
-    print_status "PASS" "g++ is in PATH"
-else
-    print_status "WARN" "g++ is not in PATH"
-fi
-
-if echo "$PATH" | grep -q "cmake"; then
-    print_status "PASS" "cmake is in PATH"
-else
-    print_status "WARN" "cmake is not in PATH"
-fi
-
-if echo "$PATH" | grep -q "make"; then
-    print_status "PASS" "make is in PATH"
-else
-    print_status "WARN" "make is not in PATH"
-fi
-
-if echo "$PATH" | grep -q "ninja"; then
-    print_status "PASS" "ninja is in PATH"
-else
-    print_status "WARN" "ninja is not in PATH"
-fi
+# Score based on required project files found
+print_proportional_status $found_count $required_count 5 "Required project files check"
 
 echo ""
-echo "4. Testing C/C++ Compilation..."
+echo "3. Testing C/C++ Compilation..."
 echo "-------------------------------"
-# Test C compilation
-if command -v gcc &> /dev/null; then
-    print_status "PASS" "gcc is available"
-    
-    # Test simple C compilation
-    echo '#include <stdio.h>
-int main() { printf("Hello from C\n"); return 0; }' > test.c
-    
-    if timeout 30s gcc -o test_c test.c 2>/dev/null; then
-        print_status "PASS" "C compilation works"
-        if ./test_c 2>/dev/null; then
-            print_status "PASS" "C execution works"
-        else
-            print_status "WARN" "C execution failed"
-        fi
-        rm -f test_c test.c
-    else
-        print_status "WARN" "C compilation failed"
-        rm -f test.c
-    fi
-else
-    print_status "FAIL" "gcc is not available"
-fi
-
-# Test C++ compilation
+# Test C++ compilation with std::format compatibility
 if command -v g++ &> /dev/null; then
     print_status "PASS" "g++ is available"
     
-    # Test simple C++ compilation
-    echo '#include <iostream>
-int main() { std::cout << "Hello from C++" << std::endl; return 0; }' > test.cpp
+    # Create a simple test program that uses fmt
+    mkdir -p fmt_basic_test
+    cat > fmt_basic_test/basic_test.cpp << 'EOF'
+#include <iostream>
+#include "fmt/core.h"
+
+int main() {
+    std::string name = "world";
+    fmt::print("Hello, {}!\n", name);
     
-    if timeout 30s g++ -o test_cpp test.cpp 2>/dev/null; then
-        print_status "PASS" "C++ compilation works"
-        if ./test_cpp 2>/dev/null; then
-            print_status "PASS" "C++ execution works"
+    // Test formatting integers
+    fmt::print("The answer is {}\n", 42);
+    
+    // Test formatting floats
+    fmt::print("Pi is approximately {:.2f}\n", 3.14159);
+    
+    // Test formatting with positional arguments
+    fmt::print("I'd rather be {1} than {0}.\n", "right", "happy");
+    
+    return 0;
+}
+EOF
+
+    # Try to compile and run with different C++ standards
+    cpp_standards=("c++11" "c++14" "c++17")
+    cpp_passed=0
+    cpp_total=${#cpp_standards[@]}
+    
+    for std in "${cpp_standards[@]}"; do
+        if timeout 60s g++ -std=$std -I. fmt_basic_test/basic_test.cpp src/format.cc -o fmt_basic_test/basic_test_$std 2>/dev/null; then
+            print_status "PASS" "Compilation with $std standard succeeded"
+            if timeout 30s ./fmt_basic_test/basic_test_$std >/dev/null 2>&1; then
+                print_status "PASS" "Execution with $std standard succeeded"
+                ((cpp_passed++))
+            else
+                print_status "FAIL" "Execution with $std standard failed"
+            fi
         else
-            print_status "WARN" "C++ execution failed"
+            print_status "FAIL" "Compilation with $std standard failed"
         fi
-        rm -f test_cpp test.cpp
-    else
-        print_status "WARN" "C++ compilation failed"
-        rm -f test.cpp
-    fi
+    done
+    
+    # Score based on C++ standards compatibility
+    print_proportional_status $cpp_passed $cpp_total 6 "C++ standards compatibility tests"
+    
 else
-    print_status "FAIL" "g++ is not available"
-fi
-
-# Test Clang compilation
-if command -v clang &> /dev/null; then
-    print_status "PASS" "clang is available"
-    
-    # Test simple C compilation with clang
-    echo '#include <stdio.h>
-int main() { printf("Hello from Clang C\n"); return 0; }' > test_clang.c
-    
-    if timeout 30s clang -o test_clang_c test_clang.c 2>/dev/null; then
-        print_status "PASS" "Clang C compilation works"
-        rm -f test_clang_c test_clang.c
-    else
-        print_status "WARN" "Clang C compilation failed"
-        rm -f test_clang.c
-    fi
-else
-    print_status "WARN" "clang is not available"
-fi
-
-# Test Clang++ compilation
-if command -v clang++ &> /dev/null; then
-    print_status "PASS" "clang++ is available"
-    
-    # Test simple C++ compilation with clang++
-    echo '#include <iostream>
-int main() { std::cout << "Hello from Clang++" << std::endl; return 0; }' > test_clang.cpp
-    
-    if timeout 30s clang++ -o test_clang_cpp test_clang.cpp 2>/dev/null; then
-        print_status "PASS" "Clang++ compilation works"
-        rm -f test_clang_cpp test_clang.cpp
-    else
-        print_status "WARN" "Clang++ compilation failed"
-        rm -f test_clang.cpp
-    fi
-else
-    print_status "WARN" "clang++ is not available"
+    print_status "FAIL" "g++ is not available for compilation tests"
 fi
 
 echo ""
-echo "5. Testing Build Systems..."
-echo "---------------------------"
-# Test CMake
-if command -v cmake &> /dev/null; then
-    print_status "PASS" "cmake is available"
-    
-    # Test cmake version
-    if timeout 30s cmake --version >/dev/null 2>&1; then
-        print_status "PASS" "cmake version command works"
-    else
-        print_status "WARN" "cmake version command failed"
-    fi
-    
-    # Test cmake help
-    if timeout 30s cmake --help >/dev/null 2>&1; then
-        print_status "PASS" "cmake help command works"
-    else
-        print_status "WARN" "cmake help command failed"
-    fi
-else
-    print_status "FAIL" "cmake is not available"
-fi
+echo "4. Testing Library Build Configurations..."
+echo "----------------------------------------"
 
-# Test Make
-if command -v make &> /dev/null; then
-    print_status "PASS" "make is available"
+# Test standard static library build
+if command -v cmake &> /dev/null && command -v make &> /dev/null; then
+    build_configs=("standard" "header_only" "shared")
+    build_passed=0
+    build_total=${#build_configs[@]}
     
-    # Test make version
-    if timeout 30s make --version >/dev/null 2>&1; then
-        print_status "PASS" "make version command works"
+    # Standard build
+    mkdir -p fmt_test_build
+    cd fmt_test_build
+    if timeout 300s cmake .. -DCMAKE_BUILD_TYPE=Release >/dev/null 2>&1; then
+        print_status "PASS" "CMake configuration for standard build succeeded"
+        if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
+            print_status "PASS" "Standard build succeeded"
+            ((build_passed++))
+        else
+            print_status "FAIL" "Standard build failed"
+        fi
     else
-        print_status "WARN" "make version command failed"
+        print_status "FAIL" "CMake configuration for standard build failed"
     fi
+    cd ..
     
-    # Test make help
-    if timeout 30s make --help >/dev/null 2>&1; then
-        print_status "PASS" "make help command works"
+    # Header-only build
+    mkdir -p fmt_test_header_only
+    cd fmt_test_header_only
+    if timeout 300s cmake .. -DCMAKE_BUILD_TYPE=Release -DFMT_HEADER_ONLY=ON >/dev/null 2>&1; then
+        print_status "PASS" "CMake configuration for header-only build succeeded"
+        if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
+            print_status "PASS" "Header-only build succeeded"
+            ((build_passed++))
+        else
+            print_status "FAIL" "Header-only build failed"
+        fi
     else
-        print_status "WARN" "make help command failed"
+        print_status "FAIL" "CMake configuration for header-only build failed"
     fi
+    cd ..
+    
+    # Shared library build
+    mkdir -p fmt_test_shared
+    cd fmt_test_shared
+    if timeout 300s cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON >/dev/null 2>&1; then
+        print_status "PASS" "CMake configuration for shared library build succeeded"
+        if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
+            print_status "PASS" "Shared library build succeeded"
+            ((build_passed++))
+        else
+            print_status "FAIL" "Shared library build failed"
+        fi
+    else
+        print_status "FAIL" "CMake configuration for shared library build failed"
+    fi
+    cd ..
+    
+    # Score based on build configuration tests
+    print_proportional_status $build_passed $build_total 10 "Build configuration tests"
+    
 else
-    print_status "FAIL" "make is not available"
-fi
-
-# Test Ninja
-if command -v ninja &> /dev/null; then
-    print_status "PASS" "ninja is available"
-    
-    # Test ninja version
-    if timeout 30s ninja --version >/dev/null 2>&1; then
-        print_status "PASS" "ninja version command works"
-    else
-        print_status "WARN" "ninja version command failed"
-    fi
-    
-    # Test ninja help
-    if timeout 30s ninja --help >/dev/null 2>&1; then
-        print_status "PASS" "ninja help command works"
-    else
-        print_status "WARN" "ninja help command failed"
-    fi
-else
-    print_status "WARN" "ninja is not available"
-fi
-
-echo ""
-echo "6. Testing Python Environment..."
-echo "-------------------------------"
-# Test Python3
-if command -v python3 &> /dev/null; then
-    print_status "PASS" "python3 is available"
-    
-    # Test Python3 execution
-    if timeout 30s python3 -c "print('Hello from Python3')" >/dev/null 2>&1; then
-        print_status "PASS" "Python3 execution works"
-    else
-        print_status "WARN" "Python3 execution failed"
-    fi
-    
-    # Test Python3 import system
-    if timeout 30s python3 -c "import sys; print('Python path:', sys.path[0])" >/dev/null 2>&1; then
-        print_status "PASS" "Python3 import system works"
-    else
-        print_status "WARN" "Python3 import system failed"
-    fi
-else
-    print_status "WARN" "python3 is not available"
+    print_status "FAIL" "CMake or Make is not available for build tests"
 fi
 
 echo ""
-echo "7. Testing Documentation Tools..."
-echo "---------------------------------"
-# Test Doxygen
-if command -v doxygen &> /dev/null; then
-    print_status "PASS" "doxygen is available"
-    
-    # Test doxygen version
-    if timeout 30s doxygen --version >/dev/null 2>&1; then
-        print_status "PASS" "doxygen version command works"
-    else
-        print_status "WARN" "doxygen version command failed"
-    fi
-    
-    # Test doxygen help
-    if timeout 30s doxygen --help >/dev/null 2>&1; then
-        print_status "PASS" "doxygen help command works"
-    else
-        print_status "WARN" "doxygen help command failed"
-    fi
-else
-    print_status "WARN" "doxygen is not available"
-fi
-
-echo ""
-echo "8. Testing Testing Tools..."
-echo "----------------------------"
-# Test Valgrind
-if command -v valgrind &> /dev/null; then
-    print_status "PASS" "valgrind is available"
-    
-    # Test valgrind version
-    if timeout 30s valgrind --version >/dev/null 2>&1; then
-        print_status "PASS" "valgrind version command works"
-    else
-        print_status "WARN" "valgrind version command failed"
-    fi
-    
-    # Test valgrind help
-    if timeout 30s valgrind --help >/dev/null 2>&1; then
-        print_status "PASS" "valgrind help command works"
-    else
-        print_status "WARN" "valgrind help command failed"
-    fi
-else
-    print_status "WARN" "valgrind is not available"
-fi
-
-echo ""
-echo "9. Testing Build Tools..."
-echo "--------------------------"
-# Test Bazel
-if command -v bazel &> /dev/null; then
-    print_status "PASS" "bazel is available"
-    
-    # Test bazel version
-    if timeout 30s bazel --version >/dev/null 2>&1; then
-        print_status "PASS" "bazel version command works"
-    else
-        print_status "WARN" "bazel version command failed"
-    fi
-    
-    # Test bazel help
-    if timeout 30s bazel help >/dev/null 2>&1; then
-        print_status "PASS" "bazel help command works"
-    else
-        print_status "WARN" "bazel help command failed"
-    fi
-else
-    print_status "WARN" "bazel is not available"
-fi
-
-echo ""
-echo "10. Testing fmt Library Compilation..."
+echo "5. Testing Advanced Library Features..."
 echo "--------------------------------------"
-# Test fmt header compilation
-if command -v g++ &> /dev/null; then
-    print_status "PASS" "g++ is available for fmt compilation test"
-    
-    # Test fmt/core.h compilation
-    echo '#include "include/fmt/core.h"
-int main() { fmt::print("Hello from fmt!\n"); return 0; }' > test_fmt.cpp
-    
-    if timeout 60s g++ -std=c++11 -I. -o test_fmt test_fmt.cpp 2>/dev/null; then
-        print_status "PASS" "fmt/core.h compilation works"
-        if ./test_fmt 2>/dev/null; then
-            print_status "PASS" "fmt/core.h execution works"
-        else
-            print_status "WARN" "fmt/core.h execution failed"
-        fi
-        rm -f test_fmt test_fmt.cpp
-    else
-        print_status "WARN" "fmt/core.h compilation failed"
-        rm -f test_fmt.cpp
-    fi
-else
-    print_status "WARN" "g++ not available for fmt compilation test"
-fi
 
-# Test fmt/base.h compilation
-if command -v g++ &> /dev/null; then
-    echo '#include "include/fmt/base.h"
-int main() { fmt::print("Hello from fmt base!\n"); return 0; }' > test_fmt_base.cpp
+# Create a test file for advanced fmt features
+mkdir -p fmt_basic_test
+cat > fmt_basic_test/advanced_test.cpp << 'EOF'
+#include <iostream>
+#include <vector>
+#include <map>
+#include "fmt/core.h"
+#include "fmt/color.h"
+#include "fmt/chrono.h"
+#include "fmt/ranges.h"
+
+int main() {
+    // Test 1: Basic formatting
+    std::string name = "world";
+    fmt::print("Hello, {}!\n", name);
     
-    if timeout 60s g++ -std=c++11 -I. -o test_fmt_base test_fmt_base.cpp 2>/dev/null; then
-        print_status "PASS" "fmt/base.h compilation works"
-        rm -f test_fmt_base test_fmt_base.cpp
+    // Test 2: Colored output
+    fmt::print(fmt::fg(fmt::color::crimson), "This should be in crimson color\n");
+    
+    // Test 3: Chrono formatting
+    auto now = std::chrono::system_clock::now();
+    fmt::print("Current time: {:%Y-%m-%d %H:%M:%S}\n", now);
+    
+    // Test 4: Container formatting
+    std::vector<int> v = {1, 2, 3};
+    fmt::print("Vector contents: {}\n", v);
+    
+    // Test 5: Map formatting
+    std::map<std::string, int> map{{"one", 1}, {"two", 2}};
+    fmt::print("Map contents: {}\n", map);
+    
+    return 0;
+}
+EOF
+
+feature_tests=0
+feature_passed=0
+
+if command -v g++ &> /dev/null; then
+    # Test 1: Basic formatting
+    ((feature_tests++))
+    if timeout 60s g++ -std=c++17 -I. fmt_basic_test/advanced_test.cpp src/format.cc -o fmt_basic_test/advanced_test 2>/dev/null; then
+        print_status "PASS" "Advanced features compilation succeeded"
+        if timeout 30s ./fmt_basic_test/advanced_test >/dev/null 2>&1; then
+            print_status "PASS" "Advanced features execution succeeded"
+            ((feature_passed++))
+        else
+            print_status "FAIL" "Advanced features execution failed"
+        fi
     else
-        print_status "WARN" "fmt/base.h compilation failed"
-        rm -f test_fmt_base.cpp
+        print_status "FAIL" "Advanced features compilation failed"
     fi
+    
+    # Score based on advanced feature tests
+    print_proportional_status $feature_passed $feature_tests 5 "Advanced library features test"
+else
+    print_status "FAIL" "g++ is not available for advanced feature tests"
 fi
 
 echo ""
-echo "11. Testing CMake Build Process..."
-echo "----------------------------------"
-# Test CMake configuration
-if command -v cmake &> /dev/null; then
-    print_status "PASS" "cmake is available for build test"
+echo "6. Running Test Suite..."
+echo "-----------------------"
+
+if command -v cmake &> /dev/null && [ -d "fmt_test_build" ]; then
+    cd fmt_test_build
     
-    # Create build directory
-    mkdir -p build_test
-    cd build_test
-    
-    # Test cmake configuration
-    if timeout 120s cmake .. >/dev/null 2>&1; then
-        print_status "PASS" "CMake configuration successful"
-        
-        # Test make build
-        if command -v make &> /dev/null; then
-            if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
-                print_status "PASS" "Make build successful"
-            else
-                print_status "WARN" "Make build failed or timed out"
-            fi
+    # Build tests if they haven't been built yet
+    if ! [ -f "bin/format-test" ] && ! [ -f "test/format-test" ]; then
+        print_status "INFO" "Building tests..."
+        if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
+            print_status "PASS" "Test build succeeded"
         else
-            print_status "WARN" "make not available for build test"
+            print_status "FAIL" "Test build failed"
         fi
-        
-        # Test ninja build
-        if command -v ninja &> /dev/null; then
-            if timeout 300s ninja >/dev/null 2>&1; then
-                print_status "PASS" "Ninja build successful"
-            else
-                print_status "WARN" "Ninja build failed or timed out"
-            fi
+    fi
+    
+    # Count total tests
+    test_count=$(ls bin/*-test test/*-test 2>/dev/null | wc -l)
+    if [ "$test_count" -eq 0 ]; then
+        test_count=$(find . -name "*-test" -type f -executable | wc -l)
+    fi
+    
+    if [ "$test_count" -eq 0 ]; then
+        print_status "FAIL" "No test executables found"
+        test_passed=0
+        # Try to run CTest anyway
+        if timeout 600s ctest --output-on-failure >/dev/null 2>&1; then
+            print_status "PASS" "CTest execution succeeded but no test count available"
         else
-            print_status "WARN" "ninja not available for build test"
+            print_status "FAIL" "CTest execution failed"
         fi
     else
-        print_status "WARN" "CMake configuration failed"
+        print_status "INFO" "Found $test_count test executables"
+        
+        # Run tests with ctest
+        test_output=$(timeout 600s ctest --output-on-failure 2>&1) || true
+        
+        # Check how many tests passed
+        if echo "$test_output" | grep -q "[0-9]*% tests passed"; then
+            test_percent=$(echo "$test_output" | grep "[0-9]*% tests passed" | sed 's/^.*\([0-9][0-9]*\)% tests passed.*$/\1/')
+            test_passed=$(( test_count * test_percent / 100 ))
+            print_status "INFO" "$test_percent% of tests passed ($test_passed/$test_count)"
+        else
+            # Fall back to just checking if ctest ran successfully
+            if echo "$test_output" | grep -q "100% tests passed" || timeout 600s make test >/dev/null 2>&1; then
+                test_passed=$test_count
+                print_status "PASS" "All tests passed ($test_passed/$test_count)"
+            else
+                # Conservatively estimate half the tests passed
+                test_passed=$(( test_count / 2 ))
+                print_status "WARN" "Some tests failed, estimating $test_passed/$test_count passed"
+            fi
+        fi
+        
+        # Score based on test suite results
+        print_proportional_status $test_passed $test_count 15 "Test suite execution"
     fi
     
     cd ..
-    rm -rf build_test
 else
-    print_status "WARN" "cmake not available for build test"
+    print_status "FAIL" "Cannot run test suite - build directory or cmake not available"
 fi
 
 echo ""
-echo "12. Testing fmt Library Features..."
-echo "-----------------------------------"
-# Test fmt library features
-if command -v g++ &> /dev/null; then
-    print_status "PASS" "g++ is available for fmt feature test"
-    
-    # Test basic formatting
-    echo '#include "include/fmt/core.h"
+echo "7. Testing Header-Only Mode Integration..."
+echo "----------------------------------------"
+
+# Create a simple test program using header-only mode
+mkdir -p fmt_basic_test
+cat > fmt_basic_test/header_only_test.cpp << 'EOF'
+#define FMT_HEADER_ONLY
+#include "fmt/core.h"
+
 int main() {
-    std::string s = fmt::format("The answer is {}.", 42);
-    fmt::print("{}\n", s);
+    fmt::print("Header-only mode works: {}\n", 42);
     return 0;
-}' > test_fmt_features.cpp
-    
-    if timeout 60s g++ -std=c++11 -I. -o test_fmt_features test_fmt_features.cpp 2>/dev/null; then
-        print_status "PASS" "fmt basic formatting compilation works"
-        if ./test_fmt_features 2>/dev/null; then
-            print_status "PASS" "fmt basic formatting execution works"
+}
+EOF
+
+if command -v g++ &> /dev/null; then
+    if timeout 60s g++ -std=c++11 -I. fmt_basic_test/header_only_test.cpp -o fmt_basic_test/header_only_test 2>/dev/null; then
+        print_status "PASS" "Header-only mode compilation succeeded"
+        if timeout 30s ./fmt_basic_test/header_only_test >/dev/null 2>&1; then
+            print_status "PASS" "Header-only mode execution succeeded"
+            # Award 5 points directly for header-only mode
+            PASS_COUNT=$((PASS_COUNT + 5))
+            print_status "INFO" "Header-only mode integration test passed (Score: 5 points)"
         else
-            print_status "WARN" "fmt basic formatting execution failed"
+            print_status "FAIL" "Header-only mode execution failed"
         fi
-        rm -f test_fmt_features test_fmt_features.cpp
     else
-        print_status "WARN" "fmt basic formatting compilation failed"
-        rm -f test_fmt_features.cpp
+        print_status "FAIL" "Header-only mode compilation failed"
     fi
 else
-    print_status "WARN" "g++ not available for fmt feature test"
+    print_status "FAIL" "g++ is not available for header-only mode test"
 fi
 
 echo ""
-echo "13. Testing Support Scripts..."
-echo "-------------------------------"
-# Test support scripts
-if [ -f "support/docopt.py" ]; then
-    print_status "PASS" "support/docopt.py exists"
-    
-    # Test if it can be executed
-    if command -v python3 &> /dev/null; then
-        if timeout 30s python3 -c "import sys; sys.path.append('support'); import docopt; print('docopt imported')" >/dev/null 2>&1; then
-            print_status "PASS" "support/docopt.py can be imported"
+echo "8. Testing System Integration..."
+echo "------------------------------"
+
+# Test if fmt library can be found with pkg-config (if available)
+if command -v pkg-config &> /dev/null; then
+    if [ -d "fmt_test_build" ]; then
+        cd fmt_test_build
+        if [ -f "fmt.pc" ]; then
+            print_status "PASS" "fmt.pc file exists"
+            # Try to run pkg-config
+            export PKG_CONFIG_PATH=$(pwd):$PKG_CONFIG_PATH
+            if pkg-config --exists fmt 2>/dev/null; then
+                print_status "PASS" "pkg-config finds fmt"
+                # Award 2 points directly for pkg-config integration
+                PASS_COUNT=$((PASS_COUNT + 2))
+                print_status "INFO" "System integration via pkg-config works (Score: 2 points)"
+            else
+                print_status "FAIL" "pkg-config cannot find fmt"
+            fi
         else
-            print_status "WARN" "support/docopt.py import failed"
+            print_status "WARN" "fmt.pc file not found"
         fi
+        cd ..
     else
-        print_status "WARN" "python3 not available for script test"
+        print_status "WARN" "Build directory not available for pkg-config test"
     fi
 else
-    print_status "FAIL" "support/docopt.py not found"
+    print_status "WARN" "pkg-config not available for system integration test"
 fi
 
-if [ -f "support/release.py" ]; then
-    print_status "PASS" "support/release.py exists"
+# Check if cmake config files are generated
+if [ -d "fmt_test_build" ]; then
+    if [ -f "fmt_test_build/fmt-config.cmake" ] || [ -f "fmt_test_build/fmtConfig.cmake" ]; then
+        print_status "PASS" "CMake config files are generated"
+        # Award 2 points directly for cmake integration
+        PASS_COUNT=$((PASS_COUNT + 2))
+        print_status "INFO" "System integration via CMake works (Score: 2 points)"
+    else
+        print_status "WARN" "CMake config files are not generated"
+    fi
 else
-    print_status "FAIL" "support/release.py not found"
-fi
-
-if [ -f "support/printable.py" ]; then
-    print_status "PASS" "support/printable.py exists"
-else
-    print_status "FAIL" "support/printable.py not found"
-fi
-
-echo ""
-echo "14. Testing Documentation..."
-echo "----------------------------"
-# Test if documentation files are readable
-if [ -r "README.md" ]; then
-    print_status "PASS" "README.md is readable"
-else
-    print_status "WARN" "README.md is not readable"
-fi
-
-if [ -r "LICENSE" ]; then
-    print_status "PASS" "LICENSE is readable"
-else
-    print_status "WARN" "LICENSE is not readable"
-fi
-
-if [ -r ".gitignore" ]; then
-    print_status "PASS" ".gitignore is readable"
-else
-    print_status "WARN" ".gitignore is not readable"
-fi
-
-if [ -r "CMakeLists.txt" ]; then
-    print_status "PASS" "CMakeLists.txt is readable"
-else
-    print_status "WARN" "CMakeLists.txt is not readable"
+    print_status "WARN" "Build directory not available for CMake integration test"
 fi
 
 echo ""
@@ -1070,21 +717,14 @@ echo ""
 echo "Summary:"
 echo "--------"
 echo "This script has tested:"
-echo "- System dependencies (GCC, G++, Clang, Clang++, CMake, Make, Ninja, Git, Bash)"
-echo "- Project structure (include/, src/, test/, support/, doc/)"
-echo "- Environment variables (CC, CXX, CFLAGS, CXXFLAGS, LDFLAGS, PATH)"
-echo "- C/C++ compilation (gcc, g++, clang, clang++)"
-echo "- Build systems (CMake, Make, Ninja)"
-echo "- Python environment (python3)"
-echo "- Documentation tools (Doxygen)"
-echo "- Testing tools (Valgrind)"
-echo "- Build tools (Bazel)"
-echo "- fmt library compilation (core.h, base.h)"
-echo "- CMake build process"
-echo "- fmt library features (basic formatting)"
-echo "- Support scripts (docopt.py, release.py, printable.py)"
-echo "- Documentation (README.md, LICENSE, .gitignore, CMakeLists.txt)"
-echo "- Dockerfile structure (if Docker build failed)"
+echo "- System dependencies (GCC, G++, Clang, CMake, Make, Ninja, Git)"
+echo "- Required project files structure"
+echo "- C++ compilation with different standards (C++11, C++14, C++17)"
+echo "- Library build configurations (Standard, Header-only, Shared)"
+echo "- Advanced library features (chrono, color, ranges)"
+echo "- Test suite execution"
+echo "- Header-only mode integration"
+echo "- System integration (pkg-config, CMake)"
 
 # Save final counts before any additional print_status calls
 FINAL_PASS_COUNT=$PASS_COUNT
@@ -1119,6 +759,4 @@ print_status "INFO" "You can now build and use {fmt}: A modern formatting librar
 print_status "INFO" "Example: mkdir build && cd build && cmake .. && make"
 
 echo ""
-print_status "INFO" "For more information, see README.md"
-
-print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/fmtlib_fmt fmtlib-env-test /bin/bash" 
+print_status "INFO" "
