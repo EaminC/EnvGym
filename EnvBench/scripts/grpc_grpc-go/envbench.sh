@@ -67,6 +67,51 @@ print_status() {
     esac
 }
 
+# Function to print proportional status with scoring (from gluetest)
+print_proportional_status() {
+    local actual=$1
+    local total=$2
+    local max_points=$3
+    local message=$4
+    
+    # Pure bash arithmetic approach - more reliable across environments
+    # Calculate score using integer arithmetic
+    if [ "$total" -ne "0" ]; then
+        # Use bc for floating point if available
+        if command -v bc &>/dev/null; then
+            # Calculate with bc but ensure we get a value (or default to 0)
+            local raw_score=$(echo "scale=6; ($actual * $max_points) / $total" | bc 2>/dev/null || echo "0")
+            # Round to nearest integer by adding 0.5 and truncating
+            local rounded_score=$(echo "$raw_score + 0.5" | bc | cut -d. -f1)
+        else
+            # Fallback to bash arithmetic (less precise)
+            local pct=$(( actual * 100 / total ))
+            local rounded_score=$(( pct * max_points / 100 ))
+        fi
+    else
+        local rounded_score=0
+    fi
+    
+    # Ensure score is within bounds
+    if [ "$rounded_score" -gt "$max_points" ]; then
+        rounded_score=$max_points
+    elif [ "$rounded_score" -lt "0" ]; then
+        rounded_score=0
+    fi
+    
+    # Add to PASS_COUNT (treating as positive achievement)
+    PASS_COUNT=$((PASS_COUNT + rounded_score))
+    
+    # Print with color based on performance
+    if [ "$actual" -eq "$total" ]; then
+        echo -e "${GREEN}[PASS]${NC} $message (Score: $rounded_score/$max_points)"
+    elif [ "$actual" -gt "$((total / 2))" ]; then
+        echo -e "${YELLOW}[PARTIAL]${NC} $message (Score: $rounded_score/$max_points)"  
+    else
+        echo -e "${RED}[LOW]${NC} $message (Score: $rounded_score/$max_points)"
+    fi
+}
+
 # Cleanup function
 cleanup() {
     echo "Cleaning up..."
@@ -147,17 +192,17 @@ if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
         echo "Analyzing Dockerfile..."
         echo "----------------------"
         
-        # Check Dockerfile structure
+        # Check Dockerfile structure - less weight on trivial checks
         if grep -q "FROM" envgym/envgym.dockerfile; then
             print_status "PASS" "FROM instruction found"
         else
             print_status "FAIL" "FROM instruction not found"
         fi
         
-        if grep -q "golang:1.24" envgym/envgym.dockerfile; then
-            print_status "PASS" "Go 1.24 specified"
+        if grep -q "golang:" envgym/envgym.dockerfile; then
+            print_status "PASS" "Go specified"
         else
-            print_status "WARN" "Go 1.24 not specified"
+            print_status "FAIL" "Go not specified"
         fi
         
         if grep -q "WORKDIR" envgym/envgym.dockerfile; then
@@ -184,22 +229,17 @@ if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
             print_status "FAIL" "make not found"
         fi
         
-        if grep -q "protoc" envgym/envgym.dockerfile; then
-            print_status "PASS" "protoc found"
+        # Critical gRPC-Go specific dependencies - higher weight
+        if grep -q "protoc" envgym/envgym.dockerfile || grep -q "protobuf" envgym/envgym.dockerfile; then
+            print_status "PASS" "protoc/protobuf found"
         else
-            print_status "FAIL" "protoc not found"
+            print_status "FAIL" "protoc/protobuf not found"
         fi
         
-        if grep -q "GO111MODULE=on" envgym/envgym.dockerfile; then
-            print_status "PASS" "GO111MODULE=on found"
+        if grep -q "GO111MODULE=" envgym/envgym.dockerfile; then
+            print_status "PASS" "GO111MODULE setting found"
         else
-            print_status "WARN" "GO111MODULE=on not found"
-        fi
-        
-        if grep -q "CGO_ENABLED=1" envgym/envgym.dockerfile; then
-            print_status "PASS" "CGO_ENABLED=1 found"
-        else
-            print_status "WARN" "CGO_ENABLED=1 not found"
+            print_status "WARN" "GO111MODULE setting not found"
         fi
         
         if grep -q "protoc-gen-go" envgym/envgym.dockerfile; then
@@ -214,34 +254,16 @@ if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
             print_status "FAIL" "protoc-gen-go-grpc not found"
         fi
         
-        if grep -q "mockgen" envgym/envgym.dockerfile; then
-            print_status "PASS" "mockgen found"
+        if grep -q "go mod" envgym/envgym.dockerfile; then
+            print_status "PASS" "go mod command found"
         else
-            print_status "WARN" "mockgen not found"
-        fi
-        
-        if grep -q "golangci-lint" envgym/envgym.dockerfile; then
-            print_status "PASS" "golangci-lint found"
-        else
-            print_status "WARN" "golangci-lint not found"
-        fi
-        
-        if grep -q "go mod download" envgym/envgym.dockerfile; then
-            print_status "PASS" "go mod download found"
-        else
-            print_status "WARN" "go mod download not found"
+            print_status "WARN" "go mod command not found"
         fi
         
         if grep -q "COPY" envgym/envgym.dockerfile; then
             print_status "PASS" "COPY instruction found"
         else
             print_status "WARN" "COPY instruction not found"
-        fi
-        
-        if grep -q "CMD" envgym/envgym.dockerfile; then
-            print_status "PASS" "CMD found"
-        else
-            print_status "WARN" "CMD not found"
         fi
         
         echo ""
@@ -254,9 +276,9 @@ if [ ! -f /.dockerenv ] && ! grep -q docker /proc/1/cgroup 2>/dev/null; then
         print_status "INFO" "Dockerfile Environment Score: $dockerfile_score% ($PASS_COUNT/$total_dockerfile_checks checks passed)"
         print_status "INFO" "PASS: $PASS_COUNT, FAIL: $((FAIL_COUNT)), WARN: $((WARN_COUNT))"
         if [ $FAIL_COUNT -eq 0 ]; then
-            print_status "INFO" "Dockerfile结构良好，建议检查依赖版本和构建产物。"
+            print_status "INFO" "Dockerfile structure good, will check dependency versions and build artifacts."
         else
-            print_status "WARN" "Dockerfile存在一些问题，建议修复后重新构建。"
+            print_status "WARN" "Dockerfile has some issues, suggest fixing before rebuilding."
         fi
         echo ""
     else
@@ -271,12 +293,15 @@ if command -v go &> /dev/null; then
     go_version=$(go version 2>&1)
     print_status "PASS" "Go is available: $go_version"
     
-    # Check Go version (should be >= 1.23)
-    go_major=$(echo $go_version | grep -o 'go[0-9]*' | sed 's/go//')
-    if [ -n "$go_major" ] && [ "$go_major" -ge 23 ]; then
-        print_status "PASS" "Go version is >= 1.23 (compatible)"
+    # Check Go version (should be >= 1.16 as per README)
+    go_version_check=$(go version | grep -o 'go[0-9.]*' | sed 's/go//')
+    go_major=$(echo $go_version_check | cut -d. -f1)
+    go_minor=$(echo $go_version_check | cut -d. -f2)
+    
+    if [ -n "$go_major" ] && ([ "$go_major" -gt 1 ] || ([ "$go_major" -eq 1 ] && [ "$go_minor" -ge 16 ])); then
+        print_status "PASS" "Go version is >= 1.16 (compatible)"
     else
-        print_status "WARN" "Go version should be >= 1.23 (found: $go_major)"
+        print_status "WARN" "Go version should be >= 1.16 (found: $go_version_check)"
     fi
 else
     print_status "FAIL" "Go is not available"
@@ -306,42 +331,7 @@ else
     print_status "FAIL" "Bash is not available"
 fi
 
-# Check curl
-if command -v curl &> /dev/null; then
-    print_status "PASS" "curl is available"
-else
-    print_status "FAIL" "curl is not available"
-fi
-
-# Check wget
-if command -v wget &> /dev/null; then
-    print_status "PASS" "wget is available"
-else
-    print_status "WARN" "wget is not available"
-fi
-
-# Check unzip
-if command -v unzip &> /dev/null; then
-    print_status "PASS" "unzip is available"
-else
-    print_status "WARN" "unzip is not available"
-fi
-
-# Check build tools
-if command -v gcc &> /dev/null; then
-    gcc_version=$(gcc --version 2>&1 | head -n 1)
-    print_status "PASS" "GCC is available: $gcc_version"
-else
-    print_status "WARN" "GCC is not available"
-fi
-
-if command -v g++ &> /dev/null; then
-    gpp_version=$(g++ --version 2>&1 | head -n 1)
-    print_status "PASS" "G++ is available: $gpp_version"
-else
-    print_status "WARN" "G++ is not available"
-fi
-
+# Critical gRPC-Go specific tools
 # Check protoc
 if command -v protoc &> /dev/null; then
     protoc_version=$(protoc --version 2>&1)
@@ -350,238 +340,32 @@ else
     print_status "FAIL" "protoc is not available"
 fi
 
-echo ""
-echo "2. Checking Project Structure..."
-echo "-------------------------------"
-# Check main directories
-if [ -d "examples" ]; then
-    print_status "PASS" "examples directory exists"
+# Check protoc-gen-go
+if command -v protoc-gen-go &> /dev/null; then
+    print_status "PASS" "protoc-gen-go is available"
 else
-    print_status "FAIL" "examples directory not found"
+    # Check in Go path
+    if [ -x "$(go env GOPATH)/bin/protoc-gen-go" ]; then
+        print_status "PASS" "protoc-gen-go is available in GOPATH"
+    else
+        print_status "FAIL" "protoc-gen-go is not available"
+    fi
 fi
 
-if [ -d "benchmark" ]; then
-    print_status "PASS" "benchmark directory exists"
+# Check protoc-gen-go-grpc
+if command -v protoc-gen-go-grpc &> /dev/null; then
+    print_status "PASS" "protoc-gen-go-grpc is available"
 else
-    print_status "FAIL" "benchmark directory not found"
-fi
-
-if [ -d "scripts" ]; then
-    print_status "PASS" "scripts directory exists"
-else
-    print_status "FAIL" "scripts directory not found"
-fi
-
-if [ -d "Documentation" ]; then
-    print_status "PASS" "Documentation directory exists"
-else
-    print_status "FAIL" "Documentation directory not found"
-fi
-
-if [ -d "internal" ]; then
-    print_status "PASS" "internal directory exists"
-else
-    print_status "FAIL" "internal directory not found"
-fi
-
-if [ -d "cmd" ]; then
-    print_status "PASS" "cmd directory exists"
-else
-    print_status "FAIL" "cmd directory not found"
-fi
-
-if [ -d "test" ]; then
-    print_status "PASS" "test directory exists"
-else
-    print_status "FAIL" "test directory not found"
-fi
-
-if [ -d "testdata" ]; then
-    print_status "PASS" "testdata directory exists"
-else
-    print_status "FAIL" "testdata directory not found"
-fi
-
-# Check key files
-if [ -f "README.md" ]; then
-    print_status "PASS" "README.md exists"
-else
-    print_status "FAIL" "README.md not found"
-fi
-
-if [ -f "go.mod" ]; then
-    print_status "PASS" "go.mod exists"
-else
-    print_status "FAIL" "go.mod not found"
-fi
-
-if [ -f "go.sum" ]; then
-    print_status "PASS" "go.sum exists"
-else
-    print_status "FAIL" "go.sum not found"
-fi
-
-if [ -f "Makefile" ]; then
-    print_status "PASS" "Makefile exists"
-else
-    print_status "FAIL" "Makefile not found"
-fi
-
-if [ -f "LICENSE" ]; then
-    print_status "PASS" "LICENSE exists"
-else
-    print_status "FAIL" "LICENSE not found"
-fi
-
-if [ -f "CONTRIBUTING.md" ]; then
-    print_status "PASS" "CONTRIBUTING.md exists"
-else
-    print_status "FAIL" "CONTRIBUTING.md not found"
-fi
-
-# Check Go files
-if [ -f "server.go" ]; then
-    print_status "PASS" "server.go exists"
-else
-    print_status "FAIL" "server.go not found"
-fi
-
-if [ -f "clientconn.go" ]; then
-    print_status "PASS" "clientconn.go exists"
-else
-    print_status "FAIL" "clientconn.go not found"
-fi
-
-if [ -f "stream.go" ]; then
-    print_status "PASS" "stream.go exists"
-else
-    print_status "FAIL" "stream.go not found"
-fi
-
-if [ -f "doc.go" ]; then
-    print_status "PASS" "doc.go exists"
-else
-    print_status "FAIL" "doc.go not found"
-fi
-
-# Check script files
-if [ -f "scripts/vet.sh" ]; then
-    print_status "PASS" "scripts/vet.sh exists"
-else
-    print_status "FAIL" "scripts/vet.sh not found"
-fi
-
-if [ -f "scripts/install-protoc.sh" ]; then
-    print_status "PASS" "scripts/install-protoc.sh exists"
-else
-    print_status "FAIL" "scripts/install-protoc.sh not found"
-fi
-
-if [ -f "scripts/regenerate.sh" ]; then
-    print_status "PASS" "scripts/regenerate.sh exists"
-else
-    print_status "FAIL" "scripts/regenerate.sh not found"
-fi
-
-# Check example files
-if [ -f "examples/go.mod" ]; then
-    print_status "PASS" "examples/go.mod exists"
-else
-    print_status "FAIL" "examples/go.mod exists"
-fi
-
-if [ -d "examples/helloworld" ]; then
-    print_status "PASS" "examples/helloworld directory exists"
-else
-    print_status "FAIL" "examples/helloworld directory not found"
-fi
-
-if [ -d "examples/route_guide" ]; then
-    print_status "PASS" "examples/route_guide directory exists"
-else
-    print_status "FAIL" "examples/route_guide directory not found"
-fi
-
-# Check benchmark files
-if [ -f "benchmark/benchmark.go" ]; then
-    print_status "PASS" "benchmark/benchmark.go exists"
-else
-    print_status "FAIL" "benchmark/benchmark.go not found"
-fi
-
-if [ -f "benchmark/run_bench.sh" ]; then
-    print_status "PASS" "benchmark/run_bench.sh exists"
-else
-    print_status "FAIL" "benchmark/run_bench.sh not found"
+    # Check in Go path
+    if [ -x "$(go env GOPATH)/bin/protoc-gen-go-grpc" ]; then
+        print_status "PASS" "protoc-gen-go-grpc is available in GOPATH"
+    else
+        print_status "FAIL" "protoc-gen-go-grpc is not available"
+    fi
 fi
 
 echo ""
-echo "3. Checking Environment Variables..."
-echo "-----------------------------------"
-# Check Go environment
-if [ -n "${GOROOT:-}" ]; then
-    print_status "PASS" "GOROOT is set: $GOROOT"
-else
-    print_status "WARN" "GOROOT is not set"
-fi
-
-if [ -n "${GOPATH:-}" ]; then
-    print_status "PASS" "GOPATH is set: $GOPATH"
-else
-    print_status "WARN" "GOPATH is not set"
-fi
-
-if [ -n "${GO111MODULE:-}" ]; then
-    print_status "PASS" "GO111MODULE is set: $GO111MODULE"
-else
-    print_status "WARN" "GO111MODULE is not set"
-fi
-
-if [ -n "${CGO_ENABLED:-}" ]; then
-    print_status "PASS" "CGO_ENABLED is set: $CGO_ENABLED"
-else
-    print_status "WARN" "CGO_ENABLED is not set"
-fi
-
-if [ -n "${GOARCH:-}" ]; then
-    print_status "PASS" "GOARCH is set: $GOARCH"
-else
-    print_status "WARN" "GOARCH is not set"
-fi
-
-if [ -n "${GOCACHE:-}" ]; then
-    print_status "PASS" "GOCACHE is set: $GOCACHE"
-else
-    print_status "WARN" "GOCACHE is not set"
-fi
-
-# Check PATH
-if echo "$PATH" | grep -q "go"; then
-    print_status "PASS" "go is in PATH"
-else
-    print_status "WARN" "go is not in PATH"
-fi
-
-if echo "$PATH" | grep -q "git"; then
-    print_status "PASS" "git is in PATH"
-else
-    print_status "WARN" "git is not in PATH"
-fi
-
-if echo "$PATH" | grep -q "make"; then
-    print_status "PASS" "make is in PATH"
-else
-    print_status "WARN" "make is not in PATH"
-fi
-
-if echo "$PATH" | grep -q "protoc"; then
-    print_status "PASS" "protoc is in PATH"
-else
-    print_status "WARN" "protoc is not in PATH"
-fi
-
-echo ""
-echo "4. Testing Go Environment..."
+echo "2. Testing Go Environment..."
 echo "----------------------------"
 # Test Go
 if command -v go &> /dev/null; then
@@ -601,423 +385,478 @@ if command -v go &> /dev/null; then
         print_status "WARN" "Go env command failed"
     fi
     
-    # Test Go list
-    if timeout 30s go list -m >/dev/null 2>&1; then
-        print_status "PASS" "Go list command works"
+    # Test Go module support
+    echo 'module test' > go.mod.test
+    if timeout 30s go mod edit -go=1.16 go.mod.test >/dev/null 2>&1; then
+        print_status "PASS" "Go module support works"
+        rm -f go.mod.test
     else
-        print_status "WARN" "Go list command failed"
+        print_status "WARN" "Go module support test failed"
+        rm -f go.mod.test
     fi
 else
     print_status "FAIL" "go is not available"
 fi
 
 echo ""
-echo "5. Testing Go Module System..."
-echo "-------------------------------"
-# Test Go modules
-if command -v go &> /dev/null; then
-    print_status "PASS" "go is available for module testing"
-    
-    # Test go mod download
-    if timeout 60s go mod download >/dev/null 2>&1; then
-        print_status "PASS" "go mod download works"
-    else
-        print_status "WARN" "go mod download failed"
-    fi
-    
-    # Test go mod tidy
-    if timeout 60s go mod tidy >/dev/null 2>&1; then
-        print_status "PASS" "go mod tidy works"
-    else
-        print_status "WARN" "go mod tidy failed"
-    fi
-    
-    # Test go mod verify
-    if timeout 60s go mod verify >/dev/null 2>&1; then
-        print_status "PASS" "go mod verify works"
-    else
-        print_status "WARN" "go mod verify failed"
-    fi
-else
-    print_status "WARN" "go not available for module testing"
-fi
+echo "3. Testing Protocol Buffers Environment..."
+echo "-----------------------------------------"
 
-echo ""
-echo "6. Testing Protocol Buffers..."
-echo "-------------------------------"
 # Test protoc
 if command -v protoc &> /dev/null; then
     print_status "PASS" "protoc is available"
     
-    # Test protoc version
-    if timeout 30s protoc --version >/dev/null 2>&1; then
-        print_status "PASS" "protoc version command works"
+    # Test basic protoc functionality with a temporary proto file
+    mkdir -p /tmp/proto_test
+    cat > /tmp/proto_test/test.proto << EOF
+syntax = "proto3";
+package test;
+option go_package = "testpkg";
+message TestMessage {
+  string test_field = 1;
+}
+service TestService {
+  rpc TestMethod(TestMessage) returns (TestMessage) {}
+}
+EOF
+    
+    # Test protoc code generation
+    if timeout 30s protoc --go_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
+        print_status "PASS" "protoc can generate Go code"
     else
-        print_status "WARN" "protoc version command failed"
+        print_status "FAIL" "protoc cannot generate Go code"
     fi
     
-    # Test protoc help
-    if timeout 30s protoc --help >/dev/null 2>&1; then
-        print_status "PASS" "protoc help command works"
+    # Test protoc-gen-go-grpc code generation
+    if timeout 30s protoc --go-grpc_out=/tmp/proto_test /tmp/proto_test/test.proto 2>/dev/null; then
+        print_status "PASS" "protoc can generate Go gRPC code"
+        
+        # Verify generated files
+        if [ -f "/tmp/proto_test/testpkg/test.pb.go" ] || [ -f "/tmp/proto_test/test.pb.go" ]; then
+            print_status "PASS" "Go protobuf file successfully generated"
+        else
+            print_status "FAIL" "Go protobuf file not found after generation"
+        fi
+        
+        if [ -f "/tmp/proto_test/testpkg/test_grpc.pb.go" ] || [ -f "/tmp/proto_test/test_grpc.pb.go" ]; then
+            print_status "PASS" "Go gRPC file successfully generated"
+        else
+            print_status "FAIL" "Go gRPC file not found after generation"
+        fi
     else
-        print_status "WARN" "protoc help command failed"
+        print_status "FAIL" "protoc cannot generate Go gRPC code"
     fi
+    
+    # Clean up temp files
+    rm -rf /tmp/proto_test
 else
-    print_status "FAIL" "protoc is not available"
+    print_status "FAIL" "protoc is not available for testing"
 fi
 
 echo ""
-echo "7. Testing Go Tools..."
-echo "----------------------"
-# Test Go tools
-if command -v go &> /dev/null; then
-    print_status "PASS" "go is available for tool testing"
-    
-    # Test protoc-gen-go
-    if timeout 30s protoc-gen-go --version >/dev/null 2>&1; then
-        print_status "PASS" "protoc-gen-go is available"
-    else
-        print_status "WARN" "protoc-gen-go is not available"
-    fi
-    
-    # Test protoc-gen-go-grpc
-    if timeout 30s protoc-gen-go-grpc --version >/dev/null 2>&1; then
-        print_status "PASS" "protoc-gen-go-grpc is available"
-    else
-        print_status "WARN" "protoc-gen-go-grpc is not available"
-    fi
-    
-    # Test mockgen
-    if timeout 30s mockgen --version >/dev/null 2>&1; then
-        print_status "PASS" "mockgen is available"
-    else
-        print_status "WARN" "mockgen is not available"
-    fi
-    
-    # Test golangci-lint
-    if timeout 30s golangci-lint --version >/dev/null 2>&1; then
-        print_status "PASS" "golangci-lint is available"
-    else
-        print_status "WARN" "golangci-lint is not available"
-    fi
-    
-    # Test gosec
-    if timeout 30s gosec --version >/dev/null 2>&1; then
-        print_status "PASS" "gosec is available"
-    else
-        print_status "WARN" "gosec is not available"
-    fi
-else
-    print_status "WARN" "go not available for tool testing"
-fi
-
-echo ""
-echo "8. Testing gRPC-Go Scripts..."
-echo "-----------------------------"
-# Test scripts
-if [ -f "scripts/vet.sh" ] && [ -x "scripts/vet.sh" ]; then
-    print_status "PASS" "scripts/vet.sh exists and is executable"
-else
-    print_status "WARN" "scripts/vet.sh not found or not executable"
-fi
-
-# Test if scripts can be made executable
-if [ -f "scripts/vet.sh" ]; then
-    if chmod +x scripts/vet.sh 2>/dev/null; then
-        print_status "PASS" "scripts/vet.sh can be made executable"
-    else
-        print_status "WARN" "scripts/vet.sh cannot be made executable"
-    fi
-fi
-
-if [ -f "scripts/install-protoc.sh" ]; then
-    print_status "PASS" "scripts/install-protoc.sh exists"
-    
-    if [ -x "scripts/install-protoc.sh" ]; then
-        print_status "PASS" "scripts/install-protoc.sh is executable"
-    else
-        print_status "WARN" "scripts/install-protoc.sh is not executable"
-    fi
-else
-    print_status "FAIL" "scripts/install-protoc.sh not found"
-fi
-
-if [ -f "scripts/regenerate.sh" ]; then
-    print_status "PASS" "scripts/regenerate.sh exists"
-    
-    if [ -x "scripts/regenerate.sh" ]; then
-        print_status "PASS" "scripts/regenerate.sh is executable"
-    else
-        print_status "WARN" "scripts/regenerate.sh is not executable"
-    fi
-else
-    print_status "FAIL" "scripts/regenerate.sh not found"
-fi
-
-echo ""
-echo "9. Testing Makefile..."
-echo "----------------------"
-# Test Makefile
-if [ -f "Makefile" ]; then
-    print_status "PASS" "Makefile exists"
-    
-    if command -v make &> /dev/null; then
-        print_status "PASS" "make is available for Makefile testing"
-        
-        # Test make help or list targets
-        if timeout 30s make -n all >/dev/null 2>&1; then
-            print_status "PASS" "Makefile syntax is valid"
-        else
-            print_status "WARN" "Makefile syntax check failed"
-        fi
-        
-        # Test make deps
-        if timeout 60s make -n deps >/dev/null 2>&1; then
-            print_status "PASS" "make deps target exists"
-        else
-            print_status "WARN" "make deps target failed"
-        fi
-        
-        # Test make test
-        if timeout 60s make -n test >/dev/null 2>&1; then
-            print_status "PASS" "make test target exists"
-        else
-            print_status "WARN" "make test target failed"
-        fi
-        
-        # Test make vet
-        if timeout 60s make -n vet >/dev/null 2>&1; then
-            print_status "PASS" "make vet target exists"
-        else
-            print_status "WARN" "make vet target failed"
-        fi
-    else
-        print_status "WARN" "make not available for Makefile testing"
-    fi
-else
-    print_status "FAIL" "Makefile not found"
-fi
-
-echo ""
-echo "10. Testing Go Build System..."
+echo "4. Testing Project Structure..."
 echo "-------------------------------"
-# Test Go build
-if command -v go &> /dev/null; then
-    print_status "PASS" "go is available for build testing"
-    
-    # Test go build
-    if timeout 120s go build -o /tmp/test_build google.golang.org/grpc/... >/dev/null 2>&1; then
-        print_status "PASS" "go build works"
-        rm -f /tmp/test_build
-    else
-        print_status "WARN" "go build failed or timed out"
-    fi
-    
-    # Test go test (dry run)
-    if timeout 60s go test -run=^$ google.golang.org/grpc/... >/dev/null 2>&1; then
-        print_status "PASS" "go test dry run works"
-    else
-        print_status "WARN" "go test dry run failed"
-    fi
-    
-    # Test go vet
-    if timeout 60s go vet google.golang.org/grpc/... >/dev/null 2>&1; then
-        print_status "PASS" "go vet works"
-    else
-        print_status "WARN" "go vet failed"
-    fi
-else
-    print_status "WARN" "go not available for build testing"
-fi
-
-echo ""
-echo "11. Testing Examples..."
-echo "-----------------------"
-# Test examples
+# Check only critical directories (minimal points for existing files)
 if [ -d "examples" ]; then
     print_status "PASS" "examples directory exists"
-    
-    if command -v go &> /dev/null; then
-        print_status "PASS" "go is available for examples testing"
-        
-        # Test examples go.mod
-        if [ -f "examples/go.mod" ]; then
-            if timeout 60s cd examples && go mod download >/dev/null 2>&1; then
-                print_status "PASS" "examples go.mod works"
-            else
-                print_status "WARN" "examples go.mod failed"
-            fi
-        else
-            print_status "FAIL" "examples/go.mod not found"
-        fi
-        
-        # Test helloworld example
-        if [ -d "examples/helloworld" ]; then
-            if timeout 60s cd examples/helloworld && go build -o /tmp/helloworld . >/dev/null 2>&1; then
-                print_status "PASS" "helloworld example builds"
-                rm -f /tmp/helloworld
-            else
-                print_status "WARN" "helloworld example build failed"
-            fi
-        else
-            print_status "FAIL" "examples/helloworld directory not found"
-        fi
-        
-        # Test route_guide example
-        if [ -d "examples/route_guide" ]; then
-            if timeout 60s cd examples/route_guide && go build -o /tmp/route_guide . >/dev/null 2>&1; then
-                print_status "PASS" "route_guide example builds"
-                rm -f /tmp/route_guide
-            else
-                print_status "WARN" "route_guide example build failed"
-            fi
-        else
-            print_status "FAIL" "examples/route_guide directory not found"
-        fi
-    else
-        print_status "WARN" "go not available for examples testing"
-    fi
 else
     print_status "FAIL" "examples directory not found"
 fi
 
-echo ""
-echo "12. Testing Benchmark..."
-echo "------------------------"
-# Test benchmark
 if [ -d "benchmark" ]; then
     print_status "PASS" "benchmark directory exists"
-    
-    if [ -f "benchmark/benchmark.go" ]; then
-        print_status "PASS" "benchmark/benchmark.go exists"
-    else
-        print_status "FAIL" "benchmark/benchmark.go not found"
-    fi
-    
-    if [ -f "benchmark/run_bench.sh" ]; then
-        print_status "PASS" "benchmark/run_bench.sh exists"
-        
-        if [ -x "benchmark/run_bench.sh" ]; then
-            print_status "PASS" "benchmark/run_bench.sh is executable"
-        else
-            print_status "WARN" "benchmark/run_bench.sh is not executable"
-        fi
-    else
-        print_status "FAIL" "benchmark/run_bench.sh not found"
-    fi
-    
-    if command -v go &> /dev/null; then
-        print_status "PASS" "go is available for benchmark testing"
-        
-        # Test benchmark build
-        if timeout 120s cd benchmark && go build -o /tmp/benchmark . >/dev/null 2>&1; then
-            print_status "PASS" "benchmark builds"
-            rm -f /tmp/benchmark
-        else
-            print_status "WARN" "benchmark build failed"
-        fi
-    else
-        print_status "WARN" "go not available for benchmark testing"
-    fi
 else
     print_status "FAIL" "benchmark directory not found"
 fi
 
-echo ""
-echo "13. Testing Documentation..."
-echo "----------------------------"
-# Test documentation
-if [ -d "Documentation" ]; then
-    print_status "PASS" "Documentation directory exists"
+if [ -d "examples/helloworld" ]; then
+    print_status "PASS" "examples/helloworld directory exists"
 else
-    print_status "FAIL" "Documentation directory not found"
+    print_status "FAIL" "examples/helloworld directory not found"
 fi
 
-if [ -r "README.md" ]; then
-    print_status "PASS" "README.md is readable"
+if [ -f "go.mod" ]; then
+    print_status "PASS" "go.mod exists"
 else
-    print_status "WARN" "README.md is not readable"
-fi
-
-if [ -r "CONTRIBUTING.md" ]; then
-    print_status "PASS" "CONTRIBUTING.md is readable"
-else
-    print_status "WARN" "CONTRIBUTING.md is not readable"
-fi
-
-if [ -r "LICENSE" ]; then
-    print_status "PASS" "LICENSE is readable"
-else
-    print_status "WARN" "LICENSE is not readable"
-fi
-
-if [ -r "examples/gotutorial.md" ]; then
-    print_status "PASS" "examples/gotutorial.md is readable"
-else
-    print_status "WARN" "examples/gotutorial.md is not readable"
+    print_status "FAIL" "go.mod not found"
 fi
 
 echo ""
-echo "14. Testing Security and Compliance..."
-echo "-------------------------------------"
-# Test security files
-if [ -f "SECURITY.md" ]; then
-    print_status "PASS" "SECURITY.md exists"
-else
-    print_status "FAIL" "SECURITY.md not found"
-fi
-
-if [ -f "CODE-OF-CONDUCT.md" ]; then
-    print_status "PASS" "CODE-OF-CONDUCT.md exists"
-else
-    print_status "FAIL" "CODE-OF-CONDUCT.md not found"
-fi
-
-if [ -f "GOVERNANCE.md" ]; then
-    print_status "PASS" "GOVERNANCE.md exists"
-else
-    print_status "FAIL" "GOVERNANCE.md not found"
-fi
-
-if [ -f "MAINTAINERS.md" ]; then
-    print_status "PASS" "MAINTAINERS.md exists"
-else
-    print_status "FAIL" "MAINTAINERS.md not found"
-fi
-
-echo ""
-echo "15. Testing gRPC-Go Core Components..."
-echo "--------------------------------------"
-# Test core gRPC components
+echo "5. Testing gRPC-Go Build Capability..."
+echo "---------------------------------------"
 if command -v go &> /dev/null; then
-    print_status "PASS" "go is available for core component testing"
+    print_status "PASS" "go is available for build testing"
     
-    # Test server component
-    if timeout 60s go build -o /tmp/server_test google.golang.org/grpc >/dev/null 2>&1; then
-        print_status "PASS" "gRPC server component builds"
-        rm -f /tmp/server_test
+    # Test dependencies download
+    if timeout 120s go mod download >/dev/null 2>&1; then
+        print_status "PASS" "go mod download works"
     else
-        print_status "WARN" "gRPC server component build failed"
+        print_status "WARN" "go mod download failed or timed out"
     fi
     
-    # Test client component
-    if timeout 60s go build -o /tmp/client_test google.golang.org/grpc >/dev/null 2>&1; then
-        print_status "PASS" "gRPC client component builds"
-        rm -f /tmp/client_test
+    # Test core gRPC package build
+    if timeout 120s go build -o /tmp/grpc_test google.golang.org/grpc >/dev/null 2>&1; then
+        print_status "PASS" "gRPC core package builds successfully"
+        rm -f /tmp/grpc_test
     else
-        print_status "WARN" "gRPC client component build failed"
-    fi
-    
-    # Test stream component
-    if timeout 60s go build -o /tmp/stream_test google.golang.org/grpc >/dev/null 2>&1; then
-        print_status "PASS" "gRPC stream component builds"
-        rm -f /tmp/stream_test
-    else
-        print_status "WARN" "gRPC stream component build failed"
+        print_status "FAIL" "gRPC core package build failed"
     fi
 else
-    print_status "WARN" "go not available for core component testing"
+    print_status "FAIL" "go is not available for build testing"
 fi
+
+echo ""
+echo "6. Testing Examples Compilation..."
+echo "----------------------------------"
+# Test compilation of examples with proportional scoring
+if [ -d "examples" ] && command -v go &> /dev/null; then
+    print_status "PASS" "examples directory exists and go is available"
+    
+    # Set up example test variables
+    EXAMPLES=(
+        "helloworld"
+        "route_guide"
+        "features/authentication"
+        "features/compression"
+        "features/encryption/TLS"
+        "features/load_balancing"
+        "features/metadata"
+    )
+    
+    SUCCESSFUL_BUILDS=0
+    TOTAL_EXAMPLES=${#EXAMPLES[@]}
+    
+    for example in ${EXAMPLES[@]}; do
+        echo "Testing example: ${example}"
+        
+        # Test server compilation
+        if [ -d "examples/${example}" ] && timeout 60s go build -o /dev/null ./examples/${example}/*server/*.go >/dev/null 2>&1; then
+            print_status "PASS" "${example} server builds successfully"
+            
+            # Test client compilation
+            if timeout 60s go build -o /dev/null ./examples/${example}/*client/*.go >/dev/null 2>&1; then
+                print_status "PASS" "${example} client builds successfully"
+                ((SUCCESSFUL_BUILDS++))
+            else
+                print_status "FAIL" "${example} client build failed"
+            fi
+        else
+            print_status "FAIL" "${example} server build failed"
+        fi
+    done
+    
+    # Score proportionally based on successful builds
+    print_proportional_status $SUCCESSFUL_BUILDS $TOTAL_EXAMPLES 15 "Examples build test ($SUCCESSFUL_BUILDS/$TOTAL_EXAMPLES examples build successfully)"
+else
+    print_status "FAIL" "Cannot test examples compilation - directory missing or go unavailable"
+fi
+
+echo ""
+echo "7. Testing Basic gRPC Server-Client Functionality..."
+echo "---------------------------------------------------"
+if command -v go &> /dev/null && [ -d "examples/helloworld" ]; then
+    print_status "PASS" "Requirements for gRPC functionality test are available"
+    
+    # Create temporary directory for the test
+    TEST_DIR=$(mktemp -d)
+    SERVER_LOG="$TEST_DIR/server.log"
+    CLIENT_LOG="$TEST_DIR/client.log"
+    
+    # Start the helloworld server in the background with timeout
+    echo "Starting helloworld server..."
+    cd examples/helloworld
+    timeout 120s go run ./greeter_server/main.go -port 50051 > $SERVER_LOG 2>&1 &
+    SERVER_PID=$!
+    cd ../..
+    
+    # Wait for server to start
+    echo "Waiting for server to start..."
+    for i in {1..10}; do
+        if lsof -i :50051 | grep -q 50051 2>/dev/null; then
+            print_status "PASS" "gRPC server started successfully"
+            break
+        fi
+        sleep 1
+        if [ $i -eq 10 ]; then
+            print_status "FAIL" "gRPC server failed to start within timeout"
+        fi
+    done
+    
+    # Run the client
+    echo "Running helloworld client..."
+    cd examples/helloworld
+    if timeout 30s go run ./greeter_client/main.go -addr localhost:50051 > $CLIENT_LOG 2>&1; then
+        print_status "PASS" "gRPC client executed successfully"
+        
+        # Check for expected output
+        if grep -q "Greeting: Hello world" $CLIENT_LOG; then
+            print_status "PASS" "gRPC client received correct response"
+        else
+            print_status "FAIL" "gRPC client did not receive expected response"
+        fi
+    else
+        print_status "FAIL" "gRPC client execution failed"
+    fi
+    cd ../..
+    
+    # Clean up
+    kill $SERVER_PID 2>/dev/null || true
+    wait $SERVER_PID 2>/dev/null || true
+    
+    # Check server log for errors
+    if grep -i "error\|panic\|fatal" $SERVER_LOG; then
+        print_status "WARN" "gRPC server log contains errors"
+    else
+        print_status "PASS" "gRPC server ran without errors"
+    fi
+    
+    # Clean up test directory
+    rm -rf $TEST_DIR
+else
+    print_status "FAIL" "Cannot test gRPC functionality - requirements not available"
+fi
+
+echo ""
+echo "8. Testing Full Examples Test Script..."
+echo "---------------------------------------"
+if [ -f "examples/examples_test.sh" ] && command -v go &> /dev/null; then
+    print_status "PASS" "examples_test.sh exists and go is available"
+    
+    # Make the script executable
+    chmod +x examples/examples_test.sh
+    
+    # Count total examples in the test script
+    TOTAL_TEST_EXAMPLES=$(grep -o "testing: " examples/examples_test.sh | wc -l)
+    
+    # Create test log
+    TEST_LOG=$(mktemp)
+    
+    # Run the examples test script with a timeout (modify TIMEOUT_SECONDS as needed)
+    TIMEOUT_SECONDS=600
+    
+    echo "Running examples_test.sh with ${TIMEOUT_SECONDS}s timeout..."
+    cd examples
+    
+    # Execute with timeout and count successes
+    timeout $TIMEOUT_SECONDS ./examples_test.sh > $TEST_LOG 2>&1 || true
+    
+    cd ..
+    
+    # Count successful tests
+    SUCCESSFUL_TESTS=$(grep -c "\[PASS\] client successfully communicated with server" $TEST_LOG)
+    
+    # Report results
+    if [ -z "$SUCCESSFUL_TESTS" ]; then
+        SUCCESSFUL_TESTS=0
+    fi
+    
+    print_proportional_status $SUCCESSFUL_TESTS $TOTAL_TEST_EXAMPLES 30 "examples_test.sh test results ($SUCCESSFUL_TESTS/$TOTAL_TEST_EXAMPLES examples passed)"
+    
+    # Clean up
+    rm -f $TEST_LOG
+else
+    print_status "FAIL" "Cannot run examples_test.sh - script missing or go unavailable"
+fi
+
+echo ""
+echo "9. Testing Benchmark Functionality..."
+echo "------------------------------------"
+if [ -d "benchmark" ] && command -v go &> /dev/null; then
+    print_status "PASS" "benchmark directory exists and go is available"
+    
+    # Test benchmark build
+    if timeout 120s go build -o /tmp/grpc_benchmark ./benchmark >/dev/null 2>&1; then
+        print_status "PASS" "gRPC benchmark builds successfully"
+        
+        # Check if benchmark can run (just --help to avoid long running benchmark)
+        if timeout 30s /tmp/grpc_benchmark --help >/dev/null 2>&1; then
+            print_status "PASS" "gRPC benchmark executes successfully"
+        else
+            print_status "FAIL" "gRPC benchmark execution failed"
+        fi
+        
+        rm -f /tmp/grpc_benchmark
+    else
+        print_status "FAIL" "gRPC benchmark build failed"
+    fi
+else
+    print_status "FAIL" "Cannot test benchmark - directory missing or go unavailable"
+fi
+
+echo ""
+echo "10. Testing Incremental Complexity..."
+echo "------------------------------------"
+
+# Create a test directory for incremental tests
+TEST_DIR=$(mktemp -d)
+
+# Create a simple proto file
+cat > $TEST_DIR/simple.proto << EOF
+syntax = "proto3";
+package simple;
+option go_package = "./simple";
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+EOF
+
+# Create a simple server implementation
+mkdir -p $TEST_DIR/server
+cat > $TEST_DIR/server/main.go << EOF
+package main
+
+import (
+	"context"
+	"log"
+	"net"
+
+	pb "simple"
+	"google.golang.org/grpc"
+)
+
+type server struct {
+	pb.UnimplementedGreeterServer
+}
+
+func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+}
+
+func main() {
+	lis, err := net.Listen("tcp", ":50052")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterGreeterServer(s, &server{})
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+EOF
+
+# Create a simple client implementation
+mkdir -p $TEST_DIR/client
+cat > $TEST_DIR/client/main.go << EOF
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	pb "simple"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+)
+
+func main() {
+	conn, err := grpc.Dial("localhost:50052", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewGreeterClient(conn)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: "world"})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	log.Printf("Greeting: %s", r.GetMessage())
+}
+EOF
+
+# Test the incremental steps
+echo "Testing Level 1: Protocol Buffer Generation..."
+if command -v protoc &> /dev/null; then
+    if timeout 30s protoc --go_out=$TEST_DIR --go-grpc_out=$TEST_DIR $TEST_DIR/simple.proto; then
+        print_status "PASS" "Level 1: Proto file compiled successfully"
+        
+        echo "Testing Level 2: Code Compilation..."
+        cd $TEST_DIR
+        
+        # Attempt to fix import paths if needed
+        if [ -f "$TEST_DIR/simple/simple.pb.go" ]; then
+            # Fix imports in server and client
+            sed -i 's|pb "simple"|pb "'"$TEST_DIR"'/simple"|' server/main.go
+            sed -i 's|pb "simple"|pb "'"$TEST_DIR"'/simple"|' client/main.go
+            
+            # Try to build server
+            if timeout 60s go build -o /tmp/grpc_incremental_server ./server >/dev/null 2>&1; then
+                print_status "PASS" "Level 2: Server compilation successful"
+                
+                # Try to build client
+                if timeout 60s go build -o /tmp/grpc_incremental_client ./client >/dev/null 2>&1; then
+                    print_status "PASS" "Level 2: Client compilation successful"
+                    
+                    echo "Testing Level 3: Basic gRPC Server-Client Operation..."
+                    
+                    # Start the server
+                    timeout 60s /tmp/grpc_incremental_server > /tmp/server.log 2>&1 &
+                    SERVER_PID=$!
+                    
+                    # Wait for server to start
+                    sleep 2
+                    
+                    # Run the client
+                    if timeout 30s /tmp/grpc_incremental_client > /tmp/client.log 2>&1; then
+                        print_status "PASS" "Level 3: Client-server communication successful"
+                        
+                        # Check client output
+                        if grep -q "Greeting:" /tmp/client.log; then
+                            print_status "PASS" "Level 3: Client received proper response"
+                        else
+                            print_status "FAIL" "Level 3: Client did not receive proper response"
+                        fi
+                    else
+                        print_status "FAIL" "Level 3: Client execution failed"
+                    fi
+                    
+                    # Clean up
+                    kill $SERVER_PID 2>/dev/null || true
+                    wait $SERVER_PID 2>/dev/null || true
+                    
+                    # Score incremental testing proportionally
+                    print_proportional_status 3 3 15 "Incremental gRPC functionality test (3/3 levels completed)"
+                else
+                    print_status "FAIL" "Level 2: Client compilation failed"
+                    # Score partial progress
+                    print_proportional_status 1 3 15 "Incremental gRPC functionality test (1/3 levels completed)"
+                fi
+                
+                rm -f /tmp/grpc_incremental_server /tmp/grpc_incremental_client
+            else
+                print_status "FAIL" "Level 2: Server compilation failed"
+                # Score partial progress
+                print_proportional_status 1 3 15 "Incremental gRPC functionality test (1/3 levels completed)"
+            fi
+        else
+            print_status "FAIL" "Generated pb.go file not found"
+            print_proportional_status 1 3 15 "Incremental gRPC functionality test (1/3 levels completed)"
+        fi
+        
+        cd -
+    else
+        print_status "FAIL" "Level 1: Proto file compilation failed"
+        print_proportional_status 0 3 15 "Incremental gRPC functionality test (0/3 levels completed)"
+    fi
+else
+    print_status "FAIL" "protoc not available for incremental testing"
+fi
+
+# Clean up test directory
+rm -rf $TEST_DIR
 
 echo ""
 echo "=========================================="
@@ -1027,20 +866,17 @@ echo ""
 echo "Summary:"
 echo "--------"
 echo "This script has tested:"
-echo "- System dependencies (Go >= 1.23, Git, Make, Bash, curl, wget, unzip)"
-echo "- Project structure (examples, benchmark, scripts, Documentation/)"
-echo "- Environment variables (GOROOT, GOPATH, GO111MODULE, CGO_ENABLED, GOARCH, GOCACHE)"
-echo "- Go environment (go, go mod, go build, go test, go vet)"
-echo "- Protocol Buffers (protoc, protoc-gen-go, protoc-gen-go-grpc)"
-echo "- Go tools (mockgen, golangci-lint, gosec)"
-echo "- gRPC-Go scripts (vet.sh, install-protoc.sh, regenerate.sh)"
-echo "- Makefile system (make, build targets, test targets)"
-echo "- Go build system (go build, go test, go vet)"
-echo "- Examples (helloworld, route_guide)"
-echo "- Benchmark (benchmark.go, run_bench.sh)"
-echo "- Documentation (README.md, CONTRIBUTING.md, LICENSE)"
-echo "- Security and compliance (SECURITY.md, CODE-OF-CONDUCT.md)"
-echo "- gRPC-Go core components (server, client, stream)"
+echo "- System dependencies (Go, Git, Make, Bash, curl)"
+echo "- Protocol Buffers tools (protoc, protoc-gen-go, protoc-gen-go-grpc)"
+echo "- Go environment (go, go mod, go build, go test)"
+echo "- Protocol Buffers code generation"
+echo "- Project structure (examples, benchmark)"
+echo "- gRPC-Go build capability"
+echo "- Examples compilation and execution"
+echo "- Basic gRPC server-client functionality"
+echo "- Full examples test script"
+echo "- Benchmark functionality"
+echo "- Incremental complexity testing"
 echo "- Dockerfile structure (if Docker build failed)"
 
 # Save final counts before any additional print_status calls
@@ -1073,9 +909,8 @@ else
 fi
 
 print_status "INFO" "You can now run gRPC-Go: A high performance, open source, general RPC framework."
-print_status "INFO" "Example: make test"
 
 echo ""
 print_status "INFO" "For more information, see README.md"
 
-print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/grpc_grpc-go grpc-go-env-test /bin/bash" 
+print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/grpc_grpc-go grpc-go-env-test /bin/bash"
