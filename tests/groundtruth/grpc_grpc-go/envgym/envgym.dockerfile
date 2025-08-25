@@ -36,12 +36,12 @@ RUN wget -q https://github.com/protocolbuffers/protobuf/releases/download/v${PRO
 ENV PATH=$PATH:/go/bin:/root/go/bin:/home/cc/go/bin
 
 # Install commonly used Go protobuf plugins and tools (for Go 1.17+; will install to /go/bin)
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \
-    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest && \
-    go install github.com/golang/mock/mockgen@latest && \
-    go install github.com/mattn/goveralls@latest && \
-    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && \
-    go install github.com/securego/gosec/v2/cmd/gosec@latest
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2 && \
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.4.0 && \
+    go install github.com/golang/mock/mockgen@v1.6.0 && \
+    go install github.com/mattn/goveralls@v0.0.12 && \
+    go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.59.0 && \
+    go install github.com/securego/gosec/v2/cmd/gosec@v2.20.0
 
 # Copy the entire repository (excluding files ignored by .dockerignore)
 COPY . .
