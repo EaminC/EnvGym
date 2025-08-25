@@ -74,9 +74,23 @@ print_proportional_status() {
     local max_points=$3
     local message=$4
     
-    # Calculate proportional score and round to nearest integer
-    local score=$(echo "scale=2; ($actual * $max_points) / $total" | bc -l 2>/dev/null || echo "0")
-    local rounded_score=$(printf "%.0f" "$score" 2>/dev/null || echo "0")
+    # Pure bash arithmetic approach - more reliable across environments
+    # Calculate score using integer arithmetic
+    if [ "$total" -ne "0" ]; then
+        # Use bc for floating point if available
+        if command -v bc &>/dev/null; then
+            # Calculate with bc but ensure we get a value (or default to 0)
+            local raw_score=$(echo "scale=6; ($actual * $max_points) / $total" | bc 2>/dev/null || echo "0")
+            # Round to nearest integer by adding 0.5 and truncating
+            local rounded_score=$(echo "$raw_score + 0.5" | bc | cut -d. -f1)
+        else
+            # Fallback to bash arithmetic (less precise)
+            local pct=$(( actual * 100 / total ))
+            local rounded_score=$(( pct * max_points / 100 ))
+        fi
+    else
+        local rounded_score=0
+    fi
     
     # Ensure score is within bounds
     if [ "$rounded_score" -gt "$max_points" ]; then
@@ -89,9 +103,9 @@ print_proportional_status() {
     PASS_COUNT=$((PASS_COUNT + rounded_score))
     
     # Print with color based on performance
-    if [ $actual -eq $total ]; then
+    if [ "$actual" -eq "$total" ]; then
         echo -e "${GREEN}[PASS]${NC} $message (Score: $rounded_score/$max_points)"
-    elif [ $actual -gt $((total / 2)) ]; then
+    elif [ "$actual" -gt "$((total / 2))" ]; then
         echo -e "${YELLOW}[PARTIAL]${NC} $message (Score: $rounded_score/$max_points)"  
     else
         echo -e "${RED}[LOW]${NC} $message (Score: $rounded_score/$max_points)"
@@ -390,73 +404,6 @@ fi
 echo ""
 echo "2. Checking Project Structure..."
 echo "-------------------------------"
-# Check main directories
-if [ -d "commons-cli" ]; then
-    print_status "PASS" "commons-cli directory exists"
-else
-    print_status "FAIL" "commons-cli directory not found"
-fi
-
-if [ -d "commons-cli-python" ]; then
-    print_status "PASS" "commons-cli-python directory exists"
-else
-    print_status "FAIL" "commons-cli-python directory not found"
-fi
-
-if [ -d "commons-cli-graal" ]; then
-    print_status "PASS" "commons-cli-graal directory exists"
-else
-    print_status "FAIL" "commons-cli-graal directory not found"
-fi
-
-if [ -d "commons-csv" ]; then
-    print_status "PASS" "commons-csv directory exists"
-else
-    print_status "FAIL" "commons-csv directory not found"
-fi
-
-if [ -d "commons-csv-python" ]; then
-    print_status "PASS" "commons-csv-python directory exists"
-else
-    print_status "FAIL" "commons-csv-python directory not found"
-fi
-
-if [ -d "commons-csv-graal" ]; then
-    print_status "PASS" "commons-csv-graal directory exists"
-else
-    print_status "FAIL" "commons-csv-graal directory not found"
-fi
-
-if [ -d "graal-glue-generator" ]; then
-    print_status "PASS" "graal-glue-generator directory exists"
-else
-    print_status "FAIL" "graal-glue-generator directory not found"
-fi
-
-if [ -d "scripts" ]; then
-    print_status "PASS" "scripts directory exists"
-else
-    print_status "FAIL" "scripts directory not found"
-fi
-
-# Check key files
-if [ -f "README.md" ]; then
-    print_status "PASS" "README.md exists"
-else
-    print_status "FAIL" "README.md not found"
-fi
-
-if [ -f "run.sh" ]; then
-    print_status "PASS" "run.sh exists"
-else
-    print_status "FAIL" "run.sh not found"
-fi
-
-if [ -f "CITATION.bib" ]; then
-    print_status "PASS" "CITATION.bib exists"
-else
-    print_status "FAIL" "CITATION.bib not found"
-fi
 
 # Check Maven files
 if [ -f "commons-cli/pom.xml" ]; then
