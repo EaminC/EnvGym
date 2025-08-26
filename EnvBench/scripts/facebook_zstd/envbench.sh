@@ -810,8 +810,271 @@ else
 fi
 
 echo ""
-echo "12. Testing Compression Tools..."
-echo "--------------------------------"
+echo "12. Testing Make Check (Official Test Suite)..."
+echo "----------------------------------------------"
+# Test make check as mentioned in README
+if command -v make &> /dev/null && [ -f "Makefile" ]; then
+    print_status "PASS" "make and Makefile available for official test suite"
+    
+    # Run make check (create and run zstd, test its behavior on local platform)
+    if timeout 300s make check >/dev/null 2>&1; then
+        print_status "PASS" "make check (official test suite) succeeded"
+    else
+        print_status "FAIL" "make check (official test suite) failed or timed out"
+    fi
+else
+    print_status "FAIL" "make or Makefile not available for official test suite"
+fi
+
+echo ""
+echo "13. Testing Manual Test Script (playTests.sh)..."
+echo "-----------------------------------------------"
+# Test playTests.sh as fallback testing method mentioned in README
+if [ -f "tests/playTests.sh" ]; then
+    print_status "PASS" "tests/playTests.sh exists"
+    
+    # Check if zstd and datagen binaries exist for test script
+    zstd_bin=""
+    datagen_bin=""
+    
+    if [ -f "zstd" ] && [ -x "zstd" ]; then
+        zstd_bin="$(pwd)/zstd"
+        print_status "PASS" "zstd binary found for test script"
+    else
+        print_status "FAIL" "zstd binary not found for test script"
+    fi
+    
+    if [ -f "programs/datagen" ] && [ -x "programs/datagen" ]; then
+        datagen_bin="$(pwd)/programs/datagen"
+        print_status "PASS" "datagen binary found for test script"
+    elif [ -f "datagen" ] && [ -x "datagen" ]; then
+        datagen_bin="$(pwd)/datagen"
+        print_status "PASS" "datagen binary found for test script"
+    else
+        print_status "WARN" "datagen binary not found for test script"
+    fi
+    
+    # Run playTests.sh if we have the required binaries
+    if [ -n "$zstd_bin" ] && [ -n "$datagen_bin" ]; then
+        cd tests
+        if timeout 300s ZSTD_BIN="$zstd_bin" DATAGEN_BIN="$datagen_bin" bash playTests.sh >/dev/null 2>&1; then
+            print_status "PASS" "playTests.sh execution succeeded"
+        else
+            print_status "FAIL" "playTests.sh execution failed or timed out"
+        fi
+        cd ..
+    else
+        print_status "WARN" "Cannot run playTests.sh - missing required binaries"
+    fi
+else
+    print_status "FAIL" "tests/playTests.sh not found"
+fi
+
+echo ""
+echo "14. Testing Core Compression/Decompression..."
+echo "--------------------------------------------"
+# Test actual compression and decompression functionality
+if [ -f "zstd" ] && [ -x "zstd" ]; then
+    print_status "PASS" "zstd binary available for compression testing"
+    
+    # Create test data
+    echo "This is test data for compression testing. Lorem ipsum dolor sit amet, consectetur adipiscing elit." > test_data.txt
+    echo "More test data to make compression worthwhile. The quick brown fox jumps over the lazy dog." >> test_data.txt
+    
+    # Test basic compression
+    if timeout 30s ./zstd test_data.txt -o test_data.txt.zst >/dev/null 2>&1; then
+        print_status "PASS" "Basic compression succeeded"
+        
+        # Test decompression
+        if timeout 30s ./zstd -d test_data.txt.zst -o test_data_decompressed.txt >/dev/null 2>&1; then
+            print_status "PASS" "Basic decompression succeeded"
+            
+            # Verify decompressed content matches original
+            if cmp -s test_data.txt test_data_decompressed.txt; then
+                print_status "PASS" "Decompressed content matches original"
+            else
+                print_status "FAIL" "Decompressed content does not match original"
+            fi
+        else
+            print_status "FAIL" "Basic decompression failed"
+        fi
+    else
+        print_status "FAIL" "Basic compression failed"
+    fi
+    
+    # Clean up test files
+    rm -f test_data.txt test_data.txt.zst test_data_decompressed.txt
+else
+    print_status "FAIL" "zstd binary not available for compression testing"
+fi
+
+echo ""
+echo "15. Testing Dictionary Compression..."
+echo "-----------------------------------"
+# Test dictionary compression functionality as mentioned in README
+if [ -f "zstd" ] && [ -x "zstd" ]; then
+    print_status "PASS" "zstd binary available for dictionary testing"
+    
+    # Create training data set
+    mkdir -p training_set
+    for i in {1..5}; do
+        echo "Training sample $i: This is similar text that should compress well with a dictionary." > training_set/sample$i.txt
+        echo "Common patterns: compression, dictionary, training, zstandard, efficiency" >> training_set/sample$i.txt
+    done
+    
+    # Test dictionary training
+    if timeout 60s ./zstd --train training_set/* -o test_dict >/dev/null 2>&1; then
+        print_status "PASS" "Dictionary training succeeded"
+        
+        # Create test file for dictionary compression
+        echo "This text should compress better with the trained dictionary containing compression words." > dict_test.txt
+        
+        # Test compression with dictionary
+        if timeout 30s ./zstd -D test_dict dict_test.txt -o dict_test.txt.zst >/dev/null 2>&1; then
+            print_status "PASS" "Dictionary compression succeeded"
+            
+            # Test decompression with dictionary
+            if timeout 30s ./zstd -D test_dict -d dict_test.txt.zst -o dict_test_decompressed.txt >/dev/null 2>&1; then
+                print_status "PASS" "Dictionary decompression succeeded"
+                
+                # Verify content
+                if cmp -s dict_test.txt dict_test_decompressed.txt; then
+                    print_status "PASS" "Dictionary decompressed content matches original"
+                else
+                    print_status "FAIL" "Dictionary decompressed content does not match original"
+                fi
+            else
+                print_status "FAIL" "Dictionary decompression failed"
+            fi
+        else
+            print_status "FAIL" "Dictionary compression failed"
+        fi
+    else
+        print_status "FAIL" "Dictionary training failed"
+    fi
+    
+    # Clean up dictionary test files
+    rm -rf training_set test_dict dict_test.txt dict_test.txt.zst dict_test_decompressed.txt
+else
+    print_status "FAIL" "zstd binary not available for dictionary testing"
+fi
+
+echo ""
+echo "16. Testing CMake Build System..."
+echo "-------------------------------"
+# Test CMake build system mentioned in README
+if command -v cmake &> /dev/null && [ -d "build/cmake" ]; then
+    print_status "PASS" "cmake and build/cmake directory available"
+    
+    # Test CMake configuration
+    mkdir -p build_cmake_test
+    cd build_cmake_test
+    if timeout 120s cmake ../build/cmake -DCMAKE_BUILD_TYPE=Release >/dev/null 2>&1; then
+        print_status "PASS" "CMake configuration succeeded"
+        
+        # Test CMake build
+        if timeout 300s make -j$(nproc 2>/dev/null || echo 2) >/dev/null 2>&1; then
+            print_status "PASS" "CMake build succeeded"
+            
+            # Check if binaries were created
+            if [ -f "programs/zstd" ] && [ -x "programs/zstd" ]; then
+                print_status "PASS" "CMake built zstd binary successfully"
+            else
+                print_status "WARN" "CMake build did not create expected zstd binary"
+            fi
+        else
+            print_status "FAIL" "CMake build failed or timed out"
+        fi
+    else
+        print_status "FAIL" "CMake configuration failed"
+    fi
+    cd ..
+    rm -rf build_cmake_test
+elif command -v cmake &> /dev/null; then
+    print_status "WARN" "cmake available but build/cmake directory not found"
+else
+    print_status "WARN" "cmake not available for CMake build testing"
+fi
+
+echo ""
+echo "17. Testing Meson Build System..."
+echo "-------------------------------"
+# Test Meson build system mentioned in README
+if command -v meson &> /dev/null && [ -d "build/meson" ]; then
+    print_status "PASS" "meson and build/meson directory available"
+    
+    # Test Meson setup
+    if timeout 120s meson setup build_meson_test build/meson >/dev/null 2>&1; then
+        print_status "PASS" "Meson setup succeeded"
+        
+        # Test Meson build
+        if timeout 300s meson compile -C build_meson_test >/dev/null 2>&1; then
+            print_status "PASS" "Meson build succeeded"
+        else
+            print_status "FAIL" "Meson build failed or timed out"
+        fi
+    else
+        print_status "FAIL" "Meson setup failed"
+    fi
+    rm -rf build_meson_test
+elif command -v meson &> /dev/null; then
+    print_status "WARN" "meson available but build/meson directory not found"
+else
+    print_status "WARN" "meson not available for Meson build testing"
+fi
+
+echo ""
+echo "18. Testing Make Install..."
+echo "-------------------------"
+# Test make install functionality mentioned in README
+if command -v make &> /dev/null && [ -f "Makefile" ]; then
+    print_status "PASS" "make and Makefile available for install testing"
+    
+    # Test make install to a temporary prefix
+    temp_prefix="/tmp/zstd_install_test_$$"
+    mkdir -p "$temp_prefix"
+    
+    if timeout 300s make install PREFIX="$temp_prefix" >/dev/null 2>&1; then
+        print_status "PASS" "make install succeeded"
+        
+        # Check if installed files exist
+        if [ -f "$temp_prefix/bin/zstd" ]; then
+            print_status "PASS" "zstd binary installed successfully"
+        else
+            print_status "WARN" "zstd binary not found in install location"
+        fi
+        
+        if [ -f "$temp_prefix/lib/libzstd.a" ] || [ -f "$temp_prefix/lib/libzstd.so" ]; then
+            print_status "PASS" "zstd library installed successfully"
+        else
+            print_status "WARN" "zstd library not found in install location"
+        fi
+        
+        if [ -f "$temp_prefix/include/zstd.h" ]; then
+            print_status "PASS" "zstd headers installed successfully"
+        else
+            print_status "WARN" "zstd headers not found in install location"
+        fi
+        
+        # Check for man pages
+        if [ -f "$temp_prefix/share/man/man1/zstd.1" ] || [ -f "$temp_prefix/man/man1/zstd.1" ]; then
+            print_status "PASS" "zstd man page installed successfully"
+        else
+            print_status "WARN" "zstd man page not found in install location"
+        fi
+    else
+        print_status "FAIL" "make install failed or timed out"
+    fi
+    
+    # Clean up temporary install
+    rm -rf "$temp_prefix"
+else
+    print_status "FAIL" "make or Makefile not available for install testing"
+fi
+
+echo ""
+echo "19. Testing Compression Tools..."
+echo "-------------------------------"
 # Test compression tools availability
 if command -v lz4 &> /dev/null; then
     print_status "PASS" "lz4 tool is available"
@@ -849,6 +1112,13 @@ echo "- Library dependencies (zlib, lz4, snappy, lzo2)"
 echo "- Zstandard library (zstd.h compilation)"
 echo "- Build process (library and binary compilation)"
 echo "- Zstd binary (version, help commands)"
+echo "- Official test suite (make check)"
+echo "- Manual test script (playTests.sh with ZSTD_BIN and DATAGEN_BIN)"
+echo "- Core compression/decompression functionality"
+echo "- Dictionary compression (--train, -D options)"
+echo "- CMake build system (build/cmake)"
+echo "- Meson build system (build/meson)"
+echo "- Installation process (make install)"
 echo "- Compression tools (lz4, brotli, gzip)"
 echo "- Dockerfile structure (if Docker build failed)"
 
@@ -887,4 +1157,4 @@ print_status "INFO" "Example: make && make check"
 echo ""
 print_status "INFO" "For more information, see README.md"
 
-print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/facebook_zstd zstd-env-test /bin/bash" 
+print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/facebook_zstd zstd-env-test /bin/bash"
