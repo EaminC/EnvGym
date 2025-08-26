@@ -821,22 +821,26 @@ if command -v make &> /dev/null && [ -f "Makefile" ]; then
         print_status "PASS" "Test infrastructure build succeeded"
         
         # Run make check (create and run zstd, test its behavior on local platform)
-        # Temporarily showing output to debug failure
-        if timeout 600s make check 2>&1 | head -50; then
+        # Show output for debugging but check correct exit code
+        timeout 600s make check 2>&1 | head -50
+        make_check_result=${PIPESTATUS[0]}
+        if [ $make_check_result -eq 0 ]; then
             print_status "PASS" "make check (official test suite) succeeded"
         else
-            print_status "FAIL" "make check (official test suite) failed or timed out"
+            print_status "FAIL" "make check (official test suite) failed or timed out (exit code: $make_check_result)"
             print_status "INFO" "See above output for make check failure details"
         fi
     else
         print_status "WARN" "Test infrastructure build failed, trying make check directly"
         
         # Fallback: try make check directly in case tests are built differently
-        # Show output to debug failure
-        if timeout 600s make check 2>&1 | head -50; then
+        # Show output for debugging but check correct exit code
+        timeout 600s make check 2>&1 | head -50
+        make_check_result=${PIPESTATUS[0]}
+        if [ $make_check_result -eq 0 ]; then
             print_status "PASS" "make check (official test suite) succeeded"
         else
-            print_status "FAIL" "make check (official test suite) failed or timed out"
+            print_status "FAIL" "make check (official test suite) failed or timed out (exit code: $make_check_result)"
             print_status "INFO" "See above output for make check failure details"
         fi
     fi

@@ -24,6 +24,7 @@ RUN apt-get update && \
         docker-compose \
         ca-certificates \
         curl \
+        file \
     && rm -rf /var/lib/apt/lists/*
 
 # Optional tools: meson (Python 3), conan (C++ package manager), vcpkg (C++ package manager)
