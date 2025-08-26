@@ -816,11 +816,25 @@ echo "----------------------------------------------"
 if command -v make &> /dev/null && [ -f "Makefile" ]; then
     print_status "PASS" "make and Makefile available for official test suite"
     
-    # Run make check (create and run zstd, test its behavior on local platform)
-    if timeout 300s make check >/dev/null 2>&1; then
-        print_status "PASS" "make check (official test suite) succeeded"
+    # Build test infrastructure first (scoring script responsibility)
+    if timeout 300s make -C tests >/dev/null 2>&1; then
+        print_status "PASS" "Test infrastructure build succeeded"
+        
+        # Run make check (create and run zstd, test its behavior on local platform)
+        if timeout 300s make check >/dev/null 2>&1; then
+            print_status "PASS" "make check (official test suite) succeeded"
+        else
+            print_status "FAIL" "make check (official test suite) failed or timed out"
+        fi
     else
-        print_status "FAIL" "make check (official test suite) failed or timed out"
+        print_status "WARN" "Test infrastructure build failed, trying make check directly"
+        
+        # Fallback: try make check directly in case tests are built differently
+        if timeout 300s make check >/dev/null 2>&1; then
+            print_status "PASS" "make check (official test suite) succeeded"
+        else
+            print_status "FAIL" "make check (official test suite) failed or timed out"
+        fi
     fi
 else
     print_status "FAIL" "make or Makefile not available for official test suite"
@@ -844,6 +858,7 @@ if [ -f "tests/playTests.sh" ]; then
         print_status "FAIL" "zstd binary not found for test script"
     fi
     
+    # Try to find datagen binary in various locations
     if [ -f "programs/datagen" ] && [ -x "programs/datagen" ]; then
         datagen_bin="$(pwd)/programs/datagen"
         print_status "PASS" "datagen binary found for test script"
@@ -851,7 +866,18 @@ if [ -f "tests/playTests.sh" ]; then
         datagen_bin="$(pwd)/datagen"
         print_status "PASS" "datagen binary found for test script"
     else
-        print_status "WARN" "datagen binary not found for test script"
+        # Build datagen if not found (scoring script responsibility)
+        print_status "WARN" "datagen binary not found, attempting to build..."
+        if timeout 120s make -C programs datagen >/dev/null 2>&1; then
+            if [ -f "programs/datagen" ] && [ -x "programs/datagen" ]; then
+                datagen_bin="$(pwd)/programs/datagen"
+                print_status "PASS" "datagen binary built successfully"
+            else
+                print_status "FAIL" "datagen binary build failed"
+            fi
+        else
+            print_status "FAIL" "datagen binary build failed or timed out"
+        fi
     fi
     
     # Run playTests.sh if we have the required binaries
