@@ -422,7 +422,8 @@ EOF
     cpp_total=${#cpp_standards[@]}
     
     for std in "${cpp_standards[@]}"; do
-        if timeout 60s g++ -std=$std -I. fmt_basic_test/basic_test.cpp src/format.cc -o fmt_basic_test/basic_test_$std 2>/dev/null; then
+        # Try header-only mode first (more reliable)
+        if timeout 60s g++ -std=$std -DFMT_HEADER_ONLY -Iinclude fmt_basic_test/basic_test.cpp -o fmt_basic_test/basic_test_$std 2>/dev/null; then
             print_status "PASS" "Compilation with $std standard succeeded"
             if timeout 30s ./fmt_basic_test/basic_test_$std >/dev/null 2>&1; then
                 print_status "PASS" "Execution with $std standard succeeded"
@@ -431,7 +432,22 @@ EOF
                 print_status "FAIL" "Execution with $std standard failed"
             fi
         else
-            print_status "FAIL" "Compilation with $std standard failed"
+            # Fallback: try linking with built library if available
+            if [ -f "fmt_test_build/libfmt.a" ]; then
+                if timeout 60s g++ -std=$std -Iinclude fmt_basic_test/basic_test.cpp fmt_test_build/libfmt.a -o fmt_basic_test/basic_test_$std 2>/dev/null; then
+                    print_status "PASS" "Compilation with $std standard succeeded (using built library)"
+                    if timeout 30s ./fmt_basic_test/basic_test_$std >/dev/null 2>&1; then
+                        print_status "PASS" "Execution with $std standard succeeded"
+                        ((cpp_passed++))
+                    else
+                        print_status "FAIL" "Execution with $std standard failed"
+                    fi
+                else
+                    print_status "FAIL" "Compilation with $std standard failed"
+                fi
+            else
+                print_status "FAIL" "Compilation with $std standard failed"
+            fi
         fi
     done
     
@@ -550,9 +566,10 @@ feature_tests=0
 feature_passed=0
 
 if command -v g++ &> /dev/null; then
-    # Test 1: Basic formatting
+    # Test 1: Advanced formatting
     ((feature_tests++))
-    if timeout 60s g++ -std=c++17 -I. fmt_basic_test/advanced_test.cpp src/format.cc -o fmt_basic_test/advanced_test 2>/dev/null; then
+    # Try header-only mode first (more reliable for advanced features)
+    if timeout 60s g++ -std=c++17 -DFMT_HEADER_ONLY -Iinclude fmt_basic_test/advanced_test.cpp -o fmt_basic_test/advanced_test 2>/dev/null; then
         print_status "PASS" "Advanced features compilation succeeded"
         if timeout 30s ./fmt_basic_test/advanced_test >/dev/null 2>&1; then
             print_status "PASS" "Advanced features execution succeeded"
@@ -561,7 +578,22 @@ if command -v g++ &> /dev/null; then
             print_status "FAIL" "Advanced features execution failed"
         fi
     else
-        print_status "FAIL" "Advanced features compilation failed"
+        # Fallback: try linking with built library if available
+        if [ -f "fmt_test_build/libfmt.a" ]; then
+            if timeout 60s g++ -std=c++17 -Iinclude fmt_basic_test/advanced_test.cpp fmt_test_build/libfmt.a -o fmt_basic_test/advanced_test 2>/dev/null; then
+                print_status "PASS" "Advanced features compilation succeeded (using built library)"
+                if timeout 30s ./fmt_basic_test/advanced_test >/dev/null 2>&1; then
+                    print_status "PASS" "Advanced features execution succeeded"
+                    ((feature_passed++))
+                else
+                    print_status "FAIL" "Advanced features execution failed"
+                fi
+            else
+                print_status "FAIL" "Advanced features compilation failed"
+            fi
+        else
+            print_status "FAIL" "Advanced features compilation failed"
+        fi
     fi
     
     # Score based on advanced feature tests
@@ -651,7 +683,7 @@ int main() {
 EOF
 
 if command -v g++ &> /dev/null; then
-    if timeout 60s g++ -std=c++11 -I. fmt_basic_test/header_only_test.cpp -o fmt_basic_test/header_only_test 2>/dev/null; then
+    if timeout 60s g++ -std=c++11 -Iinclude fmt_basic_test/header_only_test.cpp -o fmt_basic_test/header_only_test 2>/dev/null; then
         print_status "PASS" "Header-only mode compilation succeeded"
         if timeout 30s ./fmt_basic_test/header_only_test >/dev/null 2>&1; then
             print_status "PASS" "Header-only mode execution succeeded"
@@ -761,6 +793,3 @@ fi
 
 print_status "INFO" "You can now build and use {fmt}: A modern formatting library."
 print_status "INFO" "Example: mkdir build && cd build && cmake .. && make"
-
-echo ""
-print_status "INFO" "
