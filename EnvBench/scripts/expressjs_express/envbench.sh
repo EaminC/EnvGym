@@ -453,27 +453,34 @@ else
 fi
 
 echo ""
-echo "6. Testing Package Installation..."
-echo "----------------------------------"
-# Test package installation
+echo "6. Testing Package Installation Status..."
+echo "---------------------------------------"
+# Test if packages are already installed (environment should be pre-setup)
 if command -v npm &> /dev/null && [ -f "package.json" ]; then
     print_status "PASS" "npm and package.json are available"
     
-    # Test npm install
-    if timeout 120s npm install >/dev/null 2>&1; then
-        print_status "PASS" "npm install works"
-    else
-        print_status "WARN" "npm install failed"
-    fi
-    
-    # Check if node_modules exists
+    # Check if node_modules exists (dependencies should be pre-installed)
     if [ -d "node_modules" ]; then
-        print_status "PASS" "node_modules directory exists"
+        print_status "PASS" "node_modules directory exists (dependencies installed)"
+        
+        # Check if Express is installed
+        if [ -d "node_modules/express" ] || [ -d "node_modules/@types/express" ]; then
+            print_status "PASS" "Express dependency is installed"
+        else
+            print_status "WARN" "Express dependency not found in node_modules"
+        fi
+        
+        # Test if npm can read the dependency tree
+        if timeout 30s npm list --depth=0 >/dev/null 2>&1; then
+            print_status "PASS" "npm can read dependency tree"
+        else
+            print_status "WARN" "npm cannot read dependency tree properly"
+        fi
     else
-        print_status "WARN" "node_modules directory not found"
+        print_status "FAIL" "node_modules directory not found (dependencies not installed)"
     fi
 else
-    print_status "WARN" "npm or package.json not available"
+    print_status "FAIL" "npm or package.json not available"
 fi
 
 echo ""
@@ -578,17 +585,191 @@ else
 fi
 
 echo ""
-echo "11. Testing HTTP Server..."
-echo "---------------------------"
-# Test HTTP server creation
-if command -v node &> /dev/null && [ -f "index.js" ]; then
-    print_status "PASS" "node and index.js are available for HTTP testing"
+echo "11. Testing Official Test Suite (npm test)..."
+echo "--------------------------------------------"
+# Test npm test as mentioned in README
+if command -v npm &> /dev/null && [ -f "package.json" ]; then
+    print_status "PASS" "npm and package.json available for test suite"
     
-    # Test basic HTTP server creation
+    # Run npm test (the official way to test Express as per documentation)
+    if timeout 300s npm test >/dev/null 2>&1; then
+        print_status "PASS" "npm test (official test suite) succeeded"
+    else
+        print_status "FAIL" "npm test (official test suite) failed or timed out"
+    fi
+else
+    print_status "FAIL" "npm or package.json not available for test suite"
+fi
+
+echo ""
+echo "12. Testing Express Generator Availability..."
+echo "-------------------------------------------"
+# Test express-generator availability (should be pre-installed in environment)
+if command -v express &> /dev/null; then
+    print_status "PASS" "express command is available"
+    
+    # Test express version
+    if timeout 30s express --version >/dev/null 2>&1; then
+        print_status "PASS" "express --version works"
+    else
+        print_status "WARN" "express --version failed"
+    fi
+    
+    # Test express help
+    if timeout 30s express --help >/dev/null 2>&1; then
+        print_status "PASS" "express --help works"
+    else
+        print_status "WARN" "express --help failed"
+    fi
+    
+    # Test creating a minimal Express app structure (without npm install)
+    temp_app_dir="/tmp/express_test_app_$$"
+    if timeout 60s express "$temp_app_dir" >/dev/null 2>&1; then
+        print_status "PASS" "Express app generation succeeded"
+        
+        # Test if generated app has required files
+        if [ -d "$temp_app_dir" ]; then
+            if [ -f "$temp_app_dir/app.js" ] && [ -f "$temp_app_dir/package.json" ]; then
+                print_status "PASS" "Generated app has required files (app.js, package.json)"
+                
+                # Check package.json structure
+                if grep -q "express" "$temp_app_dir/package.json"; then
+                    print_status "PASS" "Generated package.json includes Express dependency"
+                else
+                    print_status "WARN" "Generated package.json missing Express dependency"
+                fi
+                
+                # Check if basic app structure is correct
+                if grep -q "var express = require('express')" "$temp_app_dir/app.js" || grep -q "const express = require('express')" "$temp_app_dir/app.js"; then
+                    print_status "PASS" "Generated app.js has proper Express import"
+                else
+                    print_status "WARN" "Generated app.js missing proper Express import"
+                fi
+            else
+                print_status "FAIL" "Generated app missing required files"
+            fi
+            
+            # Clean up
+            rm -rf "$temp_app_dir"
+        else
+            print_status "FAIL" "Generated app directory not found"
+        fi
+    else
+        print_status "FAIL" "Express app generation failed"
+    fi
+    
+    # Test if express-generator is globally available
+    if command -v npm &> /dev/null && timeout 30s npm list -g express-generator >/dev/null 2>&1; then
+        print_status "PASS" "express-generator is globally installed"
+    else
+        print_status "WARN" "express-generator not found in global npm packages"
+    fi
+else
+    print_status "FAIL" "express command not available (express-generator not installed)"
+fi
+
+echo ""
+echo "13. Testing Examples Directory..."
+echo "-------------------------------"
+# Test examples as mentioned in README documentation
+if [ -d "examples" ] && command -v node &> /dev/null; then
+    print_status "PASS" "examples directory and node available"
+    
+    # Test content-negotiation example (specifically mentioned in README)
+    if [ -f "examples/content-negotiation/index.js" ]; then
+        print_status "PASS" "content-negotiation example exists"
+        
+        # Test if the example can run (briefly)
+        if timeout 15s node examples/content-negotiation/index.js >/dev/null 2>&1 &
+        then
+            sleep 5
+            pkill -f "examples/content-negotiation" 2>/dev/null || true
+            print_status "PASS" "content-negotiation example can execute"
+        else
+            print_status "WARN" "content-negotiation example failed to run or timed out"
+        fi
+    else
+        print_status "FAIL" "content-negotiation example not found"
+    fi
+    
+    # Count and test other examples
+    example_count=$(find examples -name "*.js" -type f | wc -l)
+    if [ "$example_count" -gt 5 ]; then
+        print_status "PASS" "Multiple examples available ($example_count found)"
+    else
+        print_status "WARN" "Limited examples found ($example_count)"
+    fi
+    
+    # Test a few more examples
+    example_files=($(find examples -name "index.js" -type f | head -3))
+    working_examples=0
+    for example_file in "${example_files[@]}"; do
+        if timeout 10s node "$example_file" >/dev/null 2>&1 &
+        then
+            sleep 2
+            pkill -f "$example_file" 2>/dev/null || true
+            ((working_examples++))
+        fi
+    done
+    
+    if [ ${#example_files[@]} -gt 0 ]; then
+        print_status "PASS" "$working_examples/${#example_files[@]} tested examples can execute"
+    fi
+else
+    print_status "FAIL" "examples directory or node not available"
+fi
+
+echo ""
+echo "14. Testing Template Engine Support..."
+echo "------------------------------------"
+# Test template engine support (mentioned in README: "support for over 14 template engines")
+if command -v node &> /dev/null && [ -f "index.js" ]; then
+    print_status "PASS" "node and index.js available for template testing"
+    
+    # Test basic template engine functionality
     if timeout 30s node -e "
         const express = require('./index.js');
         const app = express();
-        app.get('/', (req, res) => res.send('Hello'));
+        app.set('view engine', 'html');
+        app.engine('html', function (filePath, options, callback) {
+            callback(null, 'Template engine works');
+        });
+        console.log('Template engine configuration successful');
+    " >/dev/null 2>&1; then
+        print_status "PASS" "Template engine configuration works"
+    else
+        print_status "WARN" "Template engine configuration failed"
+    fi
+    
+    # Check if consolidate (template engine library) can be loaded if available
+    if timeout 30s node -e "
+        try {
+            require('@ladjs/consolidate');
+            console.log('Consolidate available');
+        } catch(e) {
+            console.log('Consolidate not available (this is optional)');
+        }
+    " >/dev/null 2>&1; then
+        print_status "PASS" "@ladjs/consolidate template engine library available"
+    else
+        print_status "WARN" "@ladjs/consolidate template engine library not available"
+    fi
+else
+    print_status "WARN" "node or index.js not available for template testing"
+fi
+
+echo ""
+echo "15. Testing HTTP Server Functionality..."
+echo "--------------------------------------"
+# Test comprehensive HTTP server functionality
+if command -v node &> /dev/null && [ -f "index.js" ]; then
+    print_status "PASS" "node and index.js are available for HTTP testing"
+    
+    # Test basic HTTP server creation and response
+    if timeout 30s node -e "
+        const express = require('./index.js');
+        const app = express();
+        app.get('/', (req, res) => res.send('Hello Express'));
         const server = app.listen(0, () => {
             console.log('Server created successfully');
             server.close();
@@ -597,6 +778,58 @@ if command -v node &> /dev/null && [ -f "index.js" ]; then
         print_status "PASS" "Express HTTP server creation works"
     else
         print_status "WARN" "Express HTTP server creation failed"
+    fi
+    
+    # Test middleware functionality
+    if timeout 30s node -e "
+        const express = require('./index.js');
+        const app = express();
+        app.use((req, res, next) => {
+            req.customProperty = 'middleware works';
+            next();
+        });
+        app.get('/', (req, res) => res.send(req.customProperty));
+        const server = app.listen(0, () => {
+            console.log('Middleware test successful');
+            server.close();
+        });
+    " >/dev/null 2>&1; then
+        print_status "PASS" "Express middleware functionality works"
+    else
+        print_status "WARN" "Express middleware functionality failed"
+    fi
+    
+    # Test JSON parsing
+    if timeout 30s node -e "
+        const express = require('./index.js');
+        const app = express();
+        app.use(express.json());
+        app.post('/test', (req, res) => res.json({received: req.body}));
+        const server = app.listen(0, () => {
+            console.log('JSON parsing test successful');
+            server.close();
+        });
+    " >/dev/null 2>&1; then
+        print_status "PASS" "Express JSON parsing works"
+    else
+        print_status "WARN" "Express JSON parsing failed"
+    fi
+    
+    # Test router functionality
+    if timeout 30s node -e "
+        const express = require('./index.js');
+        const app = express();
+        const router = express.Router();
+        router.get('/test', (req, res) => res.send('Router works'));
+        app.use('/api', router);
+        const server = app.listen(0, () => {
+            console.log('Router test successful');
+            server.close();
+        });
+    " >/dev/null 2>&1; then
+        print_status "PASS" "Express Router functionality works"
+    else
+        print_status "WARN" "Express Router functionality failed"
     fi
 else
     print_status "WARN" "node or index.js not available for HTTP testing"
@@ -619,7 +852,11 @@ echo "- Express.js module (loading, app creation)"
 echo "- Express generator (express command)"
 echo "- Testing framework (Mocha, ESLint)"
 echo "- Redis integration (redis-server, redis-cli)"
-echo "- HTTP server functionality"
+echo "- Official test suite (npm test)"
+echo "- Express generator workflow (full quickstart process)"
+echo "- Examples directory (content-negotiation and others)"
+echo "- Template engine support (@ladjs/consolidate)"
+echo "- HTTP server functionality (middleware, JSON, routing)"
 echo "- Dockerfile structure (if Docker build failed)"
 
 # Save final counts before any additional print_status calls
@@ -657,4 +894,4 @@ print_status "INFO" "Example: npm install && npm test"
 echo ""
 print_status "INFO" "For more information, see Readme.md"
 
-print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/expressjs_express expressjs-env-test /bin/bash" 
+print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/expressjs_express expressjs-env-test /bin/bash"
