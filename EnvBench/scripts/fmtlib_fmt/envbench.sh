@@ -124,7 +124,7 @@ cleanup() {
     # Remove temporary files
     rm -f docker_build.log
     # Remove temporary test directories
-    rm -rf fmt_test_build fmt_test_header_only fmt_test_shared fmt_basic_test
+    rm -rf fmt_test_build fmt_test_header_only fmt_test_shared fmt_basic_test fmt_test_suite fmt_test_disabled fmt_test_pic fmt_test_ninja fmt_test_docs
     # Stop and remove Docker container if running
     docker stop fmtlib-env-test 2>/dev/null || true
     docker rm fmtlib-env-test 2>/dev/null || true
@@ -524,7 +524,167 @@ else
 fi
 
 echo ""
-echo "5. Testing Advanced Library Features..."
+echo "5. Testing Library Test Suite..."
+echo "-------------------------------"
+
+# Test running the fmt test suite (critical for environment validation)
+if command -v cmake &> /dev/null && command -v make &> /dev/null; then
+    test_suite_passed=0
+    test_suite_total=2
+    
+    # Test with FMT_TEST enabled (default)
+    if [ -d "fmt_test_build" ]; then
+        cd fmt_test_build
+        # Check if tests were built
+        if timeout 300s make test >/dev/null 2>&1; then
+            print_status "PASS" "fmt test suite execution succeeded"
+            ((test_suite_passed++))
+        else
+            print_status "FAIL" "fmt test suite execution failed"
+        fi
+        cd ..
+    else
+        # Build with tests explicitly enabled
+        mkdir -p fmt_test_suite
+        cd fmt_test_suite
+        if timeout 300s cmake .. -DCMAKE_BUILD_TYPE=Release -DFMT_TEST=ON >/dev/null 2>&1; then
+            if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
+                print_status "PASS" "Build with FMT_TEST=ON succeeded"
+                if timeout 600s make test >/dev/null 2>&1; then
+                    print_status "PASS" "fmt test suite execution succeeded"
+                    ((test_suite_passed++))
+                else
+                    print_status "FAIL" "fmt test suite execution failed"
+                fi
+            else
+                print_status "FAIL" "Build with FMT_TEST=ON failed"
+            fi
+        else
+            print_status "FAIL" "CMake configuration with FMT_TEST=ON failed"
+        fi
+        cd ..
+    fi
+    
+    # Test with FMT_TEST disabled
+    mkdir -p fmt_test_disabled
+    cd fmt_test_disabled
+    if timeout 300s cmake .. -DCMAKE_BUILD_TYPE=Release -DFMT_TEST=OFF >/dev/null 2>&1; then
+        if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
+            print_status "PASS" "Build with FMT_TEST=OFF succeeded"
+            ((test_suite_passed++))
+        else
+            print_status "FAIL" "Build with FMT_TEST=OFF failed"
+        fi
+    else
+        print_status "FAIL" "CMake configuration with FMT_TEST=OFF failed"
+    fi
+    cd ..
+    
+    # Score based on test suite execution
+    print_proportional_status $test_suite_passed $test_suite_total 8 "Library test suite execution"
+    
+else
+    print_status "FAIL" "CMake or Make is not available for test suite execution"
+fi
+
+echo ""
+echo "6. Testing Additional Build Options..."
+echo "------------------------------------"
+
+# Test position-independent code build (mentioned in docs)
+if command -v cmake &> /dev/null && command -v make &> /dev/null; then
+    pic_tests=0
+    pic_passed=0
+    
+    # Test CMAKE_POSITION_INDEPENDENT_CODE
+    ((pic_tests++))
+    mkdir -p fmt_test_pic
+    cd fmt_test_pic
+    if timeout 300s cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE >/dev/null 2>&1; then
+        print_status "PASS" "CMake configuration with position-independent code succeeded"
+        if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
+            print_status "PASS" "Position-independent code build succeeded"
+            ((pic_passed++))
+        else
+            print_status "FAIL" "Position-independent code build failed"
+        fi
+    else
+        print_status "FAIL" "CMake configuration with position-independent code failed"
+    fi
+    cd ..
+    
+    # Test Ninja generator if available
+    if command -v ninja &> /dev/null; then
+        ((pic_tests++))
+        mkdir -p fmt_test_ninja
+        cd fmt_test_ninja
+        if timeout 300s cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release >/dev/null 2>&1; then
+            print_status "PASS" "CMake configuration with Ninja generator succeeded"
+            if timeout 300s ninja >/dev/null 2>&1; then
+                print_status "PASS" "Ninja build succeeded"
+                ((pic_passed++))
+            else
+                print_status "FAIL" "Ninja build failed"
+            fi
+        else
+            print_status "FAIL" "CMake configuration with Ninja generator failed"
+        fi
+        cd ..
+    fi
+    
+    # Score based on additional build options
+    if [ $pic_tests -gt 0 ]; then
+        print_proportional_status $pic_passed $pic_tests 4 "Additional build options test"
+    fi
+    
+else
+    print_status "FAIL" "CMake or Make is not available for additional build option tests"
+fi
+
+echo ""
+echo "7. Testing Documentation Build Dependencies..."
+echo "--------------------------------------------"
+
+# Check documentation build dependencies (mentioned in docs)
+doc_deps=0
+doc_found=0
+
+dependencies=("python3" "python" "doxygen")
+for dep in "${dependencies[@]}"; do
+    ((doc_deps++))
+    if command -v "$dep" &> /dev/null; then
+        version_info=$($dep --version 2>&1 | head -n 1 || echo "version unknown")
+        print_status "PASS" "$dep is available: $version_info"
+        ((doc_found++))
+    else
+        print_status "WARN" "$dep is not available (needed for documentation building)"
+    fi
+done
+
+# Test if we can configure docs build
+if command -v cmake &> /dev/null; then
+    mkdir -p fmt_test_docs
+    cd fmt_test_docs
+    if timeout 300s cmake .. -DCMAKE_BUILD_TYPE=Release >/dev/null 2>&1; then
+        # Try to build docs if make doc target exists
+        if timeout 300s make help 2>/dev/null | grep -q "doc"; then
+            print_status "PASS" "Documentation build target is available"
+            ((doc_found++))
+        else
+            print_status "WARN" "Documentation build target not found"
+        fi
+        ((doc_deps++))
+    fi
+    cd ..
+fi
+
+# Score based on documentation dependencies
+if [ $doc_deps -gt 0 ]; then
+    print_proportional_status $doc_found $doc_deps 3 "Documentation build dependencies"
+fi
+
+echo ""
+echo "8. Testing Advanced Library Features..."
 echo "--------------------------------------"
 
 # Create a test file for advanced fmt features
@@ -602,148 +762,6 @@ else
     print_status "FAIL" "g++ is not available for advanced feature tests"
 fi
 
-echo ""
-echo "6. Running Test Suite..."
-echo "-----------------------"
-
-if command -v cmake &> /dev/null && [ -d "fmt_test_build" ]; then
-    cd fmt_test_build
-    
-    # Build tests if they haven't been built yet
-    if ! [ -f "bin/format-test" ] && ! [ -f "test/format-test" ]; then
-        print_status "INFO" "Building tests..."
-        if timeout 300s make -j$(nproc) >/dev/null 2>&1; then
-            print_status "PASS" "Test build succeeded"
-        else
-            print_status "FAIL" "Test build failed"
-        fi
-    fi
-    
-    # Count total tests
-    test_count=$(ls bin/*-test test/*-test 2>/dev/null | wc -l)
-    if [ "$test_count" -eq 0 ]; then
-        test_count=$(find . -name "*-test" -type f -executable | wc -l)
-    fi
-    
-    if [ "$test_count" -eq 0 ]; then
-        print_status "FAIL" "No test executables found"
-        test_passed=0
-        # Try to run CTest anyway
-        if timeout 600s ctest --output-on-failure >/dev/null 2>&1; then
-            print_status "PASS" "CTest execution succeeded but no test count available"
-        else
-            print_status "FAIL" "CTest execution failed"
-        fi
-    else
-        print_status "INFO" "Found $test_count test executables"
-        
-        # Run tests with ctest
-        test_output=$(timeout 600s ctest --output-on-failure 2>&1) || true
-        
-        # Check how many tests passed
-        if echo "$test_output" | grep -q "[0-9]*% tests passed"; then
-            test_percent=$(echo "$test_output" | grep "[0-9]*% tests passed" | sed 's/^.*\([0-9][0-9]*\)% tests passed.*$/\1/')
-            test_passed=$(( test_count * test_percent / 100 ))
-            print_status "INFO" "$test_percent% of tests passed ($test_passed/$test_count)"
-        else
-            # Fall back to just checking if ctest ran successfully
-            if echo "$test_output" | grep -q "100% tests passed" || timeout 600s make test >/dev/null 2>&1; then
-                test_passed=$test_count
-                print_status "PASS" "All tests passed ($test_passed/$test_count)"
-            else
-                # Conservatively estimate half the tests passed
-                test_passed=$(( test_count / 2 ))
-                print_status "WARN" "Some tests failed, estimating $test_passed/$test_count passed"
-            fi
-        fi
-        
-        # Score based on test suite results
-        print_proportional_status $test_passed $test_count 15 "Test suite execution"
-    fi
-    
-    cd ..
-else
-    print_status "FAIL" "Cannot run test suite - build directory or cmake not available"
-fi
-
-echo ""
-echo "7. Testing Header-Only Mode Integration..."
-echo "----------------------------------------"
-
-# Create a simple test program using header-only mode
-mkdir -p fmt_basic_test
-cat > fmt_basic_test/header_only_test.cpp << 'EOF'
-#define FMT_HEADER_ONLY
-#include "fmt/core.h"
-
-int main() {
-    fmt::print("Header-only mode works: {}\n", 42);
-    return 0;
-}
-EOF
-
-if command -v g++ &> /dev/null; then
-    if timeout 60s g++ -std=c++11 -Iinclude fmt_basic_test/header_only_test.cpp -o fmt_basic_test/header_only_test 2>/dev/null; then
-        print_status "PASS" "Header-only mode compilation succeeded"
-        if timeout 30s ./fmt_basic_test/header_only_test >/dev/null 2>&1; then
-            print_status "PASS" "Header-only mode execution succeeded"
-            # Award 5 points directly for header-only mode
-            PASS_COUNT=$((PASS_COUNT + 5))
-            print_status "INFO" "Header-only mode integration test passed (Score: 5 points)"
-        else
-            print_status "FAIL" "Header-only mode execution failed"
-        fi
-    else
-        print_status "FAIL" "Header-only mode compilation failed"
-    fi
-else
-    print_status "FAIL" "g++ is not available for header-only mode test"
-fi
-
-echo ""
-echo "8. Testing System Integration..."
-echo "------------------------------"
-
-# Test if fmt library can be found with pkg-config (if available)
-if command -v pkg-config &> /dev/null; then
-    if [ -d "fmt_test_build" ]; then
-        cd fmt_test_build
-        if [ -f "fmt.pc" ]; then
-            print_status "PASS" "fmt.pc file exists"
-            # Try to run pkg-config
-            export PKG_CONFIG_PATH=$(pwd):$PKG_CONFIG_PATH
-            if pkg-config --exists fmt 2>/dev/null; then
-                print_status "PASS" "pkg-config finds fmt"
-                # Award 2 points directly for pkg-config integration
-                PASS_COUNT=$((PASS_COUNT + 2))
-                print_status "INFO" "System integration via pkg-config works (Score: 2 points)"
-            else
-                print_status "FAIL" "pkg-config cannot find fmt"
-            fi
-        else
-            print_status "WARN" "fmt.pc file not found"
-        fi
-        cd ..
-    else
-        print_status "WARN" "Build directory not available for pkg-config test"
-    fi
-else
-    print_status "WARN" "pkg-config not available for system integration test"
-fi
-
-# Check if cmake config files are generated
-if [ -d "fmt_test_build" ]; then
-    if [ -f "fmt_test_build/fmt-config.cmake" ] || [ -f "fmt_test_build/fmtConfig.cmake" ]; then
-        print_status "PASS" "CMake config files are generated"
-        # Award 2 points directly for cmake integration
-        PASS_COUNT=$((PASS_COUNT + 2))
-        print_status "INFO" "System integration via CMake works (Score: 2 points)"
-    else
-        print_status "WARN" "CMake config files are not generated"
-    fi
-else
-    print_status "WARN" "Build directory not available for CMake integration test"
-fi
 
 echo ""
 echo "=========================================="
@@ -757,10 +775,10 @@ echo "- System dependencies (GCC, G++, Clang, CMake, Make, Ninja, Git)"
 echo "- Required project files structure"
 echo "- C++ compilation with different standards (C++11, C++14, C++17)"
 echo "- Library build configurations (Standard, Header-only, Shared)"
+echo "- Library test suite execution (FMT_TEST on/off)"
+echo "- Additional build options (Position-independent code, Ninja generator)"
+echo "- Documentation build dependencies (Python, Doxygen)"
 echo "- Advanced library features (chrono, color, ranges)"
-echo "- Test suite execution"
-echo "- Header-only mode integration"
-echo "- System integration (pkg-config, CMake)"
 
 # Save final counts before any additional print_status calls
 FINAL_PASS_COUNT=$PASS_COUNT
