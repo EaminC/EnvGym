@@ -102,6 +102,10 @@ print_proportional_status() {
     # Add to PASS_COUNT (treating as positive achievement)
     PASS_COUNT=$((PASS_COUNT + rounded_score))
     
+    # Add remaining points to FAIL_COUNT
+    local fail_points=$((max_points - rounded_score))
+    FAIL_COUNT=$((FAIL_COUNT + fail_points))
+    
     # Print with color based on performance
     if [ "$actual" -eq "$total" ]; then
         echo -e "${GREEN}[PASS]${NC} $message (Score: $rounded_score/$max_points)"

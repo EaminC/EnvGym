@@ -79,7 +79,8 @@ print_status() {
     esac
 }
 
-# Function to print proportional status with scoring (from gluetest)
+
+# Function to print proportional status with scoring
 print_proportional_status() {
     local actual=$1
     local total=$2
@@ -113,6 +114,10 @@ print_proportional_status() {
     
     # Add to PASS_COUNT (treating as positive achievement)
     PASS_COUNT=$((PASS_COUNT + rounded_score))
+    
+    # Add remaining points to FAIL_COUNT
+    local fail_points=$((max_points - rounded_score))
+    FAIL_COUNT=$((FAIL_COUNT + fail_points))
     
     # Print with color based on performance
     if [ "$actual" -eq "$total" ]; then
