@@ -560,6 +560,317 @@ else
 fi
 
 echo ""
+echo "11. Testing ExLi Module Import and Core Commands..."
+echo "---------------------------------------------------"
+# Test ExLi module import
+if [ -d "python/exli" ]; then
+    print_status "PASS" "ExLi module directory exists"
+    
+    # Change to python directory for ExLi tests
+    cd python || {
+        print_status "FAIL" "Cannot change to python directory"
+    }
+    
+    # Test ExLi main module help
+    if timeout 30s python -m exli.main --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi main module help works"
+    else
+        print_status "FAIL" "ExLi main module help failed"
+    fi
+    
+    # Test find_target_stmts command
+    if timeout 30s python -m exli.main find_target_stmts --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi find_target_stmts command available"
+    else
+        print_status "FAIL" "ExLi find_target_stmts command failed"
+    fi
+    
+    # Test run command
+    if timeout 30s python -m exli.main run --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi run command available"
+    else
+        print_status "FAIL" "ExLi run command failed"
+    fi
+    
+    # Test run_inline_tests command
+    if timeout 30s python -m exli.main run_inline_tests --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi run_inline_tests command available"
+    else
+        print_status "FAIL" "ExLi run_inline_tests command failed"
+    fi
+    
+    # Test generate_mutants command
+    if timeout 30s python -m exli.main generate_mutants --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi generate_mutants command available"
+    else
+        print_status "FAIL" "ExLi generate_mutants command failed"
+    fi
+    
+    # Test eval module commands
+    if timeout 30s python -m exli.eval run_tests_with_mutants --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi eval run_tests_with_mutants command available"
+    else
+        print_status "FAIL" "ExLi eval run_tests_with_mutants command failed"
+    fi
+    
+    if timeout 30s python -m exli.eval get_r2_tests --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi eval get_r2_tests command available"
+    else
+        print_status "FAIL" "ExLi eval get_r2_tests command failed"
+    fi
+    
+    # Test batch commands
+    if timeout 30s python -m exli.main batch_find_target_stmts --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi batch_find_target_stmts command available"
+    else
+        print_status "FAIL" "ExLi batch_find_target_stmts command failed"
+    fi
+    
+    if timeout 30s python -m exli.main batch_run --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi batch_run command available"
+    else
+        print_status "FAIL" "ExLi batch_run command failed"
+    fi
+    
+    # Change back to root directory
+    cd .. || print_status "WARN" "Cannot change back to root directory"
+else
+    print_status "FAIL" "ExLi module directory not found"
+fi
+
+echo ""
+echo "12. Testing ExLi Dependencies..."
+echo "--------------------------------"
+# Test EvoSuite
+if [ -f "jars/evosuite-1.0.6.jar" ]; then
+    print_status "PASS" "EvoSuite jar file exists"
+    
+    # Test EvoSuite execution
+    if timeout 30s java -jar jars/evosuite-1.0.6.jar -help >/dev/null 2>&1; then
+        print_status "PASS" "EvoSuite execution works"
+    else
+        print_status "WARN" "EvoSuite execution failed"
+    fi
+else
+    print_status "FAIL" "EvoSuite jar file not found"
+fi
+
+# Test Randoop
+if [ -f "jars/randoop-all-4.2.6.jar" ]; then
+    print_status "PASS" "Randoop jar file exists"
+    
+    # Test Randoop execution
+    if timeout 30s java -cp jars/randoop-all-4.2.6.jar randoop.main.Main help >/dev/null 2>&1; then
+        print_status "PASS" "Randoop execution works"
+    else
+        print_status "WARN" "Randoop execution failed"
+    fi
+else
+    print_status "FAIL" "Randoop jar file not found"
+fi
+
+# Test Universal Mutator
+if [ -f "jars/universalmutator.jar" ]; then
+    print_status "PASS" "Universal Mutator jar file exists"
+    
+    # Test Universal Mutator execution
+    if timeout 30s java -jar jars/universalmutator.jar --help >/dev/null 2>&1; then
+        print_status "PASS" "Universal Mutator execution works"
+    else
+        print_status "WARN" "Universal Mutator execution failed"
+    fi
+else
+    print_status "FAIL" "Universal Mutator jar file not found"
+fi
+
+# Test iTest framework
+if [ -f "jars/itest-1.0-SNAPSHOT.jar" ]; then
+    print_status "PASS" "iTest framework jar file exists"
+else
+    print_status "FAIL" "iTest framework jar file not found"
+fi
+
+# Test other required jars
+required_jars=(
+    "jars/junit-platform-console-standalone-1.6.2.jar"
+    "jars/commons-io-2.6.jar"
+    "jars/gson-2.8.6.jar"
+)
+
+for jar in "${required_jars[@]}"; do
+    if [ -f "$jar" ]; then
+        jar_name=$(basename "$jar")
+        print_status "PASS" "$jar_name exists"
+    else
+        jar_name=$(basename "$jar")
+        print_status "FAIL" "$jar_name not found"
+    fi
+done
+
+echo ""
+echo "13. Testing ExLi Directory Structure and Permissions..."
+echo "-------------------------------------------------------"
+# Test home directory access
+if [ -w "$HOME" ]; then
+    print_status "PASS" "Home directory is writable"
+    
+    # Test ExLi results directory creation
+    test_dir="$HOME/exli/results/test"
+    if mkdir -p "$test_dir" 2>/dev/null; then
+        print_status "PASS" "Can create ExLi results directories"
+        rmdir "$test_dir" 2>/dev/null || true
+        rmdir "$HOME/exli/results" 2>/dev/null || true
+        rmdir "$HOME/exli" 2>/dev/null || true
+    else
+        print_status "FAIL" "Cannot create ExLi results directories"
+    fi
+    
+    # Test other required directories
+    required_dirs=(
+        "$HOME/exli/all-tests"
+        "$HOME/exli/r0-tests"
+        "$HOME/exli/r1-tests"
+        "$HOME/exli/r0-its"
+        "$HOME/exli/r1-its"
+        "$HOME/exli/log"
+        "$HOME/exli/generated-tests"
+        "$HOME/exli/results/target-stmt"
+        "$HOME/exli/results/r0-its-report"
+        "$HOME/exli/results/r1-its-report"
+        "$HOME/exli/results/mutants"
+        "$HOME/exli/results/mutants-eval-results"
+        "$HOME/exli/results/minimized"
+        "$HOME/exli/results/r2"
+    )
+    
+    for dir in "${required_dirs[@]}"; do
+        if mkdir -p "$dir" 2>/dev/null; then
+            dir_name=$(basename "$dir")
+            print_status "PASS" "Can create $dir_name directory"
+            rmdir "$dir" 2>/dev/null || true
+        else
+            dir_name=$(basename "$dir")
+            print_status "FAIL" "Cannot create $dir_name directory"
+        fi
+    done
+    
+    # Clean up test directories
+    rm -rf "$HOME/exli" 2>/dev/null || true
+else
+    print_status "FAIL" "Home directory is not writable"
+fi
+
+echo ""
+echo "14. Testing ExLi Configuration and Setup..."
+echo "-------------------------------------------"
+# Test conda environment preparation script
+if [ -f "python/prepare-conda-env.sh" ]; then
+    print_status "PASS" "Conda environment preparation script exists"
+    
+    # Check if script is executable
+    if [ -x "python/prepare-conda-env.sh" ]; then
+        print_status "PASS" "Conda environment script is executable"
+    else
+        print_status "WARN" "Conda environment script is not executable"
+    fi
+else
+    print_status "FAIL" "Conda environment preparation script not found"
+fi
+
+# Test Java install script
+if [ -f "java/install.sh" ]; then
+    print_status "PASS" "Java install script exists"
+    
+    # Check if script is executable
+    if [ -x "java/install.sh" ]; then
+        print_status "PASS" "Java install script is executable"
+    else
+        print_status "WARN" "Java install script is not executable"
+    fi
+else
+    print_status "FAIL" "Java install script not found"
+fi
+
+# Test data directory contents
+if [ -d "data" ]; then
+    if [ "$(ls -A data 2>/dev/null)" ]; then
+        print_status "PASS" "Data directory is not empty"
+    else
+        print_status "WARN" "Data directory is empty"
+    fi
+    
+    # Check for evaluated projects file
+    if [ -f "data/evaluated_projects.txt" ] || [ -f "data/evaluated-projects.txt" ] || find data -name "*project*" -type f | grep -q .; then
+        print_status "PASS" "Project data files found"
+    else
+        print_status "WARN" "No project data files found in data directory"
+    fi
+else
+    print_status "FAIL" "Data directory not found"
+fi
+
+# Test poms directory
+if [ -d "poms" ]; then
+    pom_count=$(find poms -name "*.xml" | wc -l)
+    if [ "$pom_count" -gt 0 ]; then
+        print_status "PASS" "POM files found ($pom_count files)"
+    else
+        print_status "WARN" "No POM files found in poms directory"
+    fi
+else
+    print_status "FAIL" "Poms directory not found"
+fi
+
+echo ""
+echo "15. Testing ExLi Integration with Sample Commands..."
+echo "----------------------------------------------------"
+# Test ExLi with minimal parameters (dry run style tests)
+if [ -d "python/exli" ]; then
+    cd python || {
+        print_status "FAIL" "Cannot change to python directory for integration test"
+    }
+    
+    # Test analyze_inline_tests_reports command
+    if timeout 30s python -m exli.main analyze_inline_tests_reports --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi analyze_inline_tests_reports command available"
+    else
+        print_status "FAIL" "ExLi analyze_inline_tests_reports command failed"
+    fi
+    
+    # Test remove_failed_tests command
+    if timeout 30s python -m exli.main remove_failed_tests --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi remove_failed_tests command available"
+    else
+        print_status "FAIL" "ExLi remove_failed_tests command failed"
+    fi
+    
+    # Test batch evaluation commands
+    if timeout 30s python -m exli.eval batch_run_tests_with_mutants --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi batch_run_tests_with_mutants command available"
+    else
+        print_status "FAIL" "ExLi batch_run_tests_with_mutants command failed"
+    fi
+    
+    if timeout 30s python -m exli.eval batch_get_r2_tests --help >/dev/null 2>&1; then
+        print_status "PASS" "ExLi batch_get_r2_tests command available"
+    else
+        print_status "FAIL" "ExLi batch_get_r2_tests command failed"
+    fi
+    
+    # Test ExLi module imports (basic Python import test)
+    if timeout 30s python -c "import exli; import exli.main; import exli.eval" >/dev/null 2>&1; then
+        print_status "PASS" "ExLi Python modules can be imported"
+    else
+        print_status "FAIL" "ExLi Python modules cannot be imported"
+    fi
+    
+    # Change back to root directory
+    cd .. || print_status "WARN" "Cannot change back to root directory"
+else
+    print_status "FAIL" "ExLi module directory not found for integration test"
+fi
+
+echo ""
 echo "=========================================="
 echo "Environment Benchmark Test Complete"
 echo "=========================================="
@@ -575,6 +886,11 @@ echo "- Python environment (python3, pip3, conda)"
 echo "- Java compilation (javac)"
 echo "- Build systems (Maven)"
 echo "- Package installation (Python setup.py, Java pom.xml)"
+echo "- ExLi module import and core commands (find_target_stmts, run, run_inline_tests, etc.)"
+echo "- ExLi dependencies (EvoSuite, Randoop, Universal Mutator, iTest framework)"
+echo "- ExLi directory structure and file permissions"
+echo "- ExLi configuration and setup scripts"
+echo "- ExLi integration with batch commands and module imports"
 echo "- Dockerfile structure (if Docker build failed)"
 # Save final counts before any additional print_status calls
 FINAL_PASS_COUNT=$PASS_COUNT
@@ -611,4 +927,4 @@ print_status "INFO" "Example: cd python && bash prepare-conda-env.sh"
 echo ""
 print_status "INFO" "For more information, see README.md and REPRODUCE.md"
 
-print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/exli exli-env-test /bin/bash" 
+print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/exli exli-env-test /bin/bash"

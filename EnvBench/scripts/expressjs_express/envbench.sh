@@ -587,7 +587,7 @@ fi
 echo ""
 echo "11. Testing Official Test Suite (npm test)..."
 echo "--------------------------------------------"
-# Test npm test as mentioned in README
+# Test npm test
 if command -v npm &> /dev/null && [ -f "package.json" ]; then
     print_status "PASS" "npm and package.json available for test suite"
     
