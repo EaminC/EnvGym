@@ -3,8 +3,8 @@ import os
 import sys
 import requests
 from pathlib import Path
-from datetime import datetime
-from typing import Dict, Any, Optional
+from datetime import datetime, timezone
+from typing import Dict, Any, Optional, List
 from dotenv import load_dotenv
 
 # Add Agent directory to path for importing prompt modules
@@ -38,7 +38,13 @@ class StatsTool:
         self.base_url = os.getenv("FORGE_BASE_URL", "https://api.forge.tensorblock.co/v1").strip('"').strip("'")
         
         # Parse MODEL to get provider and model
-        model_config = os.getenv("MODEL", "OpenAI/gpt-4.1").strip('"').strip("'")
+        model_config = os.getenv("MODEL")
+        if not model_config:
+            print("Error: MODEL environment variable not set")
+            print("Please set MODEL in your .env file (e.g., MODEL=OpenAI/gpt-4.1-mini)")
+            sys.exit(1)
+        
+        model_config = model_config.strip('"').strip("'")
         if '/' in model_config:
             self.provider, self.model = model_config.split('/', 1)
         else:
@@ -87,6 +93,59 @@ class StatsTool:
             return None
         except Exception as e:
             print(f"Unexpected error getting API stats: {str(e)}")
+            return None
+    
+    def get_all_paginated_stats(self, session_start: str, session_end: str) -> Optional[List[Dict[str, Any]]]:
+        """获取指定时间范围内的统计数据"""
+        try:
+            if not self.api_key:
+                print("Error: FORGE_API_KEY not available")
+                return None
+            
+            # 使用新的API接口获取指定时间范围的统计数据
+            base_url = self.base_url.rstrip('/')
+            
+            headers = {
+                "Authorization": f"Bearer {self.api_key}"
+            }
+            
+            # 设置查询参数，与curl命令完全一致
+            params = {
+                "provider_name": self.provider,
+                "model_name": self.model,
+                "started_at": session_start,
+                "ended_at": session_end,
+                "limit": 2000
+            }
+            
+            if self.verbose:
+                print(f"Requesting data with params: {params}")
+            
+            response = requests.get(
+                f"{base_url}/statistic/usage/realtime",
+                headers=headers,
+                params=params,
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                all_data = response.json()
+                if self.verbose:
+                    print(f"Retrieved {len(all_data)} total records")
+                return all_data
+            else:
+                print(f"Error getting data: HTTP {response.status_code}")
+                print(f"Response: {response.text}")
+                return None
+                
+        except requests.exceptions.RequestException as e:
+            print(f"Network error getting paginated stats: {str(e)}")
+            return None
+        except json.JSONDecodeError as e:
+            print(f"Error parsing paginated API response: {str(e)}")
+            return None
+        except Exception as e:
+            print(f"Unexpected error getting paginated stats: {str(e)}")
             return None
     
     def load_existing_stats(self) -> Dict[str, Any]:
@@ -160,65 +219,90 @@ class StatsTool:
         print("Recording session start stats...")
         
         stats_data = self.load_existing_stats()
-        current_time = datetime.now().isoformat()
+        current_time = datetime.now(timezone.utc).isoformat()
         
-        # 获取当前API统计
-        current_stats = self.get_api_stats()
+        # 设置开始统计为全0，表示从0开始
+        start_stats = {
+            "provider_name": self.provider,
+            "model": self.model,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "requests_count": 0,
+            "cost": 0.0
+        }
         
         stats_data["session_start"] = current_time
-        stats_data["start_stats"] = current_stats
+        stats_data["start_stats"] = [start_stats]
         
         # 保存API信息
-        if current_stats and isinstance(current_stats, list) and current_stats:
-            api_data = current_stats[0]
-            stats_data["api_info"]["provider_name"] = api_data.get("provider_name")
-            stats_data["api_info"]["model"] = api_data.get("model")
+        stats_data["api_info"]["provider_name"] = self.provider
+        stats_data["api_info"]["model"] = self.model
         
         self.save_stats(stats_data)
         
-        if self.verbose and current_stats:
+        if self.verbose:
             print(f"Session start recorded at: {current_time}")
-            if isinstance(current_stats, list) and current_stats:
-                api_data = current_stats[0]
-                print(f"API Info: {api_data.get('provider_name')} - {api_data.get('model')}")
-                print(f"Current usage: {api_data.get('total_tokens', 0)} tokens, ${api_data.get('cost', 0):.6f}")
+            print(f"API Info: {self.provider} - {self.model}")
+            print(f"Starting from: 0 tokens, $0.000000")
     
     def record_session_end(self):
         """记录会话结束时的统计信息"""
         print("Recording session end stats...")
         
         stats_data = self.load_existing_stats()
-        current_time = datetime.now().isoformat()
+        current_time = datetime.now(timezone.utc).isoformat()
         
-        # 获取当前API统计
-        current_stats = self.get_api_stats()
+        # 获取会话开始时间
+        session_start = stats_data.get("session_start")
+        if not session_start:
+            print("Warning: No session start time found, using current time")
+            session_start = current_time
+        
+        # 获取会话时间范围内的所有分页数据
+        all_session_data = self.get_all_paginated_stats(session_start, current_time)
         
         stats_data["session_end"] = current_time
-        stats_data["end_stats"] = current_stats
         
-        # 计算使用量差值
-        if stats_data["start_stats"] and current_stats:
-            usage_delta = self.calculate_usage_delta(
-                stats_data["start_stats"], 
-                current_stats
-            )
-            stats_data["usage_delta"] = usage_delta
+        if all_session_data:
+            # 聚合会话时间范围内的所有数据
+            total_input_tokens = sum(item.get("input_tokens", 0) for item in all_session_data)
+            total_output_tokens = sum(item.get("output_tokens", 0) for item in all_session_data)
+            total_tokens = sum(item.get("tokens", 0) for item in all_session_data)
+            total_cost = sum(float(item.get("cost", 0)) for item in all_session_data)
+            requests_count = len(all_session_data)
             
-            if usage_delta:
-                print(f"Session usage summary:")
-                print(f"  - Input tokens: {usage_delta.get('input_tokens', 0)}")
-                print(f"  - Output tokens: {usage_delta.get('output_tokens', 0)}")
-                print(f"  - Total tokens: {usage_delta.get('total_tokens', 0)}")
-                print(f"  - Requests count: {usage_delta.get('requests_count', 0)}")
-                print(f"  - Cost: ${usage_delta.get('cost', 0):.6f}")
+            # 创建聚合统计
+            session_stats = {
+                "provider_name": self.provider,
+                "model": self.model,
+                "input_tokens": total_input_tokens,
+                "output_tokens": total_output_tokens,
+                "total_tokens": total_tokens,
+                "requests_count": requests_count,
+                "cost": total_cost
+            }
+            
+            stats_data["end_stats"] = [session_stats]
+            stats_data["usage_delta"] = session_stats
+            
+            print(f"Session usage summary (from {session_start} to {current_time}):")
+            print(f"  - Total requests: {requests_count}")
+            print(f"  - Input tokens: {total_input_tokens:,}")
+            print(f"  - Output tokens: {total_output_tokens:,}")
+            print(f"  - Total tokens: {total_tokens:,}")
+            print(f"  - Cost: ${total_cost:.6f}")
+        else:
+            stats_data["end_stats"] = []
+            stats_data["usage_delta"] = None
+            print("No usage data found for session time range")
         
         self.save_stats(stats_data)
         
         if self.verbose:
             print(f"Session end recorded at: {current_time}")
-            if current_stats and isinstance(current_stats, list) and current_stats:
-                api_data = current_stats[0]
-                print(f"Final usage: {api_data.get('total_tokens', 0)} tokens, ${api_data.get('cost', 0):.6f}")
+            if all_session_data:
+                print(f"Session total usage: {sum(item.get('tokens', 0) for item in all_session_data):,} tokens, ${sum(float(item.get('cost', 0)) for item in all_session_data):.6f}")
     
     def run(self, action: str = "check"):
         """执行统计工具
