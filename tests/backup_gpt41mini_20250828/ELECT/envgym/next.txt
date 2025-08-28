@@ -1,0 +1,16 @@
+current progress  
+- Dockerfile is based on Ubuntu 22.04 and installs all required packages for amd64 architecture, including OpenJDK 11, clang, llvm, Python3 and utilities.  
+- User `cc` with sudo privileges is created and project files copied with correct ownership.  
+- Scripts in the project’s `scripts` directory have executable permissions set.  
+- Python dependencies are installed if `requirements.txt` exists.  
+- Alternatives for java, javac, python, and pip are properly configured to point to the correct binaries.  
+- Necessary directories including `.ssh`, artifacts, coldTier data, experiment backup, logs, and results are created with appropriate permissions.  
+- Entry point is set to an interactive bash shell inside the project root `/home/cc/EnvGym/data-gpt-4.1mini/ELECT`.  
+- Environment variables like `JAVA_HOME`, `PATH`, and `PROJECT_ROOT` are set consistently.  
+
+next step  
+- Modify the Dockerfile or related scripts to implement the SSH private key copy optimization by copying the SSH private key for user `cc` once outside any per-node loops to avoid redundant copies and permission issues.  
+- Verify and adjust all path variables inside `scripts/settings.sh` and other scripts to use absolute paths under `/home/cc/EnvGym/data-gpt-4.1mini/ELECT`.  
+- Ensure all scripts explicitly use `pip3` instead of ambiguous `pip` commands to guarantee Python 3 environment consistency.  
+- Confirm that the native libraries and binaries built inside the container are for amd64 by adding checks using the `file` command or build script validations.  
+- Test the full build and deployment process inside the container to confirm compatibility and correct environment setup before production use.

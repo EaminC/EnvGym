@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250827_203413 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756326850
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+42 |
+43 | >>> RUN conda create -n flex_r_env -y r-base && \
+44 | >>>     conda run -n flex_r_env conda install -y -c conda-forge r-eva && \
+45 | >>>     conda clean -afy
+46 |
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c conda create -n flex_r_env -y r-base &&     conda run -n flex_r_env conda install -y -c conda-forge r-eva &&     conda clean -afy" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

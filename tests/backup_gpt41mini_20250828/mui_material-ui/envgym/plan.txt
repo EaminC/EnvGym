@@ -1,0 +1,44 @@
+Adjusted Plan:
+
+1. Base Image Selection:
+   - Use an amd64-compatible Linux base image such as `ubuntu:22.04`, `debian:bookworm-slim`, or `node:18-bullseye-slim` (depending on the language/runtime needed).
+   - Avoid any ARM or non-x86_64 images to ensure CPU architecture compatibility.
+
+2. Dockerfile Instructions:
+   - Specify platform explicitly: `--platform=linux/amd64` when building or pulling images.
+   - Avoid any GPU or CUDA-related instructions or base images since no NVIDIA GPU is detected.
+   - Optimize layer caching and minimize image size due to limited storage (~45GB free).
+   - Use multi-stage builds to reduce final image size.
+   - Use overlay2-compatible Dockerfile instructions and avoid deprecated storage driver features.
+
+3. Build and Runtime Environment:
+   - Leverage high CPU core count by enabling parallel build steps where applicable (e.g., `make -j$(nproc)`).
+   - Minimize memory footprint in build steps if RAM is limited (check actual memory if known).
+   - Avoid installing unnecessary packages or large dependencies.
+   - Use lightweight package variants where possible (e.g., `-slim` or `-alpine` images if compatible with project dependencies).
+
+4. Volume and Path Configuration:
+   - Use the working directory `/home/cc/EnvGym/data-gpt-4.1mini/mui_material-ui` as the main project root inside the container.
+   - Map the host directory to the container path exactly to avoid path conflicts.
+   - Avoid volume mounts that might exceed storage limits.
+
+5. Docker Build and Run Commands:
+   - Use BuildKit and Buildx features available in Docker 28.3.2 for efficient builds.
+   - Example build command:
+     ```
+     DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t your-image-name .
+     ```
+   - Avoid GPU build flags or runtime parameters.
+
+6. Development Tools and Versions:
+   - Ensure all tooling installed inside the container matches the amd64 architecture.
+   - Validate node/npm, python, or other language tools are installed in compatible versions.
+   - Avoid experimental or platform-specific binaries.
+
+Summary:
+- Base image: amd64 Linux variant (Ubuntu/Debian/Node slim)
+- Platform: linux/amd64 explicitly specified
+- No GPU or CUDA dependencies
+- Storage optimized with multi-stage builds and minimal packages
+- Paths consistent with user home directory project structure
+- Build leveraging multiple CPU cores without exceeding storage or memory limits

@@ -1,0 +1,47 @@
+Adjusted Environment Setup Plan:
+
+1. Base Image Selection:
+   - Use an x86_64-compatible Linux base image such as ubuntu:22.04, debian:bullseye, or alpine:latest for amd64 architecture.
+   - Avoid any CUDA or NVIDIA GPU-based images since no NVIDIA GPU is detected.
+
+2. Platform Specification:
+   - Explicitly specify platform as linux/amd64 in Dockerfiles and docker-compose files to ensure compatibility with the x86_64 architecture.
+   - Example: `FROM --platform=linux/amd64 ubuntu:22.04`
+
+3. Working Directory and Filesystem:
+   - Use standard Linux filesystem paths.
+   - Set working directory to `/home/cc/EnvGym/data-gpt-4.1mini/collected_stats` or a subdirectory within `/home/cc/EnvGym` as needed.
+   - Ensure volume mounts and bind mounts in Docker Compose or run commands point correctly to this directory.
+
+4. CPU Architecture and Build:
+   - Optimize builds and multi-threaded processes for x86_64 CPU.
+   - Use build tools and dependencies compatible with amd64 architecture.
+   - Avoid ARM-specific binaries or scripts.
+
+5. Memory and Storage:
+   - Confirm that the host system has sufficient RAM and storage for the planned environment.
+   - Since no specific memory constraints are indicated, assume standard memory allocation.
+   - If building large images or processing large datasets, monitor disk usage under `/home/cc/EnvGym/data-gpt-4.1mini/collected_stats`.
+
+6. Development Tools and Versions:
+   - Use versions of development tools and dependencies compatible with the selected base image and architecture.
+   - Ensure tooling supports Docker version 28.3.2 features such as BuildKit and Buildx.
+   - Avoid GPU-specific tools or libraries.
+
+7. Docker Compose and Build:
+   - Use Docker Compose v2 syntax.
+   - Use BuildKit for efficient builds.
+   - Specify platform in compose files if cross-platform build is possible or needed.
+
+8. No GPU Specific Configuration:
+   - Do not include CUDA, cuDNN, or NVIDIA driver installations.
+   - Remove or disable any GPU-dependent code paths or environment variables.
+
+Summary:
+- Base images and tools are aligned with x86_64 architecture (linux/amd64).
+- Working directory and mounting paths are Linux-standard and correct.
+- No GPU dependencies included.
+- Docker features leveraged are compatible with Docker 28.3.2.
+- Builds and runtime environment optimized for CPU execution on amd64.
+
+This plan ensures full compatibility and optimal performance on the described hardware environment.

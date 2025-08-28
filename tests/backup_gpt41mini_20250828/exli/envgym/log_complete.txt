@@ -1,0 +1,985 @@
+=== Docker Execution Log - 20250827_200316 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756324901
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.77kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/18] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 934.35kB 0.0s done
+#5 DONE 0.0s
+
+#6 [ 5/18] RUN /opt/conda/bin/conda clean -tipsy;     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+#6 CACHED
+
+#7 [ 6/18] RUN useradd -m -s /bin/bash itdocker && echo "itdocker ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/itdocker && chmod 0440 /etc/sudoers.d/itdocker
+#7 CACHED
+
+#8 [ 8/18] RUN chown -R itdocker:itdocker /opt/sdkman
+#8 CACHED
+
+#9 [ 2/18] RUN apt-get update && apt-get install -y --no-install-recommends     curl     wget     git     build-essential     sudo     unzip     zip     ca-certificates     bzip2     libgl1-mesa-glx     libgtk-3-0     libdbus-glib-1-2     libxt6     libx11-xcb1     libxcomposite1     libxcursor1     libxdamage1     libxext6     libxfixes3     libxi6     libxrandr2     libxrender1     libxss1     libxtst6     libnss3     libasound2     libpangocairo-1.0-0     libpango-1.0-0     libatk1.0-0     libatk-bridge2.0-0     libssl3     libffi7     default-jre-headless     maven     firefox     && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [ 4/18] RUN set -eux;     MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh";     curl -L -o /tmp/miniforge.sh "$MINIFORGE_URL";     chmod +x /tmp/miniforge.sh;     /tmp/miniforge.sh -b -p /opt/conda;     rm /tmp/miniforge.sh
+#10 CACHED
+
+#11 [ 7/18] RUN curl -s "https://get.sdkman.io" | bash &&     bash -c "source /opt/sdkman/bin/sdkman-init.sh && sdk install java 8.0.302-open && sdk default java 8.0.302-open"
+#11 CACHED
+
+#12 [ 3/18] RUN GECKODRIVER_VERSION=v0.31.0 &&     curl -L -o /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz &&     tar -xzf /tmp/geckodriver.tar.gz -C /usr/local/bin/ &&     chmod +x /usr/local/bin/geckodriver &&     rm /tmp/geckodriver.tar.gz
+#12 CACHED
+
+#13 [ 9/18] WORKDIR /home/itdocker
+#13 CACHED
+
+#14 [10/18] COPY --chown=itdocker:itdocker . /home/itdocker/exli
+#14 DONE 0.6s
+
+#15 [11/18] RUN ls -l /home/itdocker/exli/python
+#15 0.224 total 16
+#15 0.224 drwxrwxr-x 2 itdocker itdocker 4096 Aug 25 19:14 exli
+#15 0.224 -rwxrwxr-x 1 itdocker itdocker  836 Aug 25 19:14 prepare-conda-env.sh
+#15 0.224 -rw-rw-r-- 1 itdocker itdocker 1960 Aug 25 19:14 reproduce.sh
+#15 0.224 -rw-rw-r-- 1 itdocker itdocker 1775 Aug 25 19:14 setup.py
+#15 DONE 0.2s
+
+#16 [12/18] RUN ls -l /home/itdocker/exli
+#16 0.411 total 56
+#16 0.411 -rw-rw-r-- 1 itdocker itdocker  1917 Aug 25 19:14 Dockerfile
+#16 0.411 -rw-rw-r-- 1 itdocker itdocker  1076 Aug 25 19:14 LICENSE
+#16 0.411 -rw-rw-r-- 1 itdocker itdocker 15092 Aug 25 19:14 README.md
+#16 0.411 -rw-rw-r-- 1 itdocker itdocker  1041 Aug 25 19:14 REPRODUCE.md
+#16 0.411 drwxrwxr-x 2 itdocker itdocker  4096 Aug 25 19:14 data
+#16 0.411 drwxrwxr-x 2 itdocker itdocker  4096 Aug 27 20:01 envgym
+#16 0.411 drwxrwxr-x 3 itdocker itdocker  4096 Aug 25 19:14 jacoco-extension
+#16 0.411 drwxrwxr-x 2 itdocker itdocker  4096 Aug 25 19:14 jars
+#16 0.411 drwxrwxr-x 4 itdocker itdocker  4096 Aug 25 19:14 java
+#16 0.411 drwxrwxr-x 2 itdocker itdocker  4096 Aug 25 19:14 poms
+#16 0.411 drwxrwxr-x 3 itdocker itdocker  4096 Aug 27 19:58 python
+#16 DONE 0.4s
+
+#17 [13/18] RUN chmod +x /home/itdocker/exli/python/prepare-conda-env.sh
+#17 DONE 0.4s
+
+#18 [14/18] WORKDIR /home/itdocker/exli/python
+#18 DONE 0.0s
+
+#19 [15/18] RUN /bin/bash -ex -c "source /opt/conda/etc/profile.d/conda.sh && conda init bash && conda activate base && bash ./prepare-conda-env.sh"
+#19 0.391 + source /opt/conda/etc/profile.d/conda.sh
+#19 0.391 ++ export CONDA_EXE=/opt/conda/bin/conda
+#19 0.391 ++ CONDA_EXE=/opt/conda/bin/conda
+#19 0.392 ++ export _CE_M=
+#19 0.392 ++ _CE_M=
+#19 0.392 ++ export _CE_CONDA=
+#19 0.392 ++ _CE_CONDA=
+#19 0.392 ++ export CONDA_PYTHON_EXE=/opt/conda/bin/python
+#19 0.392 ++ CONDA_PYTHON_EXE=/opt/conda/bin/python
+#19 0.392 ++ '[' -z '' ']'
+#19 0.392 ++ export CONDA_SHLVL=0
+#19 0.392 ++ CONDA_SHLVL=0
+#19 0.392 ++ '[' -n '' ']'
+#19 0.392 ++++ dirname /opt/conda/bin/conda
+#19 0.393 +++ dirname /opt/conda/bin
+#19 0.394 ++ PATH=/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#19 0.394 ++ export PATH
+#19 0.394 ++ '[' -z '' ']'
+#19 0.394 ++ PS1=
+#19 0.394 + conda init bash
+#19 0.394 + local cmd=init
+#19 0.394 + case "$cmd" in
+#19 0.394 + __conda_exe init bash
+#19 0.394 + '[' -n '' ']'
+#19 0.394 + /opt/conda/bin/conda init bash
+#19 0.659 no change     /opt/conda/condabin/conda
+#19 0.659 no change     /opt/conda/bin/conda
+#19 0.659 no change     /opt/conda/bin/conda-env
+#19 0.659 no change     /opt/conda/bin/activate
+#19 0.659 no change     /opt/conda/bin/deactivate
+#19 0.659 no change     /opt/conda/etc/profile.d/conda.sh
+#19 0.659 no change     /opt/conda/etc/fish/conf.d/conda.fish
+#19 0.659 no change     /opt/conda/shell/condabin/Conda.psm1
+#19 0.659 no change     /opt/conda/shell/condabin/conda-hook.ps1
+#19 0.659 no change     /opt/conda/lib/python3.12/site-packages/xontrib/conda.xsh
+#19 0.659 no change     /opt/conda/etc/profile.d/conda.csh
+#19 0.659 modified      /home/itdocker/.bashrc
+#19 0.659 
+#19 0.659 ==> For changes to take effect, close and re-open your current shell. <==
+#19 0.659 
+#19 0.696 + conda activate base
+#19 0.696 + local cmd=activate
+#19 0.696 + case "$cmd" in
+#19 0.696 + __conda_activate activate base
+#19 0.696 + '[' -n '' ']'
+#19 0.696 + local ask_conda
+#19 0.697 ++ PS1=
+#19 0.697 ++ __conda_exe shell.posix activate base
+#19 0.698 ++ '[' -n '' ']'
+#19 0.698 ++ /opt/conda/bin/conda shell.posix activate base
+#19 0.964 + ask_conda='unset _CE_M
+#19 0.964 unset _CE_CONDA
+#19 0.964 PS1='\''(base) '\''
+#19 0.964 export PATH='\''/opt/conda/bin:/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+#19 0.964 export CONDA_PREFIX='\''/opt/conda'\''
+#19 0.964 export CONDA_SHLVL='\''1'\''
+#19 0.964 export CONDA_DEFAULT_ENV='\''base'\''
+#19 0.964 export CONDA_PROMPT_MODIFIER='\''(base) '\''
+#19 0.964 export CONDA_EXE='\''/opt/conda/bin/conda'\''
+#19 0.964 export CONDA_PYTHON_EXE='\''/opt/conda/bin/python'\''
+#19 0.964 . "/opt/conda/etc/conda/activate.d/libxml2_activate.sh"'
+#19 0.964 + eval 'unset _CE_M
+#19 0.964 unset _CE_CONDA
+#19 0.964 PS1='\''(base) '\''
+#19 0.964 export PATH='\''/opt/conda/bin:/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+#19 0.964 export CONDA_PREFIX='\''/opt/conda'\''
+#19 0.964 export CONDA_SHLVL='\''1'\''
+#19 0.964 export CONDA_DEFAULT_ENV='\''base'\''
+#19 0.964 export CONDA_PROMPT_MODIFIER='\''(base) '\''
+#19 0.964 export CONDA_EXE='\''/opt/conda/bin/conda'\''
+#19 0.964 export CONDA_PYTHON_EXE='\''/opt/conda/bin/python'\''
+#19 0.964 . "/opt/conda/etc/conda/activate.d/libxml2_activate.sh"'
+#19 0.964 ++ unset _CE_M
+#19 0.964 ++ unset _CE_CONDA
+#19 0.964 ++ PS1='(base) '
+#19 0.964 ++ export PATH=/opt/conda/bin:/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#19 0.964 ++ PATH=/opt/conda/bin:/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#19 0.964 ++ export CONDA_PREFIX=/opt/conda
+#19 0.964 ++ CONDA_PREFIX=/opt/conda
+#19 0.964 ++ export CONDA_SHLVL=1
+#19 0.964 ++ CONDA_SHLVL=1
+#19 0.964 ++ export CONDA_DEFAULT_ENV=base
+#19 0.964 ++ CONDA_DEFAULT_ENV=base
+#19 0.964 ++ export 'CONDA_PROMPT_MODIFIER=(base) '
+#19 0.964 ++ CONDA_PROMPT_MODIFIER='(base) '
+#19 0.964 ++ export CONDA_EXE=/opt/conda/bin/conda
+#19 0.964 ++ CONDA_EXE=/opt/conda/bin/conda
+#19 0.964 ++ export CONDA_PYTHON_EXE=/opt/conda/bin/python
+#19 0.964 ++ CONDA_PYTHON_EXE=/opt/conda/bin/python
+#19 0.964 ++ . /opt/conda/etc/conda/activate.d/libxml2_activate.sh
+#19 0.965 +++ test -n ''
+#19 0.965 +++ xml_catalog_files_libxml2=
+#19 0.965 +++ XML_CATALOG_FILES=
+#19 0.965 +++ conda_catalog_files=
+#19 0.965 +++ ifs_libxml2=' 	
+#19 0.965 '
+#19 0.965 +++ IFS=' '
+#19 0.965 +++ rem=/opt/conda
+#19 0.965 +++ for pre in ${rem}
+#19 0.965 +++ test '' = /opt/conda
+#19 0.965 +++ conda_catalog_files=/opt/conda
+#19 0.965 +++ rem=
+#19 0.965 +++ IFS=' 	
+#19 0.965 '
+#19 0.965 +++ conda_catalog_files='file:///opt/conda/etc/xml/catalog file:///etc/xml/catalog'
+#19 0.965 +++ export 'XML_CATALOG_FILES=file:///opt/conda/etc/xml/catalog file:///etc/xml/catalog'
+#19 0.965 +++ XML_CATALOG_FILES='file:///opt/conda/etc/xml/catalog file:///etc/xml/catalog'
+#19 0.965 +++ unset conda_catalog_files ifs_libxml2 rem
+#19 0.965 + __conda_hashr
+#19 0.965 + '[' -n '' ']'
+#19 0.965 + '[' -n '' ']'
+#19 0.965 + hash -r
+#19 0.965 + bash ./prepare-conda-env.sh
+#19 0.969 >>> Preparing conda environment "exli", python_version=3.9
+#19 1.758 
+#19 1.758 EnvironmentLocationNotFound: Not a conda environment: /home/itdocker/.conda/envs/exli
+#19 1.758 
+#19 2.282 Channels:
+#19 2.282  - conda-forge
+#19 2.282 Platform: linux-64
+#19 2.282 Collecting package metadata (repodata.json): ...working... done
+#19 14.80 Solving environment: ...working... done
+#19 15.11 
+#19 15.11 
+#19 15.11 ==> WARNING: A newer version of conda exists. <==
+#19 15.11     current version: 25.3.1
+#19 15.11     latest version: 25.7.0
+#19 15.11 
+#19 15.11 Please update conda by running
+#19 15.11 
+#19 15.11     $ conda update -n base -c conda-forge conda
+#19 15.11 
+#19 15.11 
+#19 15.16 
+#19 15.16 ## Package Plan ##
+#19 15.16 
+#19 15.16   environment location: /home/itdocker/.conda/envs/exli
+#19 15.16 
+#19 15.16   added / updated specs:
+#19 15.16     - pip
+#19 15.16     - python=3.9
+#19 15.16 
+#19 15.16 
+#19 15.16 The following packages will be downloaded:
+#19 15.16 
+#19 15.16     package                    |            build
+#19 15.16     ---------------------------|-----------------
+#19 15.16     ca-certificates-2025.8.3   |       hbd8a1cb_0         151 KB  conda-forge
+#19 15.16     libgcc-15.1.0              |       h767d61c_4         805 KB  conda-forge
+#19 15.16     libgcc-ng-15.1.0           |       h69a702a_4          29 KB  conda-forge
+#19 15.16     libgomp-15.1.0             |       h767d61c_4         437 KB  conda-forge
+#19 15.16     libsqlite-3.50.4           |       h0c1763c_0         911 KB  conda-forge
+#19 15.16     openssl-3.5.2              |       h26f9b46_0         3.0 MB  conda-forge
+#19 15.16     pip-25.2                   |     pyh8b19718_0         1.1 MB  conda-forge
+#19 15.16     python-3.9.23              |hc30ae73_0_cpython        22.6 MB  conda-forge
+#19 15.16     ------------------------------------------------------------
+#19 15.16                                            Total:        29.0 MB
+#19 15.16 
+#19 15.16 The following NEW packages will be INSTALLED:
+#19 15.16 
+#19 15.16   _libgcc_mutex      conda-forge/linux-64::_libgcc_mutex-0.1-conda_forge 
+#19 15.16   _openmp_mutex      conda-forge/linux-64::_openmp_mutex-4.5-2_gnu 
+#19 15.16   bzip2              conda-forge/linux-64::bzip2-1.0.8-h4bc722e_7 
+#19 15.16   ca-certificates    conda-forge/noarch::ca-certificates-2025.8.3-hbd8a1cb_0 
+#19 15.16   ld_impl_linux-64   conda-forge/linux-64::ld_impl_linux-64-2.44-h1423503_1 
+#19 15.16   libexpat           conda-forge/linux-64::libexpat-2.7.1-hecca717_0 
+#19 15.16   libffi             conda-forge/linux-64::libffi-3.4.6-h2dba641_1 
+#19 15.16   libgcc             conda-forge/linux-64::libgcc-15.1.0-h767d61c_4 
+#19 15.16   libgcc-ng          conda-forge/linux-64::libgcc-ng-15.1.0-h69a702a_4 
+#19 15.16   libgomp            conda-forge/linux-64::libgomp-15.1.0-h767d61c_4 
+#19 15.16   liblzma            conda-forge/linux-64::liblzma-5.8.1-hb9d3cd8_2 
+#19 15.16   libnsl             conda-forge/linux-64::libnsl-2.0.1-hb9d3cd8_1 
+#19 15.16   libsqlite          conda-forge/linux-64::libsqlite-3.50.4-h0c1763c_0 
+#19 15.16   libuuid            conda-forge/linux-64::libuuid-2.38.1-h0b41bf4_0 
+#19 15.16   libxcrypt          conda-forge/linux-64::libxcrypt-4.4.36-hd590300_1 
+#19 15.16   libzlib            conda-forge/linux-64::libzlib-1.3.1-hb9d3cd8_2 
+#19 15.16   ncurses            conda-forge/linux-64::ncurses-6.5-h2d0b736_3 
+#19 15.16   openssl            conda-forge/linux-64::openssl-3.5.2-h26f9b46_0 
+#19 15.16   pip                conda-forge/noarch::pip-25.2-pyh8b19718_0 
+#19 15.16   python             conda-forge/linux-64::python-3.9.23-hc30ae73_0_cpython 
+#19 15.16   readline           conda-forge/linux-64::readline-8.2-h8c095d6_2 
+#19 15.16   setuptools         conda-forge/noarch::setuptools-80.9.0-pyhff2d567_0 
+#19 15.16   tk                 conda-forge/linux-64::tk-8.6.13-noxft_hd72426e_102 
+#19 15.16   tzdata             conda-forge/noarch::tzdata-2025b-h78e105d_0 
+#19 15.16   wheel              conda-forge/noarch::wheel-0.45.1-pyhd8ed1ab_1 
+#19 15.16 
+#19 15.16 
+#19 15.16 
+#19 15.16 Downloading and Extracting Packages: ...working...
+python-3.9.23        | 22.6 MB   |            |   0% 
+#19 15.16 
+openssl-3.5.2        | 3.0 MB    |            |   0% [A
+#19 15.17 
+#19 15.17 
+pip-25.2             | 1.1 MB    |            |   0% [A[A
+#19 15.17 
+#19 15.17 
+#19 15.17 
+libsqlite-3.50.4     | 911 KB    |            |   0% [A[A[A
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+libgcc-15.1.0        | 805 KB    |            |   0% [A[A[A[A
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+libgomp-15.1.0       | 437 KB    |            |   0% [A[A[A[A[A
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+ca-certificates-2025 | 151 KB    |            |   0% [A[A[A[A[A[A
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+#19 15.17 
+libgcc-ng-15.1.0     | 29 KB     |            |   0% [A[A[A[A[A[A[A
+python-3.9.23        | 22.6 MB   |            |   0% 
+#19 15.27 
+#19 15.27 
+#19 15.27 
+libsqlite-3.50.4     | 911 KB    | ##9        |  30% [A[A[A
+#19 15.27 
+#19 15.27 
+pip-25.2             | 1.1 MB    | ########## | 100% [A[A
+#19 15.27 
+#19 15.27 
+pip-25.2             | 1.1 MB    | ########## | 100% [A[A
+#19 15.29 
+#19 15.29 
+#19 15.29 
+#19 15.29 
+libgcc-15.1.0        | 805 KB    | 1          |   2% [A[A[A[A
+#19 15.30 
+#19 15.30 
+#19 15.30 
+libsqlite-3.50.4     | 911 KB    | ########## | 100% [A[A[A
+#19 15.32 
+#19 15.32 
+#19 15.32 
+#19 15.32 
+#19 15.32 
+libgomp-15.1.0       | 437 KB    | 3          |   4% [A[A[A[A[A
+#19 15.34 
+#19 15.34 
+#19 15.34 
+#19 15.34 
+libgcc-15.1.0        | 805 KB    | ########## | 100% [A[A[A[A
+#19 15.34 
+openssl-3.5.2        | 3.0 MB    |            |   1% [A
+#19 15.35 
+#19 15.35 
+#19 15.35 
+#19 15.35 
+#19 15.35 
+libgomp-15.1.0       | 437 KB    | ########## | 100% [A[A[A[A[A
+#19 15.36 
+#19 15.36 
+#19 15.36 
+libsqlite-3.50.4     | 911 KB    | ########## | 100% [A[A[A
+python-3.9.23        | 22.6 MB   | ##         |  21% 
+#19 15.37 
+#19 15.37 
+#19 15.37 
+#19 15.37 
+#19 15.37 
+#19 15.37 
+ca-certificates-2025 | 151 KB    | #          |  11% [A[A[A[A[A[A
+#19 15.38 
+#19 15.38 
+#19 15.38 
+#19 15.38 
+#19 15.38 
+#19 15.39 
+ca-certificates-2025 | 151 KB    | ########## | 100% [A[A[A[A[A[A
+#19 15.40 
+#19 15.40 
+#19 15.40 
+#19 15.40 
+#19 15.40 
+#19 15.40 
+#19 15.40 
+libgcc-ng-15.1.0     | 29 KB     | #####6     |  56% [A[A[A[A[A[A[A
+#19 15.40 
+#19 15.40 
+#19 15.40 
+#19 15.40 
+#19 15.40 
+#19 15.40 
+#19 15.40 
+libgcc-ng-15.1.0     | 29 KB     | ########## | 100% [A[A[A[A[A[A[A
+#19 15.45 
+#19 15.45 
+#19 15.45 
+#19 15.45 
+#19 15.45 
+libgomp-15.1.0       | 437 KB    | ########## | 100% [A[A[A[A[A
+#19 15.45 
+#19 15.45 
+#19 15.45 
+#19 15.45 
+#19 15.45 
+libgomp-15.1.0       | 437 KB    | ########## | 100% [A[A[A[A[A
+python-3.9.23        | 22.6 MB   | ####       |  41% 
+#19 15.47 
+openssl-3.5.2        | 3.0 MB    | ########## | 100% [A
+#19 15.47 
+openssl-3.5.2        | 3.0 MB    | ########## | 100% [A
+#19 15.48 
+#19 15.48 
+#19 15.48 
+#19 15.48 
+#19 15.48 
+#19 15.48 
+ca-certificates-2025 | 151 KB    | ########## | 100% [A[A[A[A[A[A
+#19 15.48 
+#19 15.48 
+#19 15.48 
+#19 15.48 
+#19 15.48 
+#19 15.48 
+ca-certificates-2025 | 151 KB    | ########## | 100% [A[A[A[A[A[A
+#19 15.51 
+#19 15.51 
+#19 15.51 
+#19 15.51 
+libgcc-15.1.0        | 805 KB    | ########## | 100% [A[A[A[A
+#19 15.51 
+#19 15.51 
+#19 15.51 
+#19 15.51 
+libgcc-15.1.0        | 805 KB    | ########## | 100% [A[A[A[A
+#19 15.53 
+#19 15.53 
+#19 15.53 
+#19 15.53 
+#19 15.53 
+#19 15.53 
+#19 15.53 
+libgcc-ng-15.1.0     | 29 KB     | ########## | 100% [A[A[A[A[A[A[A
+#19 15.53 
+#19 15.53 
+#19 15.53 
+#19 15.53 
+#19 15.53 
+#19 15.53 
+#19 15.53 
+libgcc-ng-15.1.0     | 29 KB     | ########## | 100% [A[A[A[A[A[A[A
+python-3.9.23        | 22.6 MB   | ######2    |  62% 
+python-3.9.23        | 22.6 MB   | ########7  |  88% 
+#19 15.72 
+#19 15.72 
+pip-25.2             | 1.1 MB    | ########## | 100% [A[A
+#19 15.79 
+openssl-3.5.2        | 3.0 MB    | ########## | 100% [A
+python-3.9.23        | 22.6 MB   | ########## | 100% 
+python-3.9.23        | 22.6 MB   | ########## | 100% 
+                                                     
+#19 16.60 
+                                                     [A
+#19 16.60 
+#19 16.60 
+                                                     [A[A
+#19 16.60 
+#19 16.60 
+#19 16.60 
+                                                     [A[A[A
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+                                                     [A[A[A[A
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+                                                     [A[A[A[A[A
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+                                                     [A[A[A[A[A[A
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+#19 16.60 
+                                                     [A[A[A[A[A[A[A done
+#19 16.60 Preparing transaction: - \ | done
+#19 16.91 Verifying transaction: - \ | / - \ | / - \ | done
+#19 18.11 Executing transaction: - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | done
+#19 20.84 #
+#19 20.84 # To activate this environment, use
+#19 20.84 #
+#19 20.84 #     $ conda activate exli
+#19 20.84 #
+#19 20.84 # To deactivate an active environment, use
+#19 20.84 #
+#19 20.84 #     $ conda deactivate
+#19 20.84 
+#19 21.47 Requirement already satisfied: pip in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (25.2)
+#19 21.91 Obtaining file:///home/itdocker/exli/python
+#19 21.91   Preparing metadata (setup.py): started
+#19 22.07   Preparing metadata (setup.py): finished with status 'done'
+#19 22.30 Collecting seutil (from exli-research==0.1.0)
+#19 22.34   Downloading seutil-0.8.12-py3-none-any.whl.metadata (16 kB)
+#19 22.38 Collecting xmltodict (from exli-research==0.1.0)
+#19 22.39   Downloading xmltodict-0.14.2-py2.py3-none-any.whl.metadata (8.0 kB)
+#19 22.46 Collecting tqdm (from exli-research==0.1.0)
+#19 22.47   Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+#19 22.52 Collecting universalmutator (from exli-research==0.1.0)
+#19 22.53   Downloading universalmutator-1.1.12-py3-none-any.whl.metadata (6.6 kB)
+#19 22.56 Collecting flake8 (from exli-research==0.1.0)
+#19 22.56   Downloading flake8-7.3.0-py2.py3-none-any.whl.metadata (3.8 kB)
+#19 22.62 Collecting black (from exli-research==0.1.0)
+#19 22.63   Downloading black-25.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl.metadata (81 kB)
+#19 22.67 Collecting ipykernel (from exli-research==0.1.0)
+#19 22.68   Downloading ipykernel-6.30.1-py3-none-any.whl.metadata (6.2 kB)
+#19 22.70 Collecting seaborn (from exli-research==0.1.0)
+#19 22.70   Downloading seaborn-0.13.2-py3-none-any.whl.metadata (5.4 kB)
+#19 22.72 Collecting unidiff (from exli-research==0.1.0)
+#19 22.73   Downloading unidiff-0.7.5-py2.py3-none-any.whl.metadata (4.6 kB)
+#19 22.78 Collecting gensim (from exli-research==0.1.0)
+#19 22.79   Downloading gensim-4.3.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (8.3 kB)
+#19 22.93 Collecting pandas (from exli-research==0.1.0)
+#19 22.93   Downloading pandas-2.3.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (91 kB)
+#19 23.00 Collecting venn (from exli-research==0.1.0)
+#19 23.00   Downloading venn-0.1.3.tar.gz (19 kB)
+#19 23.01   Preparing metadata (setup.py): started
+#19 23.16   Preparing metadata (setup.py): finished with status 'done'
+#19 23.21 Collecting beautifulsoup4 (from exli-research==0.1.0)
+#19 23.22   Downloading beautifulsoup4-4.13.5-py3-none-any.whl.metadata (3.8 kB)
+#19 23.27 Collecting soupsieve>1.2 (from beautifulsoup4->exli-research==0.1.0)
+#19 23.27   Downloading soupsieve-2.8-py3-none-any.whl.metadata (4.6 kB)
+#19 23.31 Collecting typing-extensions>=4.0.0 (from beautifulsoup4->exli-research==0.1.0)
+#19 23.32   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+#19 23.35 Collecting click>=8.0.0 (from black->exli-research==0.1.0)
+#19 23.36   Downloading click-8.1.8-py3-none-any.whl.metadata (2.3 kB)
+#19 23.37 Collecting mypy-extensions>=0.4.3 (from black->exli-research==0.1.0)
+#19 23.38   Downloading mypy_extensions-1.1.0-py3-none-any.whl.metadata (1.1 kB)
+#19 23.41 Collecting packaging>=22.0 (from black->exli-research==0.1.0)
+#19 23.41   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#19 23.43 Collecting pathspec>=0.9.0 (from black->exli-research==0.1.0)
+#19 23.44   Downloading pathspec-0.12.1-py3-none-any.whl.metadata (21 kB)
+#19 23.47 Collecting platformdirs>=2 (from black->exli-research==0.1.0)
+#19 23.47   Downloading platformdirs-4.4.0-py3-none-any.whl.metadata (12 kB)
+#19 23.50 Collecting tomli>=1.1.0 (from black->exli-research==0.1.0)
+#19 23.50   Downloading tomli-2.2.1-py3-none-any.whl.metadata (10 kB)
+#19 23.53 Collecting mccabe<0.8.0,>=0.7.0 (from flake8->exli-research==0.1.0)
+#19 23.54   Downloading mccabe-0.7.0-py2.py3-none-any.whl.metadata (5.0 kB)
+#19 23.56 Collecting pycodestyle<2.15.0,>=2.14.0 (from flake8->exli-research==0.1.0)
+#19 23.56   Downloading pycodestyle-2.14.0-py2.py3-none-any.whl.metadata (4.5 kB)
+#19 23.58 Collecting pyflakes<3.5.0,>=3.4.0 (from flake8->exli-research==0.1.0)
+#19 23.59   Downloading pyflakes-3.4.0-py2.py3-none-any.whl.metadata (3.5 kB)
+#19 23.82 Collecting numpy<2.0,>=1.18.5 (from gensim->exli-research==0.1.0)
+#19 23.83   Downloading numpy-1.26.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+#19 23.97 Collecting scipy<1.14.0,>=1.7.0 (from gensim->exli-research==0.1.0)
+#19 23.97   Downloading scipy-1.13.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (60 kB)
+#19 24.00 Collecting smart-open>=1.8.1 (from gensim->exli-research==0.1.0)
+#19 24.01   Downloading smart_open-7.3.0.post1-py3-none-any.whl.metadata (24 kB)
+#19 24.14 Collecting wrapt (from smart-open>=1.8.1->gensim->exli-research==0.1.0)
+#19 24.15   Downloading wrapt-1.17.3-cp39-cp39-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.4 kB)
+#19 24.16 Collecting comm>=0.1.1 (from ipykernel->exli-research==0.1.0)
+#19 24.17   Downloading comm-0.2.3-py3-none-any.whl.metadata (3.7 kB)
+#19 24.27 Collecting debugpy>=1.6.5 (from ipykernel->exli-research==0.1.0)
+#19 24.28   Downloading debugpy-1.8.16-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.3 kB)
+#19 24.35 Collecting ipython>=7.23.1 (from ipykernel->exli-research==0.1.0)
+#19 24.36   Downloading ipython-8.18.1-py3-none-any.whl.metadata (6.0 kB)
+#19 24.40 Collecting jupyter-client>=8.0.0 (from ipykernel->exli-research==0.1.0)
+#19 24.41   Downloading jupyter_client-8.6.3-py3-none-any.whl.metadata (8.3 kB)
+#19 24.43 Collecting jupyter-core!=5.0.*,>=4.12 (from ipykernel->exli-research==0.1.0)
+#19 24.44   Downloading jupyter_core-5.8.1-py3-none-any.whl.metadata (1.6 kB)
+#19 24.45 Collecting matplotlib-inline>=0.1 (from ipykernel->exli-research==0.1.0)
+#19 24.46   Downloading matplotlib_inline-0.1.7-py3-none-any.whl.metadata (3.9 kB)
+#19 24.48 Collecting nest-asyncio>=1.4 (from ipykernel->exli-research==0.1.0)
+#19 24.48   Downloading nest_asyncio-1.6.0-py3-none-any.whl.metadata (2.8 kB)
+#19 24.56 Collecting psutil>=5.7 (from ipykernel->exli-research==0.1.0)
+#19 24.57   Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (22 kB)
+#19 24.85 Collecting pyzmq>=25 (from ipykernel->exli-research==0.1.0)
+#19 24.86   Downloading pyzmq-27.0.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.0 kB)
+#19 24.90 Collecting tornado>=6.2 (from ipykernel->exli-research==0.1.0)
+#19 24.90   Downloading tornado-6.5.2-cp39-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.8 kB)
+#19 24.92 Collecting traitlets>=5.4.0 (from ipykernel->exli-research==0.1.0)
+#19 24.93   Downloading traitlets-5.14.3-py3-none-any.whl.metadata (10 kB)
+#19 24.95 Collecting decorator (from ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 24.96   Downloading decorator-5.2.1-py3-none-any.whl.metadata (3.9 kB)
+#19 24.97 Collecting jedi>=0.16 (from ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 24.98   Downloading jedi-0.19.2-py2.py3-none-any.whl.metadata (22 kB)
+#19 25.05 Collecting prompt-toolkit<3.1.0,>=3.0.41 (from ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 25.06   Downloading prompt_toolkit-3.0.52-py3-none-any.whl.metadata (6.4 kB)
+#19 25.08 Collecting pygments>=2.4.0 (from ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 25.09   Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+#19 25.10 Collecting stack-data (from ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 25.11   Downloading stack_data-0.6.3-py3-none-any.whl.metadata (18 kB)
+#19 25.13 Collecting exceptiongroup (from ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 25.13   Downloading exceptiongroup-1.3.0-py3-none-any.whl.metadata (6.7 kB)
+#19 25.15 Collecting pexpect>4.3 (from ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 25.15   Downloading pexpect-4.9.0-py2.py3-none-any.whl.metadata (2.5 kB)
+#19 25.17 Collecting wcwidth (from prompt-toolkit<3.1.0,>=3.0.41->ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 25.18   Downloading wcwidth-0.2.13-py2.py3-none-any.whl.metadata (14 kB)
+#19 25.20 Collecting parso<0.9.0,>=0.8.4 (from jedi>=0.16->ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 25.21   Downloading parso-0.8.5-py2.py3-none-any.whl.metadata (8.3 kB)
+#19 25.25 Collecting importlib-metadata>=4.8.3 (from jupyter-client>=8.0.0->ipykernel->exli-research==0.1.0)
+#19 25.26   Downloading importlib_metadata-8.7.0-py3-none-any.whl.metadata (4.8 kB)
+#19 25.28 Collecting python-dateutil>=2.8.2 (from jupyter-client>=8.0.0->ipykernel->exli-research==0.1.0)
+#19 25.28   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+#19 25.32 Collecting zipp>=3.20 (from importlib-metadata>=4.8.3->jupyter-client>=8.0.0->ipykernel->exli-research==0.1.0)
+#19 25.32   Downloading zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
+#19 25.35 Collecting ptyprocess>=0.5 (from pexpect>4.3->ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 25.35   Downloading ptyprocess-0.7.0-py2.py3-none-any.whl.metadata (1.3 kB)
+#19 25.37 Collecting six>=1.5 (from python-dateutil>=2.8.2->jupyter-client>=8.0.0->ipykernel->exli-research==0.1.0)
+#19 25.38   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+#19 25.44 Collecting pytz>=2020.1 (from pandas->exli-research==0.1.0)
+#19 25.45   Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+#19 25.46 Collecting tzdata>=2022.7 (from pandas->exli-research==0.1.0)
+#19 25.47   Downloading tzdata-2025.2-py2.py3-none-any.whl.metadata (1.4 kB)
+#19 25.65 Collecting matplotlib!=3.6.1,>=3.4 (from seaborn->exli-research==0.1.0)
+#19 25.66   Downloading matplotlib-3.9.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+#19 25.75 Collecting contourpy>=1.0.1 (from matplotlib!=3.6.1,>=3.4->seaborn->exli-research==0.1.0)
+#19 25.76   Downloading contourpy-1.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.4 kB)
+#19 25.78 Collecting cycler>=0.10 (from matplotlib!=3.6.1,>=3.4->seaborn->exli-research==0.1.0)
+#19 25.78   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+#19 26.06 Collecting fonttools>=4.22.0 (from matplotlib!=3.6.1,>=3.4->seaborn->exli-research==0.1.0)
+#19 26.06   Downloading fonttools-4.59.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (109 kB)
+#19 26.15 Collecting kiwisolver>=1.3.1 (from matplotlib!=3.6.1,>=3.4->seaborn->exli-research==0.1.0)
+#19 26.15   Downloading kiwisolver-1.4.7-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.3 kB)
+#19 26.37 Collecting pillow>=8 (from matplotlib!=3.6.1,>=3.4->seaborn->exli-research==0.1.0)
+#19 26.37   Downloading pillow-11.3.0-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+#19 26.41 Collecting pyparsing>=2.3.1 (from matplotlib!=3.6.1,>=3.4->seaborn->exli-research==0.1.0)
+#19 26.41   Downloading pyparsing-3.2.3-py3-none-any.whl.metadata (5.0 kB)
+#19 26.44 Collecting importlib-resources>=3.2.0 (from matplotlib!=3.6.1,>=3.4->seaborn->exli-research==0.1.0)
+#19 26.45   Downloading importlib_resources-6.5.2-py3-none-any.whl.metadata (3.9 kB)
+#19 26.53 Collecting igraph>=0.9.10 (from seutil->exli-research==0.1.0)
+#19 26.54   Downloading igraph-0.11.9-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.4 kB)
+#19 26.62 Collecting ijson~=3.1.4 (from seutil->exli-research==0.1.0)
+#19 26.63   Downloading ijson-3.1.4-cp39-cp39-manylinux2010_x86_64.whl.metadata (19 kB)
+#19 26.67 Collecting jsonargparse>=4.1.4 (from jsonargparse[signatures]>=4.1.4->seutil->exli-research==0.1.0)
+#19 26.68   Downloading jsonargparse-4.40.2-py3-none-any.whl.metadata (13 kB)
+#19 26.77 Collecting lazy-import>=0.2.2 (from seutil->exli-research==0.1.0)
+#19 26.77   Downloading lazy_import-0.2.2.tar.gz (15 kB)
+#19 26.78   Preparing metadata (setup.py): started
+#19 26.94   Preparing metadata (setup.py): finished with status 'done'
+#19 27.03 Collecting pygithub>=1.40 (from seutil->exli-research==0.1.0)
+#19 27.04   Downloading pygithub-2.7.0-py3-none-any.whl.metadata (3.9 kB)
+#19 27.10 Collecting pyyaml>=5.1 (from seutil->exli-research==0.1.0)
+#19 27.11   Downloading PyYAML-6.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB)
+#19 27.13 Collecting typing-inspect>=0.4.0 (from seutil->exli-research==0.1.0)
+#19 27.14   Downloading typing_inspect-0.9.0-py3-none-any.whl.metadata (1.5 kB)
+#19 27.17 Collecting texttable>=1.6.2 (from igraph>=0.9.10->seutil->exli-research==0.1.0)
+#19 27.17   Downloading texttable-1.7.0-py2.py3-none-any.whl.metadata (9.8 kB)
+#19 27.20 Collecting docstring-parser>=0.17 (from jsonargparse[signatures]>=4.1.4->seutil->exli-research==0.1.0)
+#19 27.21   Downloading docstring_parser-0.17.0-py3-none-any.whl.metadata (3.5 kB)
+#19 27.23 Collecting typeshed-client>=2.8.2 (from jsonargparse[signatures]>=4.1.4->seutil->exli-research==0.1.0)
+#19 27.24   Downloading typeshed_client-2.8.2-py3-none-any.whl.metadata (9.9 kB)
+#19 27.27 Collecting pynacl>=1.4.0 (from pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.27   Downloading PyNaCl-1.5.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl.metadata (8.6 kB)
+#19 27.31 Collecting requests>=2.14.0 (from pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.32   Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+#19 27.34 Collecting pyjwt>=2.4.0 (from pyjwt[crypto]>=2.4.0->pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.35   Downloading PyJWT-2.10.1-py3-none-any.whl.metadata (4.0 kB)
+#19 27.39 Collecting urllib3>=1.26.0 (from pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.39   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+#19 27.61 Collecting cryptography>=3.4.0 (from pyjwt[crypto]>=2.4.0->pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.61   Downloading cryptography-45.0.6-cp37-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+#19 27.74 Collecting cffi>=1.14 (from cryptography>=3.4.0->pyjwt[crypto]>=2.4.0->pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.75   Downloading cffi-1.17.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.5 kB)
+#19 27.76 Collecting pycparser (from cffi>=1.14->cryptography>=3.4.0->pyjwt[crypto]>=2.4.0->pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.77   Downloading pycparser-2.22-py3-none-any.whl.metadata (943 bytes)
+#19 27.88 Collecting charset_normalizer<4,>=2 (from requests>=2.14.0->pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.88   Downloading charset_normalizer-3.4.3-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (36 kB)
+#19 27.90 Collecting idna<4,>=2.5 (from requests>=2.14.0->pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.90   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#19 27.94 Collecting certifi>=2017.4.17 (from requests>=2.14.0->pygithub>=1.40->seutil->exli-research==0.1.0)
+#19 27.94   Downloading certifi-2025.8.3-py3-none-any.whl.metadata (2.4 kB)
+#19 28.01 Collecting executing>=1.2.0 (from stack-data->ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 28.01   Downloading executing-2.2.0-py2.py3-none-any.whl.metadata (8.9 kB)
+#19 28.03 Collecting asttokens>=2.1.0 (from stack-data->ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 28.04   Downloading asttokens-3.0.0-py3-none-any.whl.metadata (4.7 kB)
+#19 28.05 Collecting pure-eval (from stack-data->ipython>=7.23.1->ipykernel->exli-research==0.1.0)
+#19 28.06   Downloading pure_eval-0.2.3-py3-none-any.whl.metadata (6.3 kB)
+#19 28.07 Collecting comby (from universalmutator->exli-research==0.1.0)
+#19 28.08   Downloading comby-0.0.3-py3-none-any.whl.metadata (2.9 kB)
+#19 28.10 Collecting python-levenshtein (from universalmutator->exli-research==0.1.0)
+#19 28.11   Downloading python_levenshtein-0.27.1-py3-none-any.whl.metadata (3.7 kB)
+#19 28.12 Collecting tabulate (from universalmutator->exli-research==0.1.0)
+#19 28.12   Downloading tabulate-0.9.0-py3-none-any.whl.metadata (34 kB)
+#19 28.15 Collecting attrs>=19.2.0 (from comby->universalmutator->exli-research==0.1.0)
+#19 28.15   Downloading attrs-25.3.0-py3-none-any.whl.metadata (10 kB)
+#19 28.17 Collecting loguru>=0.4 (from comby->universalmutator->exli-research==0.1.0)
+#19 28.18   Downloading loguru-0.7.3-py3-none-any.whl.metadata (22 kB)
+#19 28.22 Collecting typing>=0.4 (from comby->universalmutator->exli-research==0.1.0)
+#19 28.23   Downloading typing-3.7.4.3.tar.gz (78 kB)
+#19 28.24   Preparing metadata (setup.py): started
+#19 28.40   Preparing metadata (setup.py): finished with status 'done'
+#19 28.74 Collecting Levenshtein==0.27.1 (from python-levenshtein->universalmutator->exli-research==0.1.0)
+#19 28.74   Downloading levenshtein-0.27.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.6 kB)
+#19 29.37 Collecting rapidfuzz<4.0.0,>=3.9.0 (from Levenshtein==0.27.1->python-levenshtein->universalmutator->exli-research==0.1.0)
+#19 29.38   Downloading rapidfuzz-3.13.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (12 kB)
+#19 29.40 Downloading beautifulsoup4-4.13.5-py3-none-any.whl (105 kB)
+#19 29.41 Downloading soupsieve-2.8-py3-none-any.whl (36 kB)
+#19 29.42 Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+#19 29.43 Downloading black-25.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl (1.8 MB)
+#19 29.48    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 32.7 MB/s  0:00:00
+#19 29.49 Downloading click-8.1.8-py3-none-any.whl (98 kB)
+#19 29.50 Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+#19 29.50 Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#19 29.51 Downloading pathspec-0.12.1-py3-none-any.whl (31 kB)
+#19 29.52 Downloading platformdirs-4.4.0-py3-none-any.whl (18 kB)
+#19 29.53 Downloading tomli-2.2.1-py3-none-any.whl (14 kB)
+#19 29.53 Downloading flake8-7.3.0-py2.py3-none-any.whl (57 kB)
+#19 29.54 Downloading mccabe-0.7.0-py2.py3-none-any.whl (7.3 kB)
+#19 29.55 Downloading pycodestyle-2.14.0-py2.py3-none-any.whl (31 kB)
+#19 29.56 Downloading pyflakes-3.4.0-py2.py3-none-any.whl (63 kB)
+#19 29.57 Downloading gensim-4.3.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (26.6 MB)
+#19 31.82    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 26.6/26.6 MB 11.8 MB/s  0:00:02
+#19 31.82 Downloading numpy-1.26.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
+#19 33.39    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.2/18.2 MB 11.7 MB/s  0:00:01
+#19 33.39 Downloading scipy-1.13.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (38.6 MB)
+#19 36.66    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 38.6/38.6 MB 11.8 MB/s  0:00:03
+#19 36.66 Downloading smart_open-7.3.0.post1-py3-none-any.whl (61 kB)
+#19 36.67 Downloading ipykernel-6.30.1-py3-none-any.whl (117 kB)
+#19 36.90 Downloading comm-0.2.3-py3-none-any.whl (7.3 kB)
+#19 36.92 Downloading debugpy-1.8.16-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.6 MB)
+#19 37.18    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 13.5 MB/s  0:00:00
+#19 37.19 Downloading ipython-8.18.1-py3-none-any.whl (808 kB)
+#19 37.26    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 808.2/808.2 kB 13.2 MB/s  0:00:00
+#19 37.27 Downloading prompt_toolkit-3.0.52-py3-none-any.whl (391 kB)
+#19 37.31 Downloading jedi-0.19.2-py2.py3-none-any.whl (1.6 MB)
+#19 37.53    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 6.7 MB/s  0:00:00
+#19 37.53 Downloading parso-0.8.5-py2.py3-none-any.whl (106 kB)
+#19 37.55 Downloading jupyter_client-8.6.3-py3-none-any.whl (106 kB)
+#19 37.58 Downloading importlib_metadata-8.7.0-py3-none-any.whl (27 kB)
+#19 37.59 Downloading jupyter_core-5.8.1-py3-none-any.whl (28 kB)
+#19 37.60 Downloading matplotlib_inline-0.1.7-py3-none-any.whl (9.9 kB)
+#19 37.61 Downloading nest_asyncio-1.6.0-py3-none-any.whl (5.2 kB)
+#19 37.61 Downloading pexpect-4.9.0-py2.py3-none-any.whl (63 kB)
+#19 37.63 Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (277 kB)
+#19 37.67 Downloading ptyprocess-0.7.0-py2.py3-none-any.whl (13 kB)
+#19 37.68 Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+#19 37.82    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 9.3 MB/s  0:00:00
+#19 37.82 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#19 37.85 Downloading pyzmq-27.0.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (863 kB)
+#19 37.97    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 863.6/863.6 kB 6.2 MB/s  0:00:00
+#19 37.98 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+#19 37.98 Downloading tornado-6.5.2-cp39-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (443 kB)
+#19 38.09 Downloading traitlets-5.14.3-py3-none-any.whl (85 kB)
+#19 38.11 Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
+#19 38.12 Downloading decorator-5.2.1-py3-none-any.whl (9.2 kB)
+#19 38.13 Downloading exceptiongroup-1.3.0-py3-none-any.whl (16 kB)
+#19 38.13 Downloading pandas-2.3.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.4 MB)
+#19 39.54    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 8.8 MB/s  0:00:01
+#19 39.54 Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+#19 39.63 Downloading tzdata-2025.2-py2.py3-none-any.whl (347 kB)
+#19 39.69 Downloading seaborn-0.13.2-py3-none-any.whl (294 kB)
+#19 39.74 Downloading matplotlib-3.9.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.3 MB)
+#19 40.69    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 8.6 MB/s  0:00:00
+#19 40.70 Downloading contourpy-1.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (321 kB)
+#19 40.74 Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+#19 40.74 Downloading fonttools-4.59.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.8 MB)
+#19 41.23    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 9.7 MB/s  0:00:00
+#19 41.23 Downloading importlib_resources-6.5.2-py3-none-any.whl (37 kB)
+#19 41.24 Downloading kiwisolver-1.4.7-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+#19 41.44    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 8.8 MB/s  0:00:00
+#19 41.44 Downloading pillow-11.3.0-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+#19 42.02    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 11.4 MB/s  0:00:00
+#19 42.02 Downloading pyparsing-3.2.3-py3-none-any.whl (111 kB)
+#19 42.04 Downloading seutil-0.8.12-py3-none-any.whl (59 kB)
+#19 42.05 Downloading ijson-3.1.4-cp39-cp39-manylinux2010_x86_64.whl (131 kB)
+#19 42.07 Downloading igraph-0.11.9-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.4 MB)
+#19 42.50    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 9.9 MB/s  0:00:00
+#19 42.51 Downloading jsonargparse-4.40.2-py3-none-any.whl (225 kB)
+#19 42.54 Downloading docstring_parser-0.17.0-py3-none-any.whl (36 kB)
+#19 42.55 Downloading pygithub-2.7.0-py3-none-any.whl (416 kB)
+#19 42.60 Downloading PyJWT-2.10.1-py3-none-any.whl (22 kB)
+#19 42.61 Downloading cryptography-45.0.6-cp37-abi3-manylinux_2_34_x86_64.whl (4.4 MB)
+#19 43.11    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 8.7 MB/s  0:00:00
+#19 43.12 Downloading cffi-1.17.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (445 kB)
+#19 43.25 Downloading PyNaCl-1.5.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl (856 kB)
+#19 43.34    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 856.7/856.7 kB 11.0 MB/s  0:00:00
+#19 43.34 Downloading PyYAML-6.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (737 kB)
+#19 43.43    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 737.4/737.4 kB 7.4 MB/s  0:00:00
+#19 43.43 Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+#19 43.45 Downloading charset_normalizer-3.4.3-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (152 kB)
+#19 43.50 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#19 43.52 Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+#19 43.55 Downloading certifi-2025.8.3-py3-none-any.whl (161 kB)
+#19 43.58 Downloading texttable-1.7.0-py2.py3-none-any.whl (10 kB)
+#19 43.59 Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+#19 43.61 Downloading typeshed_client-2.8.2-py3-none-any.whl (760 kB)
+#19 43.74    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 760.5/760.5 kB 5.8 MB/s  0:00:00
+#19 43.75 Downloading typing_inspect-0.9.0-py3-none-any.whl (8.8 kB)
+#19 43.75 Downloading unidiff-0.7.5-py2.py3-none-any.whl (14 kB)
+#19 43.76 Downloading xmltodict-0.14.2-py2.py3-none-any.whl (10.0 kB)
+#19 43.77 Downloading pycparser-2.22-py3-none-any.whl (117 kB)
+#19 43.80 Downloading stack_data-0.6.3-py3-none-any.whl (24 kB)
+#19 43.81 Downloading asttokens-3.0.0-py3-none-any.whl (26 kB)
+#19 43.82 Downloading executing-2.2.0-py2.py3-none-any.whl (26 kB)
+#19 43.83 Downloading pure_eval-0.2.3-py3-none-any.whl (11 kB)
+#19 43.83 Downloading universalmutator-1.1.12-py3-none-any.whl (42 kB)
+#19 43.85 Downloading comby-0.0.3-py3-none-any.whl (8.2 kB)
+#19 43.85 Downloading attrs-25.3.0-py3-none-any.whl (63 kB)
+#19 43.87 Downloading loguru-0.7.3-py3-none-any.whl (61 kB)
+#19 43.88 Downloading python_levenshtein-0.27.1-py3-none-any.whl (9.4 kB)
+#19 43.89 Downloading levenshtein-0.27.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (160 kB)
+#19 43.91 Downloading rapidfuzz-3.13.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.1 MB)
+#19 44.25    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 9.3 MB/s  0:00:00
+#19 44.25 Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
+#19 44.26 Downloading wcwidth-0.2.13-py2.py3-none-any.whl (34 kB)
+#19 44.27 Downloading wrapt-1.17.3-cp39-cp39-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (81 kB)
+#19 44.78 Building wheels for collected packages: lazy-import, typing, venn
+#19 44.78   DEPRECATION: Building 'lazy-import' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'lazy-import'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+#19 44.78   Building wheel for lazy-import (setup.py): started
+#19 44.98   Building wheel for lazy-import (setup.py): finished with status 'done'
+#19 44.98   Created wheel for lazy-import: filename=lazy_import-0.2.2-py2.py3-none-any.whl size=16553 sha256=5d91f9a235a3b49f7cc28eafe3f1f07284e3773cdf8af5f898811ac5c43d26ab
+#19 44.98   Stored in directory: /home/itdocker/.cache/pip/wheels/14/07/aa/97e8f39c5f2ef91a2db0026be1bc7f4f87141fc354280501fa
+#19 44.99   DEPRECATION: Building 'typing' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'typing'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+#19 44.99   Building wheel for typing (setup.py): started
+#19 45.18   Building wheel for typing (setup.py): finished with status 'done'
+#19 45.18   Created wheel for typing: filename=typing-3.7.4.3-py3-none-any.whl size=26397 sha256=cef784e219234ec92ca13779200760e53896c12fca448903d8e0ef22ebda9508
+#19 45.18   Stored in directory: /home/itdocker/.cache/pip/wheels/fa/17/1f/332799f975d1b2d7f9b3f33bbccf65031e794717d24432caee
+#19 45.19   DEPRECATION: Building 'venn' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'venn'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+#19 45.19   Building wheel for venn (setup.py): started
+#19 45.38   Building wheel for venn (setup.py): finished with status 'done'
+#19 45.38   Created wheel for venn: filename=venn-0.1.3-py3-none-any.whl size=19781 sha256=b28cf10ff6c83bfb6d40d7ef041671cc968991ea1a294b40819b7f4e958ff18f
+#19 45.38   Stored in directory: /home/itdocker/.cache/pip/wheels/00/af/db/bff429be06f7356f58630ec42391f77653b67595e2d068d348
+#19 45.38 Successfully built lazy-import typing venn
+#19 45.78 Installing collected packages: wcwidth, unidiff, texttable, pytz, pure-eval, ptyprocess, ijson, zipp, xmltodict, wrapt, urllib3, tzdata, typing-extensions, typing, traitlets, tqdm, tornado, tomli, tabulate, soupsieve, six, rapidfuzz, pyzmq, pyyaml, pyparsing, pyjwt, pygments, pyflakes, pycparser, pycodestyle, psutil, prompt-toolkit, platformdirs, pillow, pexpect, pathspec, parso, packaging, numpy, nest-asyncio, mypy-extensions, mccabe, loguru, kiwisolver, igraph, idna, fonttools, executing, docstring-parser, decorator, debugpy, cycler, comm, click, charset_normalizer, certifi, attrs, asttokens, typing-inspect, stack-data, smart-open, scipy, requests, python-dateutil, matplotlib-inline, Levenshtein, lazy-import, jupyter-core, jsonargparse, jedi, importlib-resources, importlib-metadata, flake8, exceptiongroup, contourpy, cffi, black, beautifulsoup4, typeshed-client, python-levenshtein, pynacl, pandas, matplotlib, jupyter-client, ipython, gensim, cryptography, comby, venn, universalmutator, seaborn, ipykernel, pygithub, seutil, exli-research
+#19 62.73   DEPRECATION: Legacy editable install of exli-research[dev,research]==0.1.0 from file:///home/itdocker/exli/python (setup.py develop) is deprecated. pip 25.3 will enforce this behaviour change. A possible replacement is to add a pyproject.toml or enable --use-pep517, and use setuptools >= 64. If the resulting installation is not behaving as expected, try using --config-settings editable_mode=compat. Please consult the setuptools documentation for more information. Discussion can be found at https://github.com/pypa/pip/issues/11457
+#19 62.73   Running setup.py develop for exli-research
+#19 65.25 
+#19 65.30 Successfully installed Levenshtein-0.27.1 asttokens-3.0.0 attrs-25.3.0 beautifulsoup4-4.13.5 black-25.1.0 certifi-2025.8.3 cffi-1.17.1 charset_normalizer-3.4.3 click-8.1.8 comby-0.0.3 comm-0.2.3 contourpy-1.3.0 cryptography-45.0.6 cycler-0.12.1 debugpy-1.8.16 decorator-5.2.1 docstring-parser-0.17.0 exceptiongroup-1.3.0 executing-2.2.0 exli-research-0.1.0 flake8-7.3.0 fonttools-4.59.2 gensim-4.3.3 idna-3.10 igraph-0.11.9 ijson-3.1.4 importlib-metadata-8.7.0 importlib-resources-6.5.2 ipykernel-6.30.1 ipython-8.18.1 jedi-0.19.2 jsonargparse-4.40.2 jupyter-client-8.6.3 jupyter-core-5.8.1 kiwisolver-1.4.7 lazy-import-0.2.2 loguru-0.7.3 matplotlib-3.9.4 matplotlib-inline-0.1.7 mccabe-0.7.0 mypy-extensions-1.1.0 nest-asyncio-1.6.0 numpy-1.26.4 packaging-25.0 pandas-2.3.2 parso-0.8.5 pathspec-0.12.1 pexpect-4.9.0 pillow-11.3.0 platformdirs-4.4.0 prompt-toolkit-3.0.52 psutil-7.0.0 ptyprocess-0.7.0 pure-eval-0.2.3 pycodestyle-2.14.0 pycparser-2.22 pyflakes-3.4.0 pygithub-2.7.0 pygments-2.19.2 pyjwt-2.10.1 pynacl-1.5.0 pyparsing-3.2.3 python-dateutil-2.9.0.post0 python-levenshtein-0.27.1 pytz-2025.2 pyyaml-6.0.2 pyzmq-27.0.2 rapidfuzz-3.13.0 requests-2.32.5 scipy-1.13.1 seaborn-0.13.2 seutil-0.8.12 six-1.17.0 smart-open-7.3.0.post1 soupsieve-2.8 stack-data-0.6.3 tabulate-0.9.0 texttable-1.7.0 tomli-2.2.1 tornado-6.5.2 tqdm-4.67.1 traitlets-5.14.3 typeshed-client-2.8.2 typing-3.7.4.3 typing-extensions-4.15.0 typing-inspect-0.9.0 tzdata-2025.2 unidiff-0.7.5 universalmutator-1.1.12 urllib3-2.5.0 venn-0.1.3 wcwidth-0.2.13 wrapt-1.17.3 xmltodict-0.14.2 zipp-3.23.0
+#19 66.19 Found existing installation: exli-research 0.1.0
+#19 66.19 Uninstalling exli-research-0.1.0:
+#19 66.28   Successfully uninstalled exli-research-0.1.0
+#19 DONE 67.8s
+
+#20 [16/18] RUN /bin/bash -ex -c "source /opt/conda/etc/profile.d/conda.sh && conda activate exli && pip install ."
+#20 0.210 + source /opt/conda/etc/profile.d/conda.sh
+#20 0.210 ++ export CONDA_EXE=/opt/conda/bin/conda
+#20 0.210 ++ CONDA_EXE=/opt/conda/bin/conda
+#20 0.210 ++ export _CE_M=
+#20 0.210 ++ _CE_M=
+#20 0.210 ++ export _CE_CONDA=
+#20 0.210 ++ _CE_CONDA=
+#20 0.210 ++ export CONDA_PYTHON_EXE=/opt/conda/bin/python
+#20 0.210 ++ CONDA_PYTHON_EXE=/opt/conda/bin/python
+#20 0.211 ++ '[' -z '' ']'
+#20 0.211 ++ export CONDA_SHLVL=0
+#20 0.211 ++ CONDA_SHLVL=0
+#20 0.211 ++ '[' -n '' ']'
+#20 0.212 ++++ dirname /opt/conda/bin/conda
+#20 0.213 +++ dirname /opt/conda/bin
+#20 0.214 ++ PATH=/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#20 0.214 ++ export PATH
+#20 0.214 ++ '[' -z '' ']'
+#20 0.214 ++ PS1=
+#20 0.214 + conda activate exli
+#20 0.214 + local cmd=activate
+#20 0.214 + case "$cmd" in
+#20 0.214 + __conda_activate activate exli
+#20 0.214 + '[' -n '' ']'
+#20 0.214 + local ask_conda
+#20 0.214 ++ PS1=
+#20 0.214 ++ __conda_exe shell.posix activate exli
+#20 0.214 ++ '[' -n '' ']'
+#20 0.214 ++ /opt/conda/bin/conda shell.posix activate exli
+#20 0.488 + ask_conda='unset _CE_M
+#20 0.488 unset _CE_CONDA
+#20 0.488 PS1='\''(exli) '\''
+#20 0.488 export PATH='\''/home/itdocker/.conda/envs/exli/bin:/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+#20 0.488 export CONDA_PREFIX='\''/home/itdocker/.conda/envs/exli'\''
+#20 0.488 export CONDA_SHLVL='\''1'\''
+#20 0.488 export CONDA_DEFAULT_ENV='\''exli'\''
+#20 0.488 export CONDA_PROMPT_MODIFIER='\''(exli) '\''
+#20 0.488 export CONDA_EXE='\''/opt/conda/bin/conda'\''
+#20 0.488 export CONDA_PYTHON_EXE='\''/opt/conda/bin/python'\'''
+#20 0.488 + eval 'unset _CE_M
+#20 0.488 unset _CE_CONDA
+#20 0.488 PS1='\''(exli) '\''
+#20 0.488 export PATH='\''/home/itdocker/.conda/envs/exli/bin:/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+#20 0.488 export CONDA_PREFIX='\''/home/itdocker/.conda/envs/exli'\''
+#20 0.488 export CONDA_SHLVL='\''1'\''
+#20 0.488 export CONDA_DEFAULT_ENV='\''exli'\''
+#20 0.488 export CONDA_PROMPT_MODIFIER='\''(exli) '\''
+#20 0.488 export CONDA_EXE='\''/opt/conda/bin/conda'\''
+#20 0.488 export CONDA_PYTHON_EXE='\''/opt/conda/bin/python'\'''
+#20 0.488 ++ unset _CE_M
+#20 0.488 ++ unset _CE_CONDA
+#20 0.488 ++ PS1='(exli) '
+#20 0.488 ++ export PATH=/home/itdocker/.conda/envs/exli/bin:/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#20 0.488 ++ PATH=/home/itdocker/.conda/envs/exli/bin:/opt/conda/condabin:/opt/sdkman/candidates/java/current/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#20 0.488 ++ export CONDA_PREFIX=/home/itdocker/.conda/envs/exli
+#20 0.488 ++ CONDA_PREFIX=/home/itdocker/.conda/envs/exli
+#20 0.488 ++ export CONDA_SHLVL=1
+#20 0.488 ++ CONDA_SHLVL=1
+#20 0.488 ++ export CONDA_DEFAULT_ENV=exli
+#20 0.488 ++ CONDA_DEFAULT_ENV=exli
+#20 0.488 ++ export 'CONDA_PROMPT_MODIFIER=(exli) '
+#20 0.488 ++ CONDA_PROMPT_MODIFIER='(exli) '
+#20 0.488 ++ export CONDA_EXE=/opt/conda/bin/conda
+#20 0.488 ++ CONDA_EXE=/opt/conda/bin/conda
+#20 0.488 ++ export CONDA_PYTHON_EXE=/opt/conda/bin/python
+#20 0.488 ++ CONDA_PYTHON_EXE=/opt/conda/bin/python
+#20 0.488 + __conda_hashr
+#20 0.488 + '[' -n '' ']'
+#20 0.488 + '[' -n '' ']'
+#20 0.488 + hash -r
+#20 0.488 + pip install .
+#20 0.786 Processing /home/itdocker/exli/python
+#20 0.787   Preparing metadata (setup.py): started
+#20 0.984   Preparing metadata (setup.py): finished with status 'done'
+#20 0.988 Requirement already satisfied: seutil in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from exli-research==0.1.0) (0.8.12)
+#20 0.988 Requirement already satisfied: xmltodict in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from exli-research==0.1.0) (0.14.2)
+#20 0.989 Requirement already satisfied: tqdm in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from exli-research==0.1.0) (4.67.1)
+#20 0.989 Requirement already satisfied: universalmutator in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from exli-research==0.1.0) (1.1.12)
+#20 0.993 Requirement already satisfied: igraph>=0.9.10 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from seutil->exli-research==0.1.0) (0.11.9)
+#20 0.993 Requirement already satisfied: ijson~=3.1.4 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from seutil->exli-research==0.1.0) (3.1.4)
+#20 0.994 Requirement already satisfied: jsonargparse>=4.1.4 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from jsonargparse[signatures]>=4.1.4->seutil->exli-research==0.1.0) (4.40.2)
+#20 0.995 Requirement already satisfied: lazy-import>=0.2.2 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from seutil->exli-research==0.1.0) (0.2.2)
+#20 0.996 Requirement already satisfied: numpy>=1.14.4 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from seutil->exli-research==0.1.0) (1.26.4)
+#20 0.996 Requirement already satisfied: pygithub>=1.40 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from seutil->exli-research==0.1.0) (2.7.0)
+#20 0.997 Requirement already satisfied: pyyaml>=5.1 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from seutil->exli-research==0.1.0) (6.0.2)
+#20 0.997 Requirement already satisfied: typing-inspect>=0.4.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from seutil->exli-research==0.1.0) (0.9.0)
+#20 0.998 Requirement already satisfied: unidiff>=0.5.5 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from seutil->exli-research==0.1.0) (0.7.5)
+#20 1.006 Requirement already satisfied: texttable>=1.6.2 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from igraph>=0.9.10->seutil->exli-research==0.1.0) (1.7.0)
+#20 1.027 Requirement already satisfied: docstring-parser>=0.17 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from jsonargparse[signatures]>=4.1.4->seutil->exli-research==0.1.0) (0.17.0)
+#20 1.028 Requirement already satisfied: typeshed-client>=2.8.2 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from jsonargparse[signatures]>=4.1.4->seutil->exli-research==0.1.0) (2.8.2)
+#20 1.031 Requirement already satisfied: six in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from lazy-import>=0.2.2->seutil->exli-research==0.1.0) (1.17.0)
+#20 1.034 Requirement already satisfied: pynacl>=1.4.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from pygithub>=1.40->seutil->exli-research==0.1.0) (1.5.0)
+#20 1.035 Requirement already satisfied: requests>=2.14.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from pygithub>=1.40->seutil->exli-research==0.1.0) (2.32.5)
+#20 1.035 Requirement already satisfied: pyjwt>=2.4.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from pyjwt[crypto]>=2.4.0->pygithub>=1.40->seutil->exli-research==0.1.0) (2.10.1)
+#20 1.036 Requirement already satisfied: typing-extensions>=4.5.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from pygithub>=1.40->seutil->exli-research==0.1.0) (4.15.0)
+#20 1.037 Requirement already satisfied: urllib3>=1.26.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from pygithub>=1.40->seutil->exli-research==0.1.0) (2.5.0)
+#20 1.041 Requirement already satisfied: cryptography>=3.4.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from pyjwt[crypto]>=2.4.0->pygithub>=1.40->seutil->exli-research==0.1.0) (45.0.6)
+#20 1.049 Requirement already satisfied: cffi>=1.14 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from cryptography>=3.4.0->pyjwt[crypto]>=2.4.0->pygithub>=1.40->seutil->exli-research==0.1.0) (1.17.1)
+#20 1.050 Requirement already satisfied: pycparser in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from cffi>=1.14->cryptography>=3.4.0->pyjwt[crypto]>=2.4.0->pygithub>=1.40->seutil->exli-research==0.1.0) (2.22)
+#20 1.055 Requirement already satisfied: charset_normalizer<4,>=2 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from requests>=2.14.0->pygithub>=1.40->seutil->exli-research==0.1.0) (3.4.3)
+#20 1.066 Requirement already satisfied: idna<4,>=2.5 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from requests>=2.14.0->pygithub>=1.40->seutil->exli-research==0.1.0) (3.10)
+#20 1.067 Requirement already satisfied: certifi>=2017.4.17 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from requests>=2.14.0->pygithub>=1.40->seutil->exli-research==0.1.0) (2025.8.3)
+#20 1.079 Requirement already satisfied: importlib_resources>=1.4.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from typeshed-client>=2.8.2->jsonargparse[signatures]>=4.1.4->seutil->exli-research==0.1.0) (6.5.2)
+#20 1.083 Requirement already satisfied: zipp>=3.1.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from importlib_resources>=1.4.0->typeshed-client>=2.8.2->jsonargparse[signatures]>=4.1.4->seutil->exli-research==0.1.0) (3.23.0)
+#20 1.086 Requirement already satisfied: mypy-extensions>=0.3.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from typing-inspect>=0.4.0->seutil->exli-research==0.1.0) (1.1.0)
+#20 1.096 Requirement already satisfied: comby in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from universalmutator->exli-research==0.1.0) (0.0.3)
+#20 1.097 Requirement already satisfied: python-levenshtein in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from universalmutator->exli-research==0.1.0) (0.27.1)
+#20 1.097 Requirement already satisfied: tabulate in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from universalmutator->exli-research==0.1.0) (0.9.0)
+#20 1.099 Requirement already satisfied: attrs>=19.2.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from comby->universalmutator->exli-research==0.1.0) (25.3.0)
+#20 1.099 Requirement already satisfied: loguru>=0.4 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from comby->universalmutator->exli-research==0.1.0) (0.7.3)
+#20 1.100 Requirement already satisfied: typing>=0.4 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from comby->universalmutator->exli-research==0.1.0) (3.7.4.3)
+#20 1.122 Requirement already satisfied: Levenshtein==0.27.1 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from python-levenshtein->universalmutator->exli-research==0.1.0) (0.27.1)
+#20 1.123 Requirement already satisfied: rapidfuzz<4.0.0,>=3.9.0 in /home/itdocker/.conda/envs/exli/lib/python3.9/site-packages (from Levenshtein==0.27.1->python-levenshtein->universalmutator->exli-research==0.1.0) (3.13.0)
+#20 1.128 Building wheels for collected packages: exli-research
+#20 1.128   DEPRECATION: Building 'exli-research' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'exli-research'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+#20 1.128   Building wheel for exli-research (setup.py): started
+#20 1.388   Building wheel for exli-research (setup.py): finished with status 'done'
+#20 1.389   Created wheel for exli-research: filename=exli_research-0.1.0-py3-none-any.whl size=62615 sha256=be8750afdb277030fd1de92154728b60466687fa30520757ec569b06a19c7834
+#20 1.389   Stored in directory: /tmp/pip-ephem-wheel-cache-oqd16pwo/wheels/f2/fa/a6/7b3c6b41fb7853ee455e547d73b12e3ea73935211378e84280
+#20 1.392 Successfully built exli-research
+#20 1.539 Installing collected packages: exli-research
+#20 1.601 Successfully installed exli-research-0.1.0
+#20 DONE 1.7s
+
+#21 [17/18] RUN mkdir -p /home/itdocker/exli/logs /home/itdocker/exli/results /home/itdocker/exli/tests &&     chown -R itdocker:itdocker /home/itdocker/exli
+#21 DONE 1.0s
+
+#22 [18/18] WORKDIR /home/itdocker/exli
+#22 DONE 0.0s
+
+#23 exporting to image
+#23 exporting layers
+#23 exporting layers 22.0s done
+#23 writing image sha256:e2bf83309b147873ab238ad88dc4c7de9b4d2862b0519b509c50e67f16a1e344 done
+#23 naming to docker.io/library/envgym_test_1756324901 done
+#23 DONE 22.0s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

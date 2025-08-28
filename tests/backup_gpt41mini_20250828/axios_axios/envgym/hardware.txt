@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/axios_axios; project likely local user directory under Ubuntu 22.04
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: use amd64 Linux base images (e.g., ubuntu, debian, alpine, python:3.x-amd64)
+- GPU: no functional NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: ensure USER and WORKDIR instructions align with /home/cc/EnvGym/data-gpt-4.1mini/axios_axios; no GPU-specific instructions needed; use overlay2 storage driver compatible instructions
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build features (--gpus) available but not applicable due to missing GPU

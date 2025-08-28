@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_031230",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756264347",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.68kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/12] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [ 2/12] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     wget     git     bash     bzip2     unzip     build-essential     locales     && locale-gen en_US.UTF-8     && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [ 3/12] RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/1.4.1 -o /tmp/micromamba.tar.bz2     && mkdir -p /opt/micromamba     && tar -xjf /tmp/micromamba.tar.bz2 -C /opt/micromamba --strip-components=1 bin/micromamba     && rm /tmp/micromamba.tar.bz2\n#6 CACHED\n\n#7 [ 4/12] WORKDIR /home/cc\n#7 CACHED\n\n#8 [ 5/12] RUN useradd -m cc\n#8 CACHED\n\n#9 [ 6/12] RUN git clone --recurse-submodules https://github.com/wonglkd/Baleen-FAST24.git Baleen-FAST24 &&     chown -R cc:cc /home/cc/Baleen-FAST24\n#9 0.232 Cloning into 'Baleen-FAST24'...\n#9 1.404 Submodule 'BCacheSim' (https://github.com/wonglkd/BCacheSim.git) registered for path 'BCacheSim'\n#9 1.410 Cloning into '/home/cc/Baleen-FAST24/BCacheSim'...\n#9 1.763 Submodule path 'BCacheSim': checked out 'ddeb2d8035483b5943fa57df1932ffc7d1134b6d'\n#9 DONE 1.8s\n\n#10 [ 7/12] WORKDIR /home/cc/Baleen-FAST24\n#10 DONE 0.0s\n\n#11 [ 8/12] RUN micromamba create -y -n cachelib-py-3.11 python=3.11 -f BCacheSim/install/env_cachelib-py-3.11.yaml &&     micromamba clean --all --yes\n#11 0.345 /bin/sh: 1: micromamba: not found\n#11 ERROR: process \"/bin/sh -c micromamba create -y -n cachelib-py-3.11 python=3.11 -f BCacheSim/install/env_cachelib-py-3.11.yaml &&     micromamba clean --all --yes\" did not complete successfully: exit code: 127\n------\n > [ 8/12] RUN micromamba create -y -n cachelib-py-3.11 python=3.11 -f BCacheSim/install/env_cachelib-py-3.11.yaml &&     micromamba clean --all --yes:\n0.345 /bin/sh: 1: micromamba: not found\n------\nenvgym.dockerfile:38\n--------------------\n  37 |     # Create python 3.11 environment from env_cachelib-py-3.11.yaml using micromamba\n  38 | >>> RUN micromamba create -y -n cachelib-py-3.11 python=3.11 -f BCacheSim/install/env_cachelib-py-3.11.yaml && \\\n  39 | >>>     micromamba clean --all --yes\n  40 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c micromamba create -y -n cachelib-py-3.11 python=3.11 -f BCacheSim/install/env_cachelib-py-3.11.yaml &&     micromamba clean --all --yes\" did not complete successfully: exit code: 127\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

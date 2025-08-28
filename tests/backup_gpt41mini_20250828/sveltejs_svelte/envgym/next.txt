@@ -1,0 +1,21 @@
+current progress  
+- Dockerfile uses the correct base image `node:18-bullseye` with platform `linux/amd64`, matching the x86_64 architecture requirement.  
+- Working directory is set to `/app` as intended.  
+- Git and required certificates are installed via apt-get.  
+- pnpm version 10.4.0 is installed globally, matching the `packageManager` specification.  
+- Workspace file `pnpm-workspace.yaml`, `package.json`, `pnpm-lock.yaml`, and `.npmrc` (with Playwright browser download disabled) are copied before dependencies installation.  
+- Dependencies are installed with `pnpm install --frozen-lockfile` ensuring lockfile consistency.  
+- Entire source is copied after dependencies installation for proper layering.  
+- Environment variable `NODE_ENV=development` is set.  
+- Default command opens a bash shell in `/app` for interactive use or further commands.  
+- Build and runtime logs indicate success without errors.
+
+next step  
+- Add copying of additional config files required by the plan if not already included (e.g., `.editorconfig`, `.prettierrc`, `.prettierignore`, `eslint.config.js`, `FUNDING.json`, `LICENSE.md`, `CONTRIBUTING.md`) explicitly before or with source files to ensure they are present in the container.  
+- Confirm static assets (`public/assets/banner.png`, `banner_dark.png`) are included in the copied sources or add explicit copy commands if stored outside `/app`.  
+- Consider adding build and test commands in Dockerfile or as entrypoints/scripts to validate build (`pnpm run build`), lint (`pnpm run lint`), and test (`pnpm test`) steps in the container.  
+- Optionally, add user and permission handling for better container security if applicable.  
+- Document or automate manual installation of Playwright browsers compatible with `linux/amd64` inside the container since auto-download is disabled.  
+- Verify that the Docker context includes all needed files and that no `.dockerignore` excludes essential config or asset files.  
+- If intended for production use, consider multi-stage builds to produce optimized artifacts.  
+- Ensure environment variables and commands in Dockerfile align with the monorepo structure and dev workflows from the plan.

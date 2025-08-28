@@ -1,0 +1,28 @@
+=== Docker Execution Log - 20250827_101248 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756289567
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+1.222 │ exit code: 128
+1.222 ╰─> See above for output.
+1.222
+1.222 note: This error originates from a subprocess, and is likely not a problem with pip.
+------
+envgym.dockerfile:44
+--------------------
+42 |
+43 |     # Install randman directly from GitHub with specific commit without editable flag
+44 | >>> RUN pip install --no-cache-dir git+https://github.com/fmi-basel/randman.git@7f1a7a8#egg=randman
+45 |
+46 |     # Copy the entire repository contents to working directory
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c pip install --no-cache-dir git+https://github.com/fmi-basel/randman.git@7f1a7a8#egg=randman" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

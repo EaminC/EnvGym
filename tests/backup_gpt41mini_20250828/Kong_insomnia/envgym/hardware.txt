@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/Kong_insomnia, project likely Linux-based, no special mounting constraints noted  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: x86_64 compatible images (e.g., ubuntu, debian, alpine for amd64), no GPU-specific base image required  
+- GPU: No NVIDIA GPU detected or driver installed, no CUDA base image recommended  
+- Instruction Notes: Use Linux paths, no GPU acceleration instructions needed, storage free space sufficient but monitor usage due to 84.5% usage  
+- Docker Version: 28.3.2, supports BuildKit and Docker Buildx, GPU builds unsupported due to missing NVIDIA GPU drivers

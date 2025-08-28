@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250828_080713",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756368433",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 419B done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/golang:1.20-amd64\n#2 ERROR: docker.io/library/golang:1.20-amd64: not found\n------\n > [internal] load metadata for docker.io/library/golang:1.20-amd64:\n------\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\nenvgym.dockerfile:1\n--------------------\n   1 | >>> FROM --platform=linux/amd64 golang:1.20-amd64\n   2 |     \n   3 |     ENV DEBIAN_FRONTEND=noninteractive\n--------------------\nERROR: failed to build: failed to solve: golang:1.20-amd64: failed to resolve source metadata for docker.io/library/golang:1.20-amd64: docker.io/library/golang:1.20-amd64: not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

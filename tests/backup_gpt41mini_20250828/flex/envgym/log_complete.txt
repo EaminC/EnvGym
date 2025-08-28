@@ -1,0 +1,101 @@
+=== Docker Execution Log - 20250827_203413 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756326850
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.01kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/19] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#4 DONE 0.0s
+
+#5 [ 4/19] RUN chmod 1777 /tmp
+#5 CACHED
+
+#6 [ 2/19] RUN apt-get update && apt-get install -y --no-install-recommends     wget     curl     ca-certificates     bzip2     git     build-essential     libcurl4-openssl-dev     libssl-dev     libxml2-dev     dos2unix     bash     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 5/19] WORKDIR /home/cc
+#7 CACHED
+
+#8 [ 6/19] RUN wget --tries=5 --retry-connrefused --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh &&     chmod +x /tmp/miniconda.sh &&     /bin/bash /tmp/miniconda.sh -b -p /home/cc/miniconda3 &&     rm /tmp/miniconda.sh
+#8 CACHED
+
+#9 [ 3/19] RUN useradd -m -d /home/cc cc
+#9 CACHED
+
+#10 [ 7/19] RUN conda --version && conda info
+#10 CACHED
+
+#11 [internal] load build context
+#11 transferring context: 1.53kB done
+#11 DONE 0.0s
+
+#12 [ 8/19] RUN conda config --add channels conda-forge &&     conda config --set channel_priority strict
+#12 DONE 1.3s
+
+#13 [ 9/19] RUN conda create -n flex_r_env -y r-base &&     conda run -n flex_r_env conda install -y -c conda-forge r-eva &&     conda clean -afy
+#13 1.612 
+#13 1.612 CondaToSNonInteractiveError: Terms of Service have not been accepted for the following channels. Please accept or remove them before proceeding:
+#13 1.612     - https://repo.anaconda.com/pkgs/main
+#13 1.612     - https://repo.anaconda.com/pkgs/r
+#13 1.612 
+#13 1.612 To accept these channels' Terms of Service, run the following commands:
+#13 1.612     conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+#13 1.612     conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+#13 1.612 
+#13 1.612 For information on safely removing channels from your conda configuration,
+#13 1.612 please see the official documentation:
+#13 1.612 
+#13 1.612     https://www.anaconda.com/docs/tools/working-with-conda/channels
+#13 1.612 
+#13 ERROR: process "/bin/sh -c conda create -n flex_r_env -y r-base &&     conda run -n flex_r_env conda install -y -c conda-forge r-eva &&     conda clean -afy" did not complete successfully: exit code: 1
+------
+ > [ 9/19] RUN conda create -n flex_r_env -y r-base &&     conda run -n flex_r_env conda install -y -c conda-forge r-eva &&     conda clean -afy:
+1.612 
+1.612 To accept these channels' Terms of Service, run the following commands:
+1.612     conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+1.612     conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+1.612 
+1.612 For information on safely removing channels from your conda configuration,
+1.612 please see the official documentation:
+1.612 
+1.612     https://www.anaconda.com/docs/tools/working-with-conda/channels
+1.612 
+------
+envgym.dockerfile:43
+--------------------
+  42 |     
+  43 | >>> RUN conda create -n flex_r_env -y r-base && \
+  44 | >>>     conda run -n flex_r_env conda install -y -c conda-forge r-eva && \
+  45 | >>>     conda clean -afy
+  46 |     
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c conda create -n flex_r_env -y r-base &&     conda run -n flex_r_env conda install -y -c conda-forge r-eva &&     conda clean -afy" did not complete successfully: exit code: 1
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

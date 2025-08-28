@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/exli, project located inside nested directories under /home/cc/EnvGym/data-gpt-4.1mini  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: x86_64 compatible Linux base images (e.g., ubuntu, debian, alpine)  
+- GPU: No NVIDIA GPU detected, no CUDA base image recommended  
+- Instruction Notes: Use overlay2 storage driver compatible instructions; avoid GPU-specific instructions; large memory and CPU count allow optimizations in build concurrency and caching but no explicit Dockerfile flags needed; absolute paths should be respected in COPY/ADD instructions relative to context  
+- Docker Version: 28.3.2, supports BuildKit and Docker Buildx plugin, GPU build flags (--gpus) available but not applicable due to missing NVIDIA GPU

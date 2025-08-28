@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/grpc_grpc-go, project likely Go-based (grpc-go)
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: Linux AMD64 base images (e.g., ubuntu, debian, alpine), no ARM or other arch needed
+- GPU: No NVIDIA GPU detected, no CUDA base image required
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU-specific Dockerfile instructions needed; large memory available, large image layers feasible; consider multi-stage builds for Go projects
+- Docker Version: 28.3.2, supports BuildKit and Buildx; GPU build features unsupported due to missing NVIDIA driver and GPU

@@ -1,0 +1,87 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64 LINUX ENVIRONMENT) ===
+
+1. DOWNLOADS NEEDED:  
+   - Rust programming language toolchain, version **1.88.0** or newer (https://www.rust-lang.org/tools/install)  
+     - Use Rustup installation on Linux x86_64 architecture.  
+   - Cargo package manager (comes with Rust toolchain)  
+   - PCRE2 library (optional, for PCRE2 regex support) with pkg-config installed for automatic detection  
+     - On Debian/Ubuntu-based systems, install via package manager as `libpcre2-dev pkg-config`.  
+   - System C compiler (gcc or clang) for building native dependencies and PCRE2, if not already installed  
+     - Ensure gcc or clang is installed and accessible in PATH.  
+   - Platform-specific ripgrep binaries (optional, if not building from source) from https://github.com/BurntSushi/ripgrep/releases  
+   - Optional: MUSL library and musl-gcc (Linux only) for static linking and fully static binary builds  
+     - Use `rustup target add x86_64-unknown-linux-musl` for MUSL target on x86_64 Linux.  
+   - Optional: Package managers depending on OS:  
+     - Homebrew or Linuxbrew (Linux) can be installed if preferred.  
+     - Use native package managers for your Linux distro (e.g., apt-get for Debian/Ubuntu, dnf for Fedora, pacman for Arch Linux).  
+   - Additional Rust crate dependencies for development and extension as listed, all compatible with Rust 1.88.0+ and x86_64 Linux.  
+   - Windows-specific requirements and manifest linking for MSVC builds are **not applicable** in this Linux environment and should be skipped.  
+
+2. FILES TO CREATE:  
+   - Optional ripgrep configuration file `.ripgreprc` or `.rgignore` in user home directory or project root.  
+   - Optional Cargo.toml and Cargo.lock for managing Rust dependencies as needed.  
+   - Optional shell completion scripts (bash, zsh, fish) for Linux shells; place in standard shell directories.  
+   - Optional custom file type definitions if extending filtering.  
+   - Optional README or documentation files in crates directories as per development needs.  
+   - **Skip creation of Windows-specific files `pkg/windows/README.md` and manifest files**, as they are irrelevant for this Linux environment.  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All tests as specified in original plan apply and are compatible with Linux x86_64 architecture.  
+   - Windows-specific tests related to MSVC builds and long path manifests should be omitted or skipped on Linux.  
+   - Emphasize running the full test suite (`cargo test --all`) to verify crate functionality and integration on Linux.  
+   - Ensure PCRE2 tests run correctly if PCRE2 feature is enabled and library is installed.  
+   - Performance and compatibility tests can leverage the high CPU core count available on x86_64 Linux for parallel execution.  
+
+4. COMPLETE TODO LIST (MODIFIED FOR x86_64 LINUX):  
+   1. Verify system is Linux x86_64 (confirmed) and has compatible OS and package manager.  
+   2. Install Rust toolchain version 1.88.0 or newer via https://rustup.rs for x86_64 Linux.  
+      - Verify with `rustc --version` and `cargo --version`.  
+   3. (Optional) Install PCRE2 library and pkg-config:  
+      - For Debian/Ubuntu: `sudo apt-get install libpcre2-dev pkg-config`  
+      - Verify with `pkg-config --modversion libpcre2-8`.  
+   4. Install system C compiler if not present:  
+      - For Debian/Ubuntu: `sudo apt-get install build-essential` (includes gcc)  
+   5. Clone ripgrep repository and enter directory:  
+      - `git clone https://github.com/BurntSushi/ripgrep`  
+      - `cd ripgrep`  
+   6. Review and update Cargo.toml dependencies if extending or developing:  
+      - Confirm or add crates and versions as per original plan.  
+   7. **Skip Windows MSVC manifest linking steps; these do not apply on Linux.**  
+   8. Build ripgrep from source:  
+      - Default build: `cargo build --release`  
+      - To enable PCRE2 support: `cargo build --release --features 'pcre2'`  
+      - For static MUSL build:  
+        - Install MUSL and musl-gcc.  
+        - Add MUSL target: `rustup target add x86_64-unknown-linux-musl`  
+        - Build with: `cargo build --release --target x86_64-unknown-linux-musl`  
+   9. Verify build success:  
+      - Run `./target/release/rg --version` to confirm version output.  
+      - Confirm binary runs correctly on Linux x86_64 environment.  
+   10. Optionally install ripgrep via Linux package manager if preferred.  
+   11. (Optional) Set up shell completions for bash, zsh, or fish shells on Linux.  
+   12. (Optional) Create or customize ripgrep configuration files.  
+   13. Run full test suite with `cargo test --all`:  
+       - Verify no test failures, including all constituent crates tests and PCRE2 feature tests if enabled.  
+       - Skip Windows-specific long path manifest tests.  
+   14. (Optional) Write additional tests or extensions as needed.  
+   15-24. (Optional) Review documentation files in crates directories; all Linux-compatible.  
+   25. Establish usage guidelines and document custom configurations for Linux environment.  
+   26. Monitor for updates and patches from official repository as usual.  
+
+VERIFICATION AND ERROR HANDLING NOTES:  
+- Use Linux filesystem paths throughout; no Windows path or manifest considerations needed.  
+- Ensure all tools (rustc, cargo, gcc, pkg-config) are installed and on PATH.  
+- For PCRE2 optional feature, confirm library presence via pkg-config to avoid build errors.  
+- Storage and RAM requirements are typical for building Rust projects; no special adjustments needed assuming standard Linux workstation/server class hardware.  
+- Leverage Docker BuildKit and buildx with `--platform=linux/amd64` for containerized builds if desired.  
+- Skip Windows-only build or manifest steps in scripts or automation to avoid errors.  
+- Confirm shell completion scripts are installed to proper locations for Linux shells (e.g., `/etc/bash_completion.d/`, `~/.zsh/completions/`).  
+- Confirm no GPU or CUDA dependencies are included due to no NVIDIA GPU detected.  
+
+SUMMARY:  
+- The original plan is fully compatible with the x86_64 Linux environment after removing Windows MSVC-specific steps and files.  
+- Confirm all Rust and system dependencies are installed via Linux package managers or manual installs.  
+- Adjust build and test commands to exclude Windows manifest verification.  
+- Use Linux-native paths and shell environments.  
+- Use MUSL static builds targeting x86_64-unknown-linux-musl for static binaries if needed.  
+- Use docker build with `--platform=linux/amd64` when building in container environments.

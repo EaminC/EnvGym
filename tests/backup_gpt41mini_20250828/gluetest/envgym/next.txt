@@ -1,0 +1,21 @@
+current progress  
+- Base image set to ubuntu:22.04 with noninteractive frontend and locale configured.  
+- Required packages installed including python3.11, pip, maven, curl, git, bash, and others.  
+- SDKMAN! installed and GraalVM Java 17 (17.0.7-graal) installed and activated via sdk commands.  
+- GraalPython component installed using GraalVM's gu tool.  
+- Python3.11 aliased to python, pip upgraded, pytest installed globally.  
+- Python virtual environment created at /gluetest/venv.  
+- Environment variables JAVA_HOME, MAVEN_HOME, SDKMAN_DIR, and PATH updated in .bashrc along with activation of virtual environment.  
+- Maven installation verified.  
+- Working directory set to /gluetest and default shell set to bash.  
+- Docker build and runtime logs indicate successful build and execution.  
+
+next step  
+- Add explicit installation or verification of Maven binary placement in /opt/maven or adjust MAVEN_HOME accordingly since currently maven installed via apt but MAVEN_HOME points to /opt/maven which may mismatch.  
+- Ensure that GraalVM and SDKMAN environment variables are correctly recognized in non-interactive shell contexts (e.g., via ENV or entrypoint scripts) beyond .bashrc for all users and scripts.  
+- Consider adding commands to install or verify glue code generation scripts and their dependencies if needed.  
+- Include test execution steps for Java, Python, and glue code tests in the Dockerfile or as separate scripts for CI.  
+- Optionally automate creation and activation of Python virtual environment on container start rather than just in .bashrc.  
+- Verify coverage measurement tool dependencies and include them if missing.  
+- Add cleanup steps or cache reductions if image size optimization is desired.  
+- Document or script environment verification commands as part of the Dockerfile build or entrypoint.

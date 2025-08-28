@@ -1,0 +1,231 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context and Hardware Considerations:**  
+- Architecture: x86_64 (amd64) — fully compatible with standard JDK, JRuby, Ruby gems, Gradle and Logstash binaries.  
+- OS: Linux x86_64 compatible (e.g., Ubuntu, Debian, or Alpine) — recommended to use Ubuntu/Debian base images for ease of dependency management and compatibility.  
+- No GPU present — no CUDA or GPU-specific dependencies or images required.  
+- Working directory: `/home/cc/EnvGym/data-gpt-4.1mini/elastic_logstash` — all relative paths and environment variables must be consistent with this root.  
+- Docker version supports BuildKit and buildx; no GPU needed, so no special runtime flags.  
+- Memory and storage requirements are not explicitly stated; ensure sufficient RAM (recommended 4GB+ for build and testing) and disk space (at least several GB to accommodate JDK, JRuby, gems, Gradle caches, Logstash source and artifacts).
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - JDK version 11 or 17 for Linux x86_64 (use official OpenJDK builds or OS package manager, e.g. `apt install openjdk-11-jdk` for Ubuntu/Debian)  
+     * Set `JAVA_HOME` to installed JDK path (e.g., `/usr/lib/jvm/java-11-openjdk-amd64`)  
+     * Verify with `java -version` and `echo $JAVA_HOME`  
+   - JRuby 9.2.x matching `.ruby-version` via Ruby version manager (RVM or rbenv) on Linux x86_64 — no architecture mismatch expected  
+   - Ruby gems: `rake` and `bundler` installed via `gem install` or through Gradle/bundle processes  
+   - Gradle wrapper bundled with project; no separate download needed  
+   - Optional: Drip launcher supported on Linux x86_64; verify drip binary compatibility with platform before use  
+   - Optional: fpm tool for artifact packaging (install via Ruby gem or OS package manager if available)  
+   - Git installed and available in Linux environment (e.g., `apt install git`)  
+   - Network access required for RubyGems.org and GitHub (ensure proxy or firewall allows outbound HTTPS)  
+   - Use official Logstash binaries or build from source as needed; both fully supported on x86_64 Linux  
+
+2. FILES TO CREATE:  
+   - `.ruby-version` file in project root specifying JRuby 9.2.x version (ensure consistency with installed JRuby)  
+   - Environment variable config files:  
+     * Linux: `~/.bashrc`, `~/.bash_profile`, or `~/.zshrc` — set:  
+       ```sh  
+       export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64  
+       export OSS=true  
+       export LOGSTASH_SOURCE=1  
+       export LOGSTASH_PATH=/home/cc/EnvGym/data-gpt-4.1mini/elastic_logstash  
+       # Optional drip launcher path if installed:  
+       # export JAVACMD=$(which drip)  
+       ```  
+     * Windows not applicable based on provided environment info; focus on Linux shell configs  
+   - `gradle.properties` if customizing JRuby path or other properties  
+   - RSpec config files, Logstash configs, plugin files as per development needs in project directory  
+   - Optional shell scripts for automation in `/home/cc/EnvGym/data-gpt-4.1mini/elastic_logstash/scripts` or similar for repeatability  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - No change; all existing test suites and types remain applicable for x86_64 Linux environment  
+   - Ensure tests run with installed JRuby, Java, and Gradle on Linux environment  
+   - Verify drip compatibility on Linux before using in tests (not compatible with stdin plugin usage)  
+
+4. COMPLETE TODO LIST (adjusted for Linux x86_64 environment and working directory):  
+
+   **Step 1: Install JDK**  
+   - Install OpenJDK 11 or 17 via OS package manager (e.g., Ubuntu/Debian):  
+     ```sh  
+     sudo apt update  
+     sudo apt install openjdk-11-jdk  
+     ```  
+   - Set `JAVA_HOME`:  
+     ```sh  
+     export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64  
+     echo 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> ~/.bashrc  
+     source ~/.bashrc  
+     ```  
+   - Verify installation:  
+     ```sh  
+     java -version  
+     echo $JAVA_HOME  
+     ```  
+
+   **Step 2: Install Ruby and JRuby environment**  
+   - Install RVM or rbenv for Ruby version management on Linux x86_64:  
+     - For RVM:  
+       ```sh  
+       sudo apt install curl gpg  
+       gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3  
+       \curl -sSL https://get.rvm.io | bash -s stable  
+       source ~/.rvm/scripts/rvm  
+       rvm install jruby-9.2.x  
+       rvm use jruby-9.2.x --default  
+       ```  
+     - Or for rbenv (preferred if multiple versions needed): install rbenv and ruby-build plugin, then:  
+       ```sh  
+       rbenv install 9.2.x  
+       rbenv global 9.2.x  
+       ```  
+   - Verify Ruby version matches `.ruby-version`:  
+     ```sh  
+     ruby -v  
+     cat .ruby-version  
+     ```  
+
+   **Step 3: Install Ruby gems `rake` and `bundler`**  
+   - Run:  
+     ```sh  
+     gem install rake bundler  
+     ```  
+
+   **Step 4: Clone Logstash repository and optionally documentation repos**  
+   - In working directory:  
+     ```sh  
+     cd /home/cc/EnvGym/data-gpt-4.1mini  
+     git clone https://github.com/elastic/logstash.git  
+     cd logstash  
+     ```  
+   - Optionally clone docs repos for local documentation build:  
+     ```sh  
+     git clone https://github.com/elastic/logstash-docs.git  
+     git clone https://github.com/elastic/docs.git  
+     ```  
+   - Ensure branch consistency for docs build  
+
+   **Step 5: Set environment variables**  
+   - Add to shell profile:  
+     ```sh  
+     export OSS=true  
+     export LOGSTASH_SOURCE=1  
+     export LOGSTASH_PATH=/home/cc/EnvGym/data-gpt-4.1mini/elastic_logstash  
+     # Optional for drip launcher:  
+     # export JAVACMD=$(which drip)  
+     ```  
+   - Source shell profile or export in current session  
+
+   **Step 6: Install development dependencies using Gradle**  
+   - From `/home/cc/EnvGym/data-gpt-4.1mini/elastic_logstash`:  
+     ```sh  
+     ./gradlew installDevelopmentGems  
+     ./gradlew installDefaultGems  
+     ```  
+   - Alternatively, use bundle and rake as per Footnote 1  
+
+   **Step 7: Verify Ruby environment and dependencies**  
+   ```sh  
+   ruby -v  
+   gem list  
+   ```  
+
+   **Step 8: Verify Logstash installation with simple pipeline**  
+   ```sh  
+   bin/logstash -e 'input { stdin { } } output { stdout {} }'  
+   ```  
+   - Input text and verify output  
+
+   **Step 9: Build project artifacts (optional)**  
+   ```sh  
+   ./gradlew assembleTarDistribution  
+   ./gradlew assembleZipDistribution  
+   ./gradlew assembleOssTarDistribution  
+   ./gradlew assembleOssZipDistribution  
+   rake artifact:rpm  
+   rake artifact:deb  
+   rake artifact:rpm_oss  
+   rake artifact:deb_oss  
+   ```  
+   - Ensure fpm installed for rpm/deb packaging  
+
+   **Step 10: Run tests**  
+   ```sh  
+   ./gradlew test  
+   ./gradlew javaTests  
+   ./gradlew check  
+   ./gradlew bootstrap   # first time only  
+   bin/rspec             # run all Ruby tests  
+   rake test:plugins  
+   bin/logstash-plugin install --development  
+   ```  
+   - Use debug JVM options if needed:  
+     ```sh  
+     export LS_JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"  
+     ```  
+
+   **Step 11: (Optional) Setup drip launcher**  
+   - Confirm drip binary is Linux x86_64 compatible and installed in PATH  
+   - Set `JAVACMD` environment variable accordingly  
+   - Avoid using drip with stdin plugin due to incompatibility  
+
+   **Step 12: (Optional) Build Logstash documentation locally**  
+   - Clone repos if not yet cloned  
+   - Checkout matching branches  
+   - Run doc build script:  
+     ```sh  
+     cd docs  
+     ./build_docs.pl --doc ../logstash/docs/index.asciidoc --chunk=1 -open  
+     ```  
+
+   **Step 13: (Optional) Use custom JRuby distribution**  
+   - Pass Gradle property with absolute Linux path:  
+     ```sh  
+     ./gradlew clean test -Pcustom.jruby.path="/path/to/jruby"  
+     ```  
+
+   **Step 14: Maintain environment and update dependencies regularly**  
+   - Regularly update JDK, JRuby, gems, Gradle wrapper/plugins  
+   - Keep source branches synchronized with upstream repositories  
+   - Monitor plugin dependency updates  
+
+   **Step 15: Follow community and contribution guidelines**  
+   - Refer to README.md and CONTRIBUTING.md  
+   - Report plugin issues and core issues appropriately  
+   - Embrace community principles  
+
+---
+
+**Verification and Error Handling (Linux x86_64 context):**  
+- Confirm installed versions:  
+  ```sh  
+  java -version  
+  ruby -v  
+  gem list  
+  ./gradlew -v  
+  ```  
+- Ensure environment variables accessible in shell:  
+  ```sh  
+  echo $JAVA_HOME  
+  echo $OSS  
+  echo $LOGSTASH_PATH  
+  ```  
+- Validate Logstash runs simple pipeline without errors.  
+- Confirm tests run and pass without failures.  
+- Confirm build artifacts appear in `build` directory within project root.  
+- Check documentation builds without errors if applicable.  
+- For drip launcher, verify binary architecture matches host (Linux x86_64) and note stdin plugin incompatibility.  
+- If errors occur:  
+  - Recheck JDK installation and `JAVA_HOME` path.  
+  - Verify JRuby version matches `.ruby-version`.  
+  - Check gem install network connectivity and Ruby environment.  
+  - Ensure Gradle wrapper executable permissions are set (`chmod +x ./gradlew`).  
+  - For packaging errors, verify fpm installation and permissions.  
+  - For plugin issues, ensure development dependencies installed via `bin/logstash-plugin install --development`.  
+  - Use JVM debug options to diagnose test hangs.  
+
+---
+
+This adjusted plan fully aligns with your hardware environment (Linux x86_64, CPU-focused, no GPU) and working directory context. Paths, tools, and environment variables are specified accordingly for smooth setup, build, test, and development workflows.

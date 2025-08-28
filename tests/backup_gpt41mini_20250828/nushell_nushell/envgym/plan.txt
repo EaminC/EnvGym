@@ -1,0 +1,161 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64 LINUX amd64 ARCHITECTURE) ===
+
+1. DOWNLOADS NEEDED:  
+   - Nushell shell:  
+     - For this hardware (x86_64 Linux), install via Homebrew if available or download binaries from Nushell GitHub releases for amd64 Linux.  
+     - Alternatively, use Docker Alpine or Debian Bookworm slim images targeting `linux/amd64` platform.  
+     - Docker images to be built with `--platform=linux/amd64` explicitly to ensure correct architecture.  
+     - No ARM or other architecture images needed for this environment.  
+   - Rust toolchain:  
+     - Install Rust 1.87.0 stable via https://rustup.rs/ with default profile.  
+     - Target architecture: `x86_64-unknown-linux-gnu` by default; no cross-compilation required unless explicitly desired.  
+     - No need for riscv, armv7, loongarch64 targets unless cross-compiling.  
+   - Cargo dependencies:  
+     - Network connectivity to crates.io required for dependency fetching.  
+     - `Cargo.lock` must be present and used for reproducible builds.  
+   - Git client:  
+     - Install Git for source code cloning and contributions.  
+   - Shell environments:  
+     - Use Bash or compatible shell for `.sh` scripts (native on Linux).  
+     - Use Nushell shell installed locally or via Docker for `.nu` scripts.  
+     - PowerShell is optional but can be installed on Linux if needed; otherwise, skip Windows-specific `.ps1` scripts.  
+   - Coverage tooling:  
+     - Install `cargo-llvm-cov` via `cargo install cargo-llvm-cov`.  
+     - Ensure Rust toolchain supports LLVM coverage instrumentation.  
+     - Use `scripts/coverage-local.sh` (Bash script) preferred over deprecated `.nu` coverage script on Linux.  
+   - Python interpreter:  
+     - Python 3 must be installed and available in PATH as `python` or `python3`.  
+     - Required to run `scripts/test_virtualenv.nu` for testing Python virtual environment activation.  
+   - Typo checking tooling:  
+     - Use typo/spell checker compatible with `typos.toml`.  
+     - Configure to exclude specified files and directories.  
+   - Windows-specific build tools:  
+     - Not applicable for this Linux amd64 environment.  
+   - Docker:  
+     - Docker Engine version 28.3.2 installed and configured on Linux host.  
+     - Use `--platform=linux/amd64` in `docker build` commands to ensure images are built for x86_64 architecture.  
+     - Overlay2 storage driver compatible instructions; no GPU instructions needed.  
+     - Multi-stage builds recommended for efficiency and smaller image sizes.  
+     - Mount volumes with paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/nushell_nushell` as working directory.  
+   - Linker arguments and build scripts:  
+     - On Linux, `scripts/build.rs` sets `-rdynamic` linker argument for benchmarks.  
+     - No Windows resource compiler needed.  
+   - Code style and development tools:  
+     - Use Rust 1.87.0 stable; no nightly features.  
+     - Use `clippy` lints as baseline.  
+     - Follow style guidelines as per `devdocs/rust_style.md`.  
+   - Optional tooling:  
+     - JSON-RPC debugging tools if needed.  
+     - GitHub Actions runner optional if using CI.  
+   - Cross-compilation support:  
+     - Optional if needed; ensure cross tool and `Cross.toml` used when targeting non-x86_64 platforms.  
+   - Developer documentation:  
+     - Available and recommended for onboarding and reference.  
+   - Official Nushell project online presence and community:  
+     - Use https://www.nushell.sh and Discord https://discord.gg/NtAbbGn.  
+   - Licensing:  
+     - MIT License applies; include LICENSE file as specified.
+
+2. FILES TO CREATE:  
+   - As specified in original plan:  
+     - `README.md`, `LICENSE`, `Cargo.toml`, `rust-toolchain.toml`, `Cargo.lock`, `scripts/build.rs`, Dockerfiles, test scripts (`docker/test_docker.nu`, `scripts/test_virtualenv.nu`), utility scripts (`scripts/uninstall-all.sh`), `Cross.toml`, `typos.toml`, and scripts directory with appropriate scripts.  
+   - Ensure all file paths and scripts reference relative paths from `/home/cc/EnvGym/data-gpt-4.1mini/nushell_nushell` working directory.  
+   - Dockerfiles and build scripts adjusted to reflect `linux/amd64` platform usage.
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All tests from original plan apply.  
+   - Focus on Linux amd64 platform test runs.  
+   - Cross-compilation tests only if targeting other architectures.  
+   - Coverage tests run using `scripts/coverage-local.sh` preferred on Linux.  
+   - Docker image validation tests run with images built for `linux/amd64`.  
+   - Scripts tested under Bash, Nushell, and Python 3 environments on Linux.  
+   - CI integration tests adjusted to Linux runners without Windows-specific tooling.  
+   - Developer documentation accessibility verified on Linux environment.
+
+4. COMPLETE TODO LIST (ADJUSTED):  
+   1. Install Nushell shell:  
+      - Prefer package manager or download binaries for `x86_64-unknown-linux-gnu`.  
+      - Alternatively, build/use Docker images specifying `--platform=linux/amd64`.  
+   2. Install Rust 1.87.0:  
+      - Use https://rustup.rs/ on Linux amd64.  
+      - Confirm `rustc --version` matches 1.87.0.  
+   3. Manage Cargo dependencies:  
+      - Ensure `Cargo.lock` presence and network connectivity.  
+   4. Install coverage tooling:  
+      - Use `cargo install cargo-llvm-cov`.  
+      - Use `scripts/coverage-local.sh` (Bash) on Linux.  
+   5. Install Python 3:  
+      - Confirm `python` or `python3` in PATH.  
+      - Required for `scripts/test_virtualenv.nu`.  
+   6. Configure typo checking tooling:  
+      - Use `typos.toml` config.  
+   7. Windows-specific build tools:  
+      - Skip for Linux environment.  
+   8. Use Bash shell for script execution:  
+      - Run `./scripts/install-all.sh`, `./scripts/uninstall-all.sh`, `./scripts/coverage-local.sh`, and other `.sh` scripts.  
+   9. Clone Nushell GitHub repository:  
+      - `git clone https://github.com/nushell/nushell.git`  
+      - Work inside `/home/cc/EnvGym/data-gpt-4.1mini/nushell_nushell`.  
+   10. Build Nushell from source:  
+       - `cargo build --release` in repository root.  
+       - Use Rust 1.87.0.  
+   11. Build Nushell and plugins using scripts:  
+       - Run `./scripts/build-all-maclin.sh` on Linux amd64.  
+       - Alternatively, run `nu ./scripts/build-all.nu` if Nushell shell installed (deprecated but functional).  
+   12. Install Nushell and plugins locally:  
+       - Run `./scripts/install-all.sh`.  
+   13. Uninstall Nushell and plugins:  
+       - Run `./scripts/uninstall-all.sh`.  
+   14. Run `scripts/test_virtualenv.nu` to verify Python virtual environment handling:  
+       - Execute with `nu scripts/test_virtualenv.nu`.  
+   15. Optional cross-compilation:  
+       - Only if targeting other architectures; use `cross` with `Cross.toml`.  
+   16. Run tests:  
+       - `cargo test` in repository root.  
+   17. Build and test Docker images:  
+       - Build Alpine image:  
+         `docker build --no-cache --platform=linux/amd64 . -t nushell:latest` from `docker` directory.  
+       - Build Debian image:  
+         `docker build --no-cache --platform=linux/amd64 --file docker/debian.Dockerfile . -t nushell:latest-debian`.  
+       - Run containers:  
+         `docker run -it nushell:latest` and `docker run -it nushell:latest-debian`.  
+       - Run validation script inside containers with volume mount:  
+         `docker run -it --rm -v "/home/cc/EnvGym/data-gpt-4.1mini/nushell_nushell:/work" nushell:latest /work/docker/test_docker.nu`.  
+   18. Run Nushell shell first-time configuration:  
+       - Launch `nu`.  
+       - Run `$nu.config-path`.  
+       - Run `config reset -w` to reset defaults.  
+       - Verify config file sizes.  
+   19. Create/edit `config.nu` as needed.  
+   20. Develop or install plugins as desired.  
+   21. Test pipeline commands and file opening commands.  
+   22. Confirm cross-platform consistency on Linux amd64 (Windows/macOS testing if relevant).  
+   23. Execute and verify all scripts in `scripts/` using Bash and Nushell shells.  
+       - No PowerShell or Windows Command Prompt scripts needed for this environment.  
+   24. Set up CI integration if applicable:  
+       - Use Linux runners in GitHub Actions.  
+       - Integrate typo checking, Rust style lints, coverage, and Docker validation.  
+   25. License compliance:  
+       - Include `LICENSE` file as specified.  
+   26. Monitor Nushell Discord and community for updates.  
+   27. Document environment setup and troubleshooting.  
+   28. Optional: Use Cargo profiles and workspace lints as per original plan.  
+   29. Optional: Use feature flags during build as needed.  
+   30. Optional: Run benchmarks via `cargo bench`.  
+   31. Developer documentation review and updates recommended.  
+
+---  
+
+**Summary of Key Adjustments:**  
+- All Docker builds and runs explicitly specify `--platform=linux/amd64` to match x86_64 architecture.  
+- Windows-specific tools and scripts (e.g., `rc.exe`, PowerShell scripts, `.cmd` scripts) are excluded or optional, not required on Linux.  
+- Use Bash shell for script execution; PowerShell scripts only if PowerShell installed on Linux (optional).  
+- Coverage scripts prefer `coverage-local.sh` over deprecated `.nu` coverage script on Linux.  
+- Python interpreter path and usage assume standard Linux Python 3 installation.  
+- Cross-compilation steps optional, only if targeting non-x86_64 architectures.  
+- File paths and volume mounts in Docker commands use absolute paths relative to working directory `/home/cc/EnvGym/data-gpt-4.1mini/nushell_nushell`.  
+- No GPU or CUDA related instructions included or needed.  
+- Rust toolchain locked at 1.87.0 stable with default profile as per original plan.  
+- All testing, building, and tooling tailored to Linux amd64 environment.  
+
+This adjusted plan ensures full compatibility and optimized setup for the specified hardware environment.

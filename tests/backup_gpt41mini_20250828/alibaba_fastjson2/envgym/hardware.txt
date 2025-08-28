@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/alibaba_fastjson2; project under home/cc/EnvGym/data-gpt-4.1mini
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use x86_64 compatible base images (e.g., ubuntu, debian, alpine for amd64)
+- GPU: No NVIDIA GPU detected; no CUDA base image required
+- Instruction Notes: No GPU-specific instructions needed; leverage high CPU core count for parallel builds if applicable; ensure file paths reflect working directory structure
+- Docker Version: 28.3.2; supports BuildKit and Buildx; GPU build not applicable due to hardware; supports standard Dockerfile features and multi-platform builds

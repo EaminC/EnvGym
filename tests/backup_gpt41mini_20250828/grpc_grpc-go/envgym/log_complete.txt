@@ -1,0 +1,2005 @@
+=== Docker Execution Log - 20250827_221716 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756333001
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.22kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.4
+#2 DONE 0.1s
+
+#3 docker-image://docker.io/docker/dockerfile:1.4@sha256:9ba7531bd80fb0a858632727cf7a112fbfd19b17e94c4e84ced81e24ef1a0dbc
+#3 CACHED
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load metadata for docker.io/library/ubuntu:22.04
+#5 DONE 0.1s
+
+#6 [ 1/20] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#6 DONE 0.0s
+
+#7 [ 2/20] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     git     bash     openssl     iproute2     iputils-ping     net-tools     iputils-tracepath     locales     dnsutils     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [ 3/20] RUN locale-gen en_US.UTF-8
+#8 CACHED
+
+#9 [ 4/20] RUN set -eux;     arch=amd64;     curl -fsSL https://golang.org/dl/go1.21.0.linux-${arch}.tar.gz -o /tmp/go.tar.gz;     tar -C /usr/local -xzf /tmp/go.tar.gz;     rm /tmp/go.tar.gz
+#9 CACHED
+
+#10 [internal] load build context
+#10 transferring context: 623.22kB 0.1s done
+#10 DONE 0.1s
+
+#11 [ 5/20] RUN go version
+#11 0.206 go version go1.21.0 linux/amd64
+#11 DONE 0.2s
+
+#12 [ 6/20] RUN go env
+#12 0.378 GO111MODULE='on'
+#12 0.378 GOARCH='amd64'
+#12 0.378 GOBIN=''
+#12 0.378 GOCACHE='/root/.cache/go-build'
+#12 0.378 GOENV='/root/.config/go/env'
+#12 0.378 GOEXE=''
+#12 0.378 GOEXPERIMENT=''
+#12 0.378 GOFLAGS=''
+#12 0.378 GOHOSTARCH='amd64'
+#12 0.378 GOHOSTOS='linux'
+#12 0.378 GOINSECURE=''
+#12 0.378 GOMODCACHE='/go/pkg/mod'
+#12 0.378 GONOPROXY=''
+#12 0.378 GONOSUMDB=''
+#12 0.378 GOOS='linux'
+#12 0.378 GOPATH='/go'
+#12 0.378 GOPRIVATE=''
+#12 0.378 GOPROXY='https://proxy.golang.org,direct'
+#12 0.378 GOROOT='/usr/local/go'
+#12 0.378 GOSUMDB='sum.golang.org'
+#12 0.378 GOTMPDIR=''
+#12 0.378 GOTOOLCHAIN='auto'
+#12 0.378 GOTOOLDIR='/usr/local/go/pkg/tool/linux_amd64'
+#12 0.378 GOVCS=''
+#12 0.378 GOVERSION='go1.21.0'
+#12 0.378 GCCGO='gccgo'
+#12 0.378 GOAMD64='v1'
+#12 0.378 AR='ar'
+#12 0.378 CC='gcc'
+#12 0.378 CXX='g++'
+#12 0.378 CGO_ENABLED='0'
+#12 0.378 GOMOD='/dev/null'
+#12 0.378 GOWORK=''
+#12 0.378 CGO_CFLAGS='-O2 -g'
+#12 0.378 CGO_CPPFLAGS=''
+#12 0.378 CGO_CXXFLAGS='-O2 -g'
+#12 0.378 CGO_FFLAGS='-O2 -g'
+#12 0.378 CGO_LDFLAGS='-O2 -g'
+#12 0.378 PKG_CONFIG='pkg-config'
+#12 0.378 GOGCCFLAGS='-fPIC -m64 -fno-caret-diagnostics -Qunused-arguments -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build1770402900=/tmp/go-build -gno-record-gcc-switches'
+#12 DONE 0.4s
+
+#13 [ 7/20] RUN useradd -m -u 1000 appuser
+#13 DONE 0.4s
+
+#14 [ 8/20] WORKDIR /src
+#14 DONE 0.0s
+
+#15 [ 9/20] COPY --chown=appuser:appuser . /src
+#15 DONE 0.4s
+
+#16 [10/20] RUN test -f go.mod && test -f go.sum
+#16 DONE 0.2s
+
+#17 [11/20] RUN nslookup proxy.golang.org || echo "Warning: nslookup proxy.golang.org failed"
+#17 0.396 Server:		8.8.8.8
+#17 0.396 Address:	8.8.8.8#53
+#17 0.396 
+#17 0.396 Non-authoritative answer:
+#17 0.396 Name:	proxy.golang.org
+#17 0.396 Address: 173.194.219.141
+#17 0.396 Name:	proxy.golang.org
+#17 0.396 Address: 2607:f8b0:4002:c03::8d
+#17 0.396 
+#17 DONE 0.4s
+
+#18 [12/20] RUN curl -v https://proxy.golang.org || echo "Warning: curl to proxy.golang.org failed"
+#18 0.373   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#18 0.373                                  Dload  Upload   Total   Spent    Left  Speed
+#18 0.373 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 173.194.219.141:443...
+#18 0.408 * Connected to proxy.golang.org (173.194.219.141) port 443 (#0)
+#18 0.409 * ALPN, offering h2
+#18 0.409 * ALPN, offering http/1.1
+#18 0.456 *  CAfile: /etc/ssl/certs/ca-certificates.crt
+#18 0.456 *  CApath: /etc/ssl/certs
+#18 0.456 * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+#18 0.456 } [5 bytes data]
+#18 0.456 * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+#18 0.456 } [512 bytes data]
+#18 0.481 * TLSv1.2 (IN), TLS header, Certificate Status (22):
+#18 0.481 { [5 bytes data]
+#18 0.481 * TLSv1.3 (IN), TLS handshake, Server hello (2):
+#18 0.481 { [122 bytes data]
+#18 0.481 * TLSv1.2 (IN), TLS header, Finished (20):
+#18 0.481 { [5 bytes data]
+#18 0.481 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.481 { [5 bytes data]
+#18 0.481 * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+#18 0.481 { [15 bytes data]
+#18 0.481 * TLSv1.3 (IN), TLS handshake, Certificate (11):
+#18 0.481 { [9956 bytes data]
+#18 0.483 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+#18 0.483 { [79 bytes data]
+#18 0.483 * TLSv1.3 (IN), TLS handshake, Finished (20):
+#18 0.483 { [52 bytes data]
+#18 0.483 * TLSv1.2 (OUT), TLS header, Finished (20):
+#18 0.483 } [5 bytes data]
+#18 0.483 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+#18 0.483 } [1 bytes data]
+#18 0.483 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#18 0.483 } [5 bytes data]
+#18 0.483 * TLSv1.3 (OUT), TLS handshake, Finished (20):
+#18 0.483 } [52 bytes data]
+#18 0.483 * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+#18 0.483 * ALPN, server accepted to use h2
+#18 0.483 * Server certificate:
+#18 0.484 *  subject: CN=misc-sni.google.com
+#18 0.484 *  start date: Aug 11 19:21:49 2025 GMT
+#18 0.484 *  expire date: Nov  3 19:21:48 2025 GMT
+#18 0.484 *  subjectAltName: host "proxy.golang.org" matched cert's "*.golang.org"
+#18 0.484 *  issuer: C=US; O=Google Trust Services; CN=WE2
+#18 0.484 *  SSL certificate verify ok.
+#18 0.484 * Using HTTP2, server supports multiplexing
+#18 0.484 * Connection state changed (HTTP/2 confirmed)
+#18 0.484 * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+#18 0.484 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#18 0.484 } [5 bytes data]
+#18 0.484 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#18 0.484 } [5 bytes data]
+#18 0.484 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#18 0.484 } [5 bytes data]
+#18 0.484 * Using Stream ID: 1 (easy handle 0x56148b2d29f0)
+#18 0.484 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#18 0.484 } [5 bytes data]
+#18 0.484 > GET / HTTP/2
+#18 0.484 > Host: proxy.golang.org
+#18 0.484 > user-agent: curl/7.81.0
+#18 0.484 > accept: */*
+#18 0.484 > 
+#18 0.505 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.505 { [5 bytes data]
+#18 0.505 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#18 0.505 { [282 bytes data]
+#18 0.505 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#18 0.505 { [282 bytes data]
+#18 0.505 * old SSL session ID is stale, removing
+#18 0.505 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.505 { [5 bytes data]
+#18 0.505 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#18 0.505 } [5 bytes data]
+#18 0.506 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.506 { [5 bytes data]
+#18 0.507 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.507 { [5 bytes data]
+#18 0.507 < HTTP/2 200 
+#18 0.507 < accept-ranges: bytes
+#18 0.507 < access-control-allow-origin: *
+#18 0.507 < content-length: 9628
+#18 0.507 < content-security-policy-report-only: script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/goa-fa2dfb7c_2
+#18 0.507 < cross-origin-opener-policy: same-origin
+#18 0.507 < x-content-type-options: nosniff
+#18 0.507 < x-frame-options: SAMEORIGIN
+#18 0.507 < x-xss-protection: 0
+#18 0.507 < date: Wed, 27 Aug 2025 22:15:41 GMT
+#18 0.507 < expires: Wed, 27 Aug 2025 22:45:41 GMT
+#18 0.507 < cache-control: public, max-age=1800
+#18 0.507 < content-type: text/html; charset=UTF-8
+#18 0.507 < vary: Sec-Fetch-Site,Sec-Fetch-Mode,Sec-Fetch-Dest
+#18 0.507 < age: 63
+#18 0.507 < alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+#18 0.507 < 
+#18 0.507 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.507 { [5 bytes data]
+#18 0.507 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.507 { [5 bytes data]
+#18 0.508 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.508 { [5 bytes data]
+#18 0.508 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.508 { [5 bytes data]
+#18 0.508 <!DOCTYPE html>
+#18 0.508 <html lang="en">
+#18 0.508   <meta name="viewport" content="width=device-width, initial-scale=1">
+#18 0.508   <title>Go modules services</title>
+#18 0.508   <style>
+#18 0.508     .container {
+#18 0.508       font-size: 1.6em;
+#18 0.508       line-height: 1.4;
+#18 0.508       margin: 3.5em auto;
+#18 0.508       max-width: 45em;
+#18 0.508       padding: 0 1.5em;
+#18 0.508     }
+#18 0.508     body {
+#18 0.508       font: 62.5% Arial, sans-serif;
+#18 0.508     }
+#18 0.508     code {
+#18 0.508       background-color: #f0f8ff;
+#18 0.508     }
+#18 0.508   </style>
+#18 0.508 
+#18 0.508   <div class="container">
+#18 0.508   <h1>Go Module Mirror, Index, and Checksum Database</h1>
+#18 0.508   <p>The Go team is providing the following services run by Google: a module mirror for accelerating
+#18 0.508     Go module downloads, an index for discovering new modules, and a global go.sum database for
+#18 0.508     authenticating module content.</p>
+#18 0.508 
+#18 0.508   <p>Since Go 1.13, the go command by default downloads and authenticates modules using the Go
+#18 0.508     module mirror and Go checksum database. See
+#18 0.508     <a href="privacy">proxy.golang.org/privacy</a> for privacy information
+#18 0.508     about these services and the
+#18 0.508     <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#18 0.508     for configuration details including how to disable the use of these servers or use different
+#18 0.508     ones. If you depend on non-public modules, see the
+#18 0.508     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">documentation for configuring your environment</a>.
+#18 0.508   </p>
+#18 0.508 
+#18 0.508   <h2 id="services">Services</h2>
+#18 0.508   <p><a href="https://proxy.golang.org"><strong>proxy.golang.org</strong></a> - a module mirror
+#18 0.508     which implements the <a href="https://golang.org/ref/mod#goproxy-protocol">module proxy protocol</a>.
+#18 0.508     For users downloading large numbers of modules (e.g. for bulk static analysis), the mirror
+#18 0.508     supports a separate endpoint <code>/cached-only</code> that instructs the proxy to
+#18 0.508     return only cached content. This will avoid slow downloads, at the cost of possibly missing some
+#18 0.508     rarely-used modules.
+#18 0.508   </p>
+#18 0.508   <p>
+#18 0.508     <code>
+#18 0.508     GOPROXY=https://proxy.golang.org/cached-only go mod download golang.org/x/tools@v0.1.0
+#18 0.508     </code>
+#18 0.508   </p>
+#18 0.508 
+#18 0.508   <p><a href="https://sum.golang.org"><strong>sum.golang.org</strong></a> - an auditable checksum
+#18 0.508     database which will be used by the go command to authenticate modules.
+#18 0.508     Learn more in the <a href="https://golang.org/ref/mod#checksum-database">go command documentation</a>.</p>
+#18 0.508 
+#18 0.508   <p><a href="https://index.golang.org"><strong>index.golang.org</strong></a> - an index which
+#18 0.508     serves a feed of new module versions that become available by proxy.golang.org. The feed
+#18 0.508     can be viewed at <a href="https://index.golang.org/index">https://index.golang.org/index</a>.
+#18 0.508     The feed is served as new line delimited JSON, providing the module path (as Path), the module
+#18 0.508     version (as Version), and the time it was first cached by proxy.golang.org (as Timestamp). The
+#18 0.508     list is sorted in chronological order. There are optional parameters:</p>
+#18 0.508     <ul>
+#18 0.508       <li>
+#18 0.508         'since': the oldest allowable timestamp (RFC3339 format) for module versions in the returned list. Default
+#18 0.508         is the beginning of time, e.g.
+#18 0.508         <a href="https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z">https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z</a>
+#18 0.508       </li>
+#18 0.508       <li>
+#18 0.508         'limit': the maximum length of the returned list. Default = 2000, Max = 2000, e.g.
+#18 0.508         <a href="https://index.golang.org/index?limit=10">https://index.golang.org/index?limit=10</a>
+#18 0.508       </li>
+#18 0.508       <li>
+#18 0.508         'include': by default, the index returns module versions that proxy.golang.org has cached
+#18 0.508         copies. If 'include=all', index.golang.org will return all module versions proxy.golang.org
+#18 0.508         or sum.golang.org ever served. Default = "" e.g.
+#18 0.508         <a href="https://index.golang.org/index?include=all">https://index.golang.org/index?include=all</a>
+#18 0.508       </li>
+#18 0.508     </ul>
+#18 0.508     <p>If you use the index to download many modules from the module mirror, you will want to use
+#18 0.508     the <code>/cached-only</code> endpoint, described above.
+#18 0.508   </p>
+#18 0.508 
+#18 0.508   <h2 id="status">Status: Launched</h2>
+#18 0.508   <p>These services are ready for p* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.509 { [5 bytes data]
+#18 0.509 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.509 { [5 bytes data]
+#18 0.509 roduction use. Please
+#18 0.509     <a href="https://golang.org/issue/new?title=proxy.golang.org:%20">file issues</a>
+#18 0.509     if you spot them, with the title prefix "proxy.golang.org:" (or "index.golang.org:", or
+#18 0.509     "sum.golang.org:").</p>
+#18 0.509 
+#18 0.509   <h2 id="environment-setup">Environment setup</h2>
+#18 0.509 
+#18 0.509   <p>These services can only access publicly available source code. If you depend on private
+#18 0.509     modules, set <code>GOPRIVATE</code> to a glob pattern that covers them. See
+#18 0.509     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">Module configuration for non-public modules</a>
+#18 0.509     in the go command documentation for more details.</p>
+#18 0.509 
+#18 0.509   <p>To opt-out of this module mirror, you can turn it off by setting <code>GOPROXY=direct</code></p>
+#18 0.509 
+#18 0.509   <p>See the <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#18 0.509     for other configuration details.</p>
+#18 0.509 
+#18 0.509   <h2 id="faq">FAQ</h2>
+#18 0.509 
+#18 0.509   <h3 id="faq-refresh-traffic">
+#18 0.509     Why is proxy.golang.org sending me so much traffic?</h3>
+#18 0.509   <p>The Go module mirror tries to keep its cache up to date by refreshing recently accessed
+#18 0.509     information before it expires. If your server is seeing too much traffic, we can disable that
+#18 0.509     speculative refresh or work with you to understand the traffic better. Please file a
+#18 0.509     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">GitHub issue</a> or email us
+#18 0.509     at <a href="mailto:security@golang.org">security@golang.org</a>.</p>
+#18 0.509 
+#18 0.509   <h3 id="faq-new-version">
+#18 0.509     I committed a new change (or released a new version) to a repository, why isn't it showing up
+#18 0.509     when I run <code>go get -u</code> or <code>go list -m --versions</code>?</h3>
+#18 0.509   <p>In order to improve our services' caching and serving latencies, new versions may not show up
+#18 0.509     right away. If you want new code to be immediately available in the mirror, then first make sure
+#18 0.509     there is a semantically versioned tag for this revision in the underlying source repository.
+#18 0.509     Then explicitly request that version via <code>go get module@version</code>. The new version
+#18 0.509     should be available within one minute. Note that if someone requested the version before the tag
+#18 0.509     was pushed, it may take up to 30 minutes for the mirror's cache to expire and fresh data about
+#18 0.509     the version to become available. If the version is still not available after 30 minutes, please
+#18 0.509     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">file an issue</a>.</p>
+#18 0.509 
+#18 0.509   <h3 id="faq-retract-version">
+#18 0.509     I removed a bad release from my repository but it still appears in the mirror, what should I do?</h3>
+#18 0.509   <p>Whenever possible, the mirror aims to cache content in order to avoid breaking builds for people
+#18 0.509     that depend on your package, so this bad release may still be available in the mirror even if it
+#18 0.509     is not available at the origin. The same situation applies if you delete your entire repository.
+#18 0.509     We suggest creating a new version and encouraging people to use that one instead.</p>
+#18 0.509 
+#18 0.509   <p>If you would like to hide versions of a module from the <code>go</code>
+#18 0.509     command, as well as <a href="https://pkg.go.dev">pkg.go.dev</a>, you should retract them.
+#18 0.509     Retracting a module version involves adding a <a href="https://golang.org/ref/mod#go-mod-file-retract">retract directive</a>
+#18 0.509     to your go.mod file and publishing a new version. See the Go blog post
+#18 0.509     <a href="https://go.dev/blog/go116-module-changes#module-retraction">New module changes in Go 1.16</a> and
+#18 0.509     the <a href="https://go.dev/ref/mod#go-mod-file-retract">modules reference</a> for details.</p>
+#18 0.509 
+#18 0.509   <h3 id="faq-cannot-use">
+#18 0.509     I'm running the go command in an environment that can't use the mirror.</h3>
+#18 0.509   <p>The <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#18 0.509     describes the configuration details including how to disable the use of these servers or use
+#18 0.509     different ones.</p>
+#18 0.509 
+#18 0.509   <h3 id="faq-private">
+#18 0.509     If I don't set <code>GOPRIVATE</code> and request a private module from these services,
+#18 0.509     what leaks?</h3>
+#18 0.509   <p>The proxy and checksum database protocol* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.510 { [5 bytes data]
+#18 0.510 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#18 0.510 { [5 bytes data]
+#18 0.510 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#18 0.510 } [5 bytes data]
+#18 0.510 
+100  9628  100  9628    0     0  69971      0 --:--:-- --:--:-- --:--:-- 70277
+#18 0.510 s only send module paths and versions to the remote
+#18 0.510     server. If you request a private module, the mirror will try to download it just as any Go
+#18 0.510     user would and fail in the same way. Information about failed requests isn't published
+#18 0.510     anywhere. The only trace of the request will be in internal logs, which
+#18 0.510     are governed by the <a href="privacy">privacy policy</a>.</p>
+#18 0.510 
+#18 0.510   <h3 id="faq-retention">
+#18 0.510     Why did a previously available module become unavailable in the mirror?</h3>
+#18 0.510   <p><a href="https://proxy.golang.org">proxy.golang.org</a> does not save all modules forever.
+#18 0.510     There are a number of reasons for this, but one reason is if
+#18 0.510     <a href="https://proxy.golang.org">proxy.golang.org</a> is not able to detect a suitable
+#18 0.510     license. In this case, only a temporarily cached copy of the module will be made available, and
+#18 0.510     may become unavailable if it is removed from the original source and becomes outdated.
+#18 0.510     The checksums will still remain in the checksum database regardless of whether or not they
+#18 0.510     have become unavailable in the mirror.</p>
+#18 0.510 
+#18 0.510   <h3 id="faq-security">
+#18 0.510     I have discovered a malicious module version in the mirror. Where do I report it?</h3>
+#18 0.510   <p>Following <a href="https://golang.org/security#reporting">the security policy</a>, send an
+#18 0.510     email to <a href="mailto:security@golang.org">security@golang.org</a> with the word
+#18 0.510     "vulnerability" in the message somewhere.</p>
+#18 0.510 
+#18 0.510   </div>
+#18 0.510 * Connection #0 to host proxy.golang.org left intact
+#18 DONE 0.5s
+
+#19 [13/20] RUN curl -v https://golang.org || echo "Warning: curl to golang.org failed"
+#19 0.395   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#19 0.395                                  Dload  Upload   Total   Spent    Left  Speed
+#19 0.395 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 64.233.176.141:443...
+#19 0.429 * Connected to golang.org (64.233.176.141) port 443 (#0)
+#19 0.431 * ALPN, offering h2
+#19 0.431 * ALPN, offering http/1.1
+#19 0.478 *  CAfile: /etc/ssl/certs/ca-certificates.crt
+#19 0.478 *  CApath: /etc/ssl/certs
+#19 0.479 * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+#19 0.479 } [5 bytes data]
+#19 0.479 * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+#19 0.479 } [512 bytes data]
+#19 0.500 * TLSv1.2 (IN), TLS header, Certificate Status (22):
+#19 0.500 { [5 bytes data]
+#19 0.500 * TLSv1.3 (IN), TLS handshake, Server hello (2):
+#19 0.500 { [122 bytes data]
+#19 0.500 * TLSv1.2 (IN), TLS header, Finished (20):
+#19 0.500 { [5 bytes data]
+#19 0.500 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#19 0.500 { [5 bytes data]
+#19 0.500 * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+#19 0.500 { [15 bytes data]
+#19 0.500 * TLSv1.3 (IN), TLS handshake, Certificate (11):
+#19 0.500 { [9956 bytes data]
+#19 0.503 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+#19 0.503 { [79 bytes data]
+#19 0.503 * TLSv1.3 (IN), TLS handshake, Finished (20):
+#19 0.503 { [52 bytes data]
+#19 0.503 * TLSv1.2 (OUT), TLS header, Finished (20):
+#19 0.503 } [5 bytes data]
+#19 0.503 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+#19 0.503 } [1 bytes data]
+#19 0.503 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#19 0.503 } [5 bytes data]
+#19 0.503 * TLSv1.3 (OUT), TLS handshake, Finished (20):
+#19 0.503 } [52 bytes data]
+#19 0.503 * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+#19 0.503 * ALPN, server accepted to use h2
+#19 0.503 * Server certificate:
+#19 0.503 *  subject: CN=misc-sni.google.com
+#19 0.503 *  start date: Aug 11 19:21:49 2025 GMT
+#19 0.503 *  expire date: Nov  3 19:21:48 2025 GMT
+#19 0.503 *  subjectAltName: host "golang.org" matched cert's "golang.org"
+#19 0.503 *  issuer: C=US; O=Google Trust Services; CN=WE2
+#19 0.503 *  SSL certificate verify ok.
+#19 0.503 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Using HTTP2, server supports multiplexing
+#19 0.503 * Connection state changed (HTTP/2 confirmed)
+#19 0.503 * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+#19 0.503 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#19 0.503 } [5 bytes data]
+#19 0.503 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#19 0.503 } [5 bytes data]
+#19 0.503 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#19 0.503 } [5 bytes data]
+#19 0.503 * Using Stream ID: 1 (easy handle 0x55c460e959f0)
+#19 0.503 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#19 0.503 } [5 bytes data]
+#19 0.503 > GET / HTTP/2
+#19 0.503 > Host: golang.org
+#19 0.503 > user-agent: curl/7.81.0
+#19 0.503 > accept: */*
+#19 0.503 > 
+#19 0.524 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#19 0.524 { [5 bytes data]
+#19 0.524 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#19 0.524 { [282 bytes data]
+#19 0.524 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#19 0.524 { [282 bytes data]
+#19 0.524 * old SSL session ID is stale, removing
+#19 0.524 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#19 0.524 { [5 bytes data]
+#19 0.524 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#19 0.524 } [5 bytes data]
+#19 0.524 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#19 0.524 { [5 bytes data]
+#19 0.595 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#19 0.595 { [5 bytes data]
+#19 0.595 < HTTP/2 301 
+#19 0.595 < content-type: text/html; charset=utf-8
+#19 0.595 < content-security-policy: connect-src 'self' www.google-analytics.com stats.g.doubleclick.net ; default-src 'self' ; font-src 'self' fonts.googleapis.com fonts.gstatic.com data: ; frame-ancestors 'self' ; frame-src 'self' www.google.com feedback.googleusercontent.com www.googletagmanager.com scone-pa.clients6.google.com www.youtube.com player.vimeo.com ; img-src 'self' www.google.com www.google-analytics.com ssl.gstatic.com www.gstatic.com gstatic.com data: * ; object-src 'none' ; script-src 'self' 'sha256-n6OdwTrm52KqKm6aHYgD0TFUdMgww4a0GQlIAVrMzck=' 'sha256-4ryYrf7Y5daLOBv0CpYtyBIcJPZkRD2eBPdfqsN3r1M=' 'sha256-sVKX08+SqOmnWhiySYk3xC7RDUgKyAkmbXV2GWts4fo=' www.google.com apis.google.com www.gstatic.com gstatic.com support.google.com www.googletagmanager.com www.google-analytics.com ssl.google-analytics.com tagmanager.google.com ; style-src 'self' 'unsafe-inline' fonts.googleapis.com feedback.googleusercontent.com www.gstatic.com gstatic.com tagmanager.google.com ;
+#19 0.595 < location: https://go.dev/
+#19 0.595 < strict-transport-security: max-age=31536000; includeSubDomains; preload
+#19 0.595 < x-cloud-trace-context: 3bef184eeeb25baa6356e4542ca74d98
+#19 0.595 < date: Wed, 27 Aug 2025 22:16:45 GMT
+#19 0.595 < server: Google Frontend
+#19 0.595 < content-length: 50
+#19 0.595 < alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+#19 0.595 < 
+#19 0.595 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#19 0.595 { [5 bytes data]
+#19 0.595 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#19 0.595 { [5 bytes data]
+#19 0.595 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#19 0.595 } [5 bytes data]
+#19 0.595 
+100    50  100    50    0     0    248      0 --:--:-- --:--:-- --:--:--   248
+#19 0.595 * Connection #0 to host golang.org left intact
+#19 0.595 <a href="https://go.dev/">Moved Permanently</a>.
+#19 0.595 
+#19 DONE 0.6s
+
+#20 [14/20] RUN ping -c 3 proxy.golang.org || echo "Warning: Cannot reach proxy.golang.org"
+#20 0.404 PING proxy.golang.org (173.194.219.141) 56(84) bytes of data.
+#20 0.404 64 bytes from ya-in-f141.1e100.net (173.194.219.141): icmp_seq=1 ttl=104 time=20.0 ms
+#20 1.405 64 bytes from ya-in-f141.1e100.net (173.194.219.141): icmp_seq=2 ttl=104 time=20.5 ms
+#20 2.407 64 bytes from ya-in-f141.1e100.net (173.194.219.141): icmp_seq=3 ttl=104 time=20.5 ms
+#20 2.407 
+#20 2.407 --- proxy.golang.org ping statistics ---
+#20 2.407 3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+#20 2.407 rtt min/avg/max/mdev = 19.964/20.329/20.514/0.258 ms
+#20 DONE 2.4s
+
+#21 [15/20] RUN ping -c 3 golang.org || echo "Warning: Cannot reach golang.org"
+#21 0.443 PING golang.org (64.233.176.141) 56(84) bytes of data.
+#21 0.443 64 bytes from yw-in-f141.1e100.net (64.233.176.141): icmp_seq=1 ttl=104 time=20.0 ms
+#21 1.443 64 bytes from yw-in-f141.1e100.net (64.233.176.141): icmp_seq=2 ttl=104 time=20.0 ms
+#21 2.445 64 bytes from yw-in-f141.1e100.net (64.233.176.141): icmp_seq=3 ttl=104 time=20.0 ms
+#21 2.445 
+#21 2.445 --- golang.org ping statistics ---
+#21 2.445 3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+#21 2.445 rtt min/avg/max/mdev = 19.994/19.998/20.007/0.006 ms
+#21 DONE 2.5s
+
+#22 [16/20] RUN set -eux;     for i in 1 2 3 4 5; do       GOPROXY=https://proxy.golang.org,direct go mod download -x && break || (echo "go mod download failed, attempt $$i"; go env; curl -v https://proxy.golang.org || true; sleep 5);     done || (echo "Retrying with GOPROXY=direct"; GOPROXY=direct go mod download -x)
+#22 0.333 + GOPROXY=https://proxy.golang.org,direct go mod download -x
+#22 0.335 go: go: could not create module cache: mkdir /go: permission denied
+#22 0.336 + echo go mod download failed, attempt 1i
+#22 0.336 + go env
+#22 0.336 go mod download failed, attempt 1i
+#22 0.338 go: go: could not create module cache: mkdir /go: permission denied
+#22 0.338 + curl -v https://proxy.golang.org
+#22 0.344   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#22 0.344                                  Dload  Upload   Total   Spent    Left  Speed
+#22 0.344 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 173.194.219.141:443...
+#22 0.377 * Connected to proxy.golang.org (173.194.219.141) port 443 (#0)
+#22 0.379 * ALPN, offering h2
+#22 0.379 * ALPN, offering http/1.1
+#22 0.429 *  CAfile: /etc/ssl/certs/ca-certificates.crt
+#22 0.429 *  CApath: /etc/ssl/certs
+#22 0.429 * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+#22 0.429 } [5 bytes data]
+#22 0.429 * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+#22 0.429 } [512 bytes data]
+#22 0.450 * TLSv1.2 (IN), TLS header, Certificate Status (22):
+#22 0.450 { [5 bytes data]
+#22 0.450 * TLSv1.3 (IN), TLS handshake, Server hello (2):
+#22 0.450 { [122 bytes data]
+#22 0.451 * TLSv1.2 (IN), TLS header, Finished (20):
+#22 0.451 { [5 bytes data]
+#22 0.451 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.451 { [5 bytes data]
+#22 0.451 * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+#22 0.451 { [15 bytes data]
+#22 0.451 * TLSv1.3 (IN), TLS handshake, Certificate (11):
+#22 0.451 { [9956 bytes data]
+#22 0.453 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+#22 0.453 { [80 bytes data]
+#22 0.453 * TLSv1.3 (IN), TLS handshake, Finished (20):
+#22 0.453 { [52 bytes data]
+#22 0.453 * TLSv1.2 (OUT), TLS header, Finished (20):
+#22 0.453 } [5 bytes data]
+#22 0.453 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+#22 0.453 } [1 bytes data]
+#22 0.453 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 0.453 } [5 bytes data]
+#22 0.453 * TLSv1.3 (OUT), TLS handshake, Finished (20):
+#22 0.453 } [52 bytes data]
+#22 0.453 * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+#22 0.453 * ALPN, server accepted to use h2
+#22 0.453 * Server certificate:
+#22 0.453 *  subject: CN=misc-sni.google.com
+#22 0.453 *  start date: Aug 11 19:21:49 2025 GMT
+#22 0.453 *  expire date: Nov  3 19:21:48 2025 GMT
+#22 0.453 *  subjectAltName: host "proxy.golang.org" matched cert's "*.golang.org"
+#22 0.453 *  issuer: C=US; O=Google Trust Services; CN=WE2
+#22 0.453 *  SSL certificate verify ok.
+#22 0.453 * Using HTTP2, server supports multiplexing
+#22 0.453 * Connection state changed (HTTP/2 confirmed)
+#22 0.453 * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+#22 0.453 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 0.453 } [5 bytes data]
+#22 0.453 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 0.453 } [5 bytes data]
+#22 0.453 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 0.453 } [5 bytes data]
+#22 0.453 * Using Stream ID: 1 (easy handle 0x55fa8a1e29f0)
+#22 0.453 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 0.453 } [5 bytes data]
+#22 0.453 > GET / HTTP/2
+#22 0.453 > Host: proxy.golang.org
+#22 0.453 > user-agent: curl/7.81.0
+#22 0.453 > accept: */*
+#22 0.453 > 
+#22 0.474 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.474 { [5 bytes data]
+#22 0.474 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 0.474 { [282 bytes data]
+#22 0.474 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 0.474 { [282 bytes data]
+#22 0.474 * old SSL session ID is stale, removing
+#22 0.474 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.474 { [5 bytes data]
+#22 0.474 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 0.474 } [5 bytes data]
+#22 0.477 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.477 { [5 bytes data]
+#22 0.477 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.477 { [5 bytes data]
+#22 0.477 < HTTP/2 200 
+#22 0.477 < accept-ranges: bytes
+#22 0.477 < access-control-allow-origin: *
+#22 0.477 < content-length: 9628
+#22 0.477 < content-security-policy-report-only: script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/goa-fa2dfb7c_2
+#22 0.477 < cross-origin-opener-policy: same-origin
+#22 0.477 < x-content-type-options: nosniff
+#22 0.477 < x-frame-options: SAMEORIGIN
+#22 0.477 < x-xss-protection: 0
+#22 0.477 < date: Wed, 27 Aug 2025 22:15:41 GMT
+#22 0.477 < expires: Wed, 27 Aug 2025 22:45:41 GMT
+#22 0.477 < cache-control: public, max-age=1800
+#22 0.477 < content-type: text/html; charset=UTF-8
+#22 0.477 < vary: Sec-Fetch-Site,Sec-Fetch-Mode,Sec-Fetch-Dest
+#22 0.477 < age: 69
+#22 0.477 < alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+#22 0.477 < 
+#22 0.477 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.477 { [5 bytes data]
+#22 0.478 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.478 { [5 bytes data]
+#22 0.479 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.479 { [5 bytes data]
+#22 0.479 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.479 { [5 bytes data]
+#22 0.479 <!DOCTYPE html>
+#22 0.479 <html lang="en">
+#22 0.479   <meta name="viewport" content="width=device-width, initial-scale=1">
+#22 0.479   <title>Go modules services</title>
+#22 0.479   <style>
+#22 0.479     .container {
+#22 0.479       font-size: 1.6em;
+#22 0.479       line-height: 1.4;
+#22 0.479       margin: 3.5em auto;
+#22 0.479       max-width: 45em;
+#22 0.479       padding: 0 1.5em;
+#22 0.479     }
+#22 0.479     body {
+#22 0.479       font: 62.5% Arial, sans-serif;
+#22 0.479     }
+#22 0.479     code {
+#22 0.479       background-color: #f0f8ff;
+#22 0.479     }
+#22 0.479   </style>
+#22 0.479 
+#22 0.479   <div class="container">
+#22 0.479   <h1>Go Module Mirror, Index, and Checksum Database</h1>
+#22 0.479   <p>The Go team is providing the following services run by Google: a module mirror for accelerating
+#22 0.479     Go module downloads, an index for discovering new modules, and a global go.sum database for
+#22 0.479     authenticating module content.</p>
+#22 0.479 
+#22 0.479   <p>Since Go 1.13, the go command by default downloads and authenticates modules using the Go
+#22 0.479     module mirror and Go checksum database. See
+#22 0.479     <a href="privacy">proxy.golang.org/privacy</a> for privacy information
+#22 0.479     about these services and the
+#22 0.479     <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 0.479     for configuration details including how to disable the use of these servers or use different
+#22 0.479     ones. If you depend on non-public modules, see the
+#22 0.479     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">documentation for configuring your environment</a>.
+#22 0.479   </p>
+#22 0.479 
+#22 0.479   <h2 id="services">Services</h2>
+#22 0.479   <p><a href="https://proxy.golang.org"><strong>proxy.golang.org</strong></a> - a module mirror
+#22 0.479     which implements the <a href="https://golang.org/ref/mod#goproxy-protocol">module proxy protocol</a>.
+#22 0.479     For users downloading large numbers of modules (e.g. for bulk static analysis), the mirror
+#22 0.479     supports a separate endpoint <code>/cached-only</code> that instructs the proxy to
+#22 0.479     return only cached content. This will avoid slow downloads, at the cost of possibly missing some
+#22 0.479     rarely-used modules.
+#22 0.479   </p>
+#22 0.479   <p>
+#22 0.479     <code>
+#22 0.479     GOPROXY=https://proxy.golang.org/cached-only go mod download golang.org/x/tools@v0.1.0
+#22 0.479     </code>
+#22 0.479   </p>
+#22 0.479 
+#22 0.479   <p><a href="https://sum.golang.org"><strong>sum.golang.org</strong></a> - an auditable checksum
+#22 0.479     database which will be used by the go command to authenticate modules.
+#22 0.479     Learn more in the <a href="https://golang.org/ref/mod#checksum-database">go command documentation</a>.</p>
+#22 0.479 
+#22 0.479   <p><a href="https://index.golang.org"><strong>index.golang.org</strong></a> - an index which
+#22 0.479     serves a feed of new module versions that become available by proxy.golang.org. The feed
+#22 0.479     can be viewed at <a href="https://index.golang.org/index">https://index.golang.org/index</a>.
+#22 0.479     The feed is served as new line delimited JSON, providing the module path (as Path), the module
+#22 0.479     version (as Version), and the time it was first cached by proxy.golang.org (as Timestamp). The
+#22 0.479     list is sorted in chronological order. There are optional parameters:</p>
+#22 0.479     <ul>
+#22 0.479       <li>
+#22 0.479         'since': the oldest allowable timestamp (RFC3339 format) for module versions in the returned list. Default
+#22 0.479         is the beginning of time, e.g.
+#22 0.479         <a href="https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z">https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z</a>
+#22 0.479       </li>
+#22 0.479       <li>
+#22 0.479         'limit': the maximum length of the returned list. Default = 2000, Max = 2000, e.g.
+#22 0.479         <a href="https://index.golang.org/index?limit=10">https://index.golang.org/index?limit=10</a>
+#22 0.479       </li>
+#22 0.479       <li>
+#22 0.479         'include': by default, the index returns module versions that proxy.golang.org has cached
+#22 0.479         copies. If 'include=all', index.golang.org will return all module versions proxy.golang.org
+#22 0.479         or sum.golang.org ever served. Default = "" e.g.
+#22 0.479         <a href="https://index.golang.org/index?include=all">https://index.golang.org/index?include=all</a>
+#22 0.479       </li>
+#22 0.479     </ul>
+#22 0.479     <p>If you use the index to download many modules from the module mirror, you will want to use
+#22 0.479     the <code>/cached-only</code> endpoint, described above.
+#22 0.479   </p>
+#22 0.479 
+#22 0.479   <h2 id="status">Status: Launched</h2>
+#22 0.479   <p>These services are ready for p* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.480 { [5 bytes data]
+#22 0.480 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.480 { [5 bytes data]
+#22 0.480 roduction use. Please
+#22 0.480     <a href="https://golang.org/issue/new?title=proxy.golang.org:%20">file issues</a>
+#22 0.480     if you spot them, with the title prefix "proxy.golang.org:" (or "index.golang.org:", or
+#22 0.480     "sum.golang.org:").</p>
+#22 0.480 
+#22 0.480   <h2 id="environment-setup">Environment setup</h2>
+#22 0.480 
+#22 0.480   <p>These services can only access publicly available source code. If you depend on private
+#22 0.480     modules, set <code>GOPRIVATE</code> to a glob pattern that covers them. See
+#22 0.480     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">Module configuration for non-public modules</a>
+#22 0.480     in the go command documentation for more details.</p>
+#22 0.480 
+#22 0.480   <p>To opt-out of this module mirror, you can turn it off by setting <code>GOPROXY=direct</code></p>
+#22 0.480 
+#22 0.480   <p>See the <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 0.480     for other configuration details.</p>
+#22 0.480 
+#22 0.480   <h2 id="faq">FAQ</h2>
+#22 0.480 
+#22 0.480   <h3 id="faq-refresh-traffic">
+#22 0.480     Why is proxy.golang.org sending me so much traffic?</h3>
+#22 0.480   <p>The Go module mirror tries to keep its cache up to date by refreshing recently accessed
+#22 0.480     information before it expires. If your server is seeing too much traffic, we can disable that
+#22 0.480     speculative refresh or work with you to understand the traffic better. Please file a
+#22 0.480     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">GitHub issue</a> or email us
+#22 0.480     at <a href="mailto:security@golang.org">security@golang.org</a>.</p>
+#22 0.480 
+#22 0.480   <h3 id="faq-new-version">
+#22 0.480     I committed a new change (or released a new version) to a repository, why isn't it showing up
+#22 0.480     when I run <code>go get -u</code> or <code>go list -m --versions</code>?</h3>
+#22 0.480   <p>In order to improve our services' caching and serving latencies, new versions may not show up
+#22 0.480     right away. If you want new code to be immediately available in the mirror, then first make sure
+#22 0.480     there is a semantically versioned tag for this revision in the underlying source repository.
+#22 0.480     Then explicitly request that version via <code>go get module@version</code>. The new version
+#22 0.480     should be available within one minute. Note that if someone requested the version before the tag
+#22 0.480     was pushed, it may take up to 30 minutes for the mirror's cache to expire and fresh data about
+#22 0.480     the version to become available. If the version is still not available after 30 minutes, please
+#22 0.480     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">file an issue</a>.</p>
+#22 0.480 
+#22 0.480   <h3 id="faq-retract-version">
+#22 0.480     I removed a bad release from my repository but it still appears in the mirror, what should I do?</h3>
+#22 0.480   <p>Whenever possible, the mirror aims to cache content in order to avoid breaking builds for people
+#22 0.480     that depend on your package, so this bad release may still be available in the mirror even if it
+#22 0.480     is not available at the origin. The same situation applies if you delete your entire repository.
+#22 0.480     We suggest creating a new version and encouraging people to use that one instead.</p>
+#22 0.480 
+#22 0.480   <p>If you would like to hide versions of a module from the <code>go</code>
+#22 0.480     command, as well as <a href="https://pkg.go.dev">pkg.go.dev</a>, you should retract them.
+#22 0.480     Retracting a module version involves adding a <a href="https://golang.org/ref/mod#go-mod-file-retract">retract directive</a>
+#22 0.480     to your go.mod file and publishing a new version. See the Go blog post
+#22 0.480     <a href="https://go.dev/blog/go116-module-changes#module-retraction">New module changes in Go 1.16</a> and
+#22 0.480     the <a href="https://go.dev/ref/mod#go-mod-file-retract">modules reference</a> for details.</p>
+#22 0.480 
+#22 0.480   <h3 id="faq-cannot-use">
+#22 0.480     I'm running the go command in an environment that can't use the mirror.</h3>
+#22 0.480   <p>The <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 0.480     describes the configuration details including how to disable the use of these servers or use
+#22 0.480     different ones.</p>
+#22 0.480 
+#22 0.480   <h3 id="faq-private">
+#22 0.480     If I don't set <code>GOPRIVATE</code> and request a private module from these services,
+#22 0.480     what leaks?</h3>
+#22 0.480   <p>The proxy and checksum database protocol* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.481 { [5 bytes data]
+#22 0.481 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 0.481 { [5 bytes data]
+#22 0.481 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 0.481 } [5 bytes data]
+#22 0.481 
+100  9628  100  9628    0     0  70291      0 --:--:-- --:--:-- --:--:-- 70794
+#22 0.481 * Connection #0 to host proxy.golang.org left intact
+#22 0.481 s only send module paths and versions to the remote
+#22 0.481     server. If you request a private module, the mirror will try to download it just as any Go
+#22 0.481     user would and fail in the same way. Information about failed requests isn't published
+#22 0.481     anywhere. The only trace of the request will be in internal logs, which
+#22 0.481     are governed by the <a href="privacy">privacy policy</a>.</p>
+#22 0.481 
+#22 0.481   <h3 id="faq-retention">
+#22 0.481     Why did a previously available module become unavailable in the mirror?</h3>
+#22 0.481   <p><a href="https://proxy.golang.org">proxy.golang.org</a> does not save all modules forever.
+#22 0.481     There are a number of reasons for this, but one reason is if
+#22 0.481     <a href="https://proxy.golang.org">proxy.golang.org</a> is not able to detect a suitable
+#22 0.481     license. In this case, only a temporarily cached copy of the module will be made available, and
+#22 0.481     may become unavailable if it is removed from the original source and becomes outdated.
+#22 0.481     The checksums will still remain in the checksum database regardless of whether or not they
+#22 0.481     have become unavailable in the mirror.</p>
+#22 0.481 
+#22 0.481   <h3 id="faq-security">
+#22 0.481     I have discovered a malicious module version in the mirror. Where do I report it?</h3>
+#22 0.481   <p>Following <a href="https://golang.org/security#reporting">the security policy</a>, send an
+#22 0.481     email to <a href="mailto:security@golang.org">security@golang.org</a> with the word
+#22 0.481     "vulnerability" in the message somewhere.</p>
+#22 0.481 
+#22 0.481   </div>
+#22 0.483 + sleep 5
+#22 5.484 + GOPROXY=https://proxy.golang.org,direct go mod download -x
+#22 5.486 go: go: could not create module cache: mkdir /go: permission denied
+#22 5.487 + echo go mod download failed, attempt 1i
+#22 5.487 + go env
+#22 5.487 go mod download failed, attempt 1i
+#22 5.490 go: go: could not create module cache: mkdir /go: permission denied
+#22 5.490 + curl -v https://proxy.golang.org
+#22 5.495   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#22 5.495                                  Dload  Upload   Total   Spent    Left  Speed
+#22 5.495 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 173.194.219.141:443...
+#22 5.529 * Connected to proxy.golang.org (173.194.219.141) port 443 (#0)
+#22 5.531 * ALPN, offering h2
+#22 5.531 * ALPN, offering http/1.1
+#22 5.581 *  CAfile: /etc/ssl/certs/ca-certificates.crt
+#22 5.581 *  CApath: /etc/ssl/certs
+#22 5.582 * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+#22 5.582 } [5 bytes data]
+#22 5.582 * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+#22 5.582 } [512 bytes data]
+#22 5.609 * TLSv1.2 (IN), TLS header, Certificate Status (22):
+#22 5.609 { [5 bytes data]
+#22 5.609 * TLSv1.3 (IN), TLS handshake, Server hello (2):
+#22 5.609 { [122 bytes data]
+#22 5.609 * TLSv1.2 (IN), TLS header, Finished (20):
+#22 5.609 { [5 bytes data]
+#22 5.610 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.610 { [5 bytes data]
+#22 5.610 * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+#22 5.610 { [15 bytes data]
+#22 5.610 * TLSv1.3 (IN), TLS handshake, Certificate (11):
+#22 5.610 { [9956 bytes data]
+#22 5.612 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+#22 5.612 { [79 bytes data]
+#22 5.612 * TLSv1.3 (IN), TLS handshake, Finished (20):
+#22 5.612 { [52 bytes data]
+#22 5.612 * TLSv1.2 (OUT), TLS header, Finished (20):
+#22 5.612 } [5 bytes data]
+#22 5.612 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+#22 5.612 } [1 bytes data]
+#22 5.612 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 5.612 } [5 bytes data]
+#22 5.612 * TLSv1.3 (OUT), TLS handshake, Finished (20):
+#22 5.612 } [52 bytes data]
+#22 5.612 * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+#22 5.612 * ALPN, server accepted to use h2
+#22 5.612 * Server certificate:
+#22 5.612 *  subject: CN=misc-sni.google.com
+#22 5.612 *  start date: Aug 11 19:21:49 2025 GMT
+#22 5.612 *  expire date: Nov  3 19:21:48 2025 GMT
+#22 5.612 *  subjectAltName: host "proxy.golang.org" matched cert's "*.golang.org"
+#22 5.612 *  issuer: C=US; O=Google Trust Services; CN=WE2
+#22 5.612 *  SSL certificate verify ok.
+#22 5.612 * Using HTTP2, server supports multiplexing
+#22 5.612 * Connection state changed (HTTP/2 confirmed)
+#22 5.612 * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+#22 5.612 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 5.612 } [5 bytes data]
+#22 5.612 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 5.612 } [5 bytes data]
+#22 5.612 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 5.612 } [5 bytes data]
+#22 5.612 * Using Stream ID: 1 (easy handle 0x563238d969f0)
+#22 5.612 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 5.612 } [5 bytes data]
+#22 5.612 > GET / HTTP/2
+#22 5.612 > Host: proxy.golang.org
+#22 5.612 > user-agent: curl/7.81.0
+#22 5.612 > accept: */*
+#22 5.612 > 
+#22 5.634 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.634 { [5 bytes data]
+#22 5.634 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 5.634 { [282 bytes data]
+#22 5.634 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 5.634 { [282 bytes data]
+#22 5.634 * old SSL session ID is stale, removing
+#22 5.634 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.634 { [5 bytes data]
+#22 5.634 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 5.634 } [5 bytes data]
+#22 5.638 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.638 { [5 bytes data]
+#22 5.647 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.647 { [5 bytes data]
+#22 5.647 < HTTP/2 200 
+#22 5.647 < accept-ranges: bytes
+#22 5.647 < access-control-allow-origin: *
+#22 5.647 < content-length: 9628
+#22 5.647 < content-security-policy-report-only: script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/goa-fa2dfb7c_2
+#22 5.647 < cross-origin-opener-policy: same-origin
+#22 5.647 < x-content-type-options: nosniff
+#22 5.647 < x-frame-options: SAMEORIGIN
+#22 5.647 < x-xss-protection: 0
+#22 5.647 < date: Wed, 27 Aug 2025 22:15:41 GMT
+#22 5.647 < expires: Wed, 27 Aug 2025 22:45:41 GMT
+#22 5.647 < cache-control: public, max-age=1800
+#22 5.647 < content-type: text/html; charset=UTF-8
+#22 5.647 < vary: Sec-Fetch-Site,Sec-Fetch-Mode,Sec-Fetch-Dest
+#22 5.647 < age: 74
+#22 5.647 < alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+#22 5.647 < 
+#22 5.647 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.647 { [5 bytes data]
+#22 5.647 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.647 { [5 bytes data]
+#22 5.648 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.648 { [5 bytes data]
+#22 5.648 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.648 { [5 bytes data]
+#22 5.648 <!DOCTYPE html>
+#22 5.648 <html lang="en">
+#22 5.648   <meta name="viewport" content="width=device-width, initial-scale=1">
+#22 5.648   <title>Go modules services</title>
+#22 5.648   <style>
+#22 5.648     .container {
+#22 5.648       font-size: 1.6em;
+#22 5.648       line-height: 1.4;
+#22 5.648       margin: 3.5em auto;
+#22 5.648       max-width: 45em;
+#22 5.648       padding: 0 1.5em;
+#22 5.648     }
+#22 5.648     body {
+#22 5.648       font: 62.5% Arial, sans-serif;
+#22 5.648     }
+#22 5.648     code {
+#22 5.648       background-color: #f0f8ff;
+#22 5.648     }
+#22 5.648   </style>
+#22 5.648 
+#22 5.648   <div class="container">
+#22 5.648   <h1>Go Module Mirror, Index, and Checksum Database</h1>
+#22 5.648   <p>The Go team is providing the following services run by Google: a module mirror for accelerating
+#22 5.648     Go module downloads, an index for discovering new modules, and a global go.sum database for
+#22 5.648     authenticating module content.</p>
+#22 5.648 
+#22 5.648   <p>Since Go 1.13, the go command by default downloads and authenticates modules using the Go
+#22 5.648     module mirror and Go checksum database. See
+#22 5.648     <a href="privacy">proxy.golang.org/privacy</a> for privacy information
+#22 5.648     about these services and the
+#22 5.648     <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 5.648     for configuration details including how to disable the use of these servers or use different
+#22 5.648     ones. If you depend on non-public modules, see the
+#22 5.648     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">documentation for configuring your environment</a>.
+#22 5.648   </p>
+#22 5.648 
+#22 5.648   <h2 id="services">Services</h2>
+#22 5.648   <p><a href="https://proxy.golang.org"><strong>proxy.golang.org</strong></a> - a module mirror
+#22 5.648     which implements the <a href="https://golang.org/ref/mod#goproxy-protocol">module proxy protocol</a>.
+#22 5.648     For users downloading large numbers of modules (e.g. for bulk static analysis), the mirror
+#22 5.648     supports a separate endpoint <code>/cached-only</code> that instructs the proxy to
+#22 5.648     return only cached content. This will avoid slow downloads, at the cost of possibly missing some
+#22 5.648     rarely-used modules.
+#22 5.648   </p>
+#22 5.648   <p>
+#22 5.648     <code>
+#22 5.648     GOPROXY=https://proxy.golang.org/cached-only go mod download golang.org/x/tools@v0.1.0
+#22 5.648     </code>
+#22 5.648   </p>
+#22 5.648 
+#22 5.648   <p><a href="https://sum.golang.org"><strong>sum.golang.org</strong></a> - an auditable checksum
+#22 5.648     database which will be used by the go command to authenticate modules.
+#22 5.648     Learn more in the <a href="https://golang.org/ref/mod#checksum-database">go command documentation</a>.</p>
+#22 5.648 
+#22 5.648   <p><a href="https://index.golang.org"><strong>index.golang.org</strong></a> - an index which
+#22 5.648     serves a feed of new module versions that become available by proxy.golang.org. The feed
+#22 5.648     can be viewed at <a href="https://index.golang.org/index">https://index.golang.org/index</a>.
+#22 5.648     The feed is served as new line delimited JSON, providing the module path (as Path), the module
+#22 5.648     version (as Version), and the time it was first cached by proxy.golang.org (as Timestamp). The
+#22 5.648     list is sorted in chronological order. There are optional parameters:</p>
+#22 5.648     <ul>
+#22 5.648       <li>
+#22 5.648         'since': the oldest allowable timestamp (RFC3339 format) for module versions in the returned list. Default
+#22 5.648         is the beginning of time, e.g.
+#22 5.648         <a href="https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z">https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z</a>
+#22 5.648       </li>
+#22 5.648       <li>
+#22 5.648         'limit': the maximum length of the returned list. Default = 2000, Max = 2000, e.g.
+#22 5.648         <a href="https://index.golang.org/index?limit=10">https://index.golang.org/index?limit=10</a>
+#22 5.648       </li>
+#22 5.648       <li>
+#22 5.648         'include': by default, the index returns module versions that proxy.golang.org has cached
+#22 5.648         copies. If 'include=all', index.golang.org will return all module versions proxy.golang.org
+#22 5.648         or sum.golang.org ever served. Default = "" e.g.
+#22 5.648         <a href="https://index.golang.org/index?include=all">https://index.golang.org/index?include=all</a>
+#22 5.648       </li>
+#22 5.648     </ul>
+#22 5.648     <p>If you use the index to download many modules from the module mirror, you will want to use
+#22 5.648     the <code>/cached-only</code> endpoint, described above.
+#22 5.648   </p>
+#22 5.648 
+#22 5.648   <h2 id="status">Status: Launched</h2>
+#22 5.648   <p>These services are ready for p* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.649 { [5 bytes data]
+#22 5.649 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.649 { [5 bytes data]
+#22 5.649 roduction use. Please
+#22 5.649     <a href="https://golang.org/issue/new?title=proxy.golang.org:%20">file issues</a>
+#22 5.649     if you spot them, with the title prefix "proxy.golang.org:" (or "index.golang.org:", or
+#22 5.649     "sum.golang.org:").</p>
+#22 5.649 
+#22 5.649   <h2 id="environment-setup">Environment setup</h2>
+#22 5.649 
+#22 5.649   <p>These services can only access publicly available source code. If you depend on private
+#22 5.649     modules, set <code>GOPRIVATE</code> to a glob pattern that covers them. See
+#22 5.649     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">Module configuration for non-public modules</a>
+#22 5.649     in the go command documentation for more details.</p>
+#22 5.649 
+#22 5.649   <p>To opt-out of this module mirror, you can turn it off by setting <code>GOPROXY=direct</code></p>
+#22 5.649 
+#22 5.649   <p>See the <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 5.649     for other configuration details.</p>
+#22 5.649 
+#22 5.649   <h2 id="faq">FAQ</h2>
+#22 5.649 
+#22 5.649   <h3 id="faq-refresh-traffic">
+#22 5.649     Why is proxy.golang.org sending me so much traffic?</h3>
+#22 5.649   <p>The Go module mirror tries to keep its cache up to date by refreshing recently accessed
+#22 5.649     information before it expires. If your server is seeing too much traffic, we can disable that
+#22 5.649     speculative refresh or work with you to understand the traffic better. Please file a
+#22 5.649     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">GitHub issue</a> or email us
+#22 5.649     at <a href="mailto:security@golang.org">security@golang.org</a>.</p>
+#22 5.649 
+#22 5.649   <h3 id="faq-new-version">
+#22 5.649     I committed a new change (or released a new version) to a repository, why isn't it showing up
+#22 5.649     when I run <code>go get -u</code> or <code>go list -m --versions</code>?</h3>
+#22 5.649   <p>In order to improve our services' caching and serving latencies, new versions may not show up
+#22 5.649     right away. If you want new code to be immediately available in the mirror, then first make sure
+#22 5.649     there is a semantically versioned tag for this revision in the underlying source repository.
+#22 5.649     Then explicitly request that version via <code>go get module@version</code>. The new version
+#22 5.649     should be available within one minute. Note that if someone requested the version before the tag
+#22 5.649     was pushed, it may take up to 30 minutes for the mirror's cache to expire and fresh data about
+#22 5.649     the version to become available. If the version is still not available after 30 minutes, please
+#22 5.649     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">file an issue</a>.</p>
+#22 5.649 
+#22 5.649   <h3 id="faq-retract-version">
+#22 5.649     I removed a bad release from my repository but it still appears in the mirror, what should I do?</h3>
+#22 5.649   <p>Whenever possible, the mirror aims to cache content in order to avoid breaking builds for people
+#22 5.649     that depend on your package, so this bad release may still be available in the mirror even if it
+#22 5.649     is not available at the origin. The same situation applies if you delete your entire repository.
+#22 5.649     We suggest creating a new version and encouraging people to use that one instead.</p>
+#22 5.649 
+#22 5.649   <p>If you would like to hide versions of a module from the <code>go</code>
+#22 5.649     command, as well as <a href="https://pkg.go.dev">pkg.go.dev</a>, you should retract them.
+#22 5.649     Retracting a module version involves adding a <a href="https://golang.org/ref/mod#go-mod-file-retract">retract directive</a>
+#22 5.649     to your go.mod file and publishing a new version. See the Go blog post
+#22 5.649     <a href="https://go.dev/blog/go116-module-changes#module-retraction">New module changes in Go 1.16</a> and
+#22 5.649     the <a href="https://go.dev/ref/mod#go-mod-file-retract">modules reference</a> for details.</p>
+#22 5.649 
+#22 5.649   <h3 id="faq-cannot-use">
+#22 5.649     I'm running the go command in an environment that can't use the mirror.</h3>
+#22 5.649   <p>The <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 5.649     describes the configuration details including how to disable the use of these servers or use
+#22 5.649     different ones.</p>
+#22 5.649 
+#22 5.649   <h3 id="faq-private">
+#22 5.649     If I don't set <code>GOPRIVATE</code> and request a private module from these services,
+#22 5.649     what leaks?</h3>
+#22 5.649   <p>The proxy and checksum database protocol* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.650 { [5 bytes data]
+#22 5.650 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 5.650 { [5 bytes data]
+#22 5.650 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 5.650 } [5 bytes data]
+#22 5.650 
+100  9628  100  9628    0     0  62184      0 --:--:-- --:--:-- --:--:-- 62519
+#22 5.650 * Connection #0 to host proxy.golang.org left intact
+#22 5.650 s only send module paths and versions to the remote
+#22 5.650     server. If you request a private module, the mirror will try to download it just as any Go
+#22 5.650     user would and fail in the same way. Information about failed requests isn't published
+#22 5.650     anywhere. The only trace of the request will be in internal logs, which
+#22 5.650     are governed by the <a href="privacy">privacy policy</a>.</p>
+#22 5.650 
+#22 5.650   <h3 id="faq-retention">
+#22 5.650     Why did a previously available module become unavailable in the mirror?</h3>
+#22 5.650   <p><a href="https://proxy.golang.org">proxy.golang.org</a> does not save all modules forever.
+#22 5.650     There are a number of reasons for this, but one reason is if
+#22 5.650     <a href="https://proxy.golang.org">proxy.golang.org</a> is not able to detect a suitable
+#22 5.650     license. In this case, only a temporarily cached copy of the module will be made available, and
+#22 5.650     may become unavailable if it is removed from the original source and becomes outdated.
+#22 5.650     The checksums will still remain in the checksum database regardless of whether or not they
+#22 5.650     have become unavailable in the mirror.</p>
+#22 5.650 
+#22 5.650   <h3 id="faq-security">
+#22 5.650     I have discovered a malicious module version in the mirror. Where do I report it?</h3>
+#22 5.650   <p>Following <a href="https://golang.org/security#reporting">the security policy</a>, send an
+#22 5.650     email to <a href="mailto:security@golang.org">security@golang.org</a> with the word
+#22 5.650     "vulnerability" in the message somewhere.</p>
+#22 5.650 
+#22 5.650   </div>
+#22 5.654 + sleep 5
+#22 10.65 + GOPROXY=https://proxy.golang.org,direct go mod download -x
+#22 10.66 go: go: could not create module cache: mkdir /go: permission denied
+#22 10.66 + echo go mod download failed, attempt 1i
+#22 10.66 + go env
+#22 10.66 go mod download failed, attempt 1i
+#22 10.66 go: go: could not create module cache: mkdir /go: permission denied
+#22 10.66 + curl -v https://proxy.golang.org
+#22 10.67   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#22 10.67                                  Dload  Upload   Total   Spent    Left  Speed
+#22 10.67 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 173.194.219.141:443...
+#22 10.70 * Connected to proxy.golang.org (173.194.219.141) port 443 (#0)
+#22 10.70 * ALPN, offering h2
+#22 10.70 * ALPN, offering http/1.1
+#22 10.75 *  CAfile: /etc/ssl/certs/ca-certificates.crt
+#22 10.75 *  CApath: /etc/ssl/certs
+#22 10.75 * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+#22 10.75 } [5 bytes data]
+#22 10.75 * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+#22 10.75 } [512 bytes data]
+#22 10.78 * TLSv1.2 (IN), TLS header, Certificate Status (22):
+#22 10.78 { [5 bytes data]
+#22 10.78 * TLSv1.3 (IN), TLS handshake, Server hello (2):
+#22 10.78 { [122 bytes data]
+#22 10.78 * TLSv1.2 (IN), TLS header, Finished (20):
+#22 10.78 { [5 bytes data]
+#22 10.78 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.78 { [5 bytes data]
+#22 10.78 * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+#22 10.78 { [15 bytes data]
+#22 10.78 * TLSv1.3 (IN), TLS handshake, Certificate (11):
+#22 10.78 { [9956 bytes data]
+#22 10.78 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+#22 10.78 { [79 bytes data]
+#22 10.78 * TLSv1.3 (IN), TLS handshake, Finished (20):
+#22 10.78 { [52 bytes data]
+#22 10.78 * TLSv1.2 (OUT), TLS header, Finished (20):
+#22 10.78 } [5 bytes data]
+#22 10.78 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+#22 10.78 } [1 bytes data]
+#22 10.78 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 10.78 } [5 bytes data]
+#22 10.78 * TLSv1.3 (OUT), TLS handshake, Finished (20):
+#22 10.78 } [52 bytes data]
+#22 10.78 * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+#22 10.78 * ALPN, server accepted to use h2
+#22 10.78 * Server certificate:
+#22 10.78 *  subject: CN=misc-sni.google.com
+#22 10.78 *  start date: Aug 11 19:21:49 2025 GMT
+#22 10.78 *  expire date: Nov  3 19:21:48 2025 GMT
+#22 10.78 *  subjectAltName: host "proxy.golang.org" matched cert's "*.golang.org"
+#22 10.78 *  issuer: C=US; O=Google Trust Services; CN=WE2
+#22 10.78 *  SSL certificate verify ok.
+#22 10.78 * Using HTTP2, server supports multiplexing
+#22 10.78 * Connection state changed (HTTP/2 confirmed)
+#22 10.78 * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+#22 10.78 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 10.78 } [5 bytes data]
+#22 10.78 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 10.78 } [5 bytes data]
+#22 10.78 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 10.78 } [5 bytes data]
+#22 10.78 * Using Stream ID: 1 (easy handle 0x560692b3f9f0)
+#22 10.78 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 10.78 } [5 bytes data]
+#22 10.78 > GET / HTTP/2
+#22 10.78 > Host: proxy.golang.org
+#22 10.78 > user-agent: curl/7.81.0
+#22 10.78 > accept: */*
+#22 10.78 > 
+#22 10.80 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.80 { [5 bytes data]
+#22 10.80 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 10.80 { [282 bytes data]
+#22 10.80 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 10.80 { [282 bytes data]
+#22 10.80 * old SSL session ID is stale, removing
+#22 10.80 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.80 { [5 bytes data]
+#22 10.80 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 10.80 } [5 bytes data]
+#22 10.81 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.81 { [5 bytes data]
+#22 10.82 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]
+#22 10.82 < HTTP/2 200 
+#22 10.82 < accept-ranges: bytes
+#22 10.82 < access-control-allow-origin: *
+#22 10.82 < content-length: 9628
+#22 10.82 < content-security-policy-report-only: script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/goa-fa2dfb7c_2
+#22 10.82 < cross-origin-opener-policy: same-origin
+#22 10.82 < x-content-type-options: nosniff
+#22 10.82 < x-frame-options: SAMEORIGIN
+#22 10.82 < x-xss-protection: 0
+#22 10.82 < date: Wed, 27 Aug 2025 22:15:41 GMT
+#22 10.82 < expires: Wed, 27 Aug 2025 22:45:41 GMT
+#22 10.82 < cache-control: public, max-age=1800
+#22 10.82 < content-type: text/html; charset=UTF-8
+#22 10.82 < vary: Sec-Fetch-Site,Sec-Fetch-Mode,Sec-Fetch-Dest
+#22 10.82 < age: 79
+#22 10.82 < alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+#22 10.82 < 
+#22 10.82 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]
+#22 10.82 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]
+#22 10.82 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]
+#22 10.82 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]<!DOCTYPE html>
+#22 10.82 <html lang="en">
+#22 10.82   <meta name="viewport" content="width=device-width, initial-scale=1">
+#22 10.82   <title>Go modules services</title>
+#22 10.82   <style>
+#22 10.82     .container {
+#22 10.82       font-size: 1.6em;
+#22 10.82       line-height: 1.4;
+#22 10.82       margin: 3.5em auto;
+#22 10.82       max-width: 45em;
+#22 10.82       padding: 0 1.5em;
+#22 10.82     }
+#22 10.82     body {
+#22 10.82       font: 62.5% Arial, sans-serif;
+#22 10.82     }
+#22 10.82     code {
+#22 10.82       background-color: #f0f8ff;
+#22 10.82     }
+#22 10.82   </style>
+#22 10.82 
+#22 10.82   <div class="container">
+#22 10.82   <h1>Go Module Mirror, Index, and Checksum Database</h1>
+#22 10.82   <p>The Go team is providing the following services run by Google: a module mirror for accelerating
+#22 10.82     Go module downloads, an index for discovering new modules, and a global go.sum database for
+#22 10.82     authenticating module content.</p>
+#22 10.82 
+#22 10.82   <p>Since Go 1.13, the go command by default downloads and authenticates modules using the Go
+#22 10.82     module mirror and Go checksum database. See
+#22 10.82     <a href="privacy">proxy.golang.org/privacy</a> for privacy information
+#22 10.82     about these services and the
+#22 10.82     <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 10.82     for configuration details including how to disable the use of these servers or use different
+#22 10.82     ones. If you depend on non-public modules, see the
+#22 10.82     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">documentation for configuring your environment</a>.
+#22 10.82   </p>
+#22 10.82 
+#22 10.82   <h2 id="services">Services</h2>
+#22 10.82   <p><a href="https://proxy.golang.org"><strong>proxy.golang.org</strong></a> - a module mirror
+#22 10.82     which implements the <a href="https://golang.org/ref/mod#goproxy-protocol">module proxy protocol</a>.
+#22 10.82     For users downloading large numbers of modules (e.g. for bulk static analysis), the mirror
+#22 10.82     supports a separate endpoint <code>/cached-only</code> that instructs the proxy to
+#22 10.82     return only cached content. This will avoid slow downloads, at the cost of possibly missing some
+#22 10.82     rarely-used modules.
+#22 10.82   </p>
+#22 10.82   <p>
+#22 10.82     <code>
+#22 10.82     GOPROXY=https://proxy.golang.org/cached-only go mod download golang.org/x/tools@v0.1.0
+#22 10.82     </code>
+#22 10.82   </p>
+#22 10.82 
+#22 10.82   <p><a href="https://sum.golang.org"><strong>sum.golang.org</strong></a> - an auditable checksum
+#22 10.82     database which will be used by the go command to authenticate modules.
+#22 10.82     Learn more in the <a href="https://golang.org/ref/mod#checksum-database">go command documentation</a>.</p>
+#22 10.82 
+#22 10.82   <p><a href="https://index.golang.org"><strong>index.golang.org</strong></a> - an index which
+#22 10.82     serves a feed of new module versions that become available by proxy.golang.org. The feed
+#22 10.82     can be viewed at <a href="https://index.golang.org/index">https://index.golang.org/index</a>.
+#22 10.82     The feed is served as new line delimited JSON, providing the module path (as Path), the module
+#22 10.82     version (as Version), and the time it was first cached by proxy.golang.org (as Timestamp). The
+#22 10.82     list is sorted in chronological order. There are optional parameters:</p>
+#22 10.82     <ul>
+#22 10.82       <li>
+#22 10.82         'since': the oldest allowable timestamp (RFC3339 format) for module versions in the returned list. Default
+#22 10.82         is the beginning of time, e.g.
+#22 10.82         <a href="https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z">https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z</a>
+#22 10.82       </li>
+#22 10.82       <li>
+#22 10.82         'limit': the maximum length of the returned list. Default = 2000, Max = 2000, e.g.
+#22 10.82         <a href="https://index.golang.org/index?limit=10">https://index.golang.org/index?limit=10</a>
+#22 10.82       </li>
+#22 10.82       <li>
+#22 10.82         'include': by default, the index returns module versions that proxy.golang.org has cached
+#22 10.82         copies. If 'include=all', index.golang.org will return all module versions proxy.golang.org
+#22 10.82         or sum.golang.org ever served. Default = "" e.g.
+#22 10.82         <a href="https://index.golang.org/index?include=all">https://index.golang.org/index?include=all</a>
+#22 10.82       </li>
+#22 10.82     </ul>
+#22 10.82     <p>If you use the index to download many modules from the module mirror, you will want to use
+#22 10.82     the <code>/cached-only</code> endpoint, described above.
+#22 10.82   </p>
+#22 10.82 
+#22 10.82   <h2 id="status">Status: Launched</h2>
+#22 10.82   <p>These services are ready for p
+#22 10.82 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]
+#22 10.82 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]
+#22 10.82 roduction use. Please
+#22 10.82     <a href="https://golang.org/issue/new?title=proxy.golang.org:%20">file issues</a>
+#22 10.82     if you spot them, with the title prefix "proxy.golang.org:" (or "index.golang.org:", or
+#22 10.82     "sum.golang.org:").</p>
+#22 10.82 
+#22 10.82   <h2 id="environment-setup">Environment setup</h2>
+#22 10.82 
+#22 10.82   <p>These services can only access publicly available source code. If you depend on private
+#22 10.82     modules, set <code>GOPRIVATE</code> to a glob pattern that covers them. See
+#22 10.82     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">Module configuration for non-public modules</a>
+#22 10.82     in the go command documentation for more details.</p>
+#22 10.82 
+#22 10.82   <p>To opt-out of this module mirror, you can turn it off by setting <code>GOPROXY=direct</code></p>
+#22 10.82 
+#22 10.82   <p>See the <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 10.82     for other configuration details.</p>
+#22 10.82 
+#22 10.82   <h2 id="faq">FAQ</h2>
+#22 10.82 
+#22 10.82   <h3 id="faq-refresh-traffic">
+#22 10.82     Why is proxy.golang.org sending me so much traffic?</h3>
+#22 10.82   <p>The Go module mirror tries to keep its cache up to date by refreshing recently accessed
+#22 10.82     information before it expires. If your server is seeing too much traffic, we can disable that
+#22 10.82     speculative refresh or work with you to understand the traffic better. Please file a
+#22 10.82     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">GitHub issue</a> or email us
+#22 10.82     at <a href="mailto:security@golang.org">security@golang.org</a>.</p>
+#22 10.82 
+#22 10.82   <h3 id="faq-new-version">
+#22 10.82     I committed a new change (or released a new version) to a repository, why isn't it showing up
+#22 10.82     when I run <code>go get -u</code> or <code>go list -m --versions</code>?</h3>
+#22 10.82   <p>In order to improve our services' caching and serving latencies, new versions may not show up
+#22 10.82     right away. If you want new code to be immediately available in the mirror, then first make sure
+#22 10.82     there is a semantically versioned tag for this revision in the underlying source repository.
+#22 10.82     Then explicitly request that version via <code>go get module@version</code>. The new version
+#22 10.82     should be available within one minute. Note that if someone requested the version before the tag
+#22 10.82     was pushed, it may take up to 30 minutes for the mirror's cache to expire and fresh data about
+#22 10.82     the version to become available. If the version is still not available after 30 minutes, please
+#22 10.82     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">file an issue</a>.</p>
+#22 10.82 
+#22 10.82   <h3 id="faq-retract-version">
+#22 10.82     I removed a bad release from my repository but it still appears in the mirror, what should I do?</h3>
+#22 10.82   <p>Whenever possible, the mirror aims to cache content in order to avoid breaking builds for people
+#22 10.82     that depend on your package, so this bad release may still be available in the mirror even if it
+#22 10.82     is not available at the origin. The same situation applies if you delete your entire repository.
+#22 10.82     We suggest creating a new version and encouraging people to use that one instead.</p>
+#22 10.82 
+#22 10.82   <p>If you would like to hide versions of a module from the <code>go</code>
+#22 10.82     command, as well as <a href="https://pkg.go.dev">pkg.go.dev</a>, you should retract them.
+#22 10.82     Retracting a module version involves adding a <a href="https://golang.org/ref/mod#go-mod-file-retract">retract directive</a>
+#22 10.82     to your go.mod file and publishing a new version. See the Go blog post
+#22 10.82     <a href="https://go.dev/blog/go116-module-changes#module-retraction">New module changes in Go 1.16</a> and
+#22 10.82     the <a href="https://go.dev/ref/mod#go-mod-file-retract">modules reference</a> for details.</p>
+#22 10.82 
+#22 10.82   <h3 id="faq-cannot-use">
+#22 10.82     I'm running the go command in an environment that can't use the mirror.</h3>
+#22 10.82   <p>The <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 10.82     describes the configuration details including how to disable the use of these servers or use
+#22 10.82     different ones.</p>
+#22 10.82 
+#22 10.82   <h3 id="faq-private">
+#22 10.82     If I don't set <code>GOPRIVATE</code> and request a private module from these services,
+#22 10.82     what leaks?</h3>
+#22 10.82   <p>The proxy and checksum database protocol* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]
+#22 10.82 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 10.82 { [5 bytes data]
+#22 10.82 
+100  9628  100  9628    0     0  63071      0 --:--:-- --:--:-- --:--:-- 63342
+#22 10.82 * Connection #0 to host proxy.golang.org left intact
+#22 10.82 s only send module paths and versions to the remote
+#22 10.82     server. If you request a private module, the mirror will try to download it just as any Go
+#22 10.82     user would and fail in the same way. Information about failed requests isn't published
+#22 10.82     anywhere. The only trace of the request will be in internal logs, which
+#22 10.82     are governed by the <a href="privacy">privacy policy</a>.</p>
+#22 10.82 
+#22 10.82   <h3 id="faq-retention">
+#22 10.82     Why did a previously available module become unavailable in the mirror?</h3>
+#22 10.82   <p><a href="https://proxy.golang.org">proxy.golang.org</a> does not save all modules forever.
+#22 10.82     There are a number of reasons for this, but one reason is if
+#22 10.82     <a href="https://proxy.golang.org">proxy.golang.org</a> is not able to detect a suitable
+#22 10.82     license. In this case, only a temporarily cached copy of the module will be made available, and
+#22 10.82     may become unavailable if it is removed from the original source and becomes outdated.
+#22 10.82     The checksums will still remain in the checksum database regardless of whether or not they
+#22 10.82     have become unavailable in the mirror.</p>
+#22 10.82 
+#22 10.82   <h3 id="faq-security">
+#22 10.82     I have discovered a malicious module version in the mirror. Where do I report it?</h3>
+#22 10.82   <p>Following <a href="https://golang.org/security#reporting">the security policy</a>, send an
+#22 10.82     email to <a href="mailto:security@golang.org">security@golang.org</a> with the word
+#22 10.82     "vulnerability" in the message somewhere.</p>
+#22 10.82 
+#22 10.82   </div>
+#22 10.82 + sleep 5
+#22 15.83 + GOPROXY=https://proxy.golang.org,direct go mod download -x
+#22 15.83 go: go: could not create module cache: mkdir /go: permission denied
+#22 15.83 + echo go mod download failed, attempt 1i
+#22 15.83 + go env
+#22 15.83 go mod download failed, attempt 1i
+#22 15.83 go: go: could not create module cache: mkdir /go: permission denied
+#22 15.83 + curl -v https://proxy.golang.org
+#22 15.84   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#22 15.84                                  Dload  Upload   Total   Spent    Left  Speed
+#22 15.84 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 173.194.219.141:443...
+#22 15.87 * Connected to proxy.golang.org (173.194.219.141) port 443 (#0)
+#22 15.87 * ALPN, offering h2
+#22 15.87 * ALPN, offering http/1.1
+#22 15.92 *  CAfile: /etc/ssl/certs/ca-certificates.crt
+#22 15.92 *  CApath: /etc/ssl/certs
+#22 15.92 * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+#22 15.92 } [5 bytes data]
+#22 15.92 * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+#22 15.92 } [512 bytes data]
+#22 15.94 * TLSv1.2 (IN), TLS header, Certificate Status (22):
+#22 15.94 { [5 bytes data]
+#22 15.94 * TLSv1.3 (IN), TLS handshake, Server hello (2):
+#22 15.94 { [122 bytes data]
+#22 15.94 * TLSv1.2 (IN), TLS header, Finished (20):
+#22 15.94 { [5 bytes data]
+#22 15.94 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.94 { [5 bytes data]
+#22 15.94 * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+#22 15.94 { [15 bytes data]
+#22 15.94 * TLSv1.3 (IN), TLS handshake, Certificate (11):
+#22 15.94 { [9956 bytes data]
+#22 15.94 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+#22 15.94 { [79 bytes data]
+#22 15.94 * TLSv1.3 (IN), TLS handshake, Finished (20):
+#22 15.94 { [52 bytes data]
+#22 15.94 * TLSv1.2 (OUT), TLS header, Finished (20):
+#22 15.94 } [5 bytes data]
+#22 15.94 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+#22 15.94 } [1 bytes data]
+#22 15.94 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 15.94 } [5 bytes data]
+#22 15.94 * TLSv1.3 (OUT), TLS handshake, Finished (20):
+#22 15.94 } [52 bytes data]
+#22 15.94 * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+#22 15.94 * ALPN, server accepted to use h2
+#22 15.94 * Server certificate:
+#22 15.94 *  subject: CN=misc-sni.google.com
+#22 15.94 *  start date: Aug 11 19:21:49 2025 GMT
+#22 15.94 *  expire date: Nov  3 19:21:48 2025 GMT
+#22 15.94 *  subjectAltName: host "proxy.golang.org" matched cert's "*.golang.org"
+#22 15.94 *  issuer: C=US; O=Google Trust Services; CN=WE2
+#22 15.94 *  SSL certificate verify ok.
+#22 15.94 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Using HTTP2, server supports multiplexing
+#22 15.94 * Connection state changed (HTTP/2 confirmed)
+#22 15.94 * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+#22 15.94 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 15.94 } [5 bytes data]
+#22 15.94 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 15.94 } [5 bytes data]
+#22 15.94 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 15.94 } [5 bytes data]
+#22 15.94 * Using Stream ID: 1 (easy handle 0x562ab06f19f0)
+#22 15.94 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 15.94 } [5 bytes data]
+#22 15.94 > GET / HTTP/2
+#22 15.94 > Host: proxy.golang.org
+#22 15.94 > user-agent: curl/7.81.0
+#22 15.94 > accept: */*
+#22 15.94 > 
+#22 15.96 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.96 { [5 bytes data]
+#22 15.96 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 15.96 { [282 bytes data]
+#22 15.96 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 15.96 { [282 bytes data]
+#22 15.96 * old SSL session ID is stale, removing
+#22 15.96 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.96 { [5 bytes data]
+#22 15.96 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 15.96 } [5 bytes data]
+#22 15.97 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 < HTTP/2 200 
+#22 15.97 < accept-ranges: bytes
+#22 15.97 < access-control-allow-origin: *
+#22 15.97 < content-length: 9628
+#22 15.97 < content-security-policy-report-only: script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/goa-fa2dfb7c_2
+#22 15.97 < cross-origin-opener-policy: same-origin
+#22 15.97 < x-content-type-options: nosniff
+#22 15.97 < x-frame-options: SAMEORIGIN
+#22 15.97 < x-xss-protection: 0
+#22 15.97 < date: Wed, 27 Aug 2025 22:15:41 GMT
+#22 15.97 < expires: Wed, 27 Aug 2025 22:45:41 GMT
+#22 15.97 < cache-control: public, max-age=1800
+#22 15.97 < content-type: text/html; charset=UTF-8
+#22 15.97 < vary: Sec-Fetch-Site,Sec-Fetch-Mode,Sec-Fetch-Dest
+#22 15.97 < age: 85
+#22 15.97 < alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+#22 15.97 < 
+#22 15.97 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 <!DOCTYPE html>
+#22 15.97 <html lang="en">
+#22 15.97   <meta name="viewport" content="width=device-width, initial-scale=1">
+#22 15.97   <title>Go modules services</title>
+#22 15.97   <style>
+#22 15.97     .container {
+#22 15.97       font-size: 1.6em;
+#22 15.97       line-height: 1.4;
+#22 15.97       margin: 3.5em auto;
+#22 15.97       max-width: 45em;
+#22 15.97       padding: 0 1.5em;
+#22 15.97     }
+#22 15.97     body {
+#22 15.97       font: 62.5% Arial, sans-serif;
+#22 15.97     }
+#22 15.97     code {
+#22 15.97       background-color: #f0f8ff;
+#22 15.97     }
+#22 15.97   </style>
+#22 15.97 
+#22 15.97   <div class="container">
+#22 15.97   <h1>Go Module Mirror, Index, and Checksum Database</h1>
+#22 15.97   <p>The Go team is providing the following services run by Google: a module mirror for accelerating
+#22 15.97     Go module downloads, an index for discovering new modules, and a global go.sum database for
+#22 15.97     authenticating module content.</p>
+#22 15.97 
+#22 15.97   <p>Since Go 1.13, the go command by default downloads and authenticates modules using the Go
+#22 15.97     module mirror and Go checksum database. See
+#22 15.97     <a href="privacy">proxy.golang.org/privacy</a> for privacy information
+#22 15.97     about these services and the
+#22 15.97     <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 15.97     for configuration details including how to disable the use of these servers or use different
+#22 15.97     ones. If you depend on non-public modules, see the
+#22 15.97     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">documentation for configuring your environment</a>.
+#22 15.97   </p>
+#22 15.97 
+#22 15.97   <h2 id="services">Services</h2>
+#22 15.97   <p><a href="https://proxy.golang.org"><strong>proxy.golang.org</strong></a> - a module mirror
+#22 15.97     which implements the <a href="https://golang.org/ref/mod#goproxy-protocol">module proxy protocol</a>.
+#22 15.97     For users downloading large numbers of modules (e.g. for bulk static analysis), the mirror
+#22 15.97     supports a separate endpoint <code>/cached-only</code> that instructs the proxy to
+#22 15.97     return only cached content. This will avoid slow downloads, at the cost of possibly missing some
+#22 15.97     rarely-used modules.
+#22 15.97   </p>
+#22 15.97   <p>
+#22 15.97     <code>
+#22 15.97     GOPROXY=https://proxy.golang.org/cached-only go mod download golang.org/x/tools@v0.1.0
+#22 15.97     </code>
+#22 15.97   </p>
+#22 15.97 
+#22 15.97   <p><a href="https://sum.golang.org"><strong>sum.golang.org</strong></a> - an auditable checksum
+#22 15.97     database which will be used by the go command to authenticate modules.
+#22 15.97     Learn more in the <a href="https://golang.org/ref/mod#checksum-database">go command documentation</a>.</p>
+#22 15.97 
+#22 15.97   <p><a href="https://index.golang.org"><strong>index.golang.org</strong></a> - an index which
+#22 15.97     serves a feed of new module versions that become available by proxy.golang.org. The feed
+#22 15.97     can be viewed at <a href="https://index.golang.org/index">https://index.golang.org/index</a>.
+#22 15.97     The feed is served as new line delimited JSON, providing the module path (as Path), the module
+#22 15.97     version (as Version), and the time it was first cached by proxy.golang.org (as Timestamp). The
+#22 15.97     list is sorted in chronological order. There are optional parameters:</p>
+#22 15.97     <ul>
+#22 15.97       <li>
+#22 15.97         'since': the oldest allowable timestamp (RFC3339 format) for module versions in the returned list. Default
+#22 15.97         is the beginning of time, e.g.
+#22 15.97         <a href="https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z">https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z</a>
+#22 15.97       </li>
+#22 15.97       <li>
+#22 15.97         'limit': the maximum length of the returned list. Default = 2000, Max = 2000, e.g.
+#22 15.97         <a href="https://index.golang.org/index?limit=10">https://index.golang.org/index?limit=10</a>
+#22 15.97       </li>
+#22 15.97       <li>
+#22 15.97         'include': by default, the index returns module versions that proxy.golang.org has cached
+#22 15.97         copies. If 'include=all', index.golang.org will return all module versions proxy.golang.org
+#22 15.97         or sum.golang.org ever served. Default = "" e.g.
+#22 15.97         <a href="https://index.golang.org/index?include=all">https://index.golang.org/index?include=all</a>
+#22 15.97       </li>
+#22 15.97     </ul>
+#22 15.97     <p>If you use the index to download many modules from the module mirror, you will want to use
+#22 15.97     the <code>/cached-only</code> endpoint, described above.
+#22 15.97   </p>
+#22 15.97 
+#22 15.97   <h2 id="status">Status: Launched</h2>
+#22 15.97   <p>These services are ready for p* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 roduction use. Please
+#22 15.97     <a href="https://golang.org/issue/new?title=proxy.golang.org:%20">file issues</a>
+#22 15.97     if you spot them, with the title prefix "proxy.golang.org:" (or "index.golang.org:", or
+#22 15.97     "sum.golang.org:").</p>
+#22 15.97 
+#22 15.97   <h2 id="environment-setup">Environment setup</h2>
+#22 15.97 
+#22 15.97   <p>These services can only access publicly available source code. If you depend on private
+#22 15.97     modules, set <code>GOPRIVATE</code> to a glob pattern that covers them. See
+#22 15.97     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">Module configuration for non-public modules</a>
+#22 15.97     in the go command documentation for more details.</p>
+#22 15.97 
+#22 15.97   <p>To opt-out of this module mirror, you can turn it off by setting <code>GOPROXY=direct</code></p>
+#22 15.97 
+#22 15.97   <p>See the <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 15.97     for other configuration details.</p>
+#22 15.97 
+#22 15.97   <h2 id="faq">FAQ</h2>
+#22 15.97 
+#22 15.97   <h3 id="faq-refresh-traffic">
+#22 15.97     Why is proxy.golang.org sending me so much traffic?</h3>
+#22 15.97   <p>The Go module mirror tries to keep its cache up to date by refreshing recently accessed
+#22 15.97     information before it expires. If your server is seeing too much traffic, we can disable that
+#22 15.97     speculative refresh or work with you to understand the traffic better. Please file a
+#22 15.97     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">GitHub issue</a> or email us
+#22 15.97     at <a href="mailto:security@golang.org">security@golang.org</a>.</p>
+#22 15.97 
+#22 15.97   <h3 id="faq-new-version">
+#22 15.97     I committed a new change (or released a new version) to a repository, why isn't it showing up
+#22 15.97     when I run <code>go get -u</code> or <code>go list -m --versions</code>?</h3>
+#22 15.97   <p>In order to improve our services' caching and serving latencies, new versions may not show up
+#22 15.97     right away. If you want new code to be immediately available in the mirror, then first make sure
+#22 15.97     there is a semantically versioned tag for this revision in the underlying source repository.
+#22 15.97     Then explicitly request that version via <code>go get module@version</code>. The new version
+#22 15.97     should be available within one minute. Note that if someone requested the version before the tag
+#22 15.97     was pushed, it may take up to 30 minutes for the mirror's cache to expire and fresh data about
+#22 15.97     the version to become available. If the version is still not available after 30 minutes, please
+#22 15.97     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">file an issue</a>.</p>
+#22 15.97 
+#22 15.97   <h3 id="faq-retract-version">
+#22 15.97     I removed a bad release from my repository but it still appears in the mirror, what should I do?</h3>
+#22 15.97   <p>Whenever possible, the mirror aims to cache content in order to avoid breaking builds for people
+#22 15.97     that depend on your package, so this bad release may still be available in the mirror even if it
+#22 15.97     is not available at the origin. The same situation applies if you delete your entire repository.
+#22 15.97     We suggest creating a new version and encouraging people to use that one instead.</p>
+#22 15.97 
+#22 15.97   <p>If you would like to hide versions of a module from the <code>go</code>
+#22 15.97     command, as well as <a href="https://pkg.go.dev">pkg.go.dev</a>, you should retract them.
+#22 15.97     Retracting a module version involves adding a <a href="https://golang.org/ref/mod#go-mod-file-retract">retract directive</a>
+#22 15.97     to your go.mod file and publishing a new version. See the Go blog post
+#22 15.97     <a href="https://go.dev/blog/go116-module-changes#module-retraction">New module changes in Go 1.16</a> and
+#22 15.97     the <a href="https://go.dev/ref/mod#go-mod-file-retract">modules reference</a> for details.</p>
+#22 15.97 
+#22 15.97   <h3 id="faq-cannot-use">
+#22 15.97     I'm running the go command in an environment that can't use the mirror.</h3>
+#22 15.97   <p>The <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 15.97     describes the configuration details including how to disable the use of these servers or use
+#22 15.97     different ones.</p>
+#22 15.97 
+#22 15.97   <h3 id="faq-private">
+#22 15.97     If I don't set <code>GOPRIVATE</code> and request a private module from these services,
+#22 15.97     what leaks?</h3>
+#22 15.97   <p>The proxy and checksum database protocol* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 15.97 { [5 bytes data]
+#22 15.97 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 15.97 } [5 bytes data]
+#22 15.97 
+100  9628  100  9628    0     0  70842      0 --:--:-- --:--:-- --:--:-- 70794
+#22 15.97 * Connection #0 to host proxy.golang.org left intact
+#22 15.97 s only send module paths and versions to the remote
+#22 15.97     server. If you request a private module, the mirror will try to download it just as any Go
+#22 15.97     user would and fail in the same way. Information about failed requests isn't published
+#22 15.97     anywhere. The only trace of the request will be in internal logs, which
+#22 15.97     are governed by the <a href="privacy">privacy policy</a>.</p>
+#22 15.97 
+#22 15.97   <h3 id="faq-retention">
+#22 15.97     Why did a previously available module become unavailable in the mirror?</h3>
+#22 15.97   <p><a href="https://proxy.golang.org">proxy.golang.org</a> does not save all modules forever.
+#22 15.97     There are a number of reasons for this, but one reason is if
+#22 15.97     <a href="https://proxy.golang.org">proxy.golang.org</a> is not able to detect a suitable
+#22 15.97     license. In this case, only a temporarily cached copy of the module will be made available, and
+#22 15.97     may become unavailable if it is removed from the original source and becomes outdated.
+#22 15.97     The checksums will still remain in the checksum database regardless of whether or not they
+#22 15.97     have become unavailable in the mirror.</p>
+#22 15.97 
+#22 15.97   <h3 id="faq-security">
+#22 15.97     I have discovered a malicious module version in the mirror. Where do I report it?</h3>
+#22 15.97   <p>Following <a href="https://golang.org/security#reporting">the security policy</a>, send an
+#22 15.97     email to <a href="mailto:security@golang.org">security@golang.org</a> with the word
+#22 15.97     "vulnerability" in the message somewhere.</p>
+#22 15.97 
+#22 15.97   </div>
+#22 15.97 + sleep 5
+#22 20.98 + GOPROXY=https://proxy.golang.org,direct go mod download -x
+#22 20.98 go: go: could not create module cache: mkdir /go: permission denied
+#22 20.98 + echo go mod download failed, attempt 1i
+#22 20.98 + go env
+#22 20.98 go mod download failed, attempt 1i
+#22 20.98 go: go: could not create module cache: mkdir /go: permission denied
+#22 20.98 + curl -v https://proxy.golang.org
+#22 20.99   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#22 20.99                                  Dload  Upload   Total   Spent    Left  Speed
+#22 20.99 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 173.194.219.141:443...
+#22 21.02 * Connected to proxy.golang.org (173.194.219.141) port 443 (#0)
+#22 21.02 * ALPN, offering h2
+#22 21.02 * ALPN, offering http/1.1
+#22 21.07 *  CAfile: /etc/ssl/certs/ca-certificates.crt
+#22 21.07 *  CApath: /etc/ssl/certs
+#22 21.07 * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+#22 21.07 } [5 bytes data]
+#22 21.07 * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+#22 21.07 } [512 bytes data]
+#22 21.09 * TLSv1.2 (IN), TLS header, Certificate Status (22):
+#22 21.09 { [5 bytes data]
+#22 21.09 * TLSv1.3 (IN), TLS handshake, Server hello (2):
+#22 21.09 { [122 bytes data]
+#22 21.09 * TLSv1.2 (IN), TLS header, Finished (20):
+#22 21.09 { [5 bytes data]
+#22 21.09 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.09 { [5 bytes data]
+#22 21.09 * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+#22 21.09 { [15 bytes data]
+#22 21.09 * TLSv1.3 (IN), TLS handshake, Certificate (11):
+#22 21.09 { [9956 bytes data]
+#22 21.09 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+#22 21.09 { [79 bytes data]
+#22 21.09 * TLSv1.3 (IN), TLS handshake, Finished (20):
+#22 21.09 { [52 bytes data]
+#22 21.09 * TLSv1.2 (OUT), TLS header, Finished (20):
+#22 21.09 } [5 bytes data]
+#22 21.09 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+#22 21.09 } [1 bytes data]
+#22 21.09 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 21.09 } [5 bytes data]
+#22 21.09 * TLSv1.3 (OUT), TLS handshake, Finished (20):
+#22 21.09 } [52 bytes data]
+#22 21.09 * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+#22 21.09 * ALPN, server accepted to use h2
+#22 21.09 * Server certificate:
+#22 21.09 *  subject: CN=misc-sni.google.com
+#22 21.09 *  start date: Aug 11 19:21:49 2025 GMT
+#22 21.09 *  expire date: Nov  3 19:21:48 2025 GMT
+#22 21.09 *  subjectAltName: host "proxy.golang.org" matched cert's "*.golang.org"
+#22 21.09 *  issuer: C=US; O=Google Trust Services; CN=WE2
+#22 21.09 *  SSL certificate verify ok.
+#22 21.09 * Using HTTP2, server supports multiplexing
+#22 21.09 * Connection state changed (HTTP/2 confirmed)
+#22 21.09 * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+#22 21.09 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 21.09 } [5 bytes data]
+#22 21.09 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 21.09 } [5 bytes data]
+#22 21.09 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 21.09 } [5 bytes data]
+#22 21.09 * Using Stream ID: 1 (easy handle 0x559e3f2ea9f0)
+#22 21.09 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 21.09 } [5 bytes data]
+#22 21.09 > GET / HTTP/2
+#22 21.09 > Host: proxy.golang.org
+#22 21.09 > user-agent: curl/7.81.0
+#22 21.09 > accept: */*
+#22 21.09 > 
+#22 21.11 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.11 { [5 bytes data]
+#22 21.11 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 21.11 { [282 bytes data]
+#22 21.11 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+#22 21.11 { [282 bytes data]
+#22 21.11 * old SSL session ID is stale, removing
+#22 21.11 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.11 { [5 bytes data]
+#22 21.11 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 21.11 } [5 bytes data]
+#22 21.12 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 < HTTP/2 200 
+#22 21.12 < accept-ranges: bytes
+#22 21.12 < access-control-allow-origin: *
+#22 21.12 < content-length: 9628
+#22 21.12 < content-security-policy-report-only: script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/goa-fa2dfb7c_2
+#22 21.12 < cross-origin-opener-policy: same-origin
+#22 21.12 < x-content-type-options: nosniff
+#22 21.12 < x-frame-options: SAMEORIGIN
+#22 21.12 < x-xss-protection: 0
+#22 21.12 < date: Wed, 27 Aug 2025 22:15:41 GMT
+#22 21.12 < expires: Wed, 27 Aug 2025 22:45:41 GMT
+#22 21.12 < cache-control: public, max-age=1800
+#22 21.12 < content-type: text/html; charset=UTF-8
+#22 21.12 < vary: Sec-Fetch-Site,Sec-Fetch-Mode,Sec-Fetch-Dest
+#22 21.12 < age: 90
+#22 21.12 < alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+#22 21.12 < 
+#22 21.12 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 <!DOCTYPE html>
+#22 21.12 <html lang="en">
+#22 21.12   <meta name="viewport" content="width=device-width, initial-scale=1">
+#22 21.12   <title>Go modules services</title>
+#22 21.12   <style>
+#22 21.12     .container {
+#22 21.12       font-size: 1.6em;
+#22 21.12       line-height: 1.4;
+#22 21.12       margin: 3.5em auto;
+#22 21.12       max-width: 45em;
+#22 21.12       padding: 0 1.5em;
+#22 21.12     }
+#22 21.12     body {
+#22 21.12       font: 62.5% Arial, sans-serif;
+#22 21.12     }
+#22 21.12     code {
+#22 21.12       background-color: #f0f8ff;
+#22 21.12     }
+#22 21.12   </style>
+#22 21.12 
+#22 21.12   <div class="container">
+#22 21.12   <h1>Go Module Mirror, Index, and Checksum Database</h1>
+#22 21.12   <p>The Go team is providing the following services run by Google: a module mirror for accelerating
+#22 21.12     Go module downloads, an index for discovering new modules, and a global go.sum database for
+#22 21.12     authenticating module content.</p>
+#22 21.12 
+#22 21.12   <p>Since Go 1.13, the go command by default downloads and authenticates modules using the Go
+#22 21.12     module mirror and Go checksum database. See
+#22 21.12     <a href="privacy">proxy.golang.org/privacy</a> for privacy information
+#22 21.12     about these services and the
+#22 21.12     <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 21.12     for configuration details including how to disable the use of these servers or use different
+#22 21.12     ones. If you depend on non-public modules, see the
+#22 21.12     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">documentation for configuring your environment</a>.
+#22 21.12   </p>
+#22 21.12 
+#22 21.12   <h2 id="services">Services</h2>
+#22 21.12   <p><a href="https://proxy.golang.org"><strong>proxy.golang.org</strong></a> - a module mirror
+#22 21.12     which implements the <a href="https://golang.org/ref/mod#goproxy-protocol">module proxy protocol</a>.
+#22 21.12     For users downloading large numbers of modules (e.g. for bulk static analysis), the mirror
+#22 21.12     supports a separate endpoint <code>/cached-only</code> that instructs the proxy to
+#22 21.12     return only cached content. This will avoid slow downloads, at the cost of possibly missing some
+#22 21.12     rarely-used modules.
+#22 21.12   </p>
+#22 21.12   <p>
+#22 21.12     <code>
+#22 21.12     GOPROXY=https://proxy.golang.org/cached-only go mod download golang.org/x/tools@v0.1.0
+#22 21.12     </code>
+#22 21.12   </p>
+#22 21.12 
+#22 21.12   <p><a href="https://sum.golang.org"><strong>sum.golang.org</strong></a> - an auditable checksum
+#22 21.12     database which will be used by the go command to authenticate modules.
+#22 21.12     Learn more in the <a href="https://golang.org/ref/mod#checksum-database">go command documentation</a>.</p>
+#22 21.12 
+#22 21.12   <p><a href="https://index.golang.org"><strong>index.golang.org</strong></a> - an index which
+#22 21.12     serves a feed of new module versions that become available by proxy.golang.org. The feed
+#22 21.12     can be viewed at <a href="https://index.golang.org/index">https://index.golang.org/index</a>.
+#22 21.12     The feed is served as new line delimited JSON, providing the module path (as Path), the module
+#22 21.12     version (as Version), and the time it was first cached by proxy.golang.org (as Timestamp). The
+#22 21.12     list is sorted in chronological order. There are optional parameters:</p>
+#22 21.12     <ul>
+#22 21.12       <li>
+#22 21.12         'since': the oldest allowable timestamp (RFC3339 format) for module versions in the returned list. Default
+#22 21.12         is the beginning of time, e.g.
+#22 21.12         <a href="https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z">https://index.golang.org/index?since=2019-04-10T19:08:52.997264Z</a>
+#22 21.12       </li>
+#22 21.12       <li>
+#22 21.12         'limit': the maximum length of the returned list. Default = 2000, Max = 2000, e.g.
+#22 21.12         <a href="https://index.golang.org/index?limit=10">https://index.golang.org/index?limit=10</a>
+#22 21.12       </li>
+#22 21.12       <li>
+#22 21.12         'include': by default, the index returns module versions that proxy.golang.org has cached
+#22 21.12         copies. If 'include=all', index.golang.org will return all module versions proxy.golang.org
+#22 21.12         or sum.golang.org ever served. Default = "" e.g.
+#22 21.12         <a href="https://index.golang.org/index?include=all">https://index.golang.org/index?include=all</a>
+#22 21.12       </li>
+#22 21.12     </ul>
+#22 21.12     <p>If you use the index to download many modules from the module mirror, you will want to use
+#22 21.12     the <code>/cached-only</code> endpoint, described above.
+#22 21.12   </p>
+#22 21.12 
+#22 21.12   <h2 id="status">Status: Launched</h2>
+#22 21.12   <p>These services are ready for p* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 roduction use. Please
+#22 21.12     <a href="https://golang.org/issue/new?title=proxy.golang.org:%20">file issues</a>
+#22 21.12     if you spot them, with the title prefix "proxy.golang.org:" (or "index.golang.org:", or
+#22 21.12     "sum.golang.org:").</p>
+#22 21.12 
+#22 21.12   <h2 id="environment-setup">Environment setup</h2>
+#22 21.12 
+#22 21.12   <p>These services can only access publicly available source code. If you depend on private
+#22 21.12     modules, set <code>GOPRIVATE</code> to a glob pattern that covers them. See
+#22 21.12     <a href="https://pkg.go.dev/cmd/go#hdr-Configuration_for_downloading_non_public_code">Module configuration for non-public modules</a>
+#22 21.12     in the go command documentation for more details.</p>
+#22 21.12 
+#22 21.12   <p>To opt-out of this module mirror, you can turn it off by setting <code>GOPROXY=direct</code></p>
+#22 21.12 
+#22 21.12   <p>See the <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 21.12     for other configuration details.</p>
+#22 21.12 
+#22 21.12   <h2 id="faq">FAQ</h2>
+#22 21.12 
+#22 21.12   <h3 id="faq-refresh-traffic">
+#22 21.12     Why is proxy.golang.org sending me so much traffic?</h3>
+#22 21.12   <p>The Go module mirror tries to keep its cache up to date by refreshing recently accessed
+#22 21.12     information before it expires. If your server is seeing too much traffic, we can disable that
+#22 21.12     speculative refresh or work with you to understand the traffic better. Please file a
+#22 21.12     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">GitHub issue</a> or email us
+#22 21.12     at <a href="mailto:security@golang.org">security@golang.org</a>.</p>
+#22 21.12 
+#22 21.12   <h3 id="faq-new-version">
+#22 21.12     I committed a new change (or released a new version) to a repository, why isn't it showing up
+#22 21.12     when I run <code>go get -u</code> or <code>go list -m --versions</code>?</h3>
+#22 21.12   <p>In order to improve our services' caching and serving latencies, new versions may not show up
+#22 21.12     right away. If you want new code to be immediately available in the mirror, then first make sure
+#22 21.12     there is a semantically versioned tag for this revision in the underlying source repository.
+#22 21.12     Then explicitly request that version via <code>go get module@version</code>. The new version
+#22 21.12     should be available within one minute. Note that if someone requested the version before the tag
+#22 21.12     was pushed, it may take up to 30 minutes for the mirror's cache to expire and fresh data about
+#22 21.12     the version to become available. If the version is still not available after 30 minutes, please
+#22 21.12     <a href="https://golang.org/issue/new?title=proxy.golang.org%3A+">file an issue</a>.</p>
+#22 21.12 
+#22 21.12   <h3 id="faq-retract-version">
+#22 21.12     I removed a bad release from my repository but it still appears in the mirror, what should I do?</h3>
+#22 21.12   <p>Whenever possible, the mirror aims to cache content in order to avoid breaking builds for people
+#22 21.12     that depend on your package, so this bad release may still be available in the mirror even if it
+#22 21.12     is not available at the origin. The same situation applies if you delete your entire repository.
+#22 21.12     We suggest creating a new version and encouraging people to use that one instead.</p>
+#22 21.12 
+#22 21.12   <p>If you would like to hide versions of a module from the <code>go</code>
+#22 21.12     command, as well as <a href="https://pkg.go.dev">pkg.go.dev</a>, you should retract them.
+#22 21.12     Retracting a module version involves adding a <a href="https://golang.org/ref/mod#go-mod-file-retract">retract directive</a>
+#22 21.12     to your go.mod file and publishing a new version. See the Go blog post
+#22 21.12     <a href="https://go.dev/blog/go116-module-changes#module-retraction">New module changes in Go 1.16</a> and
+#22 21.12     the <a href="https://go.dev/ref/mod#go-mod-file-retract">modules reference</a> for details.</p>
+#22 21.12 
+#22 21.12   <h3 id="faq-cannot-use">
+#22 21.12     I'm running the go command in an environment that can't use the mirror.</h3>
+#22 21.12   <p>The <a href="https://golang.org/ref/mod#private-module-privacy">go command documentation</a>
+#22 21.12     describes the configuration details including how to disable the use of these servers or use
+#22 21.12     different ones.</p>
+#22 21.12 
+#22 21.12   <h3 id="faq-private">
+#22 21.12     If I don't set <code>GOPRIVATE</code> and request a private module from these services,
+#22 21.12     what leaks?</h3>
+#22 21.12   <p>The proxy and checksum database protocol* TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 * TLSv1.2 (IN), TLS header, Supplemental data (23):
+#22 21.12 { [5 bytes data]
+#22 21.12 * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+#22 21.12 } [5 bytes data]
+#22 21.12 
+100  9628  100  9628    0     0  70155      0 --:--:-- --:--:-- --:--:-- 70277
+#22 21.12 * Connection #0 to host proxy.golang.org left intact
+#22 21.12 s only send module paths and versions to the remote
+#22 21.12     server. If you request a private module, the mirror will try to download it just as any Go
+#22 21.12     user would and fail in the same way. Information about failed requests isn't published
+#22 21.12     anywhere. The only trace of the request will be in internal logs, which
+#22 21.12     are governed by the <a href="privacy">privacy policy</a>.</p>
+#22 21.12 
+#22 21.12   <h3 id="faq-retention">
+#22 21.12     Why did a previously available module become unavailable in the mirror?</h3>
+#22 21.12   <p><a href="https://proxy.golang.org">proxy.golang.org</a> does not save all modules forever.
+#22 21.12     There are a number of reasons for this, but one reason is if
+#22 21.12     <a href="https://proxy.golang.org">proxy.golang.org</a> is not able to detect a suitable
+#22 21.12     license. In this case, only a temporarily cached copy of the module will be made available, and
+#22 21.12     may become unavailable if it is removed from the original source and becomes outdated.
+#22 21.12     The checksums will still remain in the checksum database regardless of whether or not they
+#22 21.12     have become unavailable in the mirror.</p>
+#22 21.12 
+#22 21.12   <h3 id="faq-security">
+#22 21.12     I have discovered a malicious module version in the mirror. Where do I report it?</h3>
+#22 21.12   <p>Following <a href="https://golang.org/security#reporting">the security policy</a>, send an
+#22 21.12     email to <a href="mailto:security@golang.org">security@golang.org</a> with the word
+#22 21.12     "vulnerability" in the message somewhere.</p>
+#22 21.12 
+#22 21.12   </div>
+#22 21.13 + sleep 5
+#22 DONE 26.1s
+
+#23 [17/20] RUN go mod verify
+#23 0.398 go: go: could not create module cache: mkdir /go: permission denied
+#23 ERROR: process "/bin/sh -c go mod verify" did not complete successfully: exit code: 1
+------
+ > [17/20] RUN go mod verify:
+0.398 go: go: could not create module cache: mkdir /go: permission denied
+------
+ERROR: failed to build: failed to solve: process "/bin/sh -c go mod verify" did not complete successfully: exit code: 1
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

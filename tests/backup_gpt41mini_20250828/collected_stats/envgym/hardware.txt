@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/collected_stats; project likely Linux-based, user home directory context
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: x86_64-compatible Linux base images (e.g., ubuntu, debian, alpine for amd64)
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: Use standard Linux filesystem paths; no GPU-specific instructions; CPU architecture supports multi-threaded builds; ensure base images match x86_64 architecture
+- Docker Version: 28.3.2; supports BuildKit, Buildx, and Docker Compose v2; GPU builds not applicable due to no NVIDIA GPU detected

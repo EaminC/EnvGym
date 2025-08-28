@@ -1,0 +1,246 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Note:** This plan is adjusted and validated for your hardware environment:
+
+- Architecture: x86_64 (amd64) — compatible with all instructions and binaries below.  
+- Base OS: Use amd64 Linux base images such as Ubuntu 20.04 or 22.04 (Ubuntu 20.04 strongly recommended for modified brd kernel modules on kernels 4.4, 4.15, 5.4).  
+- Docker: Version 28.3.2 supports BuildKit and docker buildx, but GPU flags are irrelevant (no NVIDIA GPU detected).  
+- Storage: Overlay2 with extfs backing; no userxattr-dependent features required.  
+- Cgroup: v2 and systemd cgroup driver compatible.  
+- Memory: Large available RAM, no swap concerns; ample for kernel builds and model checking workloads.
+
+---
+
+### 1. DOWNLOADS & INSTALLATION REQUIREMENTS
+
+- **Operating System:** Ubuntu 20.04 (recommended) or 22.04 (compatible, but some modified kernel modules may require 20.04).  
+- **Linux Kernel versions supported:** 4.4, 4.15, 5.4, 5.15.0, 5.19.7, 6.0.6, 6.2.12, 6.3.0, 6.6.1, 6.9.4.  
+  - For JFS kernel hang bug reproduction: kernel 6.9.4 required.  
+- **Development Tools & Libraries:**  
+  - build-essential (gcc, make, libc-dev)  
+  - git  
+  - python3, python3-pip  
+  - libssl-dev  
+  - mtd-utils  
+  - xfsprogs  
+  - rename (optional but recommended)  
+  - kernel build dependencies: libncurses-dev, bison, flex, libelf-dev  
+  - nfs-ganesha package or source (for NFS-Ganesha environment)  
+- **Python Packages:** Install via pip3: numpy, scipy, matplotlib, pulp, ply (ply optional but recommended).  
+- **Repositories:** Clone all required repos using HTTPS URLs or SSH as appropriate; ensure URLs accessible from your network.  
+- **Kernel Source:** Download Linux kernel v6.9.4 tarball from https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.9.4.tar.xz for building custom kernel.
+
+---
+
+### 2. DIRECTORY AND PATHS
+
+- Working directory is `/home/cc/EnvGym/data-gpt-4.1mini/Metis` — all cloned repositories, scripts, and builds should reside within or symlinked from this directory to maintain consistent paths.  
+- No special volume mounts indicated — standard Linux file paths are used.  
+- Ensure that the following directories exist or are created with correct permissions:  
+  - `/mnt/test-ext4`  
+  - `/mnt/test-jffs2`  
+  - `/mnt/test-nfs-ganesha-export` (required for NFS-Ganesha export)  
+  - Any other mount/test points as per test scenarios.
+
+---
+
+### 3. KERNEL MODULES AND BUILD
+
+- Use compatible kernel source and headers matching your running kernel `uname -r`.  
+- For modified `brd` kernel modules (ramdisk devices) supporting individual ramdisk sizes:  
+  - Use `kernel/brd-for-5.4.0/` for kernel 5.4  
+  - Use `kernel/brd-for-4.15/` for kernel 4.15  
+  - Use `kernel/brd-for-4.4/` for kernel 4.4  
+  - For other kernels, use the closest matching or standard `brd` or `brd2` modules.  
+- Build modules with:  
+  ```bash
+  make -C /lib/modules/$(uname -r)/build M=$(pwd)
+  ```  
+- Load `brd.ko` with parameters:  
+  ```bash
+  sudo insmod brd.ko rd_nr=N rd_sizes=size1,size2,...,sizeN
+  ```  
+  - Sizes in kilobytes.  
+  - Verify block device files `/dev/ram*` exist and have expected sizes with `blockdev --getsize64`.  
+- Remove existing modules before reloading to avoid device conflicts:  
+  ```bash
+  sudo rmmod brd || true
+  find /dev -name 'ram*' ! -type b -exec rm -f {} \;
+  ```  
+- For kernel 6.9.4 custom build (required for JFS bug reproduction):  
+  - Use `.kernel-6.9.4-config` from Metis-Replayer repo as `.config` file.  
+  - Run `make oldconfig` and then `make -j$(nproc)` for build.  
+  - Install modules and kernel with `sudo make modules_install` and `sudo make install`.  
+  - Reboot and verify kernel with `uname -mars`.  
+  - Backup or snapshot system before kernel installation strongly recommended.
+
+---
+
+### 4. FILE SYSTEMS AND BLOCK DEVICES
+
+- Set up MTD RAM device for JFFS2 testing:  
+  ```bash
+  sudo modprobe mtd
+  sudo modprobe mtdram total_size=262144 erase_size=16384  # sizes in KB (256MB total, 16MB erase sector) adjust as needed  
+  sudo modprobe mtdblock
+  ```  
+- Verify `/dev/mtdblock0` exists.  
+- Create JFFS2 image:  
+  ```bash
+  mkdir /tmp/_empty
+  mkfs.jffs2 --root=/tmp/_empty --pad=262144 -o /tmp/jffs2.img
+  sudo dd if=/tmp/jffs2.img of=/dev/mtdblock0 bs=16k
+  sudo mount -t jffs2 -o rw,sync,noatime /dev/mtdblock0 /mnt/test-jffs2
+  ```  
+- For NFS-Ganesha export:  
+  - Create `/mnt/test-nfs-ganesha-export` with suitable permissions accessible by NFS-Ganesha server.  
+  - Use provided `fs-state/ganesha.conf` configuration file for server setup.
+
+---
+
+### 5. REPOSITORY SETUP
+
+- Clone and place all required repositories inside `/home/cc/EnvGym/data-gpt-4.1mini/Metis` or subdirectories:  
+  - Metis, RefFS, IOCov, fsl-spin, swarm-mcfs, eXplode, mcl-demo, python-demo/auto_ambiguity_detector, nfs4mc, Metis-Replayer, fs_bugs/jffs2/write_begin  
+- For repositories requiring SSH URLs, ensure SSH key is set up properly; otherwise use HTTPS URLs.  
+- For JFS kernel hang bug reproduction:  
+  - Download `jfs_ops_sequence.log` from provided Google Drive link and place in working directory.  
+  - Ensure `setup_jfs.sh` and `loop_replay.sh` scripts are executable (`chmod +x`) and run with sudo.
+
+---
+
+### 6. INSTALLATION OF DEPENDENCIES
+
+- Update packages and install dependencies in one step:  
+  ```bash
+  sudo apt update
+  sudo apt install -y build-essential git python3 python3-pip make libssl-dev mtd-utils xfsprogs rename libncurses-dev bison flex libelf-dev nfs-ganesha
+  ```  
+- Install Python packages:  
+  ```bash
+  sudo pip3 install numpy scipy matplotlib pulp ply
+  ```  
+  - `ply` optional, recommended for future parser enhancements.
+
+---
+
+### 7. BUILD AND INSTALL SOFTWARE
+
+- Build Metis and install:  
+  ```bash
+  cd /home/cc/EnvGym/data-gpt-4.1mini/Metis/Metis
+  make
+  sudo make install
+  ```  
+- Build RefFS:  
+  ```bash
+  cd ../RefFS
+  ./setup_verifs2.sh
+  ```  
+- Build common utilities in `common/` as needed, compiling `errnoname.c` and `nanotiming.c`.  
+- For kernel modules in `kernel/` directory, build and load as per kernel version.  
+- Build examples and demos (`example/`, `mcl-demo/`, `python-demo/auto_ambiguity_detector`) per instructions.  
+- Build fsl-spin and swarm-mcfs for model checking and Swarm verification.
+
+---
+
+### 8. CONFIGURATION AND FILE CREATION
+
+- Set up `fs-state/swarm.lib` for Swarm verification with correct hostnames and CPU counts.  
+- Modify `fs-state/parameters.py` line 26 to remove unsupported open flags if testing JFFS2.  
+- Setup SSH keys for passwordless SSH between master and client machines for distributed Swarm runs.  
+- Create or verify `/mnt/test-*` directories for filesystems under test.  
+- Copy and configure `fs-state/ganesha.conf` for NFS-Ganesha server with export path `/mnt/test-nfs-ganesha-export`.  
+- For JFS bug reproduction, prepare kernel 6.9.4 and place `jfs_ops_sequence.log`, `setup_jfs.sh`, and `loop_replay.sh` scripts in working directory.
+
+---
+
+### 9. RUNNING SERVICES AND TESTS
+
+- **NFS-Ganesha:**  
+  - Start server with:  
+    ```bash
+    sudo ganesha.nfsd -F -L /var/log/ganesha.log -f fs-state/ganesha.conf
+    ```  
+  - Verify export with:  
+    ```bash
+    showmount -e localhost
+    ```  
+  - Mount export locally or on clients:  
+    ```bash
+    sudo mkdir -p /mnt/test-nfs-client
+    sudo mount -t nfs4 localhost:/mnt/test-nfs-ganesha-export /mnt/test-nfs-client
+    ```  
+  - Test read/write access and monitor logs `/var/log/ganesha.log`.  
+- **JFFS2 write_begin bug reproduction:**  
+  ```bash
+  cd fs_bugs/jffs2/write_begin/
+  make
+  sudo bash reproduce_jffs2_write_begin_issue.sh
+  ```  
+- **JFS kernel hang bug reproduction:**  
+  ```bash
+  sudo bash setup_jfs.sh
+  make replayer
+  sudo bash loop_replay.sh
+  ```  
+  - Monitor `dmesg` for kernel crash messages; be patient as bug is non-deterministic.  
+- **Swarm Verification:**  
+  - Load ramdisk modules with sufficient devices.  
+  - Run single machine or distributed runs as per `setup_swarm.sh` and `mcfs-main.pml.swarm` scripts.  
+  - Monitor processes and logs on all machines.  
+- **IOCov experiments:** Run `figure-3-exp.sh`, `figure-4-exp.sh`, and `figure-5-exp.sh` to verify input coverage analysis.  
+- **Multi-threaded syscall example:**  
+  ```bash
+  cd example
+  make
+  ./test
+  ```  
+  - Verify `test.log` and `test.log.json` outputs.  
+- **Python ambiguity detector:**  
+  ```bash
+  cd python-demo/auto_ambiguity_detector
+  python3 ambiguity_checker_simulator.py examples/examples.pml
+  python3 ambiguity_checker_LP.py examples/example2.pml
+  ```  
+  - Verify generated test scripts and `report.txt`.
+
+---
+
+### 10. TROUBLESHOOTING AND NOTES
+
+- Ensure kernel headers match running kernel for building modules.  
+- Remove stale `/dev/ram*` devices if errors occur before loading `brd` module.  
+- Verify hostname consistency for distributed Swarm runs; hostnames must be lowercase and exact.  
+- For distributed Swarm, ensure passwordless SSH works without prompting for passwords.  
+- Use `pkill -f "mcfs-main.pml.swarm"` to kill stuck Swarm runs.  
+- Check `/var/log/ganesha.log` for NFS-Ganesha runtime errors; ensure TCP port 2049 is open and accessible.  
+- Use tmux or screen to run long experiments without interruptions.  
+- Verify all Python dependencies installed to avoid import errors in ambiguity detection scripts.  
+- Backup system before installing custom kernel 6.9.4 for JFS bug reproduction.  
+- For kernel build, ensure sufficient disk space and system memory (your hardware with large memory satisfies this).  
+- If Ext4 vs Ext2 discrepancies arise during Swarm runs, consider using larger ramdisks (e.g., via `loadlargebrds.sh`).  
+- Clean logs and unmount filesystems before new runs to maintain clean environment:  
+  ```bash
+  sudo ./stop.sh
+  sudo make clean
+  sudo umount /dev/ram* || true
+  sudo rmmod brd || true
+  ```  
+
+---
+
+### 11. VERIFICATION CHECKLIST
+
+- Confirm all required repositories exist under `/home/cc/EnvGym/data-gpt-4.1mini/Metis`.  
+- Verify kernel modules compile and load, `/dev/ram*` devices exist with correct sizes.  
+- Run simple tests: Ext4 vs Ext2, IOCov experiments, Swarm verification (single and distributed).  
+- Confirm bug reproduction scripts for JFFS2 and JFS kernel hang run and produce expected logs/errors.  
+- Verify NFS-Ganesha server starts, exports `/mnt/test-nfs-ganesha-export`, and clients can mount and read/write.  
+- Run multi-threaded syscall example and check generated log files.  
+- Run python-demo ambiguity detection scripts without import or runtime errors.  
+- Check logs and outputs for errors and address as per troubleshooting notes.
+
+---
+
+This completes the adjusted environment setup plan tailored for your x86_64 Linux environment with standard file paths, large memory, and no GPU dependencies, integrating the new NFS-Ganesha setup alongside all Metis-related components, ensuring full compatibility and operational feasibility.

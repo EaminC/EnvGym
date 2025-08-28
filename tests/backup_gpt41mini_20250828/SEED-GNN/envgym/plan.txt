@@ -1,0 +1,150 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN (NO GPU / CPU-ONLY) ===
+
+---
+
+**Context:**
+
+- Hardware: x86_64 CPU architecture, no NVIDIA GPU present  
+- OS: Linux-based environment (assumed from working directory and typical usage)  
+- No CUDA / NVIDIA GPU support — all GPU- or CUDA-specific steps must be skipped or adapted for CPU-only use  
+- Docker build environment: x86_64 compatible base images recommended (ubuntu/debian/python official amd64 images)  
+- Relative paths: based at `/home/cc/EnvGym/data-gpt-4.1mini/SEED-GNN`  
+- Docker version supports BuildKit and buildx, but no GPU flags needed
+
+---
+
+1. **DOWNLOADS & INSTALLATIONS NEEDED:**
+
+   - Python 3.8+ (preferably 3.8 to 3.10 for compatibility)  
+   - *No CUDA toolkit or NVIDIA drivers required or recommended* (skip CUDA-related installs)  
+   - Git (for repository management)  
+   - PyTorch 2.0.0 CPU-only version (no CUDA)  
+     - Install CPU-only PyTorch wheel  
+   - PyTorch Geometric and dependencies versions remain the same:  
+     - torch-geometric==2.3.1  
+     - torch-scatter==2.1.1  
+     - torch-cluster==1.6.1  
+     - torch-spline-conv==1.2.2  
+     - torch-sparse==0.6.17  
+   - Additional PyTorch ecosystem libraries:  
+     - torchvision==0.15.1  
+     - torchaudio==2.0.1  
+   - Other Python dependencies from `requirements.txt`:  
+     - numpy==1.24.4  
+     - pandas==2.0.3  
+     - ogb==1.3.6  
+   - Bash shell environment (Linux native shell available)  
+
+---
+
+2. **FILES TO CREATE/UPDATE:**
+
+   - `requirements.txt` including all Python dependencies as above, **without CUDA-specific packages or CUDA-version environment variables**.  
+     - Explicitly specify CPU-compatible packages.  
+   - `.env` or environment variables configuration: *omit* `CUDA_VERSION` variable or leave unset since no CUDA is used.  
+   - `.gitignore` file as described, unchanged:  
+     ```
+     __pycache__
+     .vscode
+     *.egg-info
+     .DS_Store
+     ckpts
+     results/
+     ```  
+   - Confirm presence and correctness of config JSON files (no change needed)  
+   - Optional shell scripts remain valid (run under bash), no CUDA dependencies expected  
+
+---
+
+3. **NECESSARY TEST CASES:**
+
+   - Test PyTorch installation: verify `torch.cuda.is_available()` returns False (expected)  
+   - Test importing PyTorch Geometric and dependencies without errors (all CPU-compatible)  
+   - Test importing torchvision, torchaudio, numpy, pandas, ogb  
+   - Run baseline training script (`bash scripts/pretrain/seed_gnn/cora.sh <output_dir> <dataset_dir>`) to completion on CPU  
+   - Run editing script (`bash scripts/edit/seed_gnn/gcn/cora.sh <output_folder> <dataset_dir>`) and check outputs  
+   - Confirm output folders contain expected log and result files  
+   - Validate config JSON parsing  
+   - Verify `.gitignore` effectiveness to exclude cache/output files  
+   - Optional: unit tests for argument parsing and `main.py` function calls  
+
+---
+
+4. **COMPLETE TODO LIST (ADJUSTED):**
+
+   1. Verify Python version installed (3.8 - 3.10 recommended):  
+      - `python --version`  
+      - Install Python if missing, using x86_64 compatible binaries or package manager (e.g., apt)  
+   2. **Skip CUDA toolkit and NVIDIA drivers installation** since no GPU detected or used.  
+      - No `nvidia-smi` or CUDA checks needed.  
+   3. **Do not set `CUDA_VERSION` environment variable or set it to empty/none** to avoid confusion in pip install commands.  
+   4. Create and activate a new Python virtual environment:  
+      - `python -m venv venv_seedgnn`  
+      - Activate: `source venv_seedgnn/bin/activate`  
+   5. Upgrade pip: `pip install --upgrade pip`  
+   6. Install CPU-only PyTorch 2.0.0:  
+      - Use PyTorch official CPU wheels, e.g.:  
+        ```
+        pip install torch==2.0.0+cpu torchvision==0.15.1+cpu torchaudio==2.0.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+        ```  
+      - Verify installation:  
+        ```
+        python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+        ```  
+        Expected output: CUDA available = False  
+   7. Install PyTorch Geometric dependencies for CPU (without CUDA suffix):  
+      - Use PyG CPU wheels:  
+        ```
+        pip install torch-scatter==2.1.1 torch-cluster==1.6.1 torch-spline-conv==1.2.2 torch-sparse==0.6.17 -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+        ```  
+      - Verify imports:  
+        ```
+        python -c "import torch_scatter; import torch_cluster; import torch_spline_conv; import torch_sparse"
+        ```  
+   8. Install other Python dependencies from `requirements.txt` (which includes torch-geometric==2.3.1, numpy, pandas, ogb):  
+      - `pip install -r requirements.txt`  
+      - Ensure versions are CPU-compatible and consistent with PyTorch 2.0.0 CPU  
+   9. Create/update `.gitignore` file with specified entries (unchanged)  
+      - Verify `.gitignore` effectiveness by generating outputs and running `git status`  
+   10. Confirm config JSON files are present and valid  
+   11. Prepare dataset directory at `<dataset_dir>` with required datasets (e.g., Cora)  
+   12. Run baseline pretraining script on CPU:  
+       - `bash scripts/pretrain/seed_gnn/cora.sh <output_dir_root> <dataset_dir>`  
+       - Confirm successful completion and checkpoint presence  
+   13. Run editing script on CPU:  
+       - `bash scripts/edit/seed_gnn/gcn/cora.sh <output_folder_dir> <dataset_dir>`  
+       - Confirm output files and logs are created  
+   14. Inspect logs and results for correctness and metric population  
+   15. Optional: implement automated test scripts for imports, config loading, and CPU training/editing runs  
+   16. Document environment setup details, explicitly stating:  
+       - CPU-only installation (no GPU or CUDA)  
+       - Python version used  
+       - Package versions installed  
+       - Any deviations from GPU/CUDA-based instructions  
+
+---
+
+5. **ERROR HANDLING & NOTES FOR CPU-ONLY SETUP:**
+
+   - Do **not** attempt to install CUDA toolkit or GPU drivers; such attempts will fail or are unnecessary.  
+   - Ensure PyTorch installed is CPU-only to avoid runtime errors due to missing CUDA.  
+   - PyTorch Geometric wheels must match PyTorch CPU version (`+cpu` suffix in wheel URLs)  
+   - If any PyG dependency installation fails, verify the wheel URL matches PyTorch 2.0.0 CPU version exactly.  
+   - Dataset presence and config files must be validated before running scripts.  
+   - Use logs (`exp.log`) for runtime error inspection.  
+   - `.gitignore` must effectively exclude generated cache, temporary, and output files.  
+
+---
+
+6. **CROSS-PLATFORM & PATH NOTES:**
+
+   - Linux environment with bash shell available; run scripts as-is.  
+   - Paths are relative to `/home/cc/EnvGym/data-gpt-4.1mini/SEED-GNN`; use relative paths in scripts and commands accordingly.  
+   - Docker images used for builds or CI should be CPU-only amd64 variants (e.g., `python:3.10-slim` or `ubuntu:22.04` amd64)  
+   - No use of `--gpus` or CUDA-specific Docker build flags.  
+   - Overlay2 storage driver compatibility is assumed and no changes needed.  
+
+---
+
+**Summary:**  
+This adjusted plan removes all CUDA and GPU-specific steps, installs CPU-only PyTorch and PyTorch Geometric wheels, skips CUDA environment variables, and runs all training and editing scripts on CPU. It ensures compatibility with the x86_64 CPU-only hardware environment and Linux operating system, maintaining version consistency and reproducibility.

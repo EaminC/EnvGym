@@ -1,0 +1,175 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64 LINUX amd64 ENVIRONMENT) ===
+
+1. DOWNLOADS NEEDED:  
+   - **C Compiler:**  
+     - GCC version 7.3.0 or higher recommended (tested with GCC 14.2.0 on Ubuntu 24.04)  
+     - Alternatively, Clang compiler (for static analysis with `scan-build` and sanitizer builds)  
+     - MSVC and cross-compilers for ARM, AArch64, PowerPC, PPC64 targets are optional and generally not required in this environment but may be installed if cross-building/testing is desired  
+   - **Swift Compiler and Tools:**  
+     - Swift toolchain version 5.0 or higher (to support `Package.swift` build configuration)  
+     - Swift Package Manager (SPM) included with Swift toolchain for building Swift packages  
+   - **Build Tools:**  
+     - GNU Make (for Unix-like systems)  
+     - CMake (for cmake builds)  
+     - Ninja build system (optional, for cmake Ninja generator and Meson builds)  
+     - Meson build system and Ninja (for Meson builds)  
+     - Docker (version 28.3.2 confirmed, supports BuildKit and docker buildx, no GPU support needed)  
+       - Use AMD64 Linux base images compatible with x86_64 (e.g., Alpine, Ubuntu, Debian) for container builds  
+       - Do not include NVIDIA or GPU runtime components or flags in Dockerfiles or build commands  
+     - Snapcraft (for building and packaging snaps)  
+       - Install Snapcraft from official sources or system package manager  
+       - Requires `snapd` and snap environment on Linux hosts supporting snap packaging  
+   - **Package Managers (optional):**  
+     - VCPKG (for Windows and cross-platform package management, optional)  
+     - Conan (for dependency management and binary installation, optional)  
+   - **Additional Tools:**  
+     - Python (optional, if running test scripts, CI scripts, or fuzzers that require it)  
+     - Git (to clone repositories and submodules)  
+     - Clang’s `scan-build` tool for static analysis (optional but recommended for development)  
+     - Valgrind (for memory debugging and CI medium and long tests)  
+     - Sanitizers support in compiler toolchains:  
+       - UBSan (Undefined Behavior Sanitizer)  
+       - ASan (Address Sanitizer)  
+       - MSan (Memory Sanitizer)  
+       - TSan (Thread Sanitizer)  
+     - QEMU user-static and system emulators for ARM, AArch64, PowerPC, PPC64 architectures available for cross-architecture testing and fuzzing if desired, but not required for native x86_64 build and test  
+     - Docker CLI and daemon for building and running containerized `zstd` binaries via the provided `Dockerfile` (AMD64 base images only)  
+     - Web browser or markdown viewer to read documentation files including `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `TESTING.md`  
+     - **Shell environment supporting file descriptor manipulation** (e.g., `bash` or compatible shell) to support redirection features used in test environment initialization (e.g., `exec 9>&2`)  
+   - **Operating System:**  
+     - Linux x86_64 (Ubuntu 24.04 or Debian tested), with Docker and Snapcraft support for containerized and snap workflows  
+     - macOS and Windows toolchains and builds remain supported but are not the primary target for this hardware environment  
+   - **Documentation and Compliance:**  
+     - Web browser or markdown viewer to read `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, and `TESTING.md`  
+
+2. FILES TO CREATE:  
+   - As per original plan, unchanged. Paths and filenames remain valid on Linux x86_64.  
+   - Dockerfile and snapcraft.yaml use AMD64 base images and configuration — no changes needed for architecture compatibility.  
+   - Ensure that any Docker build commands specify `--platform=linux/amd64` explicitly if required by the Docker runtime or buildx usage to avoid ambiguity.  
+   - No GPU-specific Dockerfile modifications needed; ensure no NVIDIA runtime or GPU flags are present.  
+   - Shell scripts and fd redirection (`exec 9>&2`) remain unchanged and compatible with bash on Linux x86_64.  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All listed test cases remain valid and applicable.  
+   - Cross-architecture tests (ARM, AArch64, PowerPC, PPC64) can be executed via QEMU emulators but are optional for native x86_64 environment.  
+   - Docker containerized tests use AMD64 Alpine-based images — verify container builds and runs correctly on x86_64 host.  
+   - Snap package build and tests are fully supported on Linux x86_64 hosts.  
+   - Swift Package Manager builds and tests supported on Linux x86_64 with Swift 5.0+ toolchain installed.  
+   - Sanitizer tests and valgrind run natively on x86_64 host without modification.  
+   - gzip-related test environment initialization scripts and file descriptor usage remain valid on Linux x86_64 bash environment.  
+   - CI pipeline integration can include Docker and Snap tests targeting AMD64 Linux runners, matching host architecture.  
+
+4. COMPLETE TODO LIST (Adjusted Highlights):  
+
+   1. **Prepare Development Environment:**  
+      - Install required system packages for Linux x86_64:  
+        ```bash
+        sudo apt-get update
+        sudo apt-get install -y gcc g++ make cmake ninja-build meson git clang valgrind qemu-user-static qemu-system-arm qemu-system-aarch64 qemu-system-ppc qemu-system-ppc64 python3 python3-pip snapd docker.io bash
+        ```  
+      - Install Swift toolchain 5.0 or higher for Linux AMD64 from official Swift.org releases or package repositories.  
+      - Enable and start Docker daemon; confirm Docker CLI version 28.3.2 installed and running.  
+      - Install Snapcraft CLI and ensure `snapd` service is running.  
+      - Use bash or compatible shell as default shell for proper file descriptor manipulation.  
+      - Verify tools versions:  
+        ```bash
+        gcc --version
+        clang --version
+        cmake --version
+        ninja --version
+        meson --version
+        scan-build --version || echo "scan-build not installed"
+        valgrind --version
+        qemu-arm-static --version
+        qemu-aarch64-static --version
+        swift --version
+        docker --version
+        snapcraft --version
+        snap --version
+        ```  
+      - Optional: install VCPKG and Conan if dependency management is desired.  
+      - No GPU or NVIDIA-specific drivers, runtimes, or build flags are to be installed or used.  
+
+   2. **Clone Repository and Initialize Submodules:**  
+      - Unchanged; standard git clone and submodule init commands.  
+
+   3. **Read and Follow Documentation:**  
+      - Unchanged; read all provided markdown files before development.  
+
+   4. **Build Using Makefile (Recommended Default):**  
+      - Unchanged; run make commands as documented.  
+
+   5. **Swift Package Manager Build:**  
+      - Ensure Swift 5.0+ toolchain installed for Linux AMD64.  
+      - Run `swift build` and `swift test` as documented.  
+
+   6. **Alternative Builds (Optional):**  
+      - CMake, Meson, Visual Studio (Windows only), Buck, Bazel builds as previously described.  
+      - For macOS Universal2 builds, not applicable on Linux x86_64 host, so skip or run only on macOS hosts.  
+
+   7. **Build and Use Containerized zstd Binary:**  
+      - Build Docker image targeting `linux/amd64` platform explicitly if required:  
+        ```bash
+        docker build --platform linux/amd64 -t zstd:alpine contrib/docker
+        ```  
+      - Run container and verify functionality as documented.  
+      - Confirm license files included at `/usr/local/share/licenses/zstd/` inside container.  
+      - No GPU or NVIDIA runtime flags used or needed.  
+
+   8. **Build and Use Snap Package for Linux:**  
+      - Unchanged; follow Snapcraft build and install instructions on Linux x86_64 host.  
+      - Test confinement modes starting with `devmode`.  
+
+   9. **Dictionary Training:**  
+      - Unchanged; run on Linux x86_64 host as documented.  
+
+   10. **Set Environment Variables for Testing:**  
+       - Export variables as needed:  
+         ```bash
+         export ZSTD_BIN=/path/to/zstd
+         export DATAGEN_BIN=/path/to/datagen
+         ```  
+       - Ensure `tests/gzip/init.cfg` is present and sourced by `tests/gzip/init.sh` before test runs.  
+       - Verify file descriptor redirection (`exec 9>&2`) matches `stderr_fileno_=9` in `init.cfg`.  
+
+   11. **Run Static Analysis:**  
+       - Run `make staticAnalyze` using installed clang scan-build tool.  
+
+   12. **Package Managers (Optional):**  
+       - Install and use VCPKG or Conan as desired, compatible with Linux AMD64.  
+
+   13. **Sanitizer and Cross-Architecture Tests:**  
+       - Run sanitizer-enabled tests natively on x86_64 host.  
+       - Run cross-architecture tests and fuzzers using QEMU emulators if desired; QEMU packages installed.  
+
+   14. **Code Style, Linting, Security, and Community:**  
+       - Unchanged; ensure compliance as per documentation.  
+
+   15. **Performance Benchmarking and Profiling:**  
+       - Run benchmarks on Linux x86_64 host as documented.  
+
+   16. **Continuous Integration (CI) Testing:**  
+       - Use Linux AMD64 runners for CI builds and tests.  
+       - Incorporate Docker image build and containerized test runs using AMD64 base images.  
+       - Incorporate Snap package build and installation tests on Linux AMD64 CI hosts supporting snapd.  
+       - Ensure gzip-related test initialization scripts source `init.cfg` properly in CI environments with bash shell.  
+
+   17. **Create and Submit Pull Requests:**  
+       - Follow contribution workflow as documented.  
+
+   18. **Security Issue Reporting:**  
+       - Follow security reporting guidelines strictly.  
+
+   19. **Documentation and Contribution Maintenance:**  
+       - Regularly consult and update documentation files as needed.  
+
+**Summary of Adjustments:**  
+- Focus exclusively on x86_64 (AMD64) architecture native support; cross-architecture builds/tests remain optional and use QEMU.  
+- Docker builds and tests target `linux/amd64` platform explicitly; no ARM or GPU/NVIDIA runtimes included.  
+- No GPU dependencies or CUDA-related tools installed or configured.  
+- Use bash or compatible shell on Linux x86_64 for file descriptor manipulations in test scripts.  
+- Swift toolchain installed for Linux AMD64 platform.  
+- Snapcraft and snapd used on Linux AMD64 hosts with no architecture changes.  
+- CI pipelines configured to run on Linux AMD64 runners matching host architecture.  
+
+This adjusted plan ensures compatibility and optimal usage of your specified x86_64 Linux environment with Docker version 28.3.2, no GPU dependencies, and AMD64 container base images.

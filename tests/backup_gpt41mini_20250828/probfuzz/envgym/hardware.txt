@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/probfuzz; project under /home/cc/EnvGym/data-gpt-4.1mini, no special volume or bind mount constraints noted  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: x86_64 compatible images; no ARM or other architecture required  
+- GPU: No usable NVIDIA GPU detected; no CUDA base image needed  
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU support instructions; consider large memory availability for multi-stage builds; no special user namespace or cgroup adjustments needed  
+- Docker Version: 28.3.2; supports BuildKit, docker buildx, and GPU build features though GPU unavailable on this system

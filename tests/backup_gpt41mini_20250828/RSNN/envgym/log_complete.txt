@@ -1,0 +1,105 @@
+=== Docker Execution Log - 20250827_101248 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756289567
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.86kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.10.12-slim
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/11] FROM docker.io/library/python:3.10.12-slim@sha256:4d440b214e447deddc0a94de23a3d97d28dfafdf125a8b4bb8073381510c9ee2
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 576.46kB 0.0s done
+#5 DONE 0.0s
+
+#6 [ 3/11] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     git     curl     ca-certificates     python3-dev     libffi-dev     libssl-dev     libcurl4-openssl-dev     pkg-config     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 5/11] RUN pip install --upgrade pip
+#7 CACHED
+
+#8 [ 7/11] RUN sed '/git+https:\/\/github.com\/fmi-basel\/stork.git/d' requirements.txt > tmp_requirements.txt &&     pip install --no-cache-dir -r tmp_requirements.txt && rm tmp_requirements.txt
+#8 CACHED
+
+#9 [ 2/11] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/RSNN
+#9 CACHED
+
+#10 [ 4/11] RUN python3 -m venv /opt/venv
+#10 CACHED
+
+#11 [ 6/11] COPY requirements.txt ./requirements.txt
+#11 CACHED
+
+#12 [ 8/11] RUN pip install --no-cache-dir -e git+https://github.com/fmi-basel/stork.git@40c68fe#egg=stork
+#12 CACHED
+
+#13 [ 9/11] RUN pip install --no-cache-dir git+https://github.com/fmi-basel/randman.git@7f1a7a8#egg=randman
+#13 0.948 Collecting randman
+#13 0.948   Cloning https://github.com/fmi-basel/randman.git (to revision 7f1a7a8) to /tmp/pip-install-bvmc_j5h/randman_05eca7712b2144fc84c6232cb36fef92
+#13 0.950   Running command git clone --filter=blob:none --quiet https://github.com/fmi-basel/randman.git /tmp/pip-install-bvmc_j5h/randman_05eca7712b2144fc84c6232cb36fef92
+#13 1.124   fatal: could not read Username for 'https://github.com': No such device or address
+#13 1.131   error: subprocess-exited-with-error
+#13 1.131   
+#13 1.131   × git clone --filter=blob:none --quiet https://github.com/fmi-basel/randman.git /tmp/pip-install-bvmc_j5h/randman_05eca7712b2144fc84c6232cb36fef92 did not run successfully.
+#13 1.131   │ exit code: 128
+#13 1.131   ╰─> See above for output.
+#13 1.131   
+#13 1.131   note: This error originates from a subprocess, and is likely not a problem with pip.
+#13 1.222 error: subprocess-exited-with-error
+#13 1.222 
+#13 1.222 × git clone --filter=blob:none --quiet https://github.com/fmi-basel/randman.git /tmp/pip-install-bvmc_j5h/randman_05eca7712b2144fc84c6232cb36fef92 did not run successfully.
+#13 1.222 │ exit code: 128
+#13 1.222 ╰─> See above for output.
+#13 1.222 
+#13 1.222 note: This error originates from a subprocess, and is likely not a problem with pip.
+#13 ERROR: process "/bin/sh -c pip install --no-cache-dir git+https://github.com/fmi-basel/randman.git@7f1a7a8#egg=randman" did not complete successfully: exit code: 1
+------
+ > [ 9/11] RUN pip install --no-cache-dir git+https://github.com/fmi-basel/randman.git@7f1a7a8#egg=randman:
+1.131   ╰─> See above for output.
+1.131   
+1.131   note: This error originates from a subprocess, and is likely not a problem with pip.
+1.222 error: subprocess-exited-with-error
+1.222 
+1.222 × git clone --filter=blob:none --quiet https://github.com/fmi-basel/randman.git /tmp/pip-install-bvmc_j5h/randman_05eca7712b2144fc84c6232cb36fef92 did not run successfully.
+1.222 │ exit code: 128
+1.222 ╰─> See above for output.
+1.222 
+1.222 note: This error originates from a subprocess, and is likely not a problem with pip.
+------
+envgym.dockerfile:44
+--------------------
+  42 |     
+  43 |     # Install randman directly from GitHub with specific commit without editable flag
+  44 | >>> RUN pip install --no-cache-dir git+https://github.com/fmi-basel/randman.git@7f1a7a8#egg=randman
+  45 |     
+  46 |     # Copy the entire repository contents to working directory
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c pip install --no-cache-dir git+https://github.com/fmi-basel/randman.git@7f1a7a8#egg=randman" did not complete successfully: exit code: 1
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

@@ -1,0 +1,17 @@
+current progress  
+- Base image python:3.10.12-slim chosen appropriately for amd64 Linux CPU environment.  
+- System dependencies installed including build tools and git.  
+- Virtual environment created and pip upgraded.  
+- requirements.txt copied and installed excluding stork.  
+- stork installed editable from GitHub at specified commit successfully.  
+- Installation of randman from GitHub failed causing build failure at Dockerfile line 44.  
+- Repository copied after dependency installation steps.  
+- Dockerfile respects CPU-only setup with no CUDA or GPU dependencies.
+
+next step  
+- Investigate the pip install failure of randman from GitHub: verify URL correctness, commit hash, and network access inside build context.  
+- Consider pinning randman to a known working commit or switch to installing randman via requirements.txt if applicable.  
+- Add verbose logging or retry logic to diagnose pip failure.  
+- Ensure all GitHub dependency installs include the `#egg=` suffix properly for pip to recognize package name.  
+- Test manual `pip install` of randman in a local container or environment matching Docker base image to reproduce error.  
+- Once resolved, rebuild Docker image and confirm successful build completion.

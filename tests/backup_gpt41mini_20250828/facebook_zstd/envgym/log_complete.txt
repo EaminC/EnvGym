@@ -1,0 +1,64 @@
+=== Docker Execution Log - 20250827_202328 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756326208
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.54kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:24.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/library/ubuntu:24.04@sha256:7c06e91f61fa88c08cc74f7e1b7c69ae24910d745357e0dfe1d2c0322aaf20f9
+#4 DONE 0.0s
+
+#5 [2/8] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     gcc-14 g++-14     clang     make     cmake     ninja-build     meson     git     valgrind     qemu-user-static     qemu-system-arm     qemu-system-aarch64     qemu-system-ppc     qemu-system-ppc64     python3     python3-pip     docker.io     bash     ca-certificates     curl     gnupg     lsb-release  && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100  && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100  && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [3/8] RUN apt-get update && apt-get install -y --no-install-recommends swift && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [4/8] RUN getent group docker || groupadd -g 999 docker;     useradd -m -u 1000 user;     usermod -aG docker user
+#7 0.200 docker:x:102:
+#7 0.206 useradd: UID 1000 is not unique
+#7 0.208 usermod: user 'user' does not exist
+#7 ERROR: process "/bin/sh -c getent group docker || groupadd -g 999 docker;     useradd -m -u 1000 user;     usermod -aG docker user" did not complete successfully: exit code: 6
+------
+ > [4/8] RUN getent group docker || groupadd -g 999 docker;     useradd -m -u 1000 user;     usermod -aG docker user:
+0.200 docker:x:102:
+0.206 useradd: UID 1000 is not unique
+0.208 usermod: user 'user' does not exist
+------
+envgym.dockerfile:39
+--------------------
+  38 |     
+  39 | >>> RUN getent group docker || groupadd -g 999 docker; \
+  40 | >>>     useradd -m -u 1000 user; \
+  41 | >>>     usermod -aG docker user
+  42 |     
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c getent group docker || groupadd -g 999 docker;     useradd -m -u 1000 user;     usermod -aG docker user" did not complete successfully: exit code: 6
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

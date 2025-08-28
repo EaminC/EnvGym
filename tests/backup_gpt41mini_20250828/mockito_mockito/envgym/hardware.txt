@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/mockito_mockito; project likely local code context, no specific volume mounts indicated  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: Use amd64 compatible images (e.g., ubuntu, debian, alpine for x86_64)  
+- GPU: No functional NVIDIA GPU detected; no CUDA base image recommended  
+- Instruction Notes: Large memory available (187.5GiB), high CPU cores (96) - optimize multi-stage builds and parallel RUN steps; no GPU-specific instructions needed; storage free is moderate (46GB) - keep image size optimized; working directory can be set to /home/cc/EnvGym/data-gpt-4.1mini/mockito_mockito if needed  
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU builds unsupported due to no NVIDIA driver detected

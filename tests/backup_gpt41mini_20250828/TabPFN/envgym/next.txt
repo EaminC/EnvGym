@@ -1,0 +1,25 @@
+current progress  
+- Dockerfile uses Python 3.11-slim-bullseye image, matching plan's Python version ≥3.9.  
+- System dependencies including git and build tools installed.  
+- Virtual environment created inside project folder and activated via PATH.  
+- pip, setuptools, wheel upgraded inside venv.  
+- Project files copied into container.  
+- PyTorch CPU-only packages installed without CUDA.  
+- eval-type-backport correctly omitted as Python 3.11 used.  
+- TabPFN 2.1.3 and specified dev dependencies (pre-commit, ruff, mypy, types) installed.  
+- Python dependencies installed from pyproject.toml or requirements.txt as per plan.  
+- pre-commit hooks installed.  
+- Pre-trained models downloaded offline with fallback to continue on failure.  
+- Recommended environment variables set in Docker ENV.  
+- Workdir set properly and container starts with bash shell.  
+- Build and runtime logs indicate success without errors.  
+
+next step  
+- Verify `.env` is created with correct absolute Linux paths and included in `.gitignore` (currently not shown in Dockerfile).  
+- Confirm that `venv/` directory is gitignored and not copied into container to avoid redundancy; consider excluding venv from COPY.  
+- Add explicit verification step for torch.cuda.is_available() to ensure CPU-only environment inside container.  
+- Consider running pre-commit hooks on all files during build to ensure code quality at build time.  
+- Document environment variable loading inside container if `.env` is used at runtime (e.g., via dotenv).  
+- Optionally, optimize Dockerfile by combining RUN steps and cleaning caches to reduce image size.  
+- Add automated test execution (`pytest tests/`) during build or container startup to validate installation correctness.  
+- Ensure `.gitignore` copied or created in container if needed for development consistency.

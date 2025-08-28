@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250827_093827 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756287505
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+52 |     # Switch to root user to run make install with proper permissions
+53 |     USER root
+54 | >>> RUN set -ex && ls -l && whoami && env && make install
+55 |
+56 |     USER cc
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c set -ex && ls -l && whoami && env && make install" did not complete successfully: exit code: 2
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

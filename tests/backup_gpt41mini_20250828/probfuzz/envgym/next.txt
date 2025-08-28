@@ -1,0 +1,17 @@
+current progress  
+- Docker image built successfully on Ubuntu 22.04 base with required system packages installed.  
+- Project files copied into /app directory and install.sh script made executable and run (with errors ignored).  
+- Python virtual environment created at /app/venv and PATH updated accordingly.  
+- pip upgraded inside venv.  
+- Key Python dependencies installed explicitly with CPU-only versions for tensorflow and torch, plus edward2 and pyro-ppl.  
+- Output directory created with root ownership.  
+- Docker container runtime starts with bash shell successfully.  
+
+next step  
+- Modify Dockerfile to create and activate the Python virtual environment before running install.sh to ensure dependencies install inside venv.  
+- Remove or avoid running install.sh twice; consolidate dependency installation steps to avoid redundant or conflicting installs.  
+- Ensure install.sh does not attempt GPU or CUDA installs and aligns with Dockerfile pip installs for CPU-only packages.  
+- Change ownership of /app/output to a non-root user or the user running the container to avoid permission issues.  
+- Add explicit user creation and switch to non-root user for safer container execution.  
+- Validate config.json paths and python executable point to /app/venv/bin/python inside container.  
+- Add health checks or test commands in Dockerfile to verify successful installation and environment correctness at build time.

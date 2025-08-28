@@ -1,0 +1,21 @@
+current progress  
+- Dockerfile uses official Node.js 20 bullseye amd64 image, matching the plan.  
+- Working directory set correctly to project path under Linux user home.  
+- Git, curl, browsers (Firefox ESR and Google Chrome stable) installed for testing/debugging, compatible with Linux amd64.  
+- Project files copied with assumption of correct context and Linux line endings.  
+- Shell scripts found are given executable permissions as required.  
+- npm dependencies installed using `npm ci` for clean install under Linux amd64.  
+- Environment variables for NODE_ENV and Sauce Labs placeholders set with Linux shell syntax.  
+- CMD defaults to bash shell on container start.  
+- No GPU or ARM-specific flags or dependencies included.  
+- Cleanup of apt lists done to minimize image size.  
+
+next step  
+- Verify that all configuration files (.editorconfig, .gitignore, package.json, etc.) are correctly copied and have proper permissions inside the container.  
+- Add steps or scripts to configure Sauce Labs credentials securely at runtime or CI level; consider environment variable injection best practices.  
+- Confirm build commands (`npm run build`, Babel, Rollup) run successfully inside the container by adding a build verification step in the Dockerfile or CI pipeline.  
+- Include linting and testing commands (ESLint, Prettier, Jest, Karma) in Dockerfile or CI scripts to validate environment setup.  
+- If automated release is part of the container workflow, add semantic-release execution steps or placeholders.  
+- Optionally, add multi-core build flags or environment variables to optimize build performance inside container.  
+- Consider adding cleanup commands post-install (e.g., removing caches) to further reduce image size.  
+- Document usage instructions for setting Sauce Labs credentials and running tests inside the container.

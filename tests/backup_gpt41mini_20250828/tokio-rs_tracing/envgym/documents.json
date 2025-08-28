@@ -1,0 +1,15 @@
+[
+  "README.md",
+  "examples/README.md",
+  "tracing/README.md",
+  "tracing-appender/README.md",
+  "tracing-attributes/README.md",
+  "tracing-core/README.md",
+  "tracing-error/README.md",
+  "tracing-flame/README.md",
+  "tracing-futures/README.md",
+  "tracing-journald/README.md",
+  "tracing-log/README.md",
+  "tracing-subscriber/README.md",
+  "tracing-test/README.md"
+]

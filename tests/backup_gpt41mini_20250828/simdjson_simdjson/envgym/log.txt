@@ -1,0 +1,23 @@
+=== Docker Execution Log - 20250828_035529 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756353292
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+30 |
+31 | >>> RUN apt-get update -o Acquire::Retries=3 \
+32 | >>>  && apt-get install -y --no-install-recommends libcurl4-openssl-dev linux-perf binutils clang clang++ lld llvm \
+33 | >>>  && apt-get clean \
+34 | >>>  && rm -rf /var/lib/apt/lists/*
+35 |
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c apt-get update -o Acquire::Retries=3  && apt-get install -y --no-install-recommends libcurl4-openssl-dev linux-perf binutils clang clang++ lld llvm  && apt-get clean  && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

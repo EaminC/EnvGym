@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250828_032242",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756351360",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.88kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.3s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 CACHED\n\n#5 [internal] load build context\n#5 transferring context: 43.17MB 0.6s done\n#5 DONE 0.6s\n\n#6 [ 5/14] RUN BAT_VERSION=$(bat --version | awk '{print $2}') &&     dpkg --compare-versions \"$BAT_VERSION\" \"ge\" \"0.25.0\" || (     curl -Lo /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v0.25.0/bat_0.25.0_amd64.deb &&     apt-get update && apt-get install -y /tmp/bat.deb && rm -rf /var/lib/apt/lists/* /tmp/bat.deb )\n#6 CACHED\n\n#7 [ 6/14] WORKDIR /app\n#7 CACHED\n\n#8 [ 3/14] RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.74.0     && rustup component add rustfmt\n#8 CACHED\n\n#9 [ 4/14] RUN apt-get update && apt-get install -y --no-install-recommends bat     && rm -rf /var/lib/apt/lists/*\n#9 CACHED\n\n#10 [ 7/14] COPY Cargo.toml Cargo.lock build.rs /app/\n#10 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::a7vedogasjv0z8opx7csxnco0: \"/build.rs\": not found\n\n#11 [ 2/14] RUN dpkg --add-architecture amd64 && apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     git     less     xclip     fzf     ripgrep     fd-find     pkg-config     build-essential     libssl-dev     cmake     && ln -s \"$(which fdfind)\" /usr/local/bin/fd     && rm -rf /var/lib/apt/lists/*\n#11 0.293 Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]\n#11 0.407 Get:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]\n#11 0.425 Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]\n#11 0.434 Get:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]\n#11 0.484 Get:5 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]\n#11 CANCELED\n------\n > [ 7/14] COPY Cargo.toml Cargo.lock build.rs /app/:\n------\nenvgym.dockerfile:40\n--------------------\n  38 |     WORKDIR /app\n  39 |     \n  40 | >>> COPY Cargo.toml Cargo.lock build.rs /app/\n  41 |     COPY rustfmt.toml /app/\n  42 |     COPY tests/syntax-tests/source/TOML/Cargo.toml /app/tests/syntax-tests/source/TOML/\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::a7vedogasjv0z8opx7csxnco0: \"/build.rs\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

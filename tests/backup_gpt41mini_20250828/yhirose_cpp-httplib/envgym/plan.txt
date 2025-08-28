@@ -1,0 +1,155 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+1. DOWNLOADS NEEDED:  
+   - C++ Compiler with C++11 support or higher (e.g., GCC 5.0+, Clang 3.4+, MSVC latest Visual Studio)  
+     - Note: For Docker static server build, GCC with C++23 support is required (e.g., GCC 11+).  
+     - GCC 4.8 and below are not supported due to broken `<regex>` support.  
+     - Ensure the compiler targets x86_64 architecture to match the host and Docker base image.  
+   - OpenSSL 3.0 or later (for SSL/TLS support)  
+   - zlib (for gzip compression support)  
+   - Brotli library (optional, for Brotli compression support) - https://github.com/google/brotli  
+   - Zstd library (optional, for Zstd compression support) - https://github.com/facebook/zstd  
+   - Docker (version 28.3.2 confirmed, supports BuildKit and Buildx)  
+     - Use overlay2 storage driver compatible instructions as recommended.  
+   - Docker Compose (optional, to orchestrate container services via `docker-compose.yml`)  
+   - CMake or other build system (optional, depending on project build setup)  
+   - clang-format tool (version v18.1.8 recommended) for code formatting and style enforcement via pre-commit hook  
+     - Can be installed via package manager or used via pre-commit-managed binary  
+   - On macOS: CoreFoundation and Security frameworks (for system certs support)  
+   - For Unix Domain Socket support: Linux or macOS environment (Windows currently unsupported)  
+   - Python (required to run pre-commit framework and hooks)  
+   - pre-commit framework (to manage git hooks, installable via `pip install pre-commit`)  
+
+2. FILES TO CREATE:  
+   - `httplib.h` and optionally split into `httplib.h` and `httplib.cc` using the `split.py` script (available with the project)  
+   - SSL certificates and private keys for HTTPS server (e.g., `cert.pem` and `key.pem`) if SSL support is enabled  
+   - CA bundle file (e.g., `ca-bundle.crt`) if custom certificate verification is needed  
+   - Dockerfile(s) for containerized static HTTP server(s):  
+     - Use x86_64 compatible base images recommended for compatibility with host architecture.  
+     - Prefer official Ubuntu 22.04 or Debian-based images matching the host OS environment for compatibility.  
+     - Provided Dockerfile uses multi-stage build with `yhirose4dockerhub/ubuntu-builder` base image (build stage) and `scratch` as final minimal image.  
+     - Ensure all paths in Dockerfile are relative to `/home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib` working directory.  
+     - Build stage compiles `main.cc` with C++23 standard and static linking, producing a stripped binary named `server`.  
+     - Final stage copies `server` binary and static HTML content (`docker/html/index.html`) into container.  
+     - Use overlay2 storage driver compatible layer instructions for Dockerfile best practices.  
+   - `docker-compose.yml` file with:  
+     - Build context set to current directory (relative to `/home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib`).  
+     - Port mapping `8080:80` to expose container port.  
+     - Volume mount binding `./docker/html` on host to `/html` in container for static content.  
+   - `.pre-commit-config.yaml` file configured with clang-format hook:  
+     - Uses repo `https://github.com/pre-commit/mirrors-clang-format`  
+     - Version pinned to `v18.1.8` or latest stable version  
+     - Hook configured to run `clang-format` on files matching `\.(cpp|cc|h)$` with in-place fixing (`-i` argument)  
+   - Build configuration files (e.g., `CMakeLists.txt`, Makefile) for compiling the project, linking necessary libraries (OpenSSL, zlib, Brotli, Zstd)  
+   - Optional: Configuration for logging output destinations if customized logging is used  
+   - Optional: Signal handler code to handle or ignore SIGPIPE signals on UNIX-like systems if SSL and signal issues are a concern  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - HTTP server basic routing and response correctness (GET, POST, PUT, DELETE, OPTIONS)  
+   - HTTPS server setup and SSL handshake success/failure scenarios  
+   - SSL error handling and detailed error reporting  
+   - Static file serving correctness including MIME type mappings and mount points  
+   - Form data handling (URL-encoded and multipart) including file uploads and field validations  
+   - Content streaming with content provider and receiver handlers  
+   - Chunked transfer encoding correctness with and without trailer headers  
+   - Logging functionality: access log, pre-compression log, error log for both server and client  
+   - Authentication methods: Basic, Digest (requires OpenSSL), Bearer token  
+   - Proxy server support and authentication  
+   - Timeout settings and keep-alive connection behavior for both client and server  
+   - Compression and decompression support for gzip, Brotli, and Zstd  
+   - Unix Domain Socket server and client communication (Linux/macOS only)  
+   - URI encoding and decoding utilities correctness  
+   - Thread pool default and custom thread pool task queue behavior  
+   - Signal handling for SIGPIPE to prevent server crashes during SSL communication  
+   - Docker container static HTTP server startup, serving, and port mapping verification:  
+     - Verify server binary starts correctly inside container on x86_64 architecture.  
+     - Verify static files (e.g., `/html/index.html`) are served at expected paths and ports (default container port 80).  
+   - Docker Compose setup verification:  
+     - Verify service builds correctly using `docker-compose.yml`.  
+     - Verify container starts with proper port mapping (`8080:80`) and volume mounts (`./docker/html:/html`).  
+     - Confirm static files are served correctly when container is run via Docker Compose.  
+   - Edge cases for regex route handlers to avoid stack overflow  
+   - Redirect handling and automatic path encoding on client requests  
+   - Range header support in client requests and server responses  
+   - Error and exception handler correctness for server route handlers  
+   - Code style and formatting compliance verification via pre-commit hook with clang-format:  
+     - Test that code files (`*.cpp`, `*.cc`, `*.h`) are correctly formatted and that the hook automatically fixes or rejects non-compliant code at commit time.  
+     - Verify pre-commit hook installation and execution on commit.  
+
+4. COMPLETE TODO LIST:  
+   1. Install a modern C++ compiler supporting at least C++11 on your OS, targeting x86_64 architecture.  
+      - For building the Docker static server image, ensure GCC with C++23 support (GCC 11+ recommended) for x86_64.  
+      - Verify by compiling a simple C++11 program using `<regex>`.  
+   2. Install OpenSSL version 3.0 or later.  
+      - Verify by running `openssl version` command.  
+   3. Install zlib development libraries for gzip compression support.  
+   4. Optionally install Brotli and Zstd libraries if additional compression methods are required.  
+      - Follow official repositories for build and installation instructions.  
+   5. On macOS, ensure `CoreFoundation` and `Security` frameworks are available and can be linked.  
+   6. Obtain or generate SSL certificates (`cert.pem` and `key.pem`) for HTTPS server testing.  
+   7. Download or clone the cpp-httplib repository into `/home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib` and extract `httplib.h`.  
+   8. Optionally run the `split.py` script to split `httplib.h` into `httplib.h` and `httplib.cc` for better compilation management.  
+      - Verify files are created correctly in the output directory within the working path.  
+   9. Create or update build configuration files (Makefile, CMakeLists.txt) that:  
+      - Compile your source code including `httplib.h` and optionally `httplib.cc`.  
+      - Link against OpenSSL (`libssl`, `libcrypto`), zlib, Brotli, and Zstd as needed.  
+      - Link macOS frameworks if applicable (e.g., `-framework CoreFoundation -framework Security`).  
+   10. Install Python and the `pre-commit` framework on your development machine:  
+       - Install Python from the official source or system package manager.  
+       - Install pre-commit with `pip install pre-commit`.  
+   11. Add `.pre-commit-config.yaml` file to your project root with clang-format hook configured to run on C++ source and header files.  
+   12. Run `pre-commit install` to set up the git hook scripts for automatic code formatting on commit.  
+   13. Test the pre-commit hook by making code changes with inconsistent formatting, then committing to verify clang-format is invoked and fixes or rejects the commit accordingly.  
+   14. Implement or include signal handler for SIGPIPE to ignore or handle the signal gracefully on UNIX-like systems for SSL stability.  
+       - Verify by running server with SSL enabled and confirming it does not crash on broken connections.  
+   15. Write test cases covering all listed necessary test points in section 3.  
+       - Use unit testing frameworks like GoogleTest or Catch2 for automated testing.  
+       - Validate server routing, SSL handshake, error handling, static file serving, form data processing, streaming, chunked encoding, logging, authentication, proxy, timeouts, compression, Unix sockets, URI utilities, thread pools, error/exception handlers, Docker container server behavior, and code style compliance.  
+   16. Docker usage for static HTTP server:  
+       - Use the provided Dockerfile with a multi-stage build:  
+         - Build stage uses `yhirose4dockerhub/ubuntu-builder` image compatible with x86_64 architecture, compiles `main.cc` with C++23 and static linking, producing a stripped binary named `server`.  
+         - Final stage uses `scratch` image, copies the `server` binary and static HTML content (`docker/html/index.html`) into container.  
+         - Ensure all paths in Dockerfile are relative to `/home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib`.  
+         - Follow Docker overlay2 storage driver best practices in Dockerfile layering.  
+       - Build the Docker image by running:  
+         ```
+         docker build -t cpp-httplib-static-server /home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib
+         ```  
+       - Run the container with port mapping (e.g., `docker run -p 8080:80 cpp-httplib-static-server`).  
+       - Verify static files are served correctly by accessing `http://localhost:8080`.  
+   17. Use Docker Compose to manage the HTTP service container:  
+       - Create a `docker-compose.yml` file with the service definition as provided, building the image from the current directory.  
+       - Map host port 8080 to container port 80.  
+       - Mount `./docker/html` inside `/home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib/docker/html` on host to `/html` in container.  
+       - Build and start the service by running:  
+         ```
+         docker-compose up --build
+         ```  
+         from `/home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib`.  
+       - Verify container starts correctly, ports are mapped as expected, and static files in `./docker/html` are served properly.  
+       - Use `docker-compose down` to stop and remove the container and network after testing.  
+   18. For Windows environment (if applicable):  
+       - Include `httplib.h` before including `Windows.h` or define `WIN32_LEAN_AND_MEAN` before `Windows.h`.  
+       - Use latest Visual Studio supported by cpp-httplib.  
+       - Verify compilation and runtime behavior.  
+   19. For Unix Domain Socket support (Linux/macOS):  
+       - Test server and client with `AF_UNIX` socket family.  
+       - Verify socket file creation, permission, and communication.  
+   20. Test client configurations with various authentication methods and proxy settings.  
+   21. Verify compression and decompression behavior with server and client settings for gzip, Brotli, and Zstd.  
+   22. Validate redirect following and URL path encoding behaviors in client requests.  
+   23. Test range request headers and partial content responses.  
+   24. Confirm thread pool task queue customization and default thread pool behavior.  
+   25. Review and test regex route patterns to avoid stack overflow issues; prefer path parameters or safer regex patterns.  
+   26. Document environment setup and build instructions tailored to x86_64 Linux environment and project directory structure for future reference.
+
+---
+
+**Summary of Key Adjustments Based on Hardware Information:**  
+- Confirmed CPU architecture as x86_64; all compilation, Docker base images, and binaries must target x86_64 for compatibility.  
+- Recommended official Ubuntu 22.04 or Debian-based Docker images compatible with host OS and architecture.  
+- Ensured Dockerfile paths and build contexts are relative to `/home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib`.  
+- Docker instructions follow overlay2 storage driver best practices, leveraging Docker version 28.3.2 features (BuildKit and Buildx).  
+- No GPU or CUDA-specific instructions needed due to absence of NVIDIA GPU.  
+- Verified that all tools and libraries are installed or built for x86_64 Linux environment.  
+- Included verification steps for Docker container and Docker Compose setups with correct port mappings and volume mounts in the specified directory structure.

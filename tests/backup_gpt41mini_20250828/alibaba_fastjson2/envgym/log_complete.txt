@@ -1,0 +1,129 @@
+=== Docker Execution Log - 20250827_140654 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756303603
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 3.70kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/23] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#4 DONE 0.0s
+
+#5 [ 2/23] WORKDIR /app
+#5 CACHED
+
+#6 [ 3/23] RUN mkdir -p /usr/share/man/man1 /usr/lib/jvm
+#6 CACHED
+
+#7 [ 4/23] RUN apt-get update && apt-get install -y --no-install-recommends     curl     wget     git     bash     unzip     tar     zip     software-properties-common     ca-certificates     gnupg2     libz-dev     libssl-dev     libfreetype6     libfreetype6-dev     libfontconfig1     libxext6     libxrender1     procps     libc6-dev     libffi-dev     build-essential     iputils-ping     dnsutils     file     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [ 5/23] RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+#8 0.411 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+#8 0.421 Get:2 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+#8 0.880 Get:3 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1271 kB]
+#8 0.921 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+#8 1.030 Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+#8 1.149 Get:6 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+#8 1.299 Get:7 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3253 kB]
+#8 1.471 Get:8 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [48.5 kB]
+#8 1.472 Get:9 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [5235 kB]
+#8 1.928 Get:10 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+#8 1.934 Get:11 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+#8 1.937 Get:12 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+#8 1.968 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3606 kB]
+#8 2.080 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [75.9 kB]
+#8 2.082 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [5519 kB]
+#8 2.241 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1576 kB]
+#8 2.293 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [83.2 kB]
+#8 2.295 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.2 kB]
+#8 3.337 Fetched 41.1 MB in 3s (13.3 MB/s)
+#8 3.337 Reading package lists...
+#8 4.349 Reading package lists...
+#8 5.336 Building dependency tree...
+#8 5.507 Reading state information...
+#8 5.693 ca-certificates is already the newest version (20240203~22.04.1).
+#8 5.693 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+#8 5.701 Updating certificates in /etc/ssl/certs...
+#8 6.152 0 added, 0 removed; done.
+#8 6.152 Running hooks in /etc/ca-certificates/update.d...
+#8 6.153 done.
+#8 DONE 6.3s
+
+#9 [ 6/23] RUN if ! command -v ping > /dev/null; then apt-get update && apt-get install -y iputils-ping && rm -rf /var/lib/apt/lists/*; fi
+#9 DONE 0.3s
+
+#10 [ 7/23] RUN echo "Debug: GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/v22.3.4/graalvm-ce-java17-linux-amd64-22.3.4.tar.gz" &&     ping -c 4 github.com || echo "Ping failed" &&     nslookup github.com || echo "DNS lookup failed"
+#10 0.382 Debug: GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/v22.3.4/graalvm-ce-java17-linux-amd64-22.3.4.tar.gz
+#10 0.438 PING github.com (140.82.113.4) 56(84) bytes of data.
+#10 0.438 64 bytes from lb-140-82-113-4-iad.github.com (140.82.113.4): icmp_seq=1 ttl=48 time=15.6 ms
+#10 1.440 64 bytes from lb-140-82-113-4-iad.github.com (140.82.113.4): icmp_seq=2 ttl=48 time=15.5 ms
+#10 2.442 64 bytes from lb-140-82-113-4-iad.github.com (140.82.113.4): icmp_seq=3 ttl=48 time=15.5 ms
+#10 3.443 64 bytes from lb-140-82-113-4-iad.github.com (140.82.113.4): icmp_seq=4 ttl=48 time=15.5 ms
+#10 3.443 
+#10 3.443 --- github.com ping statistics ---
+#10 3.443 4 packets transmitted, 4 received, 0% packet loss, time 3006ms
+#10 3.443 rtt min/avg/max/mdev = 15.469/15.541/15.641/0.062 ms
+#10 3.492 Server:		8.8.8.8
+#10 3.492 Address:	8.8.8.8#53
+#10 3.492 
+#10 3.492 Non-authoritative answer:
+#10 3.492 Name:	github.com
+#10 3.492 Address: 140.82.112.3
+#10 3.492 
+#10 DONE 3.5s
+
+#11 [ 8/23] RUN wget --retry-connrefused --tries=10 --timeout=60 --user-agent="Mozilla/5.0" "https://github.com/graalvm/graalvm-ce-builds/releases/download/v22.3.4/graalvm-ce-java17-linux-amd64-22.3.4.tar.gz" -O /usr/lib/jvm/graalvm.tar.gz &&     file /usr/lib/jvm/graalvm.tar.gz | grep gzip || (echo "Downloaded file is not gzip archive" && rm /usr/lib/jvm/graalvm.tar.gz && exit 1)
+#11 0.341 --2025-08-27 14:06:54--  https://github.com/graalvm/graalvm-ce-builds/releases/download/v22.3.4/graalvm-ce-java17-linux-amd64-22.3.4.tar.gz
+#11 0.344 Resolving github.com (github.com)... 140.82.113.3
+#11 0.368 Connecting to github.com (github.com)|140.82.113.3|:443... connected.
+#11 0.406 HTTP request sent, awaiting response... 404 Not Found
+#11 0.498 2025-08-27 14:06:54 ERROR 404: Not Found.
+#11 0.498 
+#11 0.500 Downloaded file is not gzip archive
+#11 ERROR: process "/bin/sh -c wget --retry-connrefused --tries=10 --timeout=60 --user-agent=\"Mozilla/5.0\" \"$GRAALVM_URL\" -O /usr/lib/jvm/graalvm.tar.gz &&     file /usr/lib/jvm/graalvm.tar.gz | grep gzip || (echo \"Downloaded file is not gzip archive\" && rm /usr/lib/jvm/graalvm.tar.gz && exit 1)" did not complete successfully: exit code: 1
+------
+ > [ 8/23] RUN wget --retry-connrefused --tries=10 --timeout=60 --user-agent="Mozilla/5.0" "https://github.com/graalvm/graalvm-ce-builds/releases/download/v22.3.4/graalvm-ce-java17-linux-amd64-22.3.4.tar.gz" -O /usr/lib/jvm/graalvm.tar.gz &&     file /usr/lib/jvm/graalvm.tar.gz | grep gzip || (echo "Downloaded file is not gzip archive" && rm /usr/lib/jvm/graalvm.tar.gz && exit 1):
+0.341 --2025-08-27 14:06:54--  https://github.com/graalvm/graalvm-ce-builds/releases/download/v22.3.4/graalvm-ce-java17-linux-amd64-22.3.4.tar.gz
+0.344 Resolving github.com (github.com)... 140.82.113.3
+0.368 Connecting to github.com (github.com)|140.82.113.3|:443... connected.
+0.406 HTTP request sent, awaiting response... 404 Not Found
+0.498 2025-08-27 14:06:54 ERROR 404: Not Found.
+0.498 
+0.500 Downloaded file is not gzip archive
+------
+envgym.dockerfile:57
+--------------------
+  56 |     
+  57 | >>> RUN wget --retry-connrefused --tries=10 --timeout=60 --user-agent="Mozilla/5.0" "$GRAALVM_URL" -O /usr/lib/jvm/graalvm.tar.gz && \
+  58 | >>>     file /usr/lib/jvm/graalvm.tar.gz | grep gzip || (echo "Downloaded file is not gzip archive" && rm /usr/lib/jvm/graalvm.tar.gz && exit 1)
+  59 |     
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c wget --retry-connrefused --tries=10 --timeout=60 --user-agent=\"Mozilla/5.0\" \"$GRAALVM_URL\" -O /usr/lib/jvm/graalvm.tar.gz &&     file /usr/lib/jvm/graalvm.tar.gz | grep gzip || (echo \"Downloaded file is not gzip archive\" && rm /usr/lib/jvm/graalvm.tar.gz && exit 1)" did not complete successfully: exit code: 1
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

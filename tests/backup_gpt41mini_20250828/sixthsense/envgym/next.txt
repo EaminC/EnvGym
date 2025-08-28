@@ -1,0 +1,17 @@
+current progress  
+- Base image Ubuntu 18.04 set and system dependencies installed.  
+- Miniconda Python 3.8 installed and conda initialized.  
+- Project root directory and necessary subdirectories (`plots`, `models`, `results`, `csvs`, `subcategories`) created.  
+- `requirements.txt` and `sixthsense_env.yml` files created with correct contents.  
+- Conda environment `sixthsense` created with Python 3.8; pip packages installed from `requirements.txt`.  
+- Conda environment activation configured in bash shell and environment variables set.  
+- SixthSense repository cloning step noted but not implemented (commented out).  
+- Default CMD set to bash shell.  
+
+next step  
+- Add actual cloning or copying of SixthSense codebase into `${PROJECT_ROOT}` (replace placeholder `[repository_url]` with real URL or mount code).  
+- Add commands to download and place the CSV dataset files from Zenodo into the `csvs/` folder inside the container or provide instructions for mounting.  
+- Verify presence or copy of `subcategories` JSON files inside the container.  
+- Optionally add `.gitignore` creation if managing source code inside container.  
+- Add validation steps or scripts to test package imports and basic script execution inside the container.  
+- Consider adding entrypoint or default commands to run training scripts or tests automatically if desired.

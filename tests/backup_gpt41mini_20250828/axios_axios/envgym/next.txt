@@ -1,0 +1,20 @@
+current progress  
+- Base image set to ubuntu:22.04 with environment variables for Node.js 16 and package manager versions.  
+- Installed necessary system packages including browsers (firefox, chromium-browser, microsoft-edge-stable) and required libraries for GUI/browser support.  
+- Installed Node.js 16.x via NodeSource, confirmed Node and npm versions.  
+- Installed global package managers yarn, pnpm, and bun with specified versions and verified their installation.  
+- Copied package.json and package-lock.json, project files to container.  
+- Configured git user globally.  
+- Ran `npm ci` with verbose logging, installed husky hooks, and ran prepare hooks script.  
+- Set ownership of project directory to root.  
+- Default CMD set to bash shell.  
+
+next step  
+- Add explicit installation of Karma and all required Karma plugins (karma, karma-jasmine, karma-chrome-launcher, karma-firefox-launcher, karma-edge-launcher, karma-sauce-launcher, karma-jasmine-ajax, karma-sinon) as per plan.  
+- Install Rollup with plugins, Babel packages, Webpack, gulp (v4+), gulp-cli, minimist, tslint, dtslint, axios, and other specified dev dependencies inside the container (either via npm or pnpm/yarn).  
+- Ensure environment variables for Sauce Labs credentials and browser selection are configurable in container environment or .env file.  
+- Confirm Husky version aligns with v8.x as per plan (currently HUSKY=1 environment variable set, may need update).  
+- Add npm scripts and project configuration files copy/setup if not included yet (tsconfig.json, .eslintrc.cjs, tslint.json, karma.conf.cjs, rollup.config.js, webpack.config.js, gulpfile.js, commitlint config, .npmignore, .gitignore, bower.json, .env).  
+- Verify the container runs tests (Karma with configured browsers), linting, and build tasks successfully on Linux amd64 without errors.  
+- Consider adding non-root user for safer container execution unless root is required.  
+- Clean up unnecessary files and caches to reduce image size.

@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250827_194742 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756323622
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+83 |
+84 | >>> RUN bash -c "source $RVM_PATH/scripts/rvm && \
+85 | >>>     rvm use jruby-9.2.19.0 && \
+86 | >>>     ./gradlew --no-daemon --stacktrace --info installDevelopmentGems"
+87 |
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/bash -c bash -c \"source $RVM_PATH/scripts/rvm &&     rvm use jruby-9.2.19.0 &&     ./gradlew --no-daemon --stacktrace --info installDevelopmentGems\"" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

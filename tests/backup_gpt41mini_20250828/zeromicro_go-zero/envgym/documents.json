@@ -1,0 +1,15 @@
+[
+  "README.md",
+  "readme.md",
+  "readme-cn.md",
+  "core/conf/readme.md",
+  "tools/goctl/readme.md",
+  "tools/goctl/readme-cn.md",
+  "tools/goctl/config/default.yaml",
+  "tools/goctl/gateway/conf.yml",
+  "tools/goctl/build.env",
+  "tools/goctl/Dockerfile",
+  "Dockerfile",
+  ".dockerignore",
+  "tools/goctl/.dockerignore"
+]

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_bytes; project likely Rust-based given directory name
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, alpine); no ARM or other arch needed
+- GPU: No NVIDIA GPU detected; no CUDA base image needed
+- Instruction Notes: Use overlay2 storage driver compatible instructions; ensure no GPU-specific steps; large CPU cores available, consider parallel build steps if relevant
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build features not applicable due to lack of NVIDIA GPU

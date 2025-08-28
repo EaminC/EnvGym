@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/sixthsense; project likely located within a multi-level user directory, no special volume mounting constraints indicated  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: use amd64-compatible Linux base images (e.g., ubuntu, debian, alpine for amd64); no ARM or other architecture needed  
+- GPU: No NVIDIA GPU detected; no CUDA base image required or recommended  
+- Instruction Notes: no GPU-specific instructions needed; large CPU cores available allow parallel build steps; use overlay2 storage driver compatibility; ensure Dockerfile paths relative to /home/cc/EnvGym/data-gpt-4.1mini/sixthsense  
+- Docker Version: 28.3.2; supports BuildKit and Buildx; GPU build support present but irrelevant due to no NVIDIA GPU; use Docker Compose v2.38.2 for multi-container orchestration

@@ -1,0 +1,202 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+1. DOWNLOADS NEEDED:  
+   - Python 3.6 or higher (recommend Python 3.8+ for better support and compatibility with listed packages)  
+   - Conda (Anaconda or Miniconda) for environment management (https://docs.conda.io/en/latest/miniconda.html)  
+   - pip (should come with Python/Conda)  
+   - Git (to clone the repository if not already done)  
+   - CSV datasets from Zenodo: Download csv files from https://zenodo.org/record/6388301 and place them in the `csvs` folder  
+   - Operating system: Ubuntu 18.04 64-bit recommended for best compatibility; alternatives (Windows, macOS) possible but verify dependencies and Python compatibility  
+     *Note: Your hardware is x86_64 architecture and running Linux, so Ubuntu 18.04 or later 64-bit is fully compatible.*  
+   - Key Python packages as per `requirements.txt` (to be installed via pip):  
+     - scikit-learn  
+     - numpy  
+     - matplotlib  
+     - pandas  
+     - jsonpickle  
+     - nearpy  
+     - treeinterpreter  
+     - cleanlab  
+   - Verify package compatibility with Python version (prefer Python 3.8+ to ensure smooth installs and up-to-date package support)  
+
+2. FILES TO CREATE:  
+   - Conda environment YAML file (e.g., `sixthsense_env.yml`) updated to include Python 3.8 and pip installation of `requirements.txt`:  
+     ```yaml
+     name: sixthsense
+     channels:
+       - defaults
+     dependencies:
+       - python=3.8
+       - pip
+       - pip:
+         - -r requirements.txt  # installs all required Python dependencies
+     ```  
+   - `requirements.txt` file containing:  
+     ```
+     scikit-learn
+     numpy
+     matplotlib
+     pandas
+     jsonpickle
+     nearpy
+     treeinterpreter
+     cleanlab
+     ```  
+   - Directory structure inside `/home/cc/EnvGym/data-gpt-4.1mini/sixthsense`:  
+     - `plots/` (for saving output plots)  
+     - `models/` (for saving model files)  
+     - `results/` (for saving prediction scores and results)  
+     - `csvs/` (place the downloaded CSV datasets here)  
+     - `subcategories/` (should contain JSON files defining model names per class, ensure this folder exists)  
+     *Note: Paths are relative to your project root `/home/cc/EnvGym/data-gpt-4.1mini/sixthsense`.*  
+   - Optional: create a `.gitignore` to exclude large or generated files such as `plots/`, `models/`, and `results/`  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Test loading and parsing of feature CSV files (`csvs/[classname]_features.csv`)  
+   - Test loading and parsing of metrics CSV files (`csvs/[classname]_metrics.csv`)  
+   - Test training script (`train.py`) runs without error given correct parameters for all three model classes (`lrm`, `timeseries`, `mixture`)  
+   - Test command-line argument parsing and validation, especially for required flags (`-f`, `-l`, `-a`, `-m`, `-tname`)  
+   - Test output generation: verify plots are created under `plots/` and results saved in `results/`  
+   - Verify cross-validation and model splitting logic (`-cv` and `-st` options)  
+   - Test feature importance extraction with `--tree` and `--special` flags for a valid program index  
+   - Test error handling for missing files, invalid parameter values, and unsupported ML algorithm options  
+   - Test runtime and warmup sampling flags (`-runtime`, `-warmup`) for proper feature usage  
+   - Test installation and import of all packages listed in `requirements.txt` to ensure environment completeness and compatibility  
+   - Test functionality dependent on newly added packages such as:  
+     - `cleanlab` (for label error detection and correction)  
+     - `nearpy` (for approximate nearest neighbor operations, if used in code)  
+     - `treeinterpreter` (for interpreting tree-based model predictions)  
+     - `jsonpickle` (for JSON serialization/deserialization beyond standard json)  
+
+4. COMPLETE TODO LIST:  
+
+   Step 1: Install Conda environment manager  
+   - Download and install Miniconda or Anaconda for your OS and architecture (x86_64 Linux)  
+   - Verify installation by running `conda --version`  
+
+   Step 2: Clone or download the SixthSense repository  
+   - `git clone [repository_url]` or download ZIP and extract into `/home/cc/EnvGym/data-gpt-4.1mini/sixthsense`  
+   - Navigate to the project root directory:  
+     ```
+     cd /home/cc/EnvGym/data-gpt-4.1mini/sixthsense
+     ```  
+
+   Step 3: Create required directories  
+   - Run:  
+     ```
+     mkdir -p plots models results csvs subcategories
+     ```  
+   - Verify directories exist and are writable (no special volume mounting or permission issues indicated)  
+
+   Step 4: Download dataset CSV files  
+   - Download CSV files from https://zenodo.org/record/6388301  
+   - Place all CSV files into the `csvs/` directory  
+   - Verify presence of `[classname]_features.csv` and `[classname]_metrics.csv` for each model class (`lrm`, `timeseries`, `mixture`)  
+
+   Step 5: Verify presence of `subcategories` JSON files  
+   - Ensure JSON files named `[classname].json` exist inside the `subcategories/` folder  
+   - These define model names needed for training and predictions  
+
+   Step 6: Prepare `requirements.txt` file  
+   - Create or update `requirements.txt` in project root containing:  
+     ```
+     scikit-learn
+     numpy
+     matplotlib
+     pandas
+     jsonpickle
+     nearpy
+     treeinterpreter
+     cleanlab
+     ```  
+
+   Step 7: Create and activate the Conda environment  
+   - Use the provided `sixthsense_env.yml` or create manually:  
+     ```
+     conda create -n sixthsense python=3.8
+     conda activate sixthsense
+     pip install -r requirements.txt
+     ```  
+   - Verify Python version:  
+     ```
+     python --version
+     ```  
+     Should output Python 3.8.x or higher  
+   - Verify all dependencies installed without errors by checking pip or conda logs  
+   - Test importing all key packages in a Python shell:  
+     ```python
+     import sklearn
+     import numpy
+     import matplotlib
+     import pandas
+     import jsonpickle
+     import nearpy
+     import treeinterpreter
+     import cleanlab
+     ```  
+     Should not raise ImportError  
+
+   Step 8: Test basic script execution  
+   - Run a simple training command example (replace placeholders accordingly):  
+     ```
+     python train.py -f csvs/lrm_features.csv -l csvs/lrm_metrics.csv -a rf -m rhat_min -suf avg -bw -plt -saveas plots/results_rhat_min_lrm.png -keep _ast_ dt_ var_min var_max data_size -st -tname naive-bayes-unsup -cv -ignore_vi
+     ```  
+   - Verify script runs without errors and outputs are generated in `plots/` and `results/` folders  
+   - Check console output for prediction scores  
+
+   Step 9: Test feature importance extraction  
+   - Run command to get top features:  
+     ```
+     python train.py -f csvs/lrm_features.csv -l csvs/lrm_metrics.csv -a rf -m rhat_min -suf avg -bw -th 1.1 -saveas plots/temp.png -keep _ast_ dt_ var_min var_max data_size -st -tname naive-bayes-unsup -ignore_vi --tree -special progs20200425-172437571193_prob_rand_7
+     ```  
+   - Verify output of top 20 features and their scores  
+
+   Step 10: Adjust sampling/warmup iterations if needed  
+   - Modify lines ~730-740 in `train.py` to change runtime/warmup iteration counts if desired  
+   - Test runtime and warmup training modes using flags `-runtime` and `-warmup` as per README instructions  
+
+   Step 11: Add error handling and verification steps  
+   - Confirm the scripts handle missing or corrupted CSV files gracefully  
+   - Validate command-line argument errors produce informative messages  
+   - Verify directory permissions and create missing directories automatically if possible  
+
+   Step 12: Document environment setup and usage  
+   - Create a `SETUP.md` or update `README.md` with environment creation instructions  
+   - Include instructions for running training commands and feature importance analysis  
+   - Document the purpose of each dependency listed in `requirements.txt`  
+
+   Step 13: Optional - Setup automated tests for the above test cases  
+   - Write unit/integration tests using pytest or unittest frameworks  
+   - Automate environment verification and script execution tests  
+
+5. HARDWARE & SYSTEM-SPECIFIC NOTES:  
+   - Architecture: x86_64 Linux confirmed; no ARM or other architecture concerns  
+   - GPU: No NVIDIA GPU detected; no CUDA or GPU-specific dependencies needed or recommended  
+   - Docker: If containerizing, use amd64-compatible Linux base images (e.g., ubuntu:18.04 or later, debian) without GPU support  
+   - Parallel build steps and CPU cores available can speed up installation and testing  
+   - Overlay2 storage driver is compatible, no special Docker storage adjustments needed  
+   - All paths and directories assume no special volume mounts and are relative to `/home/cc/EnvGym/data-gpt-4.1mini/sixthsense`  
+   - RAM and storage considerations:  
+     - Python environment with above dependencies is moderate in size; ensure at least 4 GB RAM available for smooth operation  
+     - Dataset CSV files and output directories should have sufficient disk space (a few hundred MBs at least)  
+   - Development tools: Conda version and Docker version are recent and compatible; no adjustments needed  
+   - Permissions: Ensure the user has read/write permissions in the working directory and all created folders  
+
+6. VERIFICATION METHODS:  
+   - Confirm Python version is 3.8+ with:  
+     ```
+     python --version
+     ```  
+   - Check all dependencies installed without errors:  
+     ```
+     pip list
+     ```  
+   - Test importing all packages in a Python shell to confirm no ImportErrors  
+   - Run example training commands and verify output files exist and contain data in `plots/` and `results/`  
+   - Confirm no runtime errors or exceptions during script runs  
+   - Check logs and console output for warnings or errors  
+   - Validate feature importance outputs match expected format and values  
+   - Verify error handling for missing/invalid inputs by purposely triggering errors  
+   - Confirm smooth operation on x86_64 Linux without GPU dependencies  
+
+This adjusted plan aligns fully with your hardware environment and paths, ensuring compatibility and smooth setup and operation.

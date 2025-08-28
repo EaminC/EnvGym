@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_031147",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756264306",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.74kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.2s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 CACHED\n\n#5 [internal] load build context\n#5 transferring context: 2B done\n#5 DONE 0.0s\n\n#6 [ 5/14] RUN useradd -m cc\n#6 CACHED\n\n#7 [ 7/14] RUN git clone --recurse-submodules https://github.com/wonglkd/Baleen-FAST24.git Baleen-FAST24\n#7 CACHED\n\n#8 [ 6/14] WORKDIR /home/cc\n#8 CACHED\n\n#9 [ 8/14] WORKDIR /home/cc/Baleen-FAST24\n#9 CACHED\n\n#10 [ 3/14] RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/1.4.1 -o /tmp/micromamba.tar.bz2     && mkdir -p /opt/micromamba     && tar -xjf /tmp/micromamba.tar.bz2 -C /opt/micromamba --strip-components=1 bin/micromamba     && rm /tmp/micromamba.tar.bz2\n#10 CACHED\n\n#11 [ 4/14] WORKDIR /home/cc\n#11 CACHED\n\n#12 [ 9/14] COPY --chown=cc:cc BCacheSim/install/env_cachelib-py-3.11.yaml /home/cc/Baleen-FAST24/BCacheSim/install/env_cachelib-py-3.11.yaml\n#12 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::3w42rtpreso626s1mgs9hgj89: \"/BCacheSim/install/env_cachelib-py-3.11.yaml\": not found\n\n#13 [ 2/14] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     wget     git     bash     bzip2     unzip     build-essential     locales     && locale-gen en_US.UTF-8     && rm -rf /var/lib/apt/lists/*\n#13 CANCELED\n------\n > [ 9/14] COPY --chown=cc:cc BCacheSim/install/env_cachelib-py-3.11.yaml /home/cc/Baleen-FAST24/BCacheSim/install/env_cachelib-py-3.11.yaml:\n------\nenvgym.dockerfile:38\n--------------------\n  36 |     \n  37 |     # Create python 3.11 environment from env_cachelib-py-3.11.yaml using micromamba\n  38 | >>> COPY --chown=cc:cc BCacheSim/install/env_cachelib-py-3.11.yaml /home/cc/Baleen-FAST24/BCacheSim/install/env_cachelib-py-3.11.yaml\n  39 |     \n  40 |     RUN micromamba create -y -n cachelib-py-3.11 python=3.11 -f BCacheSim/install/env_cachelib-py-3.11.yaml && \\\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::3w42rtpreso626s1mgs9hgj89: \"/BCacheSim/install/env_cachelib-py-3.11.yaml\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,20 @@
+current progress  
+- Base Ubuntu 22.04 image with essential build tools and dependencies installed.  
+- Rust stable toolchain installed via rustup, nightly toolchain installed.  
+- User `cc` created and ownership set properly.  
+- Project files copied with correct ownership.  
+- Clippy MSRV config and `.cargo/config.toml` for docsrs cfg set up.  
+- Network connectivity to crates.io tested and confirmed.  
+- Cargo lockfile generated, metadata and update commands run successfully.  
+- `cargo fetch` command failed during build, causing build failure.  
+- Subsequent cargo commands (`check`, `build`, `test`, `clippy`) not reached due to fetch failure.
+
+next step  
+- Investigate `cargo fetch` failure cause by examining network, proxy, or crates.io access issues during build.  
+- Add verbose logs or retry logic around `cargo fetch` to capture detailed error messages.  
+- Confirm Cargo.toml correctness and presence of all dependencies to avoid resolution errors.  
+- Verify DNS and firewall settings within Docker environment to ensure uninterrupted crates.io access.  
+- Optionally add `cargo clean` before fetch to clear any corrupted state.  
+- After fixing fetch, continue with `cargo check`, `cargo build`, `cargo test`, and `cargo clippy` steps.  
+- Consider adding explicit rustup component installs like `rustfmt` and `clippy` if missing.  
+- Ensure Docker build does not timeout or lose network connection during fetch.

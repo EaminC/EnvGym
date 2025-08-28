@@ -1,0 +1,25 @@
+current progress  
+- Base image set to ubuntu:22.04 with noninteractive frontend and timezone.  
+- Installed required packages: gcc-11/g++-11, clang-18/clang-tidy-18, cmake, git, python3.10 and pip, ninja-build, bazel, and supporting tools.  
+- Configured gcc/g++ alternatives to gcc-11/g++-11.  
+- Added LLVM repo for clang-18 and Bazel repo for latest stable Bazel install.  
+- Installed Python packages: mkdocs, mkdocs-material, mkdocstrings, pymdown-extensions, mike.  
+- Set locale to en_US.UTF-8 for Unicode support.  
+- Set working directory to /home/cc/EnvGym/data-gpt-4.1mini/fmtlib_fmt.  
+- Cloned fmt repository recursively and copied Bazel support files if present.  
+- Configured and built fmt with CMake using Ninja generator and header-only option enabled.  
+- Ran ctest to verify build success.  
+- Set environment variables for CC, CXX, and PATH for local python user binaries.  
+- Default command to launch bash shell.
+
+next step  
+- Add installation and setup of clang-tidy configuration file `.clang-tidy` with `modernize-use-std-print` check for code modernization if desired.  
+- Include copying or creation of necessary project files such as `CMakeLists.txt`, `.gitignore`, test files, and benchmark CMakeLists to the Docker context or repository as needed.  
+- Add optional steps for cloning and building benchmarks (format-benchmark) inside the Dockerfile or as separate steps.  
+- Add optional Bazel build commands to verify Bazel integration and tests inside the container.  
+- Add commands to build, serve, and deploy documentation site using the `support/mkdocs` script with appropriate environment configuration.  
+- Ensure that environment variables and PATH include directories for Bazel and python scripts if needed.  
+- Add cleanup steps post-build to reduce image size (remove build files if not needed).  
+- Consider adding user permissions or non-root user setup if required for security or CI.  
+- Add verification of terminal emulator compatibility or include instructions for usage with ANSI color capable terminals.  
+- Prepare for CI workflow integration by adding relevant scripts or entrypoints.

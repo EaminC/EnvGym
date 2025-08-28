@@ -1,0 +1,108 @@
+=== Docker Execution Log - 20250828_081122 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756368678
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 504B done
+#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/golang:1.20
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 111B done
+#3 DONE 0.0s
+
+#4 [1/7] FROM docker.io/library/golang:1.20@sha256:8f9af7094d0cb27cc783c697ac5ba25efdc4da35f8526db21f7aebb0b0b4f18a
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 226.77kB 0.1s done
+#5 DONE 0.1s
+
+#6 [2/7] RUN apt-get update && apt-get install -y --no-install-recommends     bash     ca-certificates     git     build-essential     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [3/7] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/zeromicro_go-zero
+#7 CACHED
+
+#8 [4/7] COPY go.mod go.sum ./
+#8 CACHED
+
+#9 [5/7] RUN go mod download
+#9 CACHED
+
+#10 [6/7] COPY . .
+#10 DONE 0.2s
+
+#11 [7/7] RUN go version && ls -la && go mod verify && go clean -modcache && go mod tidy -v
+#11 0.202 go version go1.20.14 linux/amd64
+#11 0.204 total 120
+#11 0.204 drwxr-xr-x  1 root root  4096 Aug 28 08:07 .
+#11 0.204 drwxr-xr-x  1 root root  4096 Aug 28 08:08 ..
+#11 0.204 -rw-rw-r--  1 root root    19 Aug 25 19:16 .gitattributes
+#11 0.204 drwxrwxr-x  4 root root  4096 Aug 25 19:16 .github
+#11 0.204 -rw-rw-r--  1 root root   295 Aug 25 19:16 .gitignore
+#11 0.204 -rw-rw-r--  1 root root  4389 Aug 25 19:16 CONTRIBUTING.md
+#11 0.204 -rw-rw-r--  1 root root  1066 Aug 25 19:16 LICENSE
+#11 0.204 -rw-rw-r--  1 root root   363 Aug 25 19:16 SECURITY.md
+#11 0.204 -rw-rw-r--  1 root root  5195 Aug 25 19:16 code-of-conduct.md
+#11 0.204 drwxrwxr-x 48 root root  4096 Aug 25 19:16 core
+#11 0.204 drwxrwxr-x  2 root root  4096 Aug 28 08:11 envgym
+#11 0.204 drwxrwxr-x  3 root root  4096 Aug 25 19:16 gateway
+#11 0.204 -rw-rw-r--  1 root root  5475 Aug 25 19:16 go.mod
+#11 0.204 -rw-rw-r--  1 root root 30741 Aug 25 19:16 go.sum
+#11 0.204 drwxrwxr-x  8 root root  4096 Aug 25 19:16 internal
+#11 0.204 drwxrwxr-x  2 root root  4096 Aug 25 19:16 mcp
+#11 0.204 drwxrwxr-x 11 root root  4096 Aug 25 19:16 rest
+#11 0.204 drwxrwxr-x  3 root root  4096 Aug 25 19:16 tools
+#11 0.204 drwxrwxr-x  4 root root  4096 Aug 25 19:16 zrpc
+#11 1.809 all modules verified
+#11 2.845 go: go.mod file indicates go 1.21, but maximum version supported by tidy is 1.20
+#11 ERROR: process "/bin/sh -c go version && ls -la && go mod verify && go clean -modcache && go mod tidy -v" did not complete successfully: exit code: 1
+------
+ > [7/7] RUN go version && ls -la && go mod verify && go clean -modcache && go mod tidy -v:
+0.204 drwxrwxr-x  3 root root  4096 Aug 25 19:16 gateway
+0.204 -rw-rw-r--  1 root root  5475 Aug 25 19:16 go.mod
+0.204 -rw-rw-r--  1 root root 30741 Aug 25 19:16 go.sum
+0.204 drwxrwxr-x  8 root root  4096 Aug 25 19:16 internal
+0.204 drwxrwxr-x  2 root root  4096 Aug 25 19:16 mcp
+0.204 drwxrwxr-x 11 root root  4096 Aug 25 19:16 rest
+0.204 drwxrwxr-x  3 root root  4096 Aug 25 19:16 tools
+0.204 drwxrwxr-x  4 root root  4096 Aug 25 19:16 zrpc
+1.809 all modules verified
+2.845 go: go.mod file indicates go 1.21, but maximum version supported by tidy is 1.20
+------
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+envgym.dockerfile:19
+--------------------
+  17 |     COPY . .
+  18 |     
+  19 | >>> RUN go version && ls -la && go mod verify && go clean -modcache && go mod tidy -v
+  20 |     
+  21 |     CMD ["/bin/bash"]
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c go version && ls -la && go mod verify && go clean -modcache && go mod tidy -v" did not complete successfully: exit code: 1
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

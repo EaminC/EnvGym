@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_tokio, project likely CPU-bound, no GPU acceleration detected  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: amd64-compatible Linux base images (e.g., ubuntu, debian, alpine)  
+- GPU: No NVIDIA GPU detected, no CUDA base image required  
+- Instruction Notes: Use standard CPU instructions, no NVIDIA GPU or CUDA dependencies; large memory and CPU availability support multi-stage builds and heavy compilation; ensure paths relative to /home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_tokio  
+- Docker Version: 28.3.2, supports BuildKit and docker buildx, no native GPU build support needed due to lack of NVIDIA GPU

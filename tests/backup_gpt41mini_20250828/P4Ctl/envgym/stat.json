@@ -1,0 +1,40 @@
+{
+  "session_start": "2025-08-27T09:38:32.484966+00:00",
+  "session_end": "2025-08-27T09:42:10.498310+00:00",
+  "start_stats": [
+    {
+      "provider_name": "Azure",
+      "model": "gpt-4.1-mini",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0,
+      "requests_count": 0,
+      "cost": 0.0
+    }
+  ],
+  "end_stats": [
+    {
+      "provider_name": "Azure",
+      "model": "gpt-4.1-mini",
+      "input_tokens": 22407,
+      "output_tokens": 8508,
+      "total_tokens": 32835,
+      "requests_count": 11,
+      "cost": 0.0227676
+    }
+  ],
+  "usage_delta": {
+    "provider_name": "Azure",
+    "model": "gpt-4.1-mini",
+    "input_tokens": 22407,
+    "output_tokens": 8508,
+    "total_tokens": 32835,
+    "requests_count": 11,
+    "cost": 0.0227676
+  },
+  "execution_info": {},
+  "api_info": {
+    "provider_name": "Azure",
+    "model": "gpt-4.1-mini"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_093026",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756287025",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.63kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:20.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context:\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/25] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214\n#4 DONE 0.0s\n\n#5 [ 2/25] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     git     python3     python3-pip     make     libssl-dev     mtd-utils     xfsprogs     rename     libncurses-dev     bison     flex     libelf-dev     nfs-ganesha     sudo     ca-certificates     wget     curl     vim     && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [ 5/25] WORKDIR /home/cc\n#6 CACHED\n\n#7 [ 3/25] RUN pip3 install --no-cache-dir numpy scipy matplotlib pulp ply\n#7 CACHED\n\n#8 [ 4/25] RUN useradd -m -s /bin/bash cc &&     echo \"cc ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\n#8 CACHED\n\n#9 [ 6/25] RUN mkdir -p EnvGym/data-gpt-4.1mini/Metis\n#9 CACHED\n\n#10 [ 7/25] RUN mkdir -p /mnt/test-ext4 /mnt/test-jffs2 /mnt/test-nfs-ganesha-export /mnt/test-nfs-client\n#10 CACHED\n\n#11 [internal] load build context\n#11 transferring context: 9.69MB 0.2s done\n#11 DONE 0.2s\n\n#12 [ 8/25] COPY ./ ./EnvGym/data-gpt-4.1mini/Metis/\n#12 DONE 0.1s\n\n#13 [ 9/25] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/Metis/Metis\n#13 DONE 0.0s\n\n#14 [10/25] RUN make V=1 && make install\n#14 0.228 make: *** No targets specified and no makefile found.  Stop.\n#14 ERROR: process \"/bin/sh -c make V=1 && make install\" did not complete successfully: exit code: 2\n------\n > [10/25] RUN make V=1 && make install:\n0.228 make: *** No targets specified and no makefile found.  Stop.\n------\nenvgym.dockerfile:47\n--------------------\n  45 |     \n  46 |     WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/Metis/Metis\n  47 | >>> RUN make V=1 && make install\n  48 |     \n  49 |     WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/Metis/RefFS\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c make V=1 && make install\" did not complete successfully: exit code: 2\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

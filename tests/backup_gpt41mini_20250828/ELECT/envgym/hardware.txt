@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/ELECT; project located in user home directory under EnvGym/data-gpt-4.1mini
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: amd64-compatible base images (e.g., ubuntu, debian, alpine for x86_64)
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: No GPU-specific instructions; leverage high CPU core count if parallel build steps; no special volume or storage constraints noted; standard Linux filesystem paths
+- Docker Version: 28.3.2; supports BuildKit and modern features; GPU build support present but no GPU hardware available on host

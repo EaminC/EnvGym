@@ -1,0 +1,15 @@
+current progress  
+- Base Ubuntu 20.04 image set with essential build tools and Python 3 development packages installed.  
+- Miniconda installed with Python 3.6 conda environment `reltr` created.  
+- Within `reltr` environment, PyTorch CPU-only version 1.6.0 and dependencies (matplotlib, scipy, numpy, cython) installed.  
+- RelTR repository cloned into working directory.  
+- Attempted installation of pycocotools from GitHub source using pip inside conda environment failed with a build error.  
+- Following step to build native code and cython extension in `lib/fpn` not reached due to previous failure.  
+
+next step  
+- Add missing system dependencies required for building pycocotools, specifically `python3-dev` headers matching the conda environment's Python version (Python 3.6), and possibly `cython` and `make` tools explicitly.  
+- Ensure pip, setuptools, and wheel inside conda environment are upgraded before pycocotools installation.  
+- Modify Dockerfile to activate conda environment properly using `conda run` or `source activate` with full environment setup before running pip install.  
+- Consider installing pycocotools from conda-forge channel if available to avoid build issues.  
+- Once pycocotools installs successfully, proceed with building `lib/fpn` native extensions.  
+- Verify all build tools and Python headers align with conda environment Python version to prevent compilation errors.

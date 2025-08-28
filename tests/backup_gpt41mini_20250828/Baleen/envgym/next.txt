@@ -1,0 +1,17 @@
+current progress  
+- Base Ubuntu 22.04 image setup with essential packages installed including git, bash, and curl.  
+- Micromamba v1.4.1 downloaded and installed under /opt/micromamba with executable permissions.  
+- Repository cloned with submodules and ownership set for user cc.  
+- User cc created and Dockerfile switches to this user for environment setup.  
+- Verified presence of environment YAML file and output its content.  
+- Attempted to append conda-forge channel to micromamba config and list channels, but this step failed in Docker build with exit code 1.  
+- Subsequent steps to create environment, clean caches, and set environment activation in bashrc not reached due to failure at channel append step.  
+- Trace data download script included but not executed yet because build failed earlier.
+
+next step  
+- Investigate and fix the failure when running `micromamba config append channels conda-forge`.  
+- Modify the Dockerfile to ensure micromamba environment is properly initialized before running micromamba commands (e.g., ensure the environment setup script is sourced correctly).  
+- Consider combining the channel append and environment creation in a single RUN command with proper micromamba initialization or use micromamba CLI flags to add channels during environment creation.  
+- Add debugging outputs or check micromamba version and config files before and after channel append to isolate the failure cause.  
+- After fixing channel configuration, proceed with environment creation, cache cleaning, and data downloading steps.  
+- Validate all RUN commands succeed before moving to CMD.

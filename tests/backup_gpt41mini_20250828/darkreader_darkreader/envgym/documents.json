@@ -1,0 +1,12 @@
+[
+  "README.md",
+  "package.json",
+  "package-lock.json",
+  "src/manifest.json",
+  "src/manifest-chrome-mv3.json",
+  "src/manifest-firefox.json",
+  "src/manifest-thunderbird.json",
+  "src/tsconfig.json",
+  "tasks/package.json",
+  "tests/package.json"
+]

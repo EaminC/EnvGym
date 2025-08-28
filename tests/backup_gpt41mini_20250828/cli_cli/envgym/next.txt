@@ -1,0 +1,11 @@
+current progress  
+- Base Ubuntu 22.04 image with essential packages installed.  
+- Go 1.24.4 successfully downloaded and installed.  
+- Dockerfile attempts to download and install cosign version 2.1.3, but fails due to invalid or unreachable URL (exit code 22).  
+- Repository source copied and `make install` intended for building GitHub CLI (`gh`) but build not reached due to prior failure.  
+
+next step  
+- Fix cosign download URL in the Dockerfile by verifying the correct asset name and URL on the cosign GitHub releases page for version 2.1.3 (likely `cosign-linux-amd64` is correct but URL or variable usage needs checking).  
+- Alternatively, add a step to verify COSIGN_VERSION is correctly set or hardcode the URL temporarily to troubleshoot.  
+- Confirm network access and GitHub release URL accessibility from build environment.  
+- After cosign installation succeeds, proceed with building and installing `gh` via `make install`.

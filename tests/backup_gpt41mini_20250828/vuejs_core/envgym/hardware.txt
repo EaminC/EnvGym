@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/vuejs_core; project likely Vue.js core related, located under user's home directory
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use base images compatible with x86_64 architecture, e.g., official ubuntu, debian, node, python amd64 tags
+- GPU: No NVIDIA GPU detected; no CUDA base image required or recommended
+- Instruction Notes: No GPU-specific instructions needed; leverage multi-core CPU for build parallelism; ensure relative paths align with /home/cc/EnvGym/data-gpt-4.1mini/vuejs_core context
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build support present but unused due to absent NVIDIA GPU

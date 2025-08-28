@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250828_044200",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756356120",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.67kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/28] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [ 6/28] RUN useradd -m cc\n#5 CACHED\n\n#6 [ 2/28] RUN apt-get update && apt-get install -y --no-install-recommends     curl     git     build-essential     ca-certificates     pkg-config     libssl-dev     llvm     clang     cmake     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [ 4/28] RUN rustup install nightly\n#7 CACHED\n\n#8 [ 5/28] RUN rustc --version && cargo --version && rustc +nightly --version\n#8 CACHED\n\n#9 [ 8/28] RUN chown -R cc:cc /home/cc\n#9 CACHED\n\n#10 [ 3/28] RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable\n#10 CACHED\n\n#11 [ 7/28] WORKDIR /home/cc/tokio-rs_bytes\n#11 CACHED\n\n#12 [ 9/28] WORKDIR /home/cc/tokio-rs_bytes\n#12 CACHED\n\n#13 [internal] load build context\n#13 transferring context: 395.38kB 0.0s done\n#13 DONE 0.0s\n\n#14 [11/28] COPY --chown=cc:cc Cargo.lock Cargo.lock\n#14 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::c4klaltvs44tm9n0g5st821f8: \"/Cargo.lock\": not found\n\n#15 [10/28] COPY --chown=cc:cc Cargo.toml Cargo.toml\n#15 CANCELED\n------\n > [11/28] COPY --chown=cc:cc Cargo.lock Cargo.lock:\n------\nenvgym.dockerfile:39\n--------------------\n  37 |     \n  38 |     COPY --chown=cc:cc Cargo.toml Cargo.toml\n  39 | >>> COPY --chown=cc:cc Cargo.lock Cargo.lock\n  40 |     COPY --chown=cc:cc src src\n  41 |     COPY --chown=cc:cc benches benches\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::c4klaltvs44tm9n0g5st821f8: \"/Cargo.lock\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

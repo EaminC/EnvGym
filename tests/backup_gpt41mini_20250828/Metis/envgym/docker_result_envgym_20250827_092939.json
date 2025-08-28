@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_092939",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756286978",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 3.11kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:20.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/26] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214\n#4 DONE 0.0s\n\n#5 [ 2/26] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     git     python3     python3-pip     make     libssl-dev     mtd-utils     xfsprogs     rename     libncurses-dev     bison     flex     libelf-dev     nfs-ganesha     sudo     ca-certificates     wget     curl     vim     && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [ 5/26] WORKDIR /home/cc\n#6 CACHED\n\n#7 [ 6/26] RUN mkdir -p EnvGym/data-gpt-4.1mini/Metis\n#7 CACHED\n\n#8 [ 3/26] RUN pip3 install --no-cache-dir numpy scipy matplotlib pulp ply\n#8 CACHED\n\n#9 [ 4/26] RUN useradd -m -s /bin/bash cc &&     echo \"cc ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\n#9 CACHED\n\n#10 [ 7/26] RUN mkdir -p /mnt/test-ext4 /mnt/test-jffs2 /mnt/test-nfs-ganesha-export /mnt/test-nfs-client\n#10 CACHED\n\n#11 [ 8/26] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/Metis\n#11 CACHED\n\n#12 [ 9/26] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/Metis/Metis/Metis\n#12 DONE 0.0s\n\n#13 [10/26] RUN make && sudo make install\n#13 0.223 make: *** No targets specified and no makefile found.  Stop.\n#13 ERROR: process \"/bin/sh -c make && sudo make install\" did not complete successfully: exit code: 2\n------\n > [10/26] RUN make && sudo make install:\n0.223 make: *** No targets specified and no makefile found.  Stop.\n------\nenvgym.dockerfile:49\n--------------------\n  47 |     # Build Metis\n  48 |     WORKDIR $WORKDIR/Metis/Metis\n  49 | >>> RUN make && sudo make install\n  50 |     \n  51 |     # Build RefFS via setup_verifs2.sh script\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c make && sudo make install\" did not complete successfully: exit code: 2\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

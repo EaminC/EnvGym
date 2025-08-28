@@ -1,0 +1,14 @@
+current progress  
+- Dockerfile successfully builds and runs with Ubuntu 22.04 base image for both build and dev stages.  
+- GCC 11 with C++23 support, OpenSSL, zlib, Brotli, Zstd, Python3, pre-commit, and clang-format are installed and configured.  
+- The build stage runs cmake and make with verbose output, compiling the project in `/yhirose_cpp-httplib/build`.  
+- The dev stage sets up a development environment with the same tools and copies the full source and build outputs from the build stage.  
+- The container currently defaults to launching `/bin/bash` for interactive use.  
+
+next step  
+- Modify Dockerfile to implement a multi-stage build producing a static linked server binary named `server` using C++23, stripped for minimal size.  
+- Adjust build commands to statically link dependencies and produce the final executable in the build stage.  
+- Add a final minimal stage (e.g., using `scratch` or minimal base) that copies only the `server` binary and static HTML content (`docker/html/index.html`).  
+- Ensure all paths in Dockerfile are relative to `/yhirose_cpp-httplib` and comply with overlay2 storage driver best practices.  
+- Add instructions to expose port 80 and configure the container to run the `server` binary by default.  
+- Optionally create or update a `docker-compose.yml` file to mount `./docker/html` and map ports as per the plan.

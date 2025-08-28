@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/Silhouette, project under user home with typical Linux path structure  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: x86_64 compatible images (e.g., ubuntu, debian, alpine for amd64), no GPU-specific base image required  
+- GPU: No NVIDIA GPU detected, no CUDA base image required  
+- Instruction Notes: Use standard Linux paths, no GPU acceleration instructions needed, consider large number of CPU cores for parallel build steps (e.g., make -j96)  
+- Docker Version: 28.3.2, supports BuildKit and docker buildx, GPU build support present but not applicable here due to lack of NVIDIA GPU

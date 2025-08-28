@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_174321",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756316600",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.12kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/7] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [2/7] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     wget     git     build-essential     gcc     make     gnupg     dirmngr     software-properties-common     lsb-release     unzip     xz-utils     apt-transport-https     && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [3/7] RUN curl -fsSL https://go.dev/dl/go1.24.4.linux-amd64.tar.gz -o /tmp/go.tar.gz     && rm -rf /usr/local/go     && tar -C /usr/local -xzf /tmp/go.tar.gz     && rm /tmp/go.tar.gz\n#6 CACHED\n\n#7 [internal] load build context\n#7 transferring context: 63.23MB 0.5s done\n#7 CANCELED\n\n#8 [4/7] RUN curl -fsSL -o /usr/local/bin/cosign https://github.com/sigstore/cosign/releases/download/v2.1.3/cosign-linux-amd64     && chmod +x /usr/local/bin/cosign\n#8 0.364 curl: (22) The requested URL returned error: 404\n#8 ERROR: process \"/bin/sh -c curl -fsSL -o /usr/local/bin/cosign https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64     && chmod +x /usr/local/bin/cosign\" did not complete successfully: exit code: 22\n------\n > [4/7] RUN curl -fsSL -o /usr/local/bin/cosign https://github.com/sigstore/cosign/releases/download/v2.1.3/cosign-linux-amd64     && chmod +x /usr/local/bin/cosign:\n0.364 curl: (22) The requested URL returned error: 404\n------\nenvgym.dockerfile:34\n--------------------\n  33 |     # Install cosign version 2.1.3 by downloading the binary with correct filename\n  34 | >>> RUN curl -fsSL -o /usr/local/bin/cosign https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64 \\\n  35 | >>>     && chmod +x /usr/local/bin/cosign\n  36 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c curl -fsSL -o /usr/local/bin/cosign https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64     && chmod +x /usr/local/bin/cosign\" did not complete successfully: exit code: 22\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/acto; project likely local source context in acto subfolder  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, alpine amd64 tags) compatible; no ARM or alternative arch needed  
+- GPU: No NVIDIA GPU detected; no CUDA base image needed; GPU acceleration not applicable  
+- Instruction Notes: Use standard Linux amd64 instructions; no GPU-specific drivers or toolkits; ensure relative paths align with /home/cc/EnvGym/data-gpt-4.1mini/acto context  
+- Docker Version: 28.3.2; supports BuildKit and modern features; --gpus flag not applicable due to absent NVIDIA GPU

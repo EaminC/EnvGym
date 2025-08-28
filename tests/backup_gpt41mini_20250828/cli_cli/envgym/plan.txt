@@ -1,0 +1,130 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR PROVIDED HARDWARE) ===
+
+1. DOWNLOADS NEEDED:  
+   - GitHub CLI (`gh`) latest stable release (version 2.62.0 or higher preferred; minimum 2.40.0 required for multiple accounts)  
+     * Target platform: Linux x86_64 (amd64)  
+     * Official installation methods recommended for Linux amd64:  
+       - Debian/Ubuntu `.deb` packages from https://cli.github.com/packages/  
+       - RPM packages if applicable (CentOS, Fedora, RHEL, openSUSE, SUSE)  
+       - Homebrew on Linux: `brew install gh` (if using Homebrew on Linux)  
+       - Precompiled binaries for amd64 available at https://github.com/cli/cli/releases/latest  
+     * Avoid Snap installation due to runtime issues.  
+     * Community package managers supported but unofficial: Alpine, Arch, Conda, etc. — use only if official methods not viable.  
+   - Git (compatible version to work alongside `gh`)  
+   - Go programming language environment (version 1.24 or higher recommended)  
+     * Required for building `gh` from source, acceptance tests, and extension development.  
+     * Ensure Go is installed for amd64 Linux platform.  
+   - Build tools:  
+     * `make`, `gcc` and related build essentials installed for the Linux environment  
+     * Ensure availability of standard Linux build utilities corresponding to your base image (e.g., `build-essential` on Debian/Ubuntu)  
+   - Optional verification tool:  
+     * `cosign` (latest version) for verifying release attestations (Linux amd64 binary available)  
+   - License compliance tooling:  
+     * `google/go-licenses` installed via Go toolchain (`go install github.com/google/go-licenses@latest`)  
+   - Additional tools:  
+     * `testscript` Go package (github.com/rogpeppe/go-internal/testscript) installed via Go tooling for acceptance tests  
+     * `GoReleaser` (~1.17.1) for release builds and local testing  
+   - macOS-specific signing tools and Windows-specific signing tools:  
+     * Not applicable for current Linux amd64 environment; exclude from setup steps.  
+   - Recommended VS Code extensions (if using VS Code):  
+     * `txtar` and `vscode-testscript` for acceptance test syntax highlighting  
+   - Terminal compatibility:  
+     * Ensure terminal emulator supports ANSI colors (8 basic colors) and Unicode; Linux terminals generally meet this.  
+   - Awareness of official vs community package distinctions remains relevant for Linux distributions.  
+
+2. FILES TO CREATE:  
+   - GitHub CLI config file (optional, e.g., `~/.config/gh/config.yml`) for authentication and settings  
+     * Include `version: 1` field if using multiple accounts feature and immutable config management tools  
+   - Devcontainer config (`.devcontainer/devcontainer.json`) if using Codespaces or devcontainers, enabling GitHub CLI feature for Linux amd64  
+     * Example snippet remains valid; no architecture-specific changes needed  
+   - GitHub Actions workflow files (`.github/workflows/deployment.yml`) for release automation and CI/CD pipelines  
+     * Ensure Linux runner jobs use official installation instructions for Debian/Ubuntu or RPM as applicable  
+   - Release and build scripts (`script/release`, `script/pkgmacos`, `script/sign`, `script/createrepo.sh`, etc.)  
+     * `script/pkgmacos` and macOS signing scripts can be excluded or disabled on Linux-only machines  
+     * Windows signing scripts not needed on Linux host  
+   - Acceptance test scripts under `acceptance/` directory  
+   - Documentation files as listed remain unchanged and applicable  
+   - VS Code settings snippet for acceptance test development (optional)  
+   - Markdown linting configs (optional)  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Installation tests for Linux amd64 using official `.deb` and RPM packages (as documented in `docs/install_linux.md`)  
+   - Building from source tests on Linux amd64:  
+     * Verify Go 1.24+ environment (`go version`)  
+     * Successful `make install` on Linux with default/custom prefix  
+     * Cross-compilation not mandatory but supported; validate environment variables (GOOS, GOARCH) accordingly  
+   - Functional tests for `gh` commands, authentication workflows, multiple accounts feature, and error handling remain unchanged  
+   - Acceptance tests using `go-internal/testscript` with build tag `acceptance` on Linux amd64  
+   - Tests for license compliance, documentation validation, CLI language and output conformity, Codespaces integration, triage role workflows, extension development workflow, and release automation as previously specified  
+   - Skip macOS- and Windows-specific signing and packaging tests on Linux-only environments unless cross-building/testing on those platforms is performed  
+
+4. COMPLETE TODO LIST (Adjusted for Linux x86_64 amd64 environment):  
+   1. Target operating system: Linux amd64 (x86_64) based on hardware info.  
+   2. Download and install GitHub CLI (`gh`):  
+      - Use official Debian/Ubuntu `.deb` packages or RPM packages per Linux distro in use.  
+      - Alternatively, use Homebrew on Linux if installed (`brew install gh`).  
+      - Download precompiled amd64 binaries if manual install preferred.  
+      - Avoid Snap installation.  
+   3. (Optional) Build and install from source on Linux amd64:  
+      - Verify Go 1.24+ installed (`go version`)  
+      - Clone repository (`git clone https://github.com/cli/cli.git`) and `cd gh-cli`  
+      - Run `make install` (with `sudo` if necessary)  
+      - For cross-compilation, set GOOS, GOARCH accordingly (see docs) but not required for native build  
+   4. Verify installation with `gh --version` and `gh auth status`.  
+   5. Configure authentication with `gh auth login` using GitHub.com or Enterprise Server (2.20+) as applicable; multiple accounts support requires `gh` ≥ 2.40.0.  
+      - Backup existing `hosts.yml` and `config.yml` before upgrading if applicable.  
+      - If using immutable config systems, update config with `version: 1` field.  
+   6. (Optional) Customize GitHub CLI config file.  
+   7. For Codespaces or devcontainer users:  
+      - Add GitHub CLI feature to `.devcontainer/devcontainer.json` for Linux amd64.  
+      - Configure repository access permissions as needed.  
+      - Remember permission changes require new codespaces creation.  
+   8. For GitHub Actions workflows on Linux runners:  
+      - Use official installation steps for Linux as per `docs/install_linux.md`.  
+      - Verify installation step success during CI.  
+      - Configure secrets/credentials for signing and releasing as needed (GPG keys, Azure credentials, Apple certs not applicable on Linux but included if cross-platform releases are done).  
+   9. (Optional) Download and verify `cosign` tool for release artifact verification on Linux amd64.  
+   10. Verify authenticity of downloaded `gh` binaries using `gh at verify` or `cosign verify-blob-attestation`.  
+   11. Set up environment for acceptance testing:  
+       - Ensure Go 1.24+ and build tools installed.  
+       - Install Go packages including `testscript`.  
+       - Set environment variables:  
+         * `GH_ACCEPTANCE_HOST` (e.g., `github.com`)  
+         * `GH_ACCEPTANCE_ORG` (e.g., `gh-acceptance-testing`)  
+         * `GH_ACCEPTANCE_TOKEN` (Legacy PAT recommended)  
+       - (Optional) Set `GH_ACCEPTANCE_SCRIPT` for targeted acceptance tests.  
+       - VS Code users: add build flag `-tags=acceptance` in `gopls` settings; install recommended extensions.  
+   12. Run acceptance tests:  
+       ```
+       GH_ACCEPTANCE_HOST=<host> GH_ACCEPTANCE_ORG=<org> GH_ACCEPTANCE_TOKEN=<token> go test -tags=acceptance ./acceptance
+       ```  
+       - Use `-run` and coverage flags as needed.  
+   13. Debug acceptance tests on failure with verbosity flags and environment variables to preserve state.  
+   14. Manage license compliance:  
+       - Install `google/go-licenses` tool.  
+       - Run `make licenses` when dependencies change; commit updates.  
+       - Run `make licenses-check` to verify compliance locally and in CI.  
+       - Ensure presence and currency of license documentation files and `third-party/` directory.  
+   15. Integrate Primer Design documentation and general `gh` development docs into workflow; no changes needed due to hardware.  
+       - Exclude macOS- or Windows-specific tooling guidance except as informational.  
+       - Follow language and design principles as specified.  
+       - Confirm terminal supports ANSI colors and Unicode (typical for Linux terminals).  
+   16. Extension development workflow per documentation; no hardware-specific changes.  
+   17. Implement and run all specified test cases; exclude macOS and Windows signing/package tests on Linux-only environment unless cross-platform testing is done.  
+   18. Document environment setup, acceptance testing, troubleshooting, triage, contribution, extension workflow, and adherence to Primer Design and CLI principles.  
+   19. Regularly update `gh`, tools, and documentation; verify functionality and compliance on Linux amd64.  
+   20. Monitor GitHub CLI release notes and documentation for changes affecting Linux amd64 environment setup and workflows.  
+
+5. NOTES AND CONSIDERATIONS:  
+   - CPU architecture: x86_64 (amd64) — all installation, build, and tooling steps target Linux amd64 platform.  
+   - Base image: Linux x86_64 compatible (e.g., Ubuntu, Debian, Alpine); ensure install commands match distribution's package manager and repository configuration.  
+   - GPU: None detected; no CUDA or GPU-specific tooling required or recommended.  
+   - Memory and storage: large memory and multi-core CPU available; leverage parallel builds and caching for performance.  
+   - Paths and directories: working directory `/home/cc/EnvGym/data-gpt-4.1mini/cli_cli`; project root `/home/cc/EnvGym/data-gpt-4.1mini` — confirm relative paths in build and test commands align accordingly.  
+   - Docker version 28.3.2 with BuildKit and Buildx: suitable for containerized builds and cross-compilation if needed, but GPU flags not applicable.  
+   - Windows- and macOS-specific signing and packaging steps omitted unless cross-building for those platforms from this Linux environment.  
+   - Confirm installed versions of Go, Git, make, gcc, and other build tools in Linux environment meet minimum requirements (Go ≥ 1.24).  
+   - For containerized builds, ensure container image matches Linux amd64 architecture and includes all required dependencies.  
+   - Ensure terminal emulator used supports ANSI colors and Unicode for best CLI experience; Linux terminals generally comply.  
+
+This plan is fully aligned with the provided hardware and operating system environment, optimized for Linux x86_64 architecture with no GPU, and excludes unnecessary platform-specific tooling for macOS and Windows not applicable in this context.

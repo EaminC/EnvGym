@@ -1,0 +1,164 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Notes on Adjustments Based on Hardware Information:**
+- Host architecture is x86_64 Linux, matching Ubuntu 22.04 base images used in Dockerfiles.
+- Docker version 28.3.2 supports BuildKit/Buildx, no GPU available; no CUDA or GPU-specific base images needed.
+- Use `--platform=linux/amd64` explicitly in Docker build commands to ensure architecture compatibility and avoid multiarch ambiguity.
+- Overlay2 storage driver compatible instructions; watch image sizes to manage storage limits.
+- Paths and relative references remain as per Linux filesystem conventions.
+- No changes needed for Rust or Verus versions or other tooling versions.
+- Ensure local binaries built for x86_64 Linux to be compatible with container base images.
+- Network connectivity and Kubernetes cluster setup remain unchanged.
+- Windows users should still use WSL2 or Linux shell environment for best tooling compatibility.
+
+---
+
+### 1. DOWNLOADS NEEDED (unchanged except Docker platform specification)
+
+- Rust toolchain version 1.88.0 (stable recommended, synchronized with Verus)
+- Verus verification tool, version: release/0.2025.07.05.8bd7c32
+- Kubernetes cluster (Minikube/kind recommended)
+- Cargo dependencies per manifests and paths (no changes)
+- Git (for cloning Anvil repo)
+- Docker (version 28.3.2 confirmed)
+- System packages per Dockerfiles
+- Python package `tabulate` in Docker `docker/ae/Dockerfile`
+- SMT solver installed by Verus setup (inside Docker or local install)
+- Network access for pulling images and repositories
+
+---
+
+### 2. FILES TO CREATE (unchanged)
+
+- `rust-toolchain.toml` specifying Rust 1.88.0 with synchronization comment
+- `Cargo.toml`, `e2e/Cargo.toml`, `src/deps_hack/Cargo.toml` as specified
+- `.cargo/config.toml` (optional)
+- `kubeconfig` for Kubernetes cluster access
+- `.env` or environment variables (optional)
+- Test files in `src/controller_examples/exec/` and `src/controller_examples/proof/`
+- `e2e/README.md`
+- Deployment scripts such as `deploy.sh`
+- Dockerfiles as specified:  
+  - `docker/ae/Dockerfile`  
+  - `docker/verus/Dockerfile`  
+  - `docker/controller/Dockerfile.local`  
+  - `docker/controller/Dockerfile.remote`  
+- Controller binaries named `${APP}_controller` in `src/` for local controller Docker images
+- Source files `${APP}_controller.rs` in build context root for remote Docker builds
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE (unchanged)
+
+- Unit tests for reconcile implementations
+- Integration tests for shim layer interactions
+- Formal verification proof tests using Verus and SMT solver
+- End-to-end controller tests on local Kubernetes cluster
+- Tests related to new `deps_hack` dependencies and Kubernetes client feature flags
+- Docker-based build environment tests verifying image correctness and functionality
+- Error handling and recovery tests simulating failures
+- Controller containerization build and run tests verifying ENTRYPOINT and runtime behavior
+
+---
+
+### 4. COMPLETE TODO LIST (adjusted steps highlighted)
+
+**Step 1: Install Rust toolchain version 1.88.0**  
+- No change; ensure Linux-compatible Rust install, verify with `rustc --version`
+
+**Step 2: Install Verus tool at specified version**  
+- Optionally use Docker-based install with explicit platform flag:  
+  ```bash
+  docker build --platform=linux/amd64 --build-arg VERUS_VER=release/0.2025.07.05.8bd7c32 -t verus-build -f docker/verus/Dockerfile .
+  ```  
+- Use this container for reproducible builds
+
+**Step 3: Clone Anvil repository**  
+- No change; verify Linux filesystem paths
+
+**Step 4: Set up Kubernetes cluster locally**  
+- No change; Minikube/kind on Linux
+
+**Step 5: Install Docker and prepare Docker build environments**  
+- Confirm Docker version 28.3.2 compatible  
+- Build Docker images with explicit platform:  
+  - `docker/ae/Dockerfile`:  
+    ```bash
+    docker build --platform=linux/amd64 -t anvil-verus-env -f docker/ae/Dockerfile .
+    ```  
+  - `docker/verus/Dockerfile`: as above  
+  - `docker/controller/Dockerfile.local`:  
+    ```bash
+    docker build --platform=linux/amd64 --build-arg APP=zookeeper -t controller-zookeeper -f docker/controller/Dockerfile.local .
+    ```  
+  - `docker/controller/Dockerfile.remote`:  
+    ```bash
+    docker build --platform=linux/amd64 --build-arg APP=zookeeper -t controller-zookeeper-remote -f docker/controller/Dockerfile.remote .
+    ```  
+- Verify images do not exceed storage quotas; prune unused images as needed  
+- Ensure built controller binaries are Linux x86_64 compatible to avoid runtime errors in containers
+
+**Step 6: Configure project dependencies and build environments**  
+- Paths remain Linux-style (relative to project root)  
+- Local binaries and source files must be accessible with correct permissions  
+- Build and verify with `cargo check` and `cargo build` as usual
+
+**Step 7: Create or verify configuration files**  
+- No change; Linux paths and environment variables
+
+**Step 8: Deploy controllers and create CRDs for end-to-end tests**  
+- No change
+
+**Step 9: Run example controllers and unit/integration tests**  
+- No change
+
+**Step 10: Build controller binaries for containerized execution**  
+- Ensure binaries are compiled for Linux x86_64 (matching Docker base images)  
+- Verify executable permissions
+
+**Step 11: Build controller container images using `docker/controller/Dockerfile.remote`**  
+- No change except use platform flag in Docker build command as above
+
+**Step 12: Perform formal verification proofs**  
+- Optionally run inside `docker/verus` container with platform flag for consistency
+
+**Step 13: Run end-to-end tests for controllers**  
+- No change
+
+**Step 14: Deploy example controllers to local Kubernetes cluster**  
+- No change
+
+**Step 15: Implement error handling and recovery tests**  
+- No change
+
+**Step 16: Utilize Docker environments for builds and tests**  
+- Always specify `--platform=linux/amd64` for Docker builds and runs to avoid architecture issues  
+- Use overlay2 storage driver compatible instructions (standard Docker usage)  
+- Monitor image sizes and prune as needed  
+- Verify containerized environments pass all tests
+
+**Step 17: Document environment setup and test procedures**  
+- Add notes specifying the `--platform=linux/amd64` flags for Docker commands  
+- Document Linux-based paths and compatibility notes  
+- Include Docker version and storage driver info for reproducibility
+
+---
+
+### Verification and Important Considerations (adjusted)
+
+- Always use Rust 1.88.0 synchronized with Verus version
+- Docker builds and runs specify `--platform=linux/amd64` explicitly due to host architecture (x86_64); avoids multiarch ambiguities
+- Controller binaries must be Linux x86_64 executables to be compatible with container base images (Ubuntu 22.04)
+- No GPU or CUDA dependencies; no GPU base images needed
+- Storage limits should be monitored; prune Docker images if required
+- Network connectivity and Kubernetes cluster access unchanged
+- WSL2 recommended for Windows users, but current hardware info suggests Linux native environment
+- Paths and relative references consistent with Linux filesystem
+- All Rust crates and dependencies compatible with Rust 1.88.0 on x86_64 Linux
+- Ensure firewall or network policies allow websocket connections used by `tungstenite` and Kubernetes client
+- Use Docker BuildKit features (supported by Docker 28.3.2) for efficient builds
+- Regularly update documentation with these platform-specific instructions for contributors and CI pipelines
+
+---
+
+This adjusted plan ensures full compatibility and stability of the environment setup, builds, tests, and deployments on your x86_64 Linux-based hardware with Docker 28.3.2, avoiding architecture mismatches, and maintaining reproducibility and correctness throughout the toolchain and container workflows.

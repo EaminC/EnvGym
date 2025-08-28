@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/zeromicro_go-zero, project likely Go-based from directory name
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: use amd64-compatible base images (e.g., ubuntu, debian, golang:amd64)
+- GPU: No NVIDIA GPU detected, no CUDA base image recommended
+- Instruction Notes: ensure overlay2 storage driver compatibility, use systemd cgroup driver awareness if needed, no GPU-specific instructions required
+- Docker Version: 28.3.2, supports BuildKit and docker buildx, GPU build features available but unused due to no GPU detected

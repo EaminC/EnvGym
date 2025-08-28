@@ -1,0 +1,198 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context:**  
+- Hardware is Linux-based, x86_64 architecture (amd64)  
+- No GPU/NVIDIA drivers, no CUDA or GPU acceleration needed  
+- Docker version 28.3.2 with BuildKit and Buildx supported  
+- Storage usage at ~84.5%, sufficient but monitor usage for large build artifacts  
+- Linux paths and tooling expected, no Windows/macOS specific adjustments needed  
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - Node.js (version per `.nvmrc`, minimum 22.17.1 as per `package.json` engines)  
+     - Use Linux x86_64 binaries or nvm install for amd64 architecture  
+   - npm (compatible with Node.js version, minimum 10)  
+   - Git (latest stable Linux x86_64 version recommended)  
+   - Electron 37.2.6 (ensure Linux amd64 compatible binaries)  
+   - Native Linux libraries (Ubuntu/Debian):  
+     - `libfontconfig-dev`, `xz-utils`, `libstdc++6`  
+     - Confirm amd64 packages installed correctly  
+   - ESLint and plugins per devDependencies for JavaScript, TypeScript, React JSX, Playwright tests  
+   - Playwright testing framework (version 1.51.1) and VS Code Playwright extension  
+   - mkcert (optional for TLS cert management, compatible with amd64 Linux)  
+   - `@getinsomnia/node-libcurl` native dependencies:  
+     - Use node-pre-gyp for Linux amd64 binaries matching Node.js and Electron versions  
+     - Use `npm run install-libcurl-electron` with `$target=37.2.6` for Electron libcurl binaries  
+   - React, TailwindCSS, Electron Builder, NeDB, CodeMirror, Commander.js, patch-package, TypeScript v5.8.3, Vitest, esbuild/esbuild-runner, consola, enquirer, picocolors, shellwords, string-argv, yaml, cosmiconfig, cross-env, express, graphql, oidc-provider, statuses, uuid, ws, socket.io, xvfb-maybe (for headless display in smoke tests), and other dependencies as listed for amd64 Linux  
+   - Security tools: semgrep or equivalent for SAST; dependency vulnerability monitoring tools compatible with Linux amd64  
+   - Docker (Linux amd64 compatible) for building and running insomnia-inso CLI Docker image in CI or containerized environments  
+   - Web browser with internet access for GitHub, docs, and security advisories  
+
+---
+
+2. FILES TO CREATE:  
+   - `.nvmrc` (root): Node.js version string ≥ 22.17.1, for Linux amd64 environment  
+   - `.npmrc`: Electron 37.2.6 and Node.js versions consistent across all `package.json` files and `.nvmrc`  
+   - `.eslintrc` or ESLint config supporting JavaScript, TypeScript, React JSX, Playwright on Linux amd64  
+   - `package.json` files in root and packages updated as per the plan, ensuring compatibility with Linux amd64 and Electron 37.2.6  
+   - Other markdown and config files (`CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `DEVELOPMENT.md`, `SECURITY.md`, `CHANGELOG.md`) as per original plan  
+   - `packages/insomnia-inso/Dockerfile`: base image Ubuntu 22.04 amd64 compatible, no GPU/CUDA dependencies  
+   - `shell.nix` or equivalent environment pinning files updated for Electron 37.2.6 and Node.js versions matching Linux amd64 architecture  
+   - Patch files for `patch-package` as implied by `package.json` postinstall  
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All tests as described in the original plan remain relevant and fully applicable on Linux amd64  
+   - Include validation that native modules (`node-libcurl`) correctly build and run on Linux x86_64  
+   - Verify Electron app and CLI runs on Linux amd64 environment without GPU acceleration  
+   - Smoke tests using Playwright run under `xvfb-maybe` for headless display on Linux  
+   - Docker containerized CLI tests verify Linux amd64 image correctness  
+   - Network environment tests ensure SSE custom protocol (`insomnia-event-source://`) works without proxy/firewall issues on Linux  
+   - Memory stability and large response load tests applicable; monitor system memory usage during heavy tests due to storage utilization status  
+   - No GPU-specific or CUDA tests needed given no GPU presence  
+   - Verify patch-package integration and workspace scripts run correctly on Linux amd64  
+
+---
+
+4. COMPLETE TODO LIST (adjusted for hardware):  
+
+   1. Install Node.js on Linux amd64 as per `.nvmrc` (≥ 22.17.1) using nvm or direct Linux x86_64 binaries  
+      - Confirm with `node -v`  
+   2. Install npm compatible with Node.js version (≥ 10) on Linux  
+      - Confirm with `npm -v`  
+   3. Install Git for Linux amd64  
+      - Confirm with `git --version`  
+   4. Clone Insomnia repo; ensure correct Linux permissions and paths  
+   5. On Linux (Ubuntu/Debian):  
+      ```shell
+      sudo apt-get update
+      sudo apt-get install libfontconfig-dev xz-utils libstdc++6
+      ```  
+      - Confirm amd64 packages are installed successfully  
+   6. Windows build tools step skipped (not applicable)  
+   7. If Electron install/build fails on Linux, clear cache:  
+      ```shell
+      rm -rf ~/.cache/electron
+      ```  
+      - Retry install/build  
+   8. Ensure `.nvmrc`, `.npmrc`, all `package.json` files, and `shell.nix` (if used) specify Node.js and Electron versions compatible with Linux amd64 environment  
+   9. In project root:  
+      ```shell
+      npm install
+      ```  
+      - Installs all dependencies, including native modules for Linux amd64  
+      - Postinstall runs `patch-package` and verifies bundles  
+   10. For `@getinsomnia/node-libcurl`:  
+       - Fix node version mismatch errors by:  
+         ```shell
+         node_modules/.bin/node-pre-gyp install --update-binary --directory node_modules/@getinsomnia/node-libcurl
+         ```  
+       - Install Electron-specific libcurl binaries:  
+         ```shell
+         npm run install-libcurl-electron
+         ```  
+         - Ensure environment variable `$target=37.2.6` set for Electron 37.2.6  
+       - Test Electron app builds and CLI commands on Linux amd64  
+   11. Build/package insomnia-inso CLI binaries for Linux amd64:  
+       ```shell
+       cd packages/insomnia-inso
+       npm run prepackage
+       npm run package
+       npm run postpackage
+       npm run artifacts
+       ```  
+       - Confirm `binaries/inso` amd64 executable presence  
+   12. Build Docker image for insomnia-inso CLI on Linux amd64:  
+       ```shell
+       docker build -t insomnia-inso:latest .
+       ```  
+       - Dockerfile uses Ubuntu 22.04 amd64 base image  
+       - Verify image builds and contains `inso` binary for Linux amd64  
+   13. Run linting for all workspaces:  
+       ```shell
+       npm run lint
+       ```  
+       - Fix lint errors if any  
+   14. Run TypeScript type checking:  
+       ```shell
+       npm run type-check
+       ```  
+   15. Run all tests across workspaces:  
+       ```shell
+       npm test
+       ```  
+       - Verify all tests pass on Linux amd64  
+       - Focus on native module loading, SSE handling, polling, CLI unit/binary/Docker tests, and smoke tests under xvfb-maybe  
+   16. Start app in dev mode with live reload:  
+       ```shell
+       npm run dev
+       # or for main and renderer reload:
+       npm run dev:autoRestart
+       ```  
+       - Confirm app launches and hot reload works on Linux amd64  
+   17. Develop/test insomnia-inso CLI on Linux amd64:  
+       ```shell
+       cd packages/insomnia-inso
+       npm install
+       npm run start
+       ./bin/inso -v
+       npm run test:unit
+       npm run test:bundle
+       npm run test:binary
+       npm run prepackage
+       npm run package
+       npm run postpackage
+       npm run artifacts
+       docker build -t insomnia-inso:latest .
+       ```  
+       - Use debug/watch modes if needed per docs  
+   18. Smoke testing suite (`packages/insomnia-smoke-test`):  
+       ```shell
+       npm install
+       npm run watch:app       # or npm run serve to start server
+       npm run test:dev
+       npm run test:build
+       npm run test:package
+       ```  
+       - Use Playwright Inspector with `PWDEBUG=1` for debugging  
+       - Use trace viewer with `npx playwright show-trace <trace-path>`  
+       - Enable debug logs via `DEBUG=pw:api` etc. environment variables  
+       - Refresh TLS certs with mkcert if needed  
+   19. Develop/run tests in `packages/insomnia-testing`:  
+       ```shell
+       cd packages/insomnia-testing
+       npm install
+       npm run lint
+       npm run test
+       npm run type-check
+       ```  
+   20. Test Plugin Hub installation and plugin system functionality on Linux amd64  
+   21. Document environment-specific setup and troubleshooting (Linux amd64 paths, Electron cache clearing, node-libcurl fixes, smoke test debugging, CLI bundling)  
+   22. Periodically update dependencies and Node.js/Electron versions for Linux amd64 compatibility; follow documented upgrade process  
+   23. Automate lint/type-check/tests pre-commit/pre-push with git hooks on Linux environment  
+   24. Verify network environment supports SSE and `insomnia-event-source://` protocol on Linux amd64  
+   25. Optionally create/update mock servers or test utilities simulating SSE/polling on Linux  
+   26. For CLI bundled asset debugging on Linux amd64:  
+       ```shell
+       DEBUG=1 npm run build
+       ```  
+       - Use `artifacts/meta.json` and `bundle-analysis.log` for analysis  
+   27. Monitor changelog for dependency/security updates; ensure Linux amd64 environment compatibility  
+   28. Foster respectful, secure, inclusive community per code of conduct and security policy on Linux development environment  
+
+---
+
+**Notes:**  
+- No Windows-specific steps needed; Windows Build Tools step skipped.  
+- No GPU or CUDA steps needed due to lack of GPU.  
+- Docker builds and images configured for linux/amd64 platform explicitly recommended due to x86_64 architecture.  
+- Linux native package installations confirmed for amd64 architecture.  
+- Storage usage at 84.5%: monitor space especially for Docker images and build artifacts; consider cleanup if space runs low.  
+- All paths and environment variables use Linux standard paths and conventions.  
+- Electron cache clearing and node-libcurl native binary fixes critical on Linux environment; ensure these steps followed if build issues arise.  
+
+---
+
+This adjusted plan ensures full compatibility and feasibility on the described Linux x86_64 hardware environment without GPU acceleration, with Docker amd64 builds, and Linux-native tooling.

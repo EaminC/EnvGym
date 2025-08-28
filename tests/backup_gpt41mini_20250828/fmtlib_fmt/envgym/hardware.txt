@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/fmtlib_fmt, project likely local source context for Docker builds
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: x86_64 compatible images (e.g., ubuntu, debian, alpine for amd64)
+- GPU: No NVIDIA GPU detected, no CUDA base image recommended
+- Instruction Notes: No GPU-specific instructions needed; leverage high CPU core count for parallel builds if applicable; storage space limited to ~47GB free, optimize image size
+- Docker Version: 28.3.2, supports BuildKit and Buildx; no GPU build support needed due to missing NVIDIA GPU

@@ -1,0 +1,209 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Note:** This adjusted plan is tailored for an x86_64 (amd64) Linux environment without GPU support, with roughly 47GB free storage, running Docker (version 28.3.2) that supports BuildKit and Buildx, and where builds happen in `/home/cc/EnvGym/data-gpt-4.1mini/fmtlib_fmt`. The plan assumes use of common Linux base images (Ubuntu, Debian, or Alpine) compatible with amd64. No CUDA or GPU-specific setups are needed.
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - **C++ Compiler:**  
+     * Must support at least C++20. On Ubuntu/Debian, GCC 11+ or Clang 12+ available via official repositories or PPAs.  
+     * Ensure installation of build-essential or equivalent packages.  
+     * Verify with `g++ --version` or `clang++ --version`.  
+   - **CMake:**  
+     * Version 3.15 or higher recommended.  
+     * Available via package managers or official binaries.  
+     * Verify with `cmake --version`.  
+   - **Git:**  
+     * For cloning repositories and deployment operations.  
+     * Verify with `git --version`.  
+   - **Python 3:**  
+     * Required for benchmark scripts, documentation building (MkDocs), and support scripts.  
+     * Prefer Python 3.8+ for compatibility with MkDocs plugins.  
+     * Verify with `python3 --version`.  
+   - **Python Packages:**  
+     * MkDocs core and plugins: `pip install mkdocs mkdocs-material mkdocstrings pymdown-extensions`  
+     * Optional: `mike` for managing/deploying multiple documentation versions (`pip install mike`)  
+   - **Optional Tools:**  
+     * Ninja build system (for faster builds): `apt install ninja-build` or equivalent.  
+     * clang-tidy v18+ for linting/code modernization (install via LLVM apt repo or latest package).  
+     * Bazel build system: install latest stable release matching or exceeding `.bazelversion` in `support/bazel/`. Verify with `bazel --version`.  
+   - **Terminal:**  
+     * Terminal emulator must support Unicode and ANSI color codes for full fmt color output testing (typical Linux terminals like xterm, GNOME Terminal, Konsole suffice).  
+   - **Internet Access:**  
+     * Required for Bazel Central Registry Bzlmod dependency resolution, cloning/pushing git repositories, and fetching external CSS/JS for MkDocs site.
+
+---
+
+2. FILES TO CREATE / USE:  
+   - `CMakeLists.txt` at project root:  
+     * Configure minimum CMake 3.15+, project name, C++20 standard.  
+     * Add fmt as subdirectory or find_package if system-installed.  
+     * Integrate `support/` CMake modules for enhanced build support.  
+     * Define targets, link against fmt (`fmt::fmt` or `fmt::fmt-header-only`).  
+     * Enable `FMT_HEADER_ONLY` option if desired.  
+   - `.clang-tidy` (optional):  
+     * Enable `modernize-use-std-print` check.  
+   - `.gitignore`:  
+     * Exclude build directories, binaries, temporary and generated files.  
+   - `benchmark/CMakeLists.txt` (optional): for building/running benchmarks.  
+   - Test files under `test/` for unit tests.  
+   - Documentation files: `README.md`, `support/README`, `support/bazel/README.md`.  
+   - MkDocs configuration: `support/mkdocs.yml` with Material theme, navigation, syntax highlighting, mkdocstrings plugin.  
+   - `support/mkdocs` Python executable script:  
+     * Sets `PYTHONPATH` to include `support/python`.  
+     * Supports `serve`, `build`, `deploy [version]` commands.  
+     * Automates git clone/push to `fmtlib/fmt.dev.git` for deployment.  
+     * Handles redirect page creation for documentation versions.  
+   - For Bazel integration (if used):  
+     * Copy `support/bazel/BUILD.bazel`, `MODULE.bazel`, `WORKSPACE.bazel`, `.bazelversion` to project root.  
+     * Use `bazel_dep(name = "fmt", version = "11.1.4")` in top-level `MODULE.bazel` or local path overrides.
+
+---
+
+3. NECESSARY TEST CASES:  
+   - Validate `fmt::format` correctness with multiple types (int, float, string, user types).  
+   - Positional arguments formatting correctness.  
+   - Compile-time format string checking (C++20).  
+   - Unicode and locale independence tests (Unicode strings, characters).  
+   - File output correctness tests.  
+   - Color and style printing tests on ANSI-capable terminals.  
+   - Performance benchmarks (optional).  
+   - Safety tests: buffer overflow prevention, invalid format string handling.  
+   - Integration tests in larger projects.  
+   - Continuous fuzzing tests (optional, e.g., OSS-Fuzz).  
+   - Verify build support files (`support/` CMake modules/scripts) integrate and operate correctly.  
+   - Bazel integration tests: build with Bazel, dependency management via Bzlmod or local override, version compatibility.  
+   - Documentation build/render tests:  
+     * Build with `support/mkdocs build`.  
+     * Serve locally with `support/mkdocs serve`.  
+     * Deploy with `support/mkdocs deploy <version>`.  
+     * Verify navigation, syntax highlighting, API docs, external CSS/JS loading, and excluded docs (e.g., `ChangeLog-old.md`).
+
+---
+
+4. COMPLETE TODO LIST (Adjusted for environment):  
+
+   1. **Install necessary software on amd64 Linux:**  
+      - Install GCC 11+ or Clang 12+ (e.g., `apt install g++-11` or add LLVM repo for newer Clang).  
+      - Install CMake 3.15+ (`apt install cmake` or download official binary if older repo version).  
+      - Install Git (`apt install git`).  
+      - Install Python 3.8+ (`apt install python3 python3-pip`).  
+      - Install MkDocs and dependencies:  
+        ```bash
+        python3 -m pip install --upgrade pip
+        pip3 install mkdocs mkdocs-material mkdocstrings pymdown-extensions
+        # Optional:
+        pip3 install mike
+        ```  
+      - Optional: Install Ninja (`apt install ninja-build`), clang-tidy v18+ (via LLVM apt repo or prebuilt binaries).  
+      - Optional: Install Bazel (download from bazel.build) ensuring version matches/exceeds `.bazelversion`.  
+   2. **Clone the fmt repository:**  
+      ```bash
+      git clone --recursive https://github.com/fmtlib/fmt.git
+      cd fmt
+      ```  
+   3. **Review `support/` directory contents:**  
+      - Read all relevant READMEs (`support/README`, `support/bazel/README.md`).  
+      - Understand `support/mkdocs.yml` and `support/mkdocs` script usage.  
+      - Integrate `support/` CMake modules as per instructions.  
+   4. **Configure build (using CMake):**  
+      ```bash
+      mkdir build && cd build
+      cmake .. -DFMT_HEADER_ONLY=ON  # or OFF as preferred
+      ```  
+      - Verify no errors and that `support/` modules are included.  
+   5. **Build library:**  
+      ```bash
+      cmake --build .
+      ```  
+      - Use Ninja if installed: `cmake --build . -- -j$(nproc)` for parallelism.  
+   6. **Run unit tests:**  
+      ```bash
+      ctest
+      ```  
+      - Confirm all tests pass.  
+   7. **(Optional) Build and run benchmarks:**  
+      ```bash
+      git clone --recursive https://github.com/fmtlib/format-benchmark.git
+      cd format-benchmark
+      cmake .
+      make speed-test bloat-test
+      ```  
+      - Review benchmark output for expected performance.  
+   8. **(Optional) Bazel build:**  
+      - Copy `support/bazel/BUILD.bazel`, `MODULE.bazel`, `WORKSPACE.bazel`, `.bazelversion` into project root.  
+      - Verify Bazel version: `bazel --version`.  
+      - Build with Bazel: `bazel build //...`  
+      - Optionally, add `bazel_dep(name = "fmt", version = "11.1.4")` to your own `MODULE.bazel`.  
+      - Verify Bazel build success and tests.  
+   9. **(Optional) Documentation site build and deployment:**  
+      - Ensure Python packages installed as above.  
+      - Preview docs locally:  
+        ```bash
+        ./support/mkdocs serve
+        ```  
+      - Build static site:  
+        ```bash
+        ./support/mkdocs build
+        ```  
+      - Deploy documentation versions (requires git credentials and internet):  
+        ```bash
+        ./support/mkdocs deploy <version>
+        ```  
+      - Confirm navigation, API docs generation, syntax highlighting, and external resource loading.  
+   10. **Integrate fmt into your own projects:**  
+       - For CMake:  
+         * Use `find_package(fmt REQUIRED)` or `add_subdirectory(path/to/fmt)`.  
+         * Link with `fmt::fmt` or `fmt::fmt-header-only`.  
+         * Use `support/` CMake modules if applicable.  
+       - For Bazel:  
+         * Use `bazel_dep` or `local_path_override`.  
+         * Reference fmt targets in BUILD files.  
+   11. **Write validation test cases in your project:**  
+       - Cover formatting, file output, color output, compile-time checks.  
+       - Verify build system integration and module script usage.  
+   12. **(Optional) clang-tidy integration:**  
+       - Configure `.clang-tidy` with `modernize-use-std-print` check for modernization.  
+   13. **Document environment setup in your project README:**  
+       - Include compiler versions, build tools, Python dependencies, Bazel integration notes, and documentation procedures.  
+   14. **Set up CI workflows (GitHub Actions or similar):**  
+       - Include jobs for build, test, lint (clang-tidy), documentation build and deploy (using `support/mkdocs`).  
+       - Support Linux amd64 primarily; include macOS and Windows if needed.  
+       - Include Bazel jobs optionally.  
+   15. **(Optional) Integrate OSS-Fuzz or other fuzzers:**  
+       - For continuous fuzz testing of format strings and API usage.  
+   16. **Terminal environment:**  
+       - Confirm terminal emulator supports Unicode and ANSI color codes to fully exploit fmt’s color printing.  
+   17. **Maintenance:**  
+       - Monitor fmt project updates, security advisories, and new releases.  
+       - Update installed tools and dependencies as needed.
+
+---
+
+**Additional Adjustments / Notes:**
+
+- Since no GPU is present, no CUDA or GPU-accelerated build instructions or images are included.  
+- Storage space (~47GB free) is sufficient for fmt builds, benchmarks, and documentation; however, avoid unnecessary large dependencies or build artifacts to conserve space. Use multi-stage Docker builds or clean build caches if building inside containers.  
+- Docker base images should be amd64 Linux variants (ubuntu, debian, alpine). Alpine is smaller but may require additional packages for build tools and Python compatibility.  
+- Use parallel build options (`-j$(nproc)`) to leverage high CPU core counts for faster compilation.  
+- Paths in the plan assume working directory `/home/cc/EnvGym/data-gpt-4.1mini/fmtlib_fmt`; verify relative paths especially for `support/` scripts and modules. Adjust accordingly in scripts or environment variables if directory structure changes.  
+- Ensure Python 3 executable is accessible as `python3` in PATH; if not, adjust `support/mkdocs` shebang or invocation accordingly.
+
+---
+
+**Verification Methods (Adjusted):**  
+- Successful compilation and linking on x86_64 Linux with GCC/Clang.  
+- Passing all unit tests without errors or warnings.  
+- Benchmarks run and output performance metrics.  
+- `support/` CMake modules and scripts are integrated and functional during configuration and build.  
+- Bazel builds succeed with version compatibility and dependency management.  
+- Documentation site builds, serves, and deploys correctly via `support/mkdocs` script.  
+- Git operations in deployment work properly with network and credentials.  
+- clang-tidy modernization checks run if configured.  
+- Color and Unicode output verified in standard Linux terminals.  
+- CI pipelines pass on amd64 Linux; optional macOS/Windows.  
+- No critical errors or security issues in fuzz testing if enabled.
+
+---
+
+This adjusted plan ensures fully compatible, efficient, and maintainable environment setup and usage of the {fmt} library on your amd64 Linux environment without GPU, leveraging modern C++ standards, tooling, and documentation workflows.

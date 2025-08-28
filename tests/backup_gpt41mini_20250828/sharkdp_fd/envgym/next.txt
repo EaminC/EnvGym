@@ -1,0 +1,21 @@
+current progress  
+- Base Ubuntu 22.04 image with essential build tools and utilities installed (make, git, curl, fd-find, fzf, ripgrep, tree, parallel, rofi)  
+- Rust 1.77.2 installed via rustup with rustfmt component added  
+- Symlink created for fd binary to support Debian/Ubuntu/Fedora naming (`fdfind` → `fd`) in `/root/.local/bin`  
+- Working directory set to `/fd` with source code copied in  
+- Empty rustfmt.toml file created in root  
+- Cargo install run to build and install fd from source path  
+- Ignore files `.fdignore` and config directory `/root/.config/fd/ignore` created as empty files  
+- Environment variables and aliases for fzf and fd configured in `/root/.bashrc`  
+- LS_COLORS setup via dircolors and appended to bashrc  
+- Dockerfile shell set to bash and default CMD to bash  
+
+next step  
+- Add a step to run `cargo fmt -- --check` or `rustfmt --check` to verify code formatting adherence before installation  
+- Add `cargo test` execution after build to verify code integrity and run all test cases on x86_64 Linux environment  
+- Ensure `/root/.local/bin` is added to PATH in shell config explicitly (currently only appended in ENV, verify functional)  
+- Optionally create `.fdignore` and `/root/.config/fd/ignore` with meaningful ignore patterns instead of empty files  
+- Document in the Dockerfile comments the omission of cross-compilation setup and ARM-specific configurations as per plan  
+- Confirm that aliases set in `.bashrc` will be available in non-interactive shells or add equivalent ENV variables if needed  
+- Optionally add verification commands (e.g., `fd --version`, pipe to fzf) as test RUN steps to validate integration  
+- Clean up any unnecessary files after build to minimize image size if desired

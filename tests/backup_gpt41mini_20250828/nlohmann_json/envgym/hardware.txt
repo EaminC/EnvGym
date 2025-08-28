@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/nlohmann_json; typical user directory, no special volume considerations noted  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: standard x86_64 Linux base images (e.g., ubuntu, debian, alpine) compatible; no ARM or other architecture needed  
+- GPU: No NVIDIA GPU detected; no CUDA or GPU-specific base images required  
+- Instruction Notes: Use standard Linux filesystem paths; no GPU drivers or toolkit installation needed; large memory and CPU available but no special Dockerfile adjustments required; ensure COPY paths align with /home/cc/EnvGym/data-gpt-4.1mini/nlohmann_json context  
+- Docker Version: 28.3.2; supports BuildKit and Buildx; GPU build features present but not applicable due to lack of NVIDIA GPU

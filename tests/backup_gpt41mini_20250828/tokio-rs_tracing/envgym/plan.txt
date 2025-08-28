@@ -1,0 +1,126 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context:**  
+The environment is a Rust-based project located at `/home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_tracing`.  
+Hardware is x86_64 architecture (amd64), Linux OS compatible, no GPU, Docker version 28.3.2 with BuildKit support.  
+Storage driver overlay2 compatible. Large CPU and memory resources available.  
+No CUDA/GPU specific instructions needed. Permissions must be consistent with cgroupns and apparmor.  
+
+---
+
+### 1. DOWNLOADS NEEDED
+
+- **Rust programming language:**  
+  - Install Rust >= 1.65 (preferably latest stable) via https://rustup.rs/  
+  - Rust official binaries fully support x86_64 Linux; no architecture issues.  
+  - Use official Rust x86_64 Linux installer or Docker Rust base images (e.g., `rust:latest` or `rust:1.65` official images) for consistency.  
+- **Cargo:** Included with Rust installation.  
+- **Git:** Ensure installed (`git`) for cloning repositories.  
+- **Optional but recommended:**  
+  - Tokio runtime crate (for async examples) – no architecture issues.  
+  - Code editor/IDE with Rust support (e.g., VS Code with Rust Analyzer) – ensure installed on host if developing interactively.  
+  - Linux journald system (systemd-journald) – present by default on most Linux distributions; confirm running on target system for journald integration examples.  
+  - Inferno tool (`cargo install inferno`) for flamegraph visualization – x86_64 Linux compatible.  
+- **Crates:** As listed, all compatible with Rust 1.65+, no architecture-specific restrictions.  
+- **Note:** No GPU-specific crates or features needed.  
+- **Storage driver:** Use overlay2-compatible instructions if building container images.  
+- **Permissions:** Ensure Docker container user permissions align with cgroupns and apparmor profiles to avoid permission denied errors.
+
+---
+
+### 2. FILES TO CREATE
+
+- **`Cargo.toml`** (root project directory):  
+  - Use specified dependency versions or newer compatible with Rust 1.65+.  
+  - Confirm all crates compile on x86_64 Linux.  
+  - Add dependencies exactly as planned; no changes needed for architecture.  
+- **Source files (`src/main.rs` or `src/lib.rs`):**  
+  - No path changes needed; use relative paths as usual.  
+  - Include all example usage code as described.  
+- **Optional configuration files:**  
+  - `.cargo/config.toml` if needed for compiler options, targets, or build profiles (for example, setting `target = "x86_64-unknown-linux-gnu"` explicitly if cross-compilation is considered).  
+  - `.rustfmt.toml`, `.gitignore` as planned.  
+- **Environment variables:**  
+  - Use standard Linux shell export commands (`export RUST_LOG=info`) since the base OS is Linux.  
+- **Examples directory and README files:**  
+  - Maintain directory structure and naming as planned; no changes for architecture or OS.
+
+---
+
+### 3. NECESSARY TEST CASES
+
+- No changes needed; all tests described are compatible with x86_64 Linux.  
+- Ensure tests that rely on journald integration run only if systemd-journald is available and running.  
+- For cross-thread tracing and concurrency tests, large CPU and memory resources support parallel execution without constraints.  
+- Testing in Docker containers should consider mounting `/run/systemd/journal` or similar if journald tests are to run inside containers.  
+- No GPU-specific or CUDA-related tests; these are not applicable.
+
+---
+
+### 4. COMPLETE TODO LIST (ADJUSTED DETAILS)
+
+**Step 1: Install Rust toolchain**  
+- Use official Rust installer or Docker Rust images for x86_64 Linux.  
+- Verify with `rustc --version` and `cargo --version`.  
+
+**Step 2: Clone repository**  
+- Use Git normally. No path or network changes needed.  
+
+**Step 3: Create and configure `Cargo.toml`**  
+- Use versions as specified or latest stable; all compatible with Rust 1.65+ on x86_64 Linux.  
+- No cross-compilation or alternative architecture targets needed.  
+
+**Step 4: Write example application code and add example files**  
+- Use Linux-native features (journald integration) only if systemd-journald is running.  
+- No changes to code paths or dependencies due to architecture.  
+- Ensure file permissions in the working directory allow build and execution operations.  
+
+**Step 5: Install and configure Inferno tool**  
+- Run `cargo install inferno` on x86_64 Linux host or container.  
+- Document usage for generating flamegraphs.  
+
+**Step 6: Configure environment variables**  
+- Use Linux shell syntax (`export RUST_LOG=info`).  
+
+**Step 7: Implement and run test cases**  
+- Run tests natively on x86_64 Linux.  
+- For journald tests inside Docker, ensure journald socket is accessible or skip those tests if not.  
+- Use parallel builds/tests leveraging large CPU and RAM.  
+
+**Step 8: Build and run tests**  
+- Use `cargo build` and `cargo test`.  
+- Run examples individually to confirm behavior.  
+
+**Step 9: Optional: Configure additional tracing layers and features**  
+- Add ecosystem crates as needed; no architecture constraints.  
+
+**Step 10: Setup CI and build status badges (optional)**  
+- Configure CI to run on x86_64 Linux runners (common default in GitHub Actions and other CI).  
+
+**Step 11: Documentation and community engagement**  
+- Document Linux-specific instructions for journald integration clearly.  
+- Note that GPU instructions/examples are not applicable.  
+
+---
+
+### ADDITIONAL NOTES BASED ON HARDWARE
+
+- **CPU architecture compatibility:** Confirmed x86_64 Linux compatible; no ARM or other arch considerations needed.  
+- **Memory and CPU:** Large resources allow parallel build and test steps; configure `cargo` to use parallel jobs (e.g., `cargo build -j` with high concurrency).  
+- **Storage:** Overlay2 storage driver supported; ensure Docker build instructions use overlay2 compatible syntax (e.g., no devicemapper-specific commands).  
+- **Operating System:** Linux; journald integration fully supported. For users on other OS (Windows/macOS), journald examples should be conditionally compiled or documented as Linux-only.  
+- **No GPU:** Remove any CUDA or GPU-related instructions or dependencies from documentation and CI.  
+- **Docker:** Use official Rust and Linux images for amd64 (`rust:latest`, `ubuntu:latest`) for containerized builds/tests.  
+- **Paths:** Use Linux path conventions as already specified; no Windows path adjustments needed.  
+- **Permissions:** Ensure Docker container runs with user permissions compatible with cgroup namespaces and apparmor; avoid root unless necessary.  
+- **Environment variables:** Use Linux shell syntax; document accordingly.  
+- **Testing journald inside containers:** Either mount journald socket or mock journald layers; document fallback or skipping tests if journald not available.
+
+---
+
+**Summary:**  
+The original plan is fully compatible with the provided hardware environment (x86_64 Linux, no GPU). Minor adjustments include ensuring Linux shell environment variables, using Linux journald only if available, leveraging overlay2-compatible Docker instructions, no GPU/CUDA instructions, and permissions consistent with cgroupns and apparmor. Use official Rust x86_64 Linux binaries or images for installation and builds. Testing and CI should run on x86_64 Linux runners. Paths and directories remain unchanged.
+
+---
+
+**End of Adjusted Environment Setup Plan**

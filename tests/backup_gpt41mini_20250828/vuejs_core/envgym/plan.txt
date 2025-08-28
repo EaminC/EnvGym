@@ -1,0 +1,76 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64 LINUX ENVIRONMENT) ===
+
+1. DOWNLOADS NEEDED:  
+   - Node.js (version 22.14.0 or later recommended)  
+     - Use official Node.js Linux x86_64 (amd64) binaries or install via NodeSource or nvm for Linux x86_64 architecture  
+     - Verify installed Node.js version with `node -v` to ensure it matches 22.14.0+  
+   - pnpm (version 10.15.0)  
+     - Install globally using npm or standalone script compatible with Linux x86_64  
+     - Verify with `pnpm -v`  
+   - Git (latest stable version)  
+     - Install via package manager (e.g., `apt-get install git`) or official binary for Linux x86_64  
+     - Verify with `git --version` and configure user credentials if not set  
+   - Visual Studio Code (recommended)  
+     - Use official VS Code Linux x86_64 binaries or install via distro package manager if available  
+   - Optional tools:  
+     - Vue CLI (`@vue/cli`) installed globally or locally via pnpm  
+     - Browsers (Chrome, Firefox, Edge for Linux) for testing  
+     - Docker (already present, version 28.3.2, supports BuildKit and buildx) for containerization needs; no GPU/CUDA support required  
+   - Development dependencies installed via pnpm remain the same; all packages targeted for Node.js 22 and Linux x86_64 architecture are compatible and available  
+   - Ensure all native binaries or platform-specific dependencies (e.g., `@swc/core`, `esbuild`) are installed with Linux x86_64 compatible versions; no ARM or other architecture variants needed  
+   - No adjustments needed for GPU tooling or CUDA dependencies as no NVIDIA GPU detected  
+
+2. FILES TO CREATE:  
+   - All specified files (`package.json`, `.gitignore`, `README.md`, ESLint config, Rollup configs, tsconfig files, private package configs, Vite configs, etc.) remain unchanged in content and paths  
+   - Paths and directories referenced (e.g., `/home/cc/EnvGym/data-gpt-4.1mini/vuejs_core/` context) are relative to project root; ensure all scripts and tooling use relative paths consistent with this working directory on Linux  
+   - No Windows or macOS path adjustments required; all paths use POSIX-style `/` separators consistent with Linux  
+   - Vite, Rollup, Vitest configurations, and plugins are platform-independent and require no changes for x86_64 Linux  
+   - ESLint, Prettier, and other tooling configs remain the same  
+   - Docker-related instructions (if containerized environment desired) should specify base images compatible with Linux x86_64 architecture, e.g., `node:22-bullseye` or `ubuntu:22.04` amd64 tags  
+   - `.gitignore` entries and `.prettierignore` remain as specified, no changes needed  
+   - No GPU or CUDA environment variables or build flags included or required  
+   - Netlify and Vercel deployment configurations remain unchanged; environment variables and Node.js versions set to 22 are compatible  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All test cases remain applicable and compatible with Linux x86_64 environment  
+   - Vitest tests, Rollup build tests, ESLint rules, and declaration bundling tests run natively on Linux x86_64 without modification  
+   - No hardware-specific tests required; tests related to platform-specific binaries (e.g., `@swc/core`, `esbuild`) will use Linux x86_64 binaries automatically  
+   - Continuous integration workflows (if set up) should run on Linux x86_64 runners or containers to match local dev environment  
+   - No adjustments needed for test environment variables or coverage tools  
+   - Verify that file system case sensitivity on Linux is respected by tooling and tests (Linux is case-sensitive; the plan already enforces case-insensitive normalization for `"moduleResolution": "bundler"` to `"bundler"` in tsconfig, which is compatible)  
+
+4. COMPLETE TODO LIST (Adjusted Notes):  
+   1. Install Node.js 22.14.0 for Linux x86_64:  
+      - Use official Linux x86_64 binaries or package manager  
+      - Confirm with `node -v`  
+   2. Install pnpm 10.15.0 globally on Linux x86_64  
+   3. Install Git on Linux x86_64, configure user.name and user.email  
+   4. Clone project repository under `/home/cc/EnvGym/data-gpt-4.1mini/vuejs_core`  
+   5. Create/update `pnpm-workspace.yaml`, `netlify.toml`, license, changelog, `.gitignore`, ESLint config, Prettier configs, Rollup configs, tsconfig files, private packages configs, and README files as per plan without path or content modifications  
+   6. Ensure all native dependencies like `@swc/core` and `esbuild` resolve and download Linux x86_64 binaries (pnpm and npm handle this automatically)  
+   7. Use Docker base images for builds and containerization that are Linux x86_64 compatible (e.g., official `node:22` amd64 tags)  
+   8. Run `pnpm install` from project root to install all dependencies and workspace packages; confirm no errors related to architecture or platform  
+   9. Verify Vite dev servers (`sfc-playground` and `vite-debug`), Rollup builds, Vitest tests, ESLint linting, Prettier formatting, declaration bundling, and all scripts execute successfully on Linux x86_64 environment  
+   10. Confirm no GPU/CUDA related environment variables or build steps are included or required  
+   11. Document usage instructions referencing Linux paths and shell commands (bash/zsh)  
+   12. Commit all configuration files, source files, and documentation to Git repository under Linux-compatible UTF-8 encoding  
+   13. Set up CI workflows (e.g., GitHub Actions) with Linux x86_64 runners or Linux docker containers to match local environment  
+   14. Leverage multi-core CPU for build parallelism; no changes needed to scripts, but consider `--max-workers` flags in test/build tools if desired for performance tuning  
+   15. Regularly update dependencies and verify compatibility with Linux x86_64 platform  
+   16. Monitor peer dependencies and workspace package resolutions to avoid conflicts on Linux platform  
+   17. Use relative paths in all tooling and scripts aligned with `/home/cc/EnvGym/data-gpt-4.1mini/vuejs_core` working directory  
+   18. No platform-specific modifications needed for `.env` or environment variable usage  
+   19. Confirm that `.gitignore`, `.prettierignore`, ESLint ignore patterns exclude intended Linux filesystem paths and artifacts  
+   20. No changes required for funding metadata, security files, or licensing due to platform  
+
+# Summary of Adjustments:  
+- Confirm all native binaries and dependencies resolve Linux x86_64 versions (automatic via package managers)  
+- Use Linux-compatible Node.js and pnpm installation methods  
+- Use Linux x86_64 compatible Docker base images if containerization is used  
+- Paths and environment variables remain POSIX-style, consistent with Linux filesystem  
+- No GPU or CUDA related dependencies or build steps included or needed  
+- Verify all tooling and build/test scripts run correctly under Linux x86_64 shell environment  
+- No changes needed in configuration files content or structure due to hardware environment  
+- Emphasize multi-core CPU usage for build/test parallelism where applicable  
+
+# End of adjusted environment setup plan for x86_64 Linux environment at `/home/cc/EnvGym/data-gpt-4.1mini/vuejs_core`.

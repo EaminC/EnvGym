@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250827_031701 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756264620
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+42 |
+43 |     # Append channel config separately with debugging
+44 | >>> RUN bash -c "source /opt/micromamba/etc/profile.d/micromamba.sh && micromamba config append channels conda-forge && micromamba config list"
+45 |
+46 |     # Create environment with debugging and explicit bash shell
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/bash -c bash -c \"source /opt/micromamba/etc/profile.d/micromamba.sh && micromamba config append channels conda-forge && micromamba config list\"" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

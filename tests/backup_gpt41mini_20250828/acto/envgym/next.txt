@@ -1,0 +1,20 @@
+current progress  
+- Dockerfile is based on ubuntu:22.04 amd64 image and installs all required system dependencies and tools including python3.12 and python3.10 from deadsnakes PPA.  
+- Go 1.20.7 amd64 binary installed and GOPATH set, Kind v0.20.0 and gocovmerge installed via go install.  
+- Latest stable kubectl and Helm amd64 binaries installed.  
+- Python environment uses python3.12 with pip-tools, ansible-core 2.17.5, pre-commit, black, isort, pylint, mypy installed.  
+- Ansible collections ansible.posix and community.general installed.  
+- Repository files copied into container at /home/cc/EnvGym/data-gpt-4.1mini/acto.  
+- Python dependencies installed from pinned requirements files using python3.12 pip.  
+- Pre-commit hooks installed, Acto libraries built via make lib.  
+- User cc created with sudo privileges, switched to user cc and working directory set.  
+- PATH environment variables set appropriately for Go and Python tools.  
+
+next step  
+- Verify that volume mounts and file paths inside the container align with host project directory and Linux amd64 paths as per plan.  
+- Confirm that Dockerfile uses explicit `--platform=linux/amd64` in any docker run commands or scripts if applicable.  
+- Add sysctl commands for inotify limits if needed during container runtime or document for host setup outside container.  
+- Ensure coverage tooling setup steps (main_test.go, coverage flags, shell scripts) are integrated and tested within the container environment.  
+- Validate that operator deployment manifests and Kind cluster YAMLs reference correct volume mounts and paths consistent with container filesystem and host project root.  
+- Test the container fully by running Acto learn and test phases inside the container to confirm environment correctness.  
+- Optionally, optimize Dockerfile layers and caching strategy if build time or image size improvements are desired.

@@ -1,0 +1,13 @@
+current progress  
+- The Dockerfile uses the amd64 golang:1.20 base image with explicit platform specification.  
+- Necessary system dependencies are installed.  
+- Working directory is correctly set to the specified path.  
+- go.mod and go.sum are copied and dependencies downloaded before copying the rest of the source.  
+- The build fails during the RUN command executing Go version check, directory listing, and Go module commands; the error occurs likely due to issues in module verification or source code presence.
+
+next step  
+- Investigate the cause of failure in the RUN go mod verify and go mod tidy step; verify the presence and correctness of the source code in the working directory after COPY.  
+- Consider adding debugging steps such as inspecting file contents or logs after copying files to ensure all required source files are present.  
+- Confirm that the go.mod and go.sum files are consistent with the copied source code.  
+- Ensure no architecture or dependency mismatches remain.  
+- Once the cause is identified and fixed, re-run the build and verify completion.

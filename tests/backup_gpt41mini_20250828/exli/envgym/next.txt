@@ -1,0 +1,19 @@
+current progress  
+- Docker image builds and runs successfully with Ubuntu 22.04 base (no explicit platform flag yet)  
+- Essential packages including Java 8, Maven, Git, Firefox, GeckoDriver installed correctly  
+- Miniforge (Conda) installed at /opt/conda, conda environment setup script executed, environment created  
+- User itdocker added with sudo privileges, working directory and ownership set properly  
+- Source code copied into container with correct ownership  
+- Conda environment activation and pip install of exli package performed inside container  
+- Directories for logs, results, and tests created with correct permissions  
+- Dockerfile commands align mostly with plan except missing explicit `--platform=linux/amd64` in FROM and build command  
+
+next step  
+- Modify Dockerfile to specify platform explicitly in the FROM line as `FROM --platform=linux/amd64 ubuntu:22.04` to ensure architecture consistency  
+- Update Docker build command to include `--platform=linux/amd64` flag  
+- Confirm that Conda environment activation uses the correct environment name consistently (`exli`) in all RUN commands (currently base is activated before prepare-conda-env.sh)  
+- Ensure `prepare-conda-env.sh` installs all dependencies from setup.py including extras if needed  
+- Validate network access during build for cloning repos if applicable (currently code copied instead)  
+- Test full environment activation and package imports in final image shell to confirm no errors  
+- Verify that volume mappings and directory permissions work correctly during container runtime  
+- Add any missing steps from plan such as cloning `inlinetest` repo if required during build

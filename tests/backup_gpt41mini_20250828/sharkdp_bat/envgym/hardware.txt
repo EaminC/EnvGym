@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/sharkdp_bat; project likely local, no special volume or context constraints
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, alpine) compatible; no ARM or other arch needed
+- GPU: No NVIDIA GPU detected; no CUDA base image required or GPU-specific image
+- Instruction Notes: Use standard Linux commands; no GPU drivers or CUDA deps; large available memory and CPU cores allow multi-stage builds and parallel builds without special adjustments
+- Docker Version: 28.3.2; supports BuildKit and --gpus flag but GPU build not applicable here

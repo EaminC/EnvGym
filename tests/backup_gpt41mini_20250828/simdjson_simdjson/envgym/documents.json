@@ -1,0 +1,17 @@
+[
+  "README.md",
+  "p2996/Dockerfile",
+  "p2996/README.md",
+  "p2996/remove_docker.sh",
+  "p2996/run_docker.sh",
+  "scripts/javascript/package.json",
+  "scripts/javascript/package-lock.json",
+  "singleheader/README.md",
+  "benchmark/static_reflect/serde-benchmark/Cargo.toml",
+  "benchmark/static_reflect/serde-benchmark/Cargo.lock",
+  ".appveyor.yml",
+  ".cirrus.yml",
+  ".drone.yml",
+  ".travis.yml",
+  "Dockerfile"
+]

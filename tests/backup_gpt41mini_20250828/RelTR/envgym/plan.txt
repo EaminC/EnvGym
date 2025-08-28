@@ -1,0 +1,132 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context:**  
+- Hardware: x86_64 Linux (amd64), no NVIDIA GPU detected  
+- No CUDA GPU support available, so CUDA Toolkit 10.1 and GPU drivers are NOT applicable  
+- Working directory: `/home/cc/EnvGym/data-gpt-4.1mini/RelTR` (user home subfolder)  
+- Large memory available, no storage or resource constraints noted  
+- Docker version supports BuildKit, but GPU build features not applicable  
+- Use standard Linux base images (Ubuntu/Debian) compatible with amd64 architecture  
+
+---
+
+### 1. DOWNLOADS NEEDED (adjusted)
+
+- **Miniconda/Anaconda** for Python environment management (Python 3.6 required) — same  
+- **Git** — same  
+- **CUDA Toolkit 10.1 and NVIDIA GPU drivers:**  
+  - **REMOVE** from setup since no NVIDIA GPU is detected and CUDA is not applicable  
+  - Instead, use CPU-only PyTorch installation  
+- **RelTR pretrained models:** same  
+- **Datasets:** same  
+- **Python packages and build tools:** same  
+- **Note:** Skip GPU driver and CUDA Toolkit installation. Use CPU-only compatible PyTorch version.
+
+---
+
+### 2. FILES TO CREATE (unchanged except notes)
+
+- All files and folder structures remain unchanged  
+- Note: No CUDA or GPU-specific compiled binaries needed, but **still build** cython extensions (`lib/fpn`) as required for CPU operations  
+- Paths remain as per repository structure under the working directory `/home/cc/EnvGym/data-gpt-4.1mini/RelTR`  
+- Ensure all relative paths in config and scripts reflect this working directory if any absolute paths are hardcoded (verify and adjust if needed)  
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE (adjusted)
+
+- **GPU availability test:**  
+  - Expect `torch.cuda.is_available()` to return **False** (no GPU) — this is normal  
+- **Inference, training, evaluation tests:**  
+  - Run on CPU mode; expect slower performance but functional correctness  
+  - Adjust batch sizes or processing parameters if needed to accommodate CPU speed  
+- **Compilation and environment dependency tests:** same, ensure cython extensions build and import correctly for CPU use  
+- **Dataset integrity and data processing tests:** unchanged  
+- **Build verification test:** unchanged  
+
+---
+
+### 4. COMPLETE TODO LIST (adjusted)
+
+**Step 1: Install Miniconda or Anaconda** (unchanged)  
+- Install Miniconda/Anaconda with Python 3.6 support  
+- Verify `conda` command availability  
+
+**Step 2: Clone RelTR repository**  
+- `git clone https://github.com/yrcong/RelTR.git`  
+- `cd RelTR`  
+
+**Step 3: Create and activate conda environment**  
+- Run: `conda create -n reltr python=3.6 -y`  
+- Run: `conda activate reltr`  
+
+**Step 4: Install PyTorch and dependencies**  
+- **Modify PyTorch installation to CPU-only**:  
+  - Run: `conda install pytorch==1.6.0 torchvision==0.7.0 cpuonly -c pytorch -y`  
+  - (Do NOT install cudatoolkit 10.1 or CUDA-dependent packages)  
+- Install other packages:  
+  - `conda install matplotlib scipy numpy cython -y`  
+- Install pycocotools:  
+  - `pip install -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'`  
+
+**Step 5: Download pretrained models** (unchanged)  
+
+**Step 6: Prepare Visual Genome dataset** (unchanged)  
+
+**Step 7: Prepare Open Images V6 dataset** (unchanged)  
+
+**Step 8: Compile IoU computation code and cython extension**  
+- `cd lib/fpn`  
+- Run: `sh make.sh` (build native code for IoU computation — CPU version)  
+- Build cython extension:  
+  - Run: `python setup.py build_ext --inplace`  
+  - Ensure no errors during compilation  
+- `cd ../../`  
+
+**Step 9: Verify environment setup**  
+- Run Python imports:  
+  ```python  
+  import torch  
+  import matplotlib  
+  import scipy  
+  import numpy  
+  import cython  
+  ```  
+- Check PyTorch version and CUDA availability:  
+  ```python  
+  import torch  
+  print(torch.__version__)  # expect 1.6.0  
+  print(torch.cuda.is_available())  # expect False (no GPU)  
+  ```  
+- Test import of compiled cython extension:  
+  ```python  
+  import bbox  # or as per compiled module  
+  ```  
+- Run inference test on CPU:  
+  ```bash  
+  python inference.py --img_path demo/vg1.png --resume ckpt/checkpoint0149.pth  
+  ```  
+- Confirm output correctness (slower, no GPU)  
+
+**Step 10: (Optional) Run training and evaluation tests on CPU**  
+- Use reduced batch sizes to accommodate CPU performance  
+- Confirm no errors and functional correctness  
+
+**Step 11: Document issues; seek support if needed**  
+
+---
+
+### Additional Notes and Recommendations
+
+- **CPU-only PyTorch**: Using `cpuonly` package ensures no CUDA dependencies installed, avoiding runtime errors on GPU-less machines.  
+- **Performance**: Without GPU, expect slower training and inference times; adjust batch sizes and epochs accordingly.  
+- **Compilation**: Compilation scripts (`sh make.sh`, `python setup.py build_ext`) target CPU native code and cython extensions; ensure build tools (gcc, g++, python-dev headers) are installed on OS.  
+- **Operating system**: Use Ubuntu/Debian base images or native OS matching x86_64 linux architecture; verify all build tools and dependencies are installed (`build-essential`, `python3-dev`, etc.).  
+- **Paths**: Working directory is `/home/cc/EnvGym/data-gpt-4.1mini/RelTR` — ensure any hardcoded absolute paths in scripts or configs are updated accordingly if necessary.  
+- **Docker**: If containerizing, use an amd64 CPU base image (Ubuntu 20.04 or similar), install necessary build tools and dependencies, skip CUDA drivers/toolkit.  
+- **No GPU-specific instructions or configurations needed**; remove all CUDA environment variables and GPU driver install steps.  
+- **Ensure environment isolation**: Keep the conda environment dedicated to RelTR to avoid dependency conflicts.  
+
+---
+
+This adjusted plan ensures compatibility and smooth operation on the given hardware environment, which is a CPU-only x86_64 Linux system without NVIDIA GPU or CUDA support.

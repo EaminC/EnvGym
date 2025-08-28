@@ -1,0 +1,17 @@
+current progress  
+- Base Debian bullseye-slim image used with essential packages installed including gcc, pkg-config, libpcre2-dev, musl-tools, git, bash, and build-essential.  
+- Non-root user created and set as working user.  
+- Rust toolchain 1.88.0 installed via rustup with MUSL target added for static builds.  
+- Ripgrep repository cloned inside user home directory.  
+- Ripgrep built from source using default features (no PCRE2).  
+- Ripgrep binary version verified successfully.  
+- Docker container set up to run with bash shell by default.  
+
+next step  
+- Modify Dockerfile to optionally build ripgrep with PCRE2 feature enabled by adding a build step with `cargo build --release --features 'pcre2'`.  
+- Add conditional logic or separate build stages to support static MUSL builds using `cargo build --release --target x86_64-unknown-linux-musl`.  
+- Optionally add steps to create or copy shell completion scripts into standard Linux shell completion directories.  
+- (Optional) Add ripgrep configuration file creation or copy commands if desired.  
+- Include a step to run the full test suite `cargo test --all` to verify the build integrity and PCRE2 feature functionality.  
+- Remove any Windows-specific build steps if present (already confirmed skipped).  
+- Optimize Docker layers and cache usage for faster rebuilds.

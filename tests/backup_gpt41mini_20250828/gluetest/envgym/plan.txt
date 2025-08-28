@@ -1,0 +1,144 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+Based on the provided hardware information (x86_64 architecture, Linux platform, no GPU, ample CPU and memory resources), the original plan is mostly compatible. Below are adjustments and confirmations to ensure smooth setup and operation under these conditions.
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - **SDKMAN!** for managing Java versions and GraalVM installation  
+     - Confirmed compatible with Linux x86_64.  
+     - Install from https://sdkman.io/install as planned.  
+   - **GraalVM SDK with Java 17 (version 17.0.7-graal)** via SDKMAN!  
+     - Confirmed x86_64 GraalVM packages available and compatible.  
+     - Use `sdk install java 17.0.7-graal` as planned.  
+   - **GraalVM Python language component (GraalPython)**  
+     - Install via `gu install python` after GraalVM is installed and activated.  
+     - No GPU-related dependencies; compatible with standard Linux environment.  
+   - **Apache Maven**  
+     - Use latest stable version compatible with Linux x86_64.  
+     - Install via package manager or official binaries as planned.  
+   - **Python 3.11.4 (CPython)**  
+     - Confirmed availability on x86_64 Linux.  
+     - Use system package manager or official sources.  
+   - **Python package `pytest`**  
+     - Install via `python -m pip install pytest` within system or virtual environment.  
+   - **Optional Python dependencies**  
+     - Verify after first run; no architecture-specific concerns.  
+
+---
+
+2. FILES TO CREATE:  
+   - Environment configuration script (`setup_env.sh`)  
+     - Use bash script since the environment is Linux x86_64.  
+     - Include SDKMAN!, GraalVM, Python version, pytest installation checks.  
+   - `.mvn/settings.xml`  
+     - Create only if proxy or custom repositories are needed in your network environment.  
+   - `pytest.ini` or equivalent pytest config file  
+     - Configure test discovery for `commons-cli-python` and `commons-csv-python` as planned.  
+   - `.bashrc` or `.zshrc` update  
+     - Add GraalVM `bin` directory and Maven `bin` directories to `PATH`.  
+     - Export `JAVA_HOME` environment variable pointing to GraalVM installation directory.  
+   - Python virtual environment (optional but recommended)  
+     - Create with `python -m venv venv` in project root or relevant folder to isolate dependencies.  
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Java tests: under `commons-cli` and `commons-csv`  
+   - Translated Python tests: under `commons-cli-python` and `commons-csv-python`  
+   - GraalVM glue code tests: under `commons-cli-graal` and `commons-csv-graal`  
+   - Coverage measurement for glue code via `scripts/coverage/cover_local.py`  
+   - Optional additional glue code generation validation after running `scripts/generate_glue.py`  
+
+---
+
+4. COMPLETE TODO LIST:  
+
+   **Step 1: Install SDKMAN!**  
+   - Run: `curl -s "https://get.sdkman.io" | bash`  
+   - Source initialization: `source "$HOME/.sdkman/bin/sdkman-init.sh"` or restart shell  
+   - Verify: `sdk version`  
+   - Troubleshoot network or shell compatibility issues if any (bash, zsh recommended)  
+
+   **Step 2: Install GraalVM Java 17 (17.0.7-graal)**  
+   - Run: `sdk install java 17.0.7-graal`  
+   - Set as default: `sdk use java 17.0.7-graal` or export `JAVA_HOME` accordingly  
+   - Verify: `java -version` outputs GraalVM and Java 17  
+
+   **Step 3: Install GraalPython component**  
+   - Run: `gu install python` (ensure GraalVM is activated and `gu` is in PATH)  
+   - Verify: `graalpython --version`  
+   - Note: No GPU or CUDA dependencies; compatible with Linux x86_64  
+
+   **Step 4: Install Apache Maven**  
+   - Verify: `mvn -v`  
+   - If missing, install latest stable from https://maven.apache.org/install.html for Linux x86_64  
+   - Ensure Maven `bin` directory is in `PATH`  
+   - Verify again: `mvn -v`  
+
+   **Step 5: Install Python 3.11.4**  
+   - Verify: `python3 --version` or `python --version`  
+   - If version mismatch, install via OS package manager or official binaries for Linux x86_64  
+   - Optional: create virtual environment using `python -m venv venv` and activate it  
+
+   **Step 6: Install pytest Python package**  
+   - Run: `python -m pip install pytest` (preferably inside virtual environment)  
+   - Verify: `pytest --version`  
+
+   **Step 7: Run tests**  
+   - Java tests:  
+     - `mvn -f commons-cli/pom.xml test -Drat.skip`  
+     - `mvn -f commons-csv/pom.xml test -Drat.skip`  
+   - Python tests:  
+     - `pytest commons-cli-python`  
+     - `pytest commons-csv-python`  
+   - GraalVM glue code tests:  
+     - `mvn -f commons-cli-graal/pom.xml test -Drat.skip`  
+     - `mvn -f commons-csv-graal/pom.xml test -Drat.skip`  
+   - Verify all tests pass without failures  
+
+   **Step 8: Measure glue code coverage**  
+   - Run: `python scripts/coverage/cover_local.py`  
+   - Check coverage output and confirm no errors  
+
+   **Step 9: Generate glue code automatically**  
+   - Run: `python scripts/generate_glue.py` from root directory  
+   - Confirm new files in `generated/commons-cli` and `generated/commons-csv`  
+   - Optionally replace glue code and re-run glue code tests for validation  
+
+   **Step 10: (Optional) Client scraping tools**  
+   - Review and run `scripts/clients/selenium.py` and `scripts/clients/bash_script_version.sh` if needed  
+   - If using selenium.py, ensure installation of Selenium dependencies and appropriate WebDriver binaries for Linux x86_64 (e.g., ChromeDriver or GeckoDriver)  
+
+   **Step 11: Document and automate environment setup**  
+   - Create a bash script (`setup_env.sh`) automating above steps with error handling and user guidance  
+   - Include environment variable exports for `JAVA_HOME`, `PATH`, Maven, GraalVM, and Python virtual environment activation if used  
+
+   **Step 12: Environment verification**  
+   - Confirm all commands complete without errors  
+   - Confirm test suite passes fully  
+   - Confirm coverage reports are generated and valid  
+   - Confirm environment variables properly set in shell environment  
+   - Test on Linux x86_64 shell(s) as primary target platform (bash or zsh)  
+
+---
+
+5. ADDITIONAL NOTES BASED ON HARDWARE INFO:  
+- **CPU Architecture Compatibility:**  
+  - All tools and dependencies planned support x86_64 architecture natively; no ARM or other architecture adjustments needed.  
+- **Memory and CPU Resources:**  
+  - Ample resources available; consider enabling parallel builds or test runs to reduce total build time (e.g., `mvn -T 1C` for Maven parallel builds).  
+- **Storage Space:**  
+  - No special storage considerations; standard GraalVM, Maven, Python installs expected to fit comfortably.  
+- **Operating System Compatibility:**  
+  - Plan targets Linux x86_64, consistent with working directory and base image expectations.  
+- **Docker Considerations:**  
+  - If containerizing, use base images like `ubuntu:latest` or `debian:latest` for amd64 architecture.  
+  - Avoid GPU or CUDA directives since no NVIDIA GPU detected.  
+- **Paths and Directories:**  
+  - Working directory `/home/cc/EnvGym/data-gpt-4.1mini/gluetest` is consistent with Linux user home conventions.  
+  - Use relative paths in scripts when possible to maintain portability.  
+
+---
+
+This completes the adjusted environment setup plan tailored to your hardware environment (Linux x86_64, no GPU, ample resources). All original steps remain valid with confirmations and minor clarifications to ensure compatibility and optimal execution on your platform.

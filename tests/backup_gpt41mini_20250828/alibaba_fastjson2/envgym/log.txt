@@ -1,0 +1,29 @@
+=== Docker Execution Log - 20250827_140654 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756303603
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+> [ 8/23] RUN wget --retry-connrefused --tries=10 --timeout=60 --user-agent="Mozilla/5.0" "https://github.com/graalvm/graalvm-ce-builds/releases/download/v22.3.4/graalvm-ce-java17-linux-amd64-22.3.4.tar.gz" -O /usr/lib/jvm/graalvm.tar.gz &&     file /usr/lib/jvm/graalvm.tar.gz | grep gzip || (echo "Downloaded file is not gzip archive" && rm /usr/lib/jvm/graalvm.tar.gz && exit 1):
+0.341 --2025-08-27 14:06:54--  https://github.com/graalvm/graalvm-ce-builds/releases/download/v22.3.4/graalvm-ce-java17-linux-amd64-22.3.4.tar.gz
+0.344 Resolving github.com (github.com)... 140.82.113.3
+0.368 Connecting to github.com (github.com)|140.82.113.3|:443... connected.
+0.406 HTTP request sent, awaiting response... 404 Not Found
+0.498 2025-08-27 14:06:54 ERROR 404: Not Found.
+0.498
+0.500 Downloaded file is not gzip archive
+------
+envgym.dockerfile:57
+--------------------
+56 |
+57 | >>> RUN wget --retry-connrefused --tries=10 --timeout=60 --user-agent="Mozilla/5.0" "$GRAALVM_URL" -O /usr/lib/jvm/graalvm.tar.gz && \
+58 | >>>     file /usr/lib/jvm/graalvm.tar.gz | grep gzip || (echo "Downloaded file is not gzip archive" && rm /usr/lib/jvm/graalvm.tar.gz && exit 1)
+59 |
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

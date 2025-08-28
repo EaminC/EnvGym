@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/cli_cli; project under /home/cc/EnvGym/data-gpt-4.1mini
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: x86_64 compatible Linux base images (e.g., ubuntu, debian, alpine for amd64)
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: No GPU drivers required; leverage large memory and multi-core CPU for build optimizations; no specific volume or user namespace adjustments based on cgroup v2 and overlay2 storage driver
+- Docker Version: 28.3.2; supports BuildKit, Buildx, and Docker Compose; GPU build flags (--gpus) not applicable due to lack of NVIDIA GPU

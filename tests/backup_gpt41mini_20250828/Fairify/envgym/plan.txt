@@ -1,0 +1,165 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Note:** This adjusted plan is based on your hardware environment: x86_64 architecture, Linux OS (amd64), no NVIDIA GPU present, project located in `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`, Docker version 28.3.2 with BuildKit support, no GPU acceleration required.
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - Python 3.7 (recommended version for compatibility)  
+     * Use x86_64 Linux-compatible installer or package (e.g., Ubuntu/Debian official repos or python.org Linux binaries)  
+     * No ARM or other architecture versions needed, confirm installation for amd64  
+   - Git (for cloning the repository)  
+     * Linux x86_64 binary or package from official repos  
+   - pip (Python package installer, latest version)  
+   - Virtual environment tool (venv, included with Python 3.7+)  
+   - Bash shell environment (Linux default available)  
+     * No Windows-specific bash environments needed (Git Bash or WSL not required)  
+   - System dependencies for TensorFlow 2.5.0 and aif360 (may require additional system libraries depending on Linux distro)  
+     * Since no NVIDIA GPU is detected, install CPU-only TensorFlow 2.5.0 version; avoid CUDA/cuDNN dependencies  
+     * Confirm `tensorflow==2.5.0` installed corresponds to CPU version to prevent GPU dependency errors  
+   - z3-solver (SMT solver Python bindings)  
+     * Install via pip; no GPU or architecture-specific changes needed  
+   - aif360 library for fairness metrics and preprocessing  
+   - Internet access to download Python packages (required during setup)  
+   - Datasets included in artifact; no additional downloads needed  
+   - Awareness of dataset specifics and directory locations as per original plan (paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`)  
+   - Result directories as described, ensure all writable in your Linux environment  
+   - No adjustments needed for GPU or CUDA; CPU-only environment compatible with all planned software versions  
+
+---
+
+2. FILES TO CREATE:  
+   - Virtual environment folder: `fenv/` (created by `python3 -m venv fenv`) inside project root  
+   - `requirements.txt` including:  
+     * z3-solver  
+     * tensorflow==2.5.0 (CPU-only)  
+     * aif360  
+   - `.gitignore` with specified content to exclude:  
+     ```
+     *.DS_Store
+     .ipynb_checkpoints/
+     __pycache__/
+     ~$*
+     ```  
+   - (Optional) `.env` or shell script for environment variables if needed  
+   - `INSTALL.md` with setup instructions  
+   - Ensure all bash scripts (`fairify.sh`, `fairify-stress.sh`, `fairify-relaxed.sh`, `fairify-targeted.sh`, `fairify-targeted2.sh`) are executable (`chmod +x`)  
+   - Confirm presence of datasets and artifact components in relative paths under `/home/cc/EnvGym/data-gpt-4.1mini/Fairify/data/` as per original plan  
+   - Confirm existence and write permissions of all result directories under relative paths (e.g., `relaxed/AC/res/`, `targeted2/GC/res/`, `src/AC/res-race/`)  
+   - README files in result directories as described, no path changes needed  
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All original test case requirements apply, with no modification needed for CPU-only environment  
+   - Tests involving TensorFlow must run with CPU backend only; ensure tests do not attempt GPU usage  
+   - Bash script executions run in Linux bash environment as default; no Windows-specific adjustments required  
+   - Paths referenced in tests and scripts remain relative or absolute from `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`  
+   - No changes needed for architecture or OS-specific test logic since x86_64 Linux is compatible  
+   - Confirm tests for loading datasets, running verification, and saving CSV outputs work with CPU-only TensorFlow and z3-solver installed in virtual environment  
+   - Repository hygiene tests and `.gitignore` checks remain unchanged  
+
+---
+
+4. COMPLETE TODO LIST (ADJUSTED FOR YOUR HARDWARE & ENVIRONMENT):  
+
+   1. **Install Python 3.7 (Linux x86_64 CPU version)**  
+      - Use official python.org Linux x86_64 binaries or distro package manager (e.g., `sudo apt install python3.7 python3.7-venv python3.7-dev`)  
+      - Verify with `python3.7 --version` and confirm `python3` points to Python 3.7 or adjust aliases as needed  
+   
+   2. **Install Git (Linux x86_64)**  
+      - Use package manager (e.g., `sudo apt install git`)  
+      - Verify with `git --version`  
+   
+   3. **Bash shell environment**  
+      - Native on Linux; verify with `bash --version`  
+      - No Windows-specific steps needed  
+   
+   4. **Clone Fairify repository**  
+      - `git clone https://github.com/sumonbis/Fairify` into `/home/cc/EnvGym/data-gpt-4.1mini/`  
+      - Confirm presence of all files and directories as per original plan  
+      - Confirm `requirements.txt` includes `tensorflow==2.5.0` (CPU), `z3-solver`, and `aif360`  
+      - Confirm `.gitignore` is present and correctly configured  
+      - Confirm datasets and benchmark models exist in `data/` and appropriate folders  
+   
+   5. **Create Python virtual environment**  
+      - Run: `python3.7 -m venv fenv` inside project root  
+      - Activate: `source fenv/bin/activate`  
+      - Confirm prompt change and `which python` points to `fenv/bin/python`  
+   
+   6. **Upgrade pip inside virtual environment**  
+      - Run: `pip install --upgrade pip`  
+      - Verify with `pip --version`  
+   
+   7. **Install required Python packages**  
+      - Run: `pip install -r requirements.txt`  
+      - TensorFlow 2.5.0 installed will be CPU-only version by default on Linux without GPU detected  
+      - If `z3-solver` fails, try precompiled wheels or install system SMT solver dependencies (`libz3-dev`) via package manager  
+      - For `aif360`, ensure all dependencies are installed; install system libraries if errors occur (e.g., `libxml2-dev`, `libxslt1-dev`)  
+   
+   8. **Verify artifact availability and completeness**  
+      - Confirm all datasets present and accessible at relative paths  
+      - Confirm benchmark `.h5` model files present  
+      - Confirm Python source code files executable and not corrupted  
+      - Confirm `.gitignore` present and correct  
+      - Confirm all result directories exist and writable, including new `targeted2/` directories  
+      - Confirm README files present in result directories  
+   
+   9. **Run basic verification and environment tests**  
+      - Run a Python script to load a benchmark model and verify a simple query (CPU-only)  
+      - Run a minimal script to use `z3-solver` SMT functionality  
+      - Run a minimal TensorFlow 2.5.0 CPU script (e.g., tensor addition) to confirm installation and runtime  
+      - Run a minimal `aif360` test (e.g., load sample dataset and compute fairness metric)  
+      - Load each dataset (`adult`, `bank`, `german`) and confirm feature correctness per documentation  
+      - Execute bash scripts for all experiment types (`fairify.sh`, `fairify-stress.sh`, `fairify-relaxed.sh`, `fairify-targeted.sh`, `fairify-targeted2.sh`) with dataset arguments (`AC`, `BM`, `GC`)  
+      - Run race-based and sex-based verification scripts for Adult Census and German Credit as applicable  
+      - Run Bank Marketing verification scripts  
+      - Confirm all produce CSV result files in designated `res/` directories  
+      - Confirm README files in result directories accurately describe outputs  
+   
+   10. **Verify reproducibility and artifact badge claims**  
+       - Confirm GitHub repo and Zenodo DOI accessibility  
+       - Confirm environment and scripts match STATUS.md description for reproducibility  
+       - Document any deviations or errors encountered  
+   
+   11. **Error handling and troubleshooting**  
+       - For Python version issues, use `pyenv` or package manager to enforce Python 3.7  
+       - For missing system dependencies, install via distro package manager (e.g., `apt`)  
+       - For virtual environment activation errors, check shell and permissions  
+       - For TensorFlow errors, confirm CPU-only installation compatible with x86_64 Linux, no GPU dependencies present  
+       - For `aif360` errors, install missing system libraries as needed  
+       - For `z3-solver` installation errors, ensure `libz3-dev` or equivalent installed  
+       - For bash script execution errors, verify executable permissions (`chmod +x`) and bash shell presence  
+       - For permission errors writing CSV files, check ownership and write permissions on `res/` directories  
+       - Confirm `.gitignore` prevents committing unwanted files  
+   
+   12. **Documentation and reproducibility**  
+       - Document installed versions: Python 3.7.x, pip, tensorflow 2.5.0 (CPU), z3-solver, aif360  
+       - Follow `INSTALL.md` instructions closely for consistency  
+       - Maintain `.gitignore` hygiene  
+       - Refer to dataset documentation files in `data/` directories for clarity  
+       - Maintain README files in result folders for output guidance  
+   
+   13. **Prepare for development or experimentation**  
+       - Create or update test scripts to cover CPU-only environment and new dependencies  
+       - Configure IDE/editor to use `fenv` Python interpreter  
+       - Use provided bash scripts for benchmarking and verification as per instructions  
+       - Account for CPU-only environment in experiment run times (may be longer than GPU runs)  
+       - Use included datasets and models for thorough testing  
+       - Ensure `.gitignore` respected by development tools  
+       - Confirm result directories writable and include descriptive README files, including newly added `targeted2` outputs  
+   
+---
+
+**Additional Notes Specific to Your Hardware Setup:**  
+- No NVIDIA GPU detected: skip any CUDA/cuDNN or GPU-specific installations; TensorFlow 2.5.0 CPU-only version is compatible and recommended.  
+- x86_64 Linux base image compatibility confirmed; no ARM or multi-architecture adjustments needed.  
+- Use absolute or relative paths consistently from `/home/cc/EnvGym/data-gpt-4.1mini/Fairify` as your working directory.  
+- Bash shell available natively; no additional shell environment installations required.  
+- Docker usage not detailed in original plan but if used, base images should be Linux amd64 (e.g., `python:3.7-slim`) without GPU support.  
+- Memory and storage considerations: project is large but typical for CPU-based ML experiments; ensure sufficient RAM (>=8GB recommended) and disk space (~several GBs for datasets, models, and results).  
+- Execution times may be longer on CPU-only; plan experiment scheduling accordingly.  
+
+---
+
+This adjusted plan ensures full compatibility and feasibility given your x86_64 Linux CPU-only hardware environment and project location. All original steps remain valid with clarifications to avoid GPU dependencies and Windows-specific instructions.

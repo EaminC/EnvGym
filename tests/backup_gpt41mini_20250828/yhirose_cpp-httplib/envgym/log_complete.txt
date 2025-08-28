@@ -1,0 +1,94 @@
+=== Docker Execution Log - 20250828_080648 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756368398
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.49kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [build 1/5] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#4 DONE 0.0s
+
+#5 [build 2/5] WORKDIR /yhirose_cpp-httplib
+#5 CACHED
+
+#6 [dev 3/5] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     gcc-11 g++-11     cmake     pkg-config     libssl-dev     zlib1g-dev     libbrotli-dev     libzstd-dev     python3 python3-pip     clang-format-14     ca-certificates  && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100  && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100  && pip3 install --no-cache-dir pre-commit  && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 266.34kB 0.0s done
+#7 DONE 0.0s
+
+#8 [build 3/5] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     gcc-11 g++-11     cmake     pkg-config     libssl-dev     zlib1g-dev     libbrotli-dev     libzstd-dev     python3 python3-pip     clang-format-14     ca-certificates  && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100  && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100  && pip3 install --no-cache-dir pre-commit  && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [build 4/5] COPY . .
+#9 DONE 0.1s
+
+#10 [build 5/5] RUN set -ex  && mkdir -p build  && cd build  && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23 -DCMAKE_VERBOSE_MAKEFILE=ON  && make VERBOSE=1
+#10 0.199 + mkdir -p build
+#10 0.200 + cd build
+#10 0.200 + cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23 -DCMAKE_VERBOSE_MAKEFILE=ON
+#10 0.275 -- The CXX compiler identification is GNU 11.4.0
+#10 0.281 -- Detecting CXX compiler ABI info
+#10 0.357 -- Detecting CXX compiler ABI info - done
+#10 0.367 -- Check for working CXX compiler: /usr/bin/c++ - skipped
+#10 0.367 -- Detecting CXX compile features
+#10 0.368 -- Detecting CXX compile features - done
+#10 0.370 -- Looking for C++ include pthread.h
+#10 0.451 -- Looking for C++ include pthread.h - found
+#10 0.451 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#10 0.532 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#10 0.535 -- Found Threads: TRUE  
+#10 0.828 -- Configuring done
+#10 0.831 -- Generating done
+#10 0.832 -- Build files have been written to: /yhirose_cpp-httplib/build
+#10 0.837 + make VERBOSE=1
+#10 0.838 /usr/bin/cmake -S/yhirose_cpp-httplib -B/yhirose_cpp-httplib/build --check-build-system CMakeFiles/Makefile.cmake 0
+#10 0.849 /usr/bin/cmake -E cmake_progress_start /yhirose_cpp-httplib/build/CMakeFiles /yhirose_cpp-httplib/build//CMakeFiles/progress.marks
+#10 0.857 make  -f CMakeFiles/Makefile2 all
+#10 0.858 make[1]: Entering directory '/yhirose_cpp-httplib/build'
+#10 0.858 make[1]: Nothing to be done for 'all'.
+#10 0.858 make[1]: Leaving directory '/yhirose_cpp-httplib/build'
+#10 0.858 /usr/bin/cmake -E cmake_progress_start /yhirose_cpp-httplib/build/CMakeFiles 0
+#10 DONE 0.9s
+
+#11 [dev 4/5] COPY --from=build /yhirose_cpp-httplib /yhirose_cpp-httplib
+#11 DONE 0.1s
+
+#12 [dev 5/5] WORKDIR /yhirose_cpp-httplib
+#12 DONE 0.0s
+
+#13 exporting to image
+#13 exporting layers
+#13 exporting layers 8.3s done
+#13 writing image sha256:e611649448c8d8a7cd07b5d22c5d414efbd0f8d40b84ed4d9ac65163d802931d done
+#13 naming to docker.io/library/envgym_test_1756368398 done
+#13 DONE 8.3s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

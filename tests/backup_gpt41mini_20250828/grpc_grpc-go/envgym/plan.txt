@@ -1,0 +1,67 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR PROVIDED HARDWARE) ===
+
+1. DOWNLOADS NEEDED:  
+   - Go programming language: install the latest two major releases from https://golang.org/dl/ targeting `linux/amd64` architecture, consistent with x86_64 CPU architecture of your hardware.  
+   - Optional VPN software if you are located in China or regions blocking golang.org domains to ensure smooth module downloads.  
+   - Git (for managing source code and module dependencies).  
+   - Shell environment capable of running shell scripts (`./create.sh`, `./generate.sh`) to generate x509 certificates and credentials; typical Linux shell such as bash is suitable and expected on your Linux AMD64 base image.  
+   - OpenSSL or equivalent cryptographic tools installed on the system for certificate/key generation or inspection as required by example scripts.  
+   - Network connectivity to external OAuth2 providers if testing OAuth2 authentication examples requiring live tokens (or mock tokens if offline).  
+   - Network connectivity to an xDS Control plane or ability to override client server address for testing CSM Observability example (xDS scheme used by default).  
+   - Docker installed (version 28.3.2 confirmed) for building client and server images; leverage Docker BuildKit and Buildx for multi-stage builds suitable for Go projects. Use Linux AMD64 base images (e.g., ubuntu, debian, alpine) in Dockerfiles to match x86_64 architecture; no ARM or GPU-specific Docker instructions or base images needed.  
+   - No NVIDIA GPU detected; no CUDA or GPU-specific build steps required or included.  
+   - Storage driver: use overlay2-compatible Dockerfile instructions; large available memory and storage allow building large image layers and multi-stage builds without constraint.  
+   - Ensure Go version compatibility with grpc authz package, compression support, xDS support, debugging tools (logging and channelz), dualstack networking, encryption examples (TLS, ALTS, mTLS), error details support, error handling features, flow control behavior, graceful stop usage, health checking, interceptor usage, keepalive settings, load balancing policies (`pick_first`, `round_robin`), metadata handling APIs, interceptor APIs, multiplexing of client connections and servers, name resolver registration, OpenTelemetry metrics and tracing integration, ORCA load reporting usage, server reflection support, retry feature support, stats monitoring via `stats.Handler` interface, and other grpc features (compatible with latest grpc-go releases and linux/amd64 architecture).  
+   - Network requirements: ensure localhost IPv4 (127.0.0.1) and IPv6 loopback interface ([::1]) are available and active on your Linux AMD64 system for dualstack examples.  
+   - For Encryption examples:  
+     - OpenSSL or equivalent tools installed for any certificate/key generation or inspection; pre-created keys are used but scripts may require OpenSSL presence.  
+     - ALTS example requires Google Cloud Platform environment with early access permissions; no separate downloads but requires GCP environment to run successfully (note: test only if such environment available).  
+   - All other dependencies and requirements remain as described in original plan, with no adjustment needed for your hardware or OS environment.  
+
+2. FILES TO CREATE:  
+   - `go.mod` file in project root initialized for linux/amd64 platform (default for Go modules unless cross-compiling).  
+   - `.gitignore` for vendor and build artifacts as usual.  
+   - Optional `.env` or shell profile exports for verbose gRPC logging.  
+   - README or documentation notes updated to specify usage on Linux AMD64 environment and Docker build instructions targeting linux/amd64 base images.  
+   - All example directories and scripts remain unchanged; paths and script invocations are compatible with standard Linux filesystem structure and shell environment.  
+   - Dockerfiles in examples/features/csm_observability/ and other containerized examples should be confirmed or updated to specify `linux/amd64` platform base images (e.g., `FROM ubuntu:20.04` or `FROM alpine:latest`), no ARM or GPU-specific images to be used.  
+   - Multi-stage Docker builds recommended to optimize image sizes leveraging Docker BuildKit and Buildx support of your Docker version.  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All test cases remain as described, with emphasis on verifying build and run on Linux AMD64 environment.  
+   - Cross-platform build tests: focus testing on Linux AMD64, Windows amd64, and macOS amd64 as relevant; no ARM or GPU-specific tests required.  
+   - Docker builds and runs tested on Linux AMD64 platform only.  
+   - Networking tests including IPv4 and IPv6 loopback interfaces verified on Linux AMD64 environment.  
+   - All example executions verified under Linux AMD64 OS and hardware environment.  
+   - Logs, debugging, and environment variable settings verified on Linux shell environment.  
+   - Certificate and credential generation scripts tested under Linux AMD64 shell environment with OpenSSL installed.  
+   - No adjustments required in test cases due to hardware; no GPU or ARM considerations needed.  
+
+4. COMPLETE TODO LIST (ADJUSTED):  
+   1. Install Go for linux/amd64 architecture (latest two major versions) from official site https://golang.org/dl/. Verify with `go version`.  
+   2. Install Git and verify (`git --version`).  
+   3. Initialize Go module in project directory with:  
+      ```sh  
+      go mod init <your-module-name>  
+      ```  
+   4. Add grpc dependency with:  
+      ```sh  
+      go get google.golang.org/grpc@latest  
+      ```  
+   5. For restricted networks (e.g., China):  
+      - Set up VPN or  
+      - Use `go mod edit -replace` directive for grpc dependency and vendor modules, build with `go build -mod=vendor`.  
+   6. Create `.gitignore` as needed.  
+   7. Export gRPC logging environment variables for verbose logs as needed.  
+   8. Run certificate generation scripts (`./create.sh` and `./generate.sh`) under Linux AMD64 shell with OpenSSL installed.  
+   9. Run advanced TLS, authentication, RBAC, cancellation, compression, observability, debugging, load balancing, dualstack, encryption, error details, error handling, flow control, graceful stop, health, interceptor, metadata interceptor, keepalive, metadata, multiplex, name resolving, hello world observability, OpenTelemetry, ORCA, reflection, retry, and stats monitoring examples as described, ensuring all run on Linux AMD64 platform.  
+   10. Build Docker images for examples requiring containers using linux/amd64 base images; leverage multi-stage builds and Docker BuildKit/Buildx features in Docker 28.3.2.  
+   11. Confirm no GPU-specific or ARM-specific build instructions are used or required.  
+   12. Verify network connectivity for client-server communication over required localhost ports and IPv6 loopback on Linux AMD64 system.  
+   13. Perform all tests and verify expected logs, outputs, behaviors as per original plan.  
+   14. Document Linux AMD64 specific instructions for Docker builds, environment setup, and network configuration if any special notes apply.  
+   15. Confirm cross-platform compatibility testing focusing on Linux AMD64, Windows amd64, and macOS amd64; no ARM or GPU testing needed.  
+   16. Final verification by running `go build` and `go test ./...` on Linux AMD64 environment without errors.  
+   17. Validate Docker builds and runs for all Dockerized examples on Linux AMD64 platform using overlay2 storage driver compatibility.  
+
+- End of adjusted environment setup plan for Linux AMD64 x86_64 architecture without GPU support, leveraging Docker 28.3.2 with BuildKit/Buildx, and standard Linux base images.

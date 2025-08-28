@@ -1,0 +1,48 @@
+Adjusted Plan:
+
+1. Base Image Selection:
+   - Use an amd64-compatible base image, such as `golang:1.20-amd64` or `ubuntu:22.04` (amd64), to ensure compatibility with the x86_64 architecture.
+   - Avoid any ARM or other architecture-specific images.
+
+2. Docker Build Configuration:
+   - Specify the platform explicitly in the Docker build command to ensure amd64 target:
+     ```
+     docker build --platform=linux/amd64 -t your-image-name .
+     ```
+   - Enable BuildKit for efficient builds (already supported in Docker 28.3.2).
+
+3. GPU and CUDA:
+   - Since no NVIDIA GPU is detected, do not include any CUDA or GPU-specific base images or dependencies.
+   - Omit any GPU-related environment variables or runtime flags.
+
+4. Storage and Cgroup Drivers:
+   - Ensure the Docker daemon uses the overlay2 storage driver for compatibility.
+   - Be aware of systemd cgroup driver usage; configure the container and host accordingly if systemd cgroups are in use.
+
+5. Working Directory and Paths:
+   - Set the working directory inside the Dockerfile to `/home/cc/EnvGym/data-gpt-4.1mini/zeromicro_go-zero`:
+     ```
+     WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/zeromicro_go-zero
+     ```
+   - Confirm all project files and dependencies are copied or mounted appropriately relative to this directory.
+
+6. Development Tools and Versions:
+   - Use Go version consistent with the project requirements (e.g., Go 1.20) matching the base image's Go version.
+   - Install any additional build tools or dependencies compatible with amd64 and Ubuntu/Debian if using those base images.
+
+7. Memory and Storage:
+   - Verify host system has sufficient RAM and disk space for the build and runtime processes.
+   - No specific adjustments needed in the plan unless project demands exceed host capacity.
+
+8. Operating System Compatibility:
+   - Use base images aligned with Linux distributions compatible with x86_64, such as Ubuntu or Debian.
+   - Avoid Windows or non-Linux base images.
+
+Summary:
+- Use amd64 base images and specify `--platform=linux/amd64` in docker build commands.
+- Remove GPU/CUDA-related components.
+- Set working directory correctly.
+- Ensure storage driver and cgroup driver compatibility.
+- Confirm development tools align with amd64 architecture.
+
+This adjusted plan ensures compatibility and efficient use of the hardware environment described.

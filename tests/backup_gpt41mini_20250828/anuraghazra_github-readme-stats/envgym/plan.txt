@@ -1,0 +1,35 @@
+Adjusted Plan:
+
+1. Base Image:
+   - Use a linux/amd64 compatible base image to match the x86_64 architecture.
+   - Avoid any GPU or CUDA-specific base images since no NVIDIA GPU is detected.
+
+2. Dockerfile Setup:
+   - Ensure all COPY commands use paths relative to the working directory: /home/cc/EnvGym/data-gpt-4.1mini/anuraghazra_github-readme-stats.
+   - Leverage multi-stage builds to reduce final image size due to potential storage constraints.
+   - Use overlay2 storage driver features for better layer management and build performance.
+   - Avoid any GPU-specific instructions or flags such as --gpus.
+
+3. Build Process:
+   - Use Docker version 28.3.2 features like BuildKit and docker buildx for efficient builds.
+   - Specify --platform=linux/amd64 explicitly in docker build commands to ensure compatibility.
+   - Monitor image size and storage use; consider cleaning up intermediate layers if necessary.
+
+4. Environment:
+   - Target Linux OS environments compatible with x86_64 architecture.
+   - Confirm that any development tools and dependencies installed are compatible with the linux/amd64 architecture.
+   - Verify all scripts and binaries are compatible with x86_64 and do not rely on GPU acceleration.
+
+5. Paths and Directories:
+   - Confirm that all file and directory references in Dockerfile and scripts are consistent with the working directory /home/cc/EnvGym/data-gpt-4.1mini/anuraghazra_github-readme-stats.
+   - Avoid absolute paths that may not exist inside the container.
+
+Summary:
+- Base image: linux/amd64 only, no GPU/CUDA.
+- COPY paths relative to /home/cc/EnvGym/data-gpt-4.1mini/anuraghazra_github-readme-stats.
+- Use multi-stage builds and overlay2 storage features.
+- Leverage Docker 28.3.2 build enhancements with explicit --platform specification.
+- No GPU instructions or flags.
+- Confirm all tools and binaries are x86_64 compatible.
+
+This plan ensures compatibility with the hardware environment, efficient storage usage, and correct path handling.

@@ -1,0 +1,18 @@
+current progress  
+- Dockerfile builds successfully on python:3.7-slim base image with apt packages installed including libz3-dev, libxml2-dev, libxslt1-dev, git, bash, build-essential, python3-venv.  
+- Fairify repository cloned into /Fairify.  
+- Python virtual environment created at /root/fenv.  
+- pip upgraded inside virtual environment.  
+- Python packages installed from /Fairify/requirements.txt inside virtual environment.  
+- Executable permissions set on all required bash scripts.  
+- Container CMD set to /bin/bash for interactive use.  
+- Docker build and runtime logs indicate success without errors.
+
+next step  
+- Modify Dockerfile to ensure environment variables correctly activate virtual environment on container start, e.g., by setting ENV PATH or using an entrypoint script to source /root/fenv/bin/activate.  
+- Validate that installed tensorflow==2.5.0 is CPU-only (no GPU dependencies).  
+- Add verification steps or scripts in Dockerfile or container startup to confirm dataset presence and permissions for result directories inside /Fairify.  
+- Confirm all required data and result directories exist and are writable within container filesystem or mount volumes as needed.  
+- Optionally, include minimal test commands in Dockerfile or entrypoint to run sample scripts verifying z3-solver, tensorflow CPU, and aif360 functionality.  
+- Document any environment variable or path adjustments needed for smooth operation within container.  
+- Consider adding non-root user for safer execution if relevant.

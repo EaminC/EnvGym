@@ -1,0 +1,181 @@
+=== Docker Execution Log - 20250828_043548 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756355730
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 853B done
+#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:18-bullseye
+#2 DONE 0.3s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/9] FROM docker.io/library/node:18-bullseye@sha256:0d9e9a8dcd5a83ea737ed92227a6591a31ad70c8bb722b0c51aff7ae23a88b6a
+#4 CACHED
+
+#5 [2/9] WORKDIR /app
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 132.96MB 2.4s done
+#6 DONE 2.5s
+
+#7 [3/9] RUN apt-get update && apt-get install -y git curl ca-certificates   && rm -rf /var/lib/apt/lists/*
+#7 0.298 Get:1 http://deb.debian.org/debian bullseye InRelease [75.1 kB]
+#7 0.306 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.2 kB]
+#7 0.308 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.0 kB]
+#7 0.413 Get:4 http://deb.debian.org/debian bullseye/main amd64 Packages [8066 kB]
+#7 0.602 Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 Packages [392 kB]
+#7 0.621 Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [18.8 kB]
+#7 1.601 Fetched 8623 kB in 1s (6517 kB/s)
+#7 1.601 Reading package lists...
+#7 2.105 Reading package lists...
+#7 2.557 Building dependency tree...
+#7 2.644 Reading state information...
+#7 2.752 ca-certificates is already the newest version (20210119).
+#7 2.752 git is already the newest version (1:2.30.2-1+deb11u4).
+#7 2.752 Suggested packages:
+#7 2.752   libcurl4-doc libidn11-dev libldap2-dev librtmp-dev libssh2-1-dev
+#7 2.768 The following packages will be upgraded:
+#7 2.768   curl libcurl4 libcurl4-openssl-dev
+#7 2.801 3 upgraded, 0 newly installed, 0 to remove and 40 not upgraded.
+#7 2.801 Need to get 1057 kB of archives.
+#7 2.801 After this operation, 0 B of additional disk space will be used.
+#7 2.801 Get:1 http://deb.debian.org/debian-security bullseye-security/main amd64 libcurl4-openssl-dev amd64 7.74.0-1.3+deb11u15 [438 kB]
+#7 2.813 Get:2 http://deb.debian.org/debian-security bullseye-security/main amd64 curl amd64 7.74.0-1.3+deb11u15 [272 kB]
+#7 2.815 Get:3 http://deb.debian.org/debian-security bullseye-security/main amd64 libcurl4 amd64 7.74.0-1.3+deb11u15 [347 kB]
+#7 2.956 debconf: delaying package configuration, since apt-utils is not installed
+#7 2.982 Fetched 1057 kB in 0s (22.0 MB/s)
+#7 2.998 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 22801 files and directories currently installed.)
+#7 3.010 Preparing to unpack .../libcurl4-openssl-dev_7.74.0-1.3+deb11u15_amd64.deb ...
+#7 3.012 Unpacking libcurl4-openssl-dev:amd64 (7.74.0-1.3+deb11u15) over (7.74.0-1.3+deb11u14) ...
+#7 3.075 Preparing to unpack .../curl_7.74.0-1.3+deb11u15_amd64.deb ...
+#7 3.077 Unpacking curl (7.74.0-1.3+deb11u15) over (7.74.0-1.3+deb11u14) ...
+#7 3.112 Preparing to unpack .../libcurl4_7.74.0-1.3+deb11u15_amd64.deb ...
+#7 3.115 Unpacking libcurl4:amd64 (7.74.0-1.3+deb11u15) over (7.74.0-1.3+deb11u14) ...
+#7 3.170 Setting up libcurl4:amd64 (7.74.0-1.3+deb11u15) ...
+#7 3.173 Setting up curl (7.74.0-1.3+deb11u15) ...
+#7 3.175 Setting up libcurl4-openssl-dev:amd64 (7.74.0-1.3+deb11u15) ...
+#7 3.178 Processing triggers for libc-bin (2.31-13+deb11u12) ...
+#7 DONE 3.7s
+
+#8 [4/9] RUN npm install -g pnpm@10.4.0
+#8 1.294 
+#8 1.294 added 1 package in 987ms
+#8 1.294 
+#8 1.295 1 package is looking for funding
+#8 1.295   run `npm fund` for details
+#8 1.296 npm notice
+#8 1.296 npm notice New major version of npm available! 10.8.2 -> 11.5.2
+#8 1.296 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+#8 1.296 npm notice To update run: npm install -g npm@11.5.2
+#8 1.296 npm notice
+#8 DONE 1.4s
+
+#9 [5/9] COPY pnpm-workspace.yaml ./
+#9 DONE 0.0s
+
+#10 [6/9] COPY package.json pnpm-lock.yaml ./
+#10 DONE 0.0s
+
+#11 [7/9] COPY .npmrc ./
+#11 DONE 0.0s
+
+#12 [8/9] RUN pnpm install --frozen-lockfile
+#12 0.901 Lockfile is up to date, resolution step is skipped
+#12 0.962 Progress: resolved 1, reused 0, downloaded 0, added 0
+#12 1.045 Packages: +431
+#12 1.045 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#12 2.021 Progress: resolved 431, reused 0, downloaded 82, added 1
+#12 2.566 
+#12 2.566    ╭───────────────────────────────────────────────────────────────────╮
+#12 2.566    │                                                                   │
+#12 2.566    │                Update available! 10.4.0 → 10.15.0.                │
+#12 2.566    │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v10.15.0   │
+#12 2.566    │                 Run "pnpm add -g pnpm" to update.                 │
+#12 2.566    │                                                                   │
+#12 2.566    ╰───────────────────────────────────────────────────────────────────╯
+#12 2.566 
+#12 2.757 Progress: resolved 431, reused 0, downloaded 430, added 431, done
+#12 3.098 
+#12 3.098 devDependencies:
+#12 3.098 + @changesets/cli 2.27.8
+#12 3.098 + @sveltejs/eslint-config 8.3.3
+#12 3.098 + @svitejs/changesets-changelog-github-compact 1.1.0
+#12 3.098 + @types/node 20.12.7
+#12 3.098 + @vitest/coverage-v8 2.1.9
+#12 3.098 + eslint 9.9.1
+#12 3.098 + eslint-plugin-lube 0.4.3
+#12 3.098 + eslint-plugin-svelte 3.11.0
+#12 3.098 + jsdom 25.0.1
+#12 3.098 + playwright 1.46.1
+#12 3.098 + prettier 3.2.4
+#12 3.098 + prettier-plugin-svelte 3.4.0
+#12 3.098 + svelte 0.0.0 <- packages/svelte
+#12 3.098 + typescript 5.5.4
+#12 3.098 + typescript-eslint 8.26.0
+#12 3.098 + v8-natives 1.2.5
+#12 3.098 + vitest 2.1.9
+#12 3.098 
+#12 3.098 ╭ Warning ─────────────────────────────────────────────────────────────────────╮│                                                                              ││   Ignored build scripts: esbuild.                                            ││   Run "pnpm approve-builds" to pick which dependencies should be allowed     ││   to run scripts.                                                            ││                                                                              │╰──────────────────────────────────────────────────────────────────────────────╯
+#12 3.098 
+#12 3.109 Done in 2.7s
+#12 DONE 4.0s
+
+#13 [9/9] COPY . .
+#13 DONE 1.5s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 6.5s done
+#14 writing image sha256:6b979f37dc7c7fec64b0352c252d4689175d8b2c8ea8d1367d93467a682b8133 done
+#14 naming to docker.io/library/envgym_test_1756355730 done
+#14 DONE 6.5s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

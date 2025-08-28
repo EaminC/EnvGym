@@ -1,0 +1,20 @@
+current progress  
+- Base image set to ubuntu:22.04 with linux/amd64 platform.  
+- User and group created matching host user.  
+- Universe and multiverse repositories added.  
+- Installed build-essential, cmake, ninja-build, git, python3, wget, curl, sudo successfully.  
+- Attempted to install libcurl4-openssl-dev, linux-perf, binutils, clang, clang++, lld, llvm but failed with exit code 100 during apt-get install.  
+- Configured clang as default compiler alternatives.  
+- Installed Node.js 16.x and npm, cleaned npm cache.  
+- Configured passwordless sudo for user.  
+- Created dependency cache directory and set working directory.  
+- Installed Rustup and Rust stable toolchain as user.  
+
+next step  
+- Investigate and fix apt-get install failure for libcurl4-openssl-dev, linux-perf, binutils, clang, clang++, lld, llvm.  
+- Possible actions:  
+  * Add `apt-get update` immediately preceding the failing install command to ensure fresh package lists.  
+  * Check for missing or incorrect repository sources or keys for required packages.  
+  * Consider splitting the failing install command into smaller parts to isolate the problematic package.  
+  * Add debugging commands (e.g., `apt-cache policy <package>`) in Dockerfile to verify package availability.  
+- Once fixed, rebuild Docker image to validate successful installation of all required packages.

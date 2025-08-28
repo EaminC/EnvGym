@@ -1,0 +1,257 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context:**  
+- Working Directory: `/home/cc/EnvGym/data-gpt-4.1mini/SymMC` (all relative paths should be resolved from here)  
+- Architecture: x86_64 (amd64) — compatible with standard Ubuntu/Debian amd64 base images  
+- OS Compatibility: Linux-based environment (recommended Ubuntu/Debian amd64 base images)  
+- No GPU present, so no CUDA or GPU-specific tooling required  
+- Docker Version supports BuildKit and Compose v2.38.2, local volumes for data persistence recommended  
+- Storage driver: overlay2 compatible  
+
+---
+
+### 1. DOWNLOADS NEEDED
+
+- **OpenJDK 8 (jdk1.8)**  
+  - Use official Ubuntu/Debian package `openjdk-8-jdk` for amd64 architecture, installed via:  
+    ```bash
+    sudo apt-get update && sudo apt-get install -y openjdk-8-jdk
+    ```  
+  - Confirm Java version with `java -version` (should be OpenJDK 8 on amd64)  
+  - No ARM or other architecture considerations needed  
+
+- **Apache Ant**  
+  - Install via package manager on Ubuntu/Debian amd64:  
+    ```bash
+    sudo apt-get install -y ant
+    ```  
+  - Alternatively, download official binary from Apache Ant website (amd64 binaries available)  
+  - Confirm with `ant -version`  
+
+- **MiniSat SAT solver**  
+  - Clone from https://github.com/niklasso/minisat, build on x86_64 Linux without GPU dependencies  
+  - Ensure `gcc` and `g++` compilers are available (part of `build-essential`)  
+  - Confirm built binary is executable on amd64 platform  
+
+- **CMake**  
+  - Minimum version 3.10+ recommended  
+  - Install via package manager:  
+    ```bash
+    sudo apt-get install -y cmake
+    ```  
+  - Confirm with `cmake --version` (should be >=3.10)  
+  - Use amd64 compatible binaries or build from source if necessary  
+
+- **Build essentials (gcc/g++, make)**  
+  - Install on Ubuntu/Debian with:  
+    ```bash
+    sudo apt-get install -y build-essential
+    ```  
+  - All tools are compatible with x86_64 architecture  
+
+- **Git**  
+  - Install via package manager:  
+    ```bash
+    sudo apt-get install -y git
+    ```  
+
+- **Eclipse IDE (optional)**  
+  - Use Eclipse versions supporting Java 8 on amd64 Linux  
+  - Download from https://www.eclipse.org/downloads/ (amd64 Linux tar.gz or installer)  
+  - Adjust `.classpath` jar paths if Eclipse installation paths differ  
+
+- **Java libraries referenced in `.classpath`**  
+  - `java-cup-11a.jar`  
+  - `org.alloytools.alloy.dist.jar`  
+  - `org.sat4j.core.jar` and `org.sat4j.core-src.jar`  
+  - Ensure these jars are placed in `Enhanced_Kodkod/lib/` relative to working directory `/home/cc/EnvGym/data-gpt-4.1mini/SymMC`  
+
+- **Optional:** Image viewer to verify `./images/overview.jpg` (install standard Linux image viewer, e.g., `eog` or `feh`)  
+
+---
+
+### 2. FILES TO CREATE AND CONFIGURE
+
+- **Enhanced_Kodkod/build.xml**  
+  - Ensure targets `clean` and `compile` are defined properly and reference local `lib/*.jar` paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/SymMC/Enhanced_Kodkod`  
+
+- **Enhanced_Kodkod/build.sh**  
+  - Content:  
+    ```bash
+    #!/bin/bash
+    ant compile
+    ```  
+  - Make executable:  
+    ```bash
+    chmod +x Enhanced_Kodkod/build.sh
+    ```  
+
+- **Enhanced_Kodkod/run.sh**  
+  - Content:  
+    ```bash
+    #!/bin/bash
+
+    currentdir="$(dirname "$(realpath $0)")"
+
+    specfile=$1
+    satfile=$2
+    symfile=$3
+
+    java -cp "$currentdir/src:$currentdir/bin:$currentdir/lib/org.alloytools.alloy.dist.jar" edu.mit.csail.sdg.alloy4whole.ExampleUsingTheCompiler "$specfile" "$satfile" "$symfile"
+    ```  
+  - Make executable:  
+    ```bash
+    chmod +x Enhanced_Kodkod/run.sh
+    ```  
+  - Use relative paths from working directory `/home/cc/EnvGym/data-gpt-4.1mini/SymMC`  
+
+- **Enumerator_Estimator/build.sh**  
+  - Should run CMake and build commands in `Enumerator_Estimator` folder, producing `cmake-build-release/minisat` executable on amd64 Linux  
+
+- **Eclipse project files** (`.classpath`, `.project`)  
+  - Ensure `.classpath` references valid jar paths relative to project root or absolute paths valid on local amd64 system  
+  - Place `lib` folder and jars accordingly in `Enhanced_Kodkod/lib/`  
+
+- **Environment variables setup script (optional)**  
+  - `env_setup.sh` to export:  
+    - `JAVA_HOME` pointing to OpenJDK 8 installation (e.g., `/usr/lib/jvm/java-8-openjdk-amd64`)  
+    - Add Apache Ant bin directory to `PATH` if installed manually  
+    - Add MiniSat binaries directory to `PATH` if not installed globally  
+
+- **.gitignore** in project root adjusted for Linux amd64 environment:  
+  ```
+  Enumerator_Estimator/cmake-build-release/
+  Enhanced_Kodkod/bin/
+  **/.idea/
+  # Optionally ignore Eclipse metadata if not versioned:
+  # .project
+  # .classpath
+  # .settings/
+  ```  
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE
+
+- Verify Ant build on amd64 Linux completes without errors using `Enhanced_Kodkod/build.sh`  
+- Confirm creation of `Enhanced_Kodkod/bin/` with `.class` files  
+- Test `Enhanced_Kodkod/run.sh` on sample Alloy spec file, verify output SAT and symmetry files/directories generated without errors  
+- Validate CMake build of `Enumerator_Estimator` on amd64 Linux produces `minisat` executable  
+- Run `minisat` commands with sample SAT/symmetry files to verify model counting and metrics outputs  
+- Integration test running full pipeline from Alloy spec input to Enumerator_Estimator outputs on amd64 Linux environment  
+- Confirm `.gitignore` effectively excludes build artifacts and IDE config folders on Linux filesystem  
+- Validate error handling for missing dependencies, incorrect arguments, or misconfigured environment on amd64 Linux  
+
+---
+
+### 4. COMPLETE TODO LIST (adjusted for amd64 Linux environment)
+
+**Step 1: Prepare system prerequisites**  
+- Verify OS is Linux amd64 (e.g., Ubuntu 20.04/22.04 or Debian stable 64-bit)  
+- Install OpenJDK 8:  
+  ```bash
+  sudo apt-get update
+  sudo apt-get install -y openjdk-8-jdk
+  ```  
+- Install Apache Ant:  
+  ```bash
+  sudo apt-get install -y ant
+  ```  
+- Install build essentials and CMake:  
+  ```bash
+  sudo apt-get install -y build-essential cmake
+  ```  
+- Install Git:  
+  ```bash
+  sudo apt-get install -y git
+  ```  
+- Clone MiniSat and build on Linux x86_64:  
+  ```bash
+  git clone https://github.com/niklasso/minisat.git
+  cd minisat
+  mkdir build && cd build
+  cmake ..
+  make
+  ```  
+- (Optional) Install Eclipse IDE for Java developers (amd64 Linux version) from https://www.eclipse.org/downloads/  
+- Place required Java library jars in `Enhanced_Kodkod/lib/` relative to working directory  
+
+**Step 2: Configure `.gitignore`**  
+- Create or update `.gitignore` in project root with entries as specified above, matching Linux filesystem paths  
+- Commit `.gitignore` to repository  
+
+**Step 3: Prepare Enhanced_Kodkod build environment**  
+- Ensure `Enhanced_Kodkod/lib/` contains all required jars  
+- Verify `build.xml` references jars in `lib/` correctly  
+- Create `Enhanced_Kodkod/build.sh` and `run.sh` with executable permissions  
+- Adjust any path references in scripts or `.classpath` to relative paths within `/home/cc/EnvGym/data-gpt-4.1mini/SymMC`  
+
+**Step 4: Build Enhanced_Kodkod module**  
+- `cd Enhanced_Kodkod`  
+- Run `./build.sh`  
+- Verify `bin/` directory exists and contains compiled `.class` files  
+- Optionally run `ant clean` separately if needed  
+
+**Step 5: Run Enhanced_Kodkod module**  
+- Prepare Alloy spec file and output directories (relative or absolute paths)  
+- Run:  
+  ```bash
+  ./run.sh path_to_spec_file path_to_sat_dir path_to_sym_dir
+  ```  
+- Verify output files are generated and logs show no errors  
+
+**Step 6: Build Enumerator_Estimator module**  
+- `cd Enumerator_Estimator`  
+- Run `./build.sh` (should invoke CMake and make)  
+- Confirm creation of `cmake-build-release/minisat` executable  
+
+**Step 7: Verify Enumerator_Estimator commands**  
+- Run commands as per plan on sample SAT and symmetry files, verify outputs and no errors  
+
+**Step 8: Integration test with dataset**  
+- Use example Alloy specs from `Datasets/specs`  
+- Run full pipeline: build Enhanced_Kodkod, run Enhanced_Kodkod, build Enumerator_Estimator, run Enumerator_Estimator commands  
+- Verify outputs match expectations  
+
+**Step 9: Configure Eclipse project (optional)**  
+- Import `Enhanced_Kodkod` as Java project using `.classpath` and `.project` files  
+- Adjust library paths if needed  
+- Confirm successful build on amd64 Linux Eclipse IDE  
+
+**Step 10: Create helper environment setup scripts (optional)**  
+- Create `env_setup.sh` exporting `JAVA_HOME`, adding Ant and MiniSat binaries to `PATH` for amd64 Linux environment  
+- Document usage instructions  
+
+**Step 11: Document environment variables and troubleshooting**  
+- Add README notes on verifying Java, Ant, CMake, gcc versions on Linux amd64  
+- Document jar dependencies and Eclipse import instructions  
+- Note updated `build.sh` runs only `ant compile` (no clean)  
+- Document usage of `run.sh` with arguments and expected output  
+
+**Step 12: Repository cleanliness verification**  
+- Ensure `.gitignore` excludes build folders and IDE config folders on Linux filesystem  
+- Verify no build artifacts or IDE files are committed unintentionally  
+
+**Step 13: Error handling and verification**  
+- Check exit codes of commands in scripts during build and run  
+- Provide clear error messages for missing dependencies or incorrect usage  
+- Verify `run.sh` fails gracefully if arguments missing or invalid  
+- Confirm Eclipse project named "GenAlloySBP" builds cleanly if imported  
+- Validate Ant targets `clean` and `compile` function correctly on Linux amd64  
+- Confirm `run.sh` Java execution completes successfully with no errors  
+
+---
+
+### Additional Notes Based on Hardware
+
+- All tools and builds target standard amd64 Linux environment; no ARM or GPU considerations needed  
+- Docker containerization (if used) should base on amd64 Linux images such as `ubuntu:20.04` or `debian:stable-slim` to ensure compatibility  
+- Leverage local volume mounts under Docker Root Dir `/var/lib/docker` for data persistence, matching working directory paths  
+- No GPU-specific or CUDA tooling steps are included, reducing complexity  
+- Memory considerations: plan does not specify RAM requirements; ensure host has sufficient RAM (e.g., minimum 4GB recommended) for Java and build tools; no special tuning needed  
+- Storage: standard Linux file system layout assumed; relative paths in scripts are consistent with working directory `/home/cc/EnvGym/data-gpt-4.1mini/SymMC`  
+- Shell scripts use standard bash compatible syntax, compatible with Linux amd64 environment  
+
+---
+
+**This adjusted plan fully aligns with the provided hardware and environment details, ensuring all tools, paths, and build steps are compatible with an x86_64 Linux environment, using standard package managers and relative paths under the given working directory.**

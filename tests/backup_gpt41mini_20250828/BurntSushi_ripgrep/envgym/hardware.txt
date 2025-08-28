@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/BurntSushi_ripgrep, project likely Linux-based, local path usage relevant for COPY instructions  
+- Architecture: x86_64, --platform=linux/amd64 recommended  
+- Base Image: x86_64 compatible Linux base images (e.g., ubuntu, debian, alpine x86_64 tags)  
+- GPU: No NVIDIA GPU detected, no CUDA base image needed  
+- Instruction Notes: Use Linux filesystem paths; no GPU-specific instructions required; leverage overlay2 storage driver compatibility; consider high CPU core count for parallel build steps if applicable  
+- Docker Version: 28.3.2, supports BuildKit and docker buildx, GPU build features present but not applicable due to no NVIDIA GPU detected

@@ -1,0 +1,18 @@
+current progress  
+- Dockerfile uses amd64 node:18-bullseye-slim base images with explicit platform specification as planned.  
+- Multi-stage build implemented separating build and runtime environments.  
+- Working directory set correctly matching project path.  
+- Necessary build and runtime dependencies installed with minimal packages.  
+- Package manifests copied before npm install for caching.  
+- npm ci step fails during build, causing build failure.  
+- No GPU or CUDA dependencies present.  
+- Storage and package optimization approaches are in place.  
+
+next step  
+- Investigate npm ci failure by adding debug steps or logging inside the build stage (e.g., add `RUN npm ci --verbose` or inspect package-lock.json compatibility).  
+- Verify that package-lock.json exists and is properly copied (wildcard usage may fail if no lock file present).  
+- Confirm node and npm versions are compatible with project dependencies.  
+- Consider adding `RUN npm config set legacy-peer-deps true` if dependency conflicts occur.  
+- Ensure all files required for npm install are copied prior to npm ci (e.g., .npmrc if used).  
+- Test build locally with BuildKit enabled to reproduce and debug failure.  
+- If memory/storage limits cause failure, optimize further by reducing installed packages or splitting build steps.

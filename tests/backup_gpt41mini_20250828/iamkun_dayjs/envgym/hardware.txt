@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/iamkun_dayjs, project located under user home, ensure context paths are relative and accessible  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: Use amd64-compatible base images, no ARM or other architecture images needed  
+- GPU: No NVIDIA GPU detected, no CUDA base images required  
+- Instruction Notes: Avoid GPU-specific instructions, leverage multi-core CPU for build optimizations, ensure storage usage does not impact large image builds  
+- Docker Version: 28.3.2, supports BuildKit and Buildx, GPU build flags (--gpus) not applicable due to no NVIDIA GPU detected

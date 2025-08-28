@@ -1,0 +1,1692 @@
+=== Iteration 1 - [2025-08-28 03:22:47] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN ===
+  1. DOWNLOADS NEEDED:  
+     - Rust toolchain (Rust 1.74.0 or higher) for building from source and using cargo  
+       * https://rustup.rs/  
+       * Minimum Rust version explicitly specified as 1.74 in Cargo.toml; ensure toolchain matches or exceeds this version  
+       * Use x86_64 Linux binaries/installers compatible with amd64 architecture  
+     - `bat` prebuilt binaries or packages depending on OS:  
+       * Linux (Ubuntu/Debian): `bat` or `batcat` via apt or latest `.deb` (e.g., `bat_0.25.0_amd64.deb`)  
+         - Ensure installation targets amd64 architecture (matches x86_64 hardware)  
+       * Alpine Linux: `apk add bat` (amd64 packages available)  
+       * Arch Linux: `pacman -S bat` (amd64 packages)  
+       * Fedora: `dnf install bat`  
+       * Gentoo: `emerge sys-apps/bat`  
+       * FreeBSD: `pkg install bat` or ports tree  
+       * OpenBSD: `pkg_add bat`  
+       * openSUSE: `zypper install bat`  
+       * macOS: Homebrew `brew install bat` or MacPorts `port install bat` (if applicable; note hardware is Linux, macOS only for cross-platform docs)  
+       * Windows: one of WinGet, Chocolatey, Scoop, or prebuilt binaries (not applicable for current Linux hardware setup)  
+     - Git (for Git integration features, cloning repositories, and local configuration)  
+       * Use standard x86_64 Linux Git packages  
+     - Optional tools for enhanced integration and usage:  
+       * fzf (for preview integration)  
+       * ripgrep (for batgrep)  
+       * fd (for find-like functionality used in integration)  
+       * less pager (especially on Windows, but also recommended on Linux)  
+       * xclip (for clipboard integration on Linux)  
+       * Visual C++ Redistributable for Windows (not required on Linux x86_64)  
+     - Additional Rust dependencies implied by Cargo.toml and Cargo.lock (for building from source):  
+       * Build dependencies and features as specified in the updated `tests/syntax-tests/source/TOML/Cargo.toml` file:  
+         - Features and dependencies as described, compatible with Rust 1.74.0 and x86_64 Linux  
+       * Rust edition 2018 specified in Cargo.toml; compatible with Rust 1.74.0+  
+       * Build script `build.rs` present as required  
+     - Version compatibility requirements:  
+       * Rust toolchain ≥ 1.74.0 (consistent with Cargo.toml MSRV)  
+       * `bat` version 0.25.0 or higher for binaries; source build version 0.15.4 also supported/tested  
+       * Cargo.lock dependencies versions locked and consistent with Cargo.toml versions for reproducible builds  
+     - Formatting tool:  
+       * Rustfmt included with Rust toolchain; install via `rustup component add rustfmt` if missing  
+       * `rustfmt.toml` with default settings present  
+     - Syntax highlighting and language support:  
+       * `syntect` v4.2.0 used with features enabled as specified  
+       * Support for Dockerfile, Python requirements.txt, DotENV, Java Server Page (JSP) syntax highlighting fully compatible with Linux x86_64 environment  
+       * Licensing compliance for JSP files ensured  
+     - Licensing and compliance:  
+       * Verify compliance with included licenses for JSP files and third-party components as per plan  
+     - No conflicts with existing configuration or version requirements introduced by hardware environment (Linux x86_64)  
+  2. FILES TO CREATE:  
+     - All configuration files, source files, test files, and license/notice files as specified, paths and formats compatible with Linux x86_64 environment  
+     - User configuration file path for `bat` as per Linux conventions (e.g., `$XDG_CONFIG_HOME/bat/config` or `$HOME/.config/bat/config`)  
+     - System-wide configuration file at `/etc/bat/config` (Linux)  
+     - Integration test config files and JSON config file as specified  
+     - Build configuration files `Cargo.toml`, `Cargo.lock`, `build.rs` with correct dependency versions  
+     - Syntax test files for Dockerfile, Python requirements, DotENV, JSP, and license/notice files as specified  
+     - Rustfmt configuration file `rustfmt.toml` with default content  
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - All listed syntax highlighting tests for Dockerfile, Python requirements.txt, DotENV, and JSP files fully applicable for Linux x86_64 environment  
+     - Git integration tests using provided Git config files in Linux paths  
+     - Paging behavior tests including system-wide and additional config files on Linux  
+     - Configuration file precedence and parsing tests including JSON config file handling on Linux  
+     - Non-printable character display tests, integration with fzf, ripgrep, fd, tail, git, man page coloring as specified  
+     - Build system validation, Rust edition and MSRV compatibility, dependency version checks as specified  
+     - Code formatting tests using rustfmt  
+     - Licensing compliance tests for JSP and third-party notices  
+     - Confirm no conflicts or errors arise from presence of JSON config file or Windows-specific configs (Windows-specific config files ignored or tested in Windows environment only)  
+     - No GPU-specific tests or CUDA dependencies required or present  
+     - Tests adjusted to expect Linux file paths and environment variables  
+     - Confirm multi-threaded and parallel build tests pass given available CPUs and memory on x86_64 Linux hardware  
+  4. COMPLETE TODO LIST:  
+     1. Verify system platform and prerequisites on Linux x86_64:  
+        - `rustc --version` (≥ 1.74.0)  
+        - `git --version`  
+        - `less --version` or equivalent pager presence  
+        - `rustfmt --version` (install if missing)  
+        - Install prerequisites as per Linux distro instructions for amd64 architecture  
+     2. Install `bat` using Linux amd64 compatible packages or prebuilt binaries (version ≥ 0.25.0)  
+     3. For building from source (optional):  
+        - Use provided `Cargo.toml`, `Cargo.lock`, and `build.rs` files targeting Linux amd64  
+        - Ensure Rust toolchain 1.74.0+ installed and rustfmt available  
+        - Build with Cargo commands as specified  
+        - Run `bat cache --build` post-build  
+     4. Configure Git test environment using Linux path configs  
+     5. Configure shell environment aliases and functions for Linux shell (bash, zsh, etc.)  
+     6. Create or generate default user config file for `bat` in Linux config directory  
+     7. Create or verify system-wide config file at `/etc/bat/config` with pager settings  
+     8. Add integration test config files as specified  
+     9. Include syntax test files for Dockerfile, Python requirements, DotENV, JSP as specified, verifying Linux path compatibility  
+     10. Install optional tools `fzf`, `ripgrep`, `fd`, `less`, `xclip` as needed on Linux amd64  
+     11. (Optional) Add custom syntaxes/themes in Linux config directories and rebuild cache  
+     12. Test basic functionality on Linux shell environment as specified  
+     13. Test integration with other tools on Linux x86_64 environment  
+     14. Validate configuration persistence, overrides, and precedence on Linux  
+     15. Confirm error handling and edge cases on Linux environment  
+     16. Build system and dependency validation on Linux amd64  
+     17. Document environment setup and usage for Linux amd64 users, including licensing compliance for JSP files  
+     18. (Optional) Setup CI/CD pipeline targeting Linux amd64 platform with build, test, and formatting steps  
+  Verification Methods (Linux x86_64 specific):  
+  - Verify `bat --version` outputs expected version (≥ 0.25.0) on Linux amd64  
+  - Confirm syntax highlighting visually for Dockerfile, Python requirements.txt, DotENV, JSP files on Linux terminal with syntect v4.2.0  
+  - Use `bat --list-themes` and `bat --list-languages` on Linux to verify availability of new languages and themes  
+  - Confirm integration commands execute without error on Linux shell  
+  - Monitor logs and error messages on Linux environment  
+  - Validate all config files load and apply correctly on Linux paths  
+  - Confirm system-wide config `/etc/bat/config` is loaded and effective on Linux  
+  - Confirm no Windows-specific config files interfere on Linux (ignored or skipped)  
+  - Confirm Cargo builds succeed on Linux amd64 with locked dependency versions  
+  - Confirm build scripts and asset generation succeed on Linux  
+  - Run dev-dependency tests on Linux  
+  - Confirm no conflicts from multiple dependency versions on Linux  
+  - Verify error handling with unsupported encodings and terminal capabilities on Linux  
+  - Confirm code formatting compliance via `cargo fmt -- --check` on Linux  
+  - Confirm Git integration tests run using Linux paths for config files  
+  - Confirm configuration precedence order enforced on Linux environment  
+  - Confirm licensing and notice compliance for JSP files on Linux filesystem  
+  - Confirm Dockerfile, Python `requirements.txt`, DotENV `.env`, JSP `.jsp` syntax highlighting produce correct colored output and lexer/parser behavior on Linux terminals  
+  Notes on adjustments:  
+  - No ARM or other architecture support required or included; strictly x86_64 amd64 Linux environment targeted  
+  - No GPU or CUDA dependencies included or required  
+  - Windows-specific installation steps and config files exist in plan for cross-platform completeness, but for this environment, only Linux-specific steps are mandatory; Windows-specific config files will be present for completeness but are ignored in Linux environment  
+  - Paths and environment variables adjusted for Linux conventions (e.g., `/etc/bat/config`, `$HOME/.config/bat/config`)  
+  - All tooling and dependencies installed and tested for Linux amd64 compatibility  
+  - Build and test commands run in Linux shell environment; no Windows PowerShell or CMD specifics needed  
+  - Memory and CPU resources assumed sufficient for parallel builds and multi-stage builds without special adjustments  
+  This adjusted plan ensures full compatibility and optimal operation on the provided hardware environment: x86_64 Linux amd64 architecture, without GPU or Windows dependencies, using standard Linux tools and paths.
+NEXT:
+  current progress  
+  - Base image set to Ubuntu 22.04 with amd64 architecture support.  
+  - Installed essential packages and Rust toolchain 1.74.0 with rustfmt component.  
+  - Installed bat with version check and fallback to latest .deb v0.25.0 if needed.  
+  - Set working directory to /app and attempted to copy necessary files including Cargo.toml, Cargo.lock, build.rs, rustfmt.toml, and tests syntax Cargo.toml.  
+  - Copy command for build.rs failed due to missing file in context (error: "/build.rs": not found).  
+  - All other files copied with wildcard COPY . .  
+  - Cargo build and bat cache build commands included.  
+  - System-wide and user bat config files with pager settings created.  
+  - Environment variables and CMD set appropriately.
+  next step  
+  - Ensure the build.rs file exists at the root of the build context before Docker build; add it to the Docker build context or adjust Dockerfile COPY paths accordingly.  
+  - Verify the presence and correct relative paths of all source and configuration files referenced in COPY commands to prevent missing file errors.  
+  - Consider splitting COPY commands to isolate missing files and improve error diagnostics.  
+  - Confirm all test syntax files and configuration files are present in the build context at specified locations.  
+  - After resolving file copy issues, re-run build to confirm successful cargo build and bat cache build commands.  
+  - Optionally, optimize Docker layers and cleanup after installations for smaller image size.
+LOG:
+  === Docker Execution Log - 20250828_032242 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1756351360
+  === Build Log ===
+  Build Status: Failed
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.88kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/ubuntu:22.04
+  #2 DONE 0.3s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+  #4 CACHED
+  #5 [internal] load build context
+  #5 transferring context: 43.17MB 0.6s done
+  #5 DONE 0.6s
+  #6 [ 5/14] RUN BAT_VERSION=$(bat --version | awk '{print $2}') &&     dpkg --compare-versions "$BAT_VERSION" "ge" "0.25.0" || (     curl -Lo /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v0.25.0/bat_0.25.0_amd64.deb &&     apt-get update && apt-get install -y /tmp/bat.deb && rm -rf /var/lib/apt/lists/* /tmp/bat.deb )
+  #6 CACHED
+  #7 [ 6/14] WORKDIR /app
+  #7 CACHED
+  #8 [ 3/14] RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.74.0     && rustup component add rustfmt
+  #8 CACHED
+  #9 [ 4/14] RUN apt-get update && apt-get install -y --no-install-recommends bat     && rm -rf /var/lib/apt/lists/*
+  #9 CACHED
+  #10 [ 7/14] COPY Cargo.toml Cargo.lock build.rs /app/
+  #10 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::a7vedogasjv0z8opx7csxnco0: "/build.rs": not found
+  #11 [ 2/14] RUN dpkg --add-architecture amd64 && apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     git     less     xclip     fzf     ripgrep     fd-find     pkg-config     build-essential     libssl-dev     cmake     && ln -s "$(which fdfind)" /usr/local/bin/fd     && rm -rf /var/lib/apt/lists/*
+  #11 0.293 Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+  #11 0.407 Get:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+  #11 0.425 Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+  #11 0.434 Get:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+  #11 0.484 Get:5 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+  #11 CANCELED
+  ------
+   > [ 7/14] COPY Cargo.toml Cargo.lock build.rs /app/:
+  ------
+  envgym.dockerfile:40
+  --------------------
+    38 |     WORKDIR /app
+    39 |     
+    40 | >>> COPY Cargo.toml Cargo.lock build.rs /app/
+    41 |     COPY rustfmt.toml /app/
+    42 |     COPY tests/syntax-tests/source/TOML/Cargo.toml /app/tests/syntax-tests/source/TOML/
+  --------------------
+  ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::a7vedogasjv0z8opx7csxnco0: "/build.rs": not found
+  === Runtime Log ===  
+  Runtime Status: Failed
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM ubuntu:22.04
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV RUSTUP_HOME=/usr/local/rustup
+  ENV CARGO_HOME=/usr/local/cargo
+  ENV PATH=$CARGO_HOME/bin:$PATH
+  ENV BAT_CONFIG_DIR=/etc/bat
+  ENV BAT_USER_CONFIG_DIR=/root/.config/bat
+  RUN dpkg --add-architecture amd64 && apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      git \
+      less \
+      xclip \
+      fzf \
+      ripgrep \
+      fd-find \
+      pkg-config \
+      build-essential \
+      libssl-dev \
+      cmake \
+      && ln -s "$(which fdfind)" /usr/local/bin/fd \
+      && rm -rf /var/lib/apt/lists/*
+  RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.74.0 \
+      && rustup component add rustfmt
+  RUN apt-get update && apt-get install -y --no-install-recommends bat \
+      && rm -rf /var/lib/apt/lists/*
+  # Verify bat version >= 0.25.0; if default apt package is older, install latest .deb from github releases
+  RUN BAT_VERSION=$(bat --version | awk '{print $2}') && \
+      dpkg --compare-versions "$BAT_VERSION" "ge" "0.25.0" || ( \
+      curl -Lo /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v0.25.0/bat_0.25.0_amd64.deb && \
+      apt-get update && apt-get install -y /tmp/bat.deb && rm -rf /var/lib/apt/lists/* /tmp/bat.deb )
+  WORKDIR /app
+  COPY Cargo.toml Cargo.lock build.rs /app/
+  COPY rustfmt.toml /app/
+  COPY tests/syntax-tests/source/TOML/Cargo.toml /app/tests/syntax-tests/source/TOML/
+  COPY . .
+  RUN cargo build --release
+  RUN ./target/release/bat cache --build
+  # Create system-wide bat config directory and default config with pager settings
+  RUN mkdir -p $BAT_CONFIG_DIR && echo "pager = \"less\"" > $BAT_CONFIG_DIR/config
+  # Create default user config directory and config file
+  RUN mkdir -p $BAT_USER_CONFIG_DIR && echo "[bat]\npager = \"less\"" > $BAT_USER_CONFIG_DIR/config
+  ENV RUST_BACKTRACE=1
+  CMD ["/bin/bash"]
+--- End of Iteration 1 ---
+
+=== Iteration 2 - [2025-08-28 03:25:27] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN ===
+  1. DOWNLOADS NEEDED:  
+     - Rust toolchain (Rust 1.74.0 or higher) for building from source and using cargo  
+       * https://rustup.rs/  
+       * Minimum Rust version explicitly specified as 1.74 in Cargo.toml; ensure toolchain matches or exceeds this version  
+       * Use x86_64 Linux binaries/installers compatible with amd64 architecture  
+     - `bat` prebuilt binaries or packages depending on OS:  
+       * Linux (Ubuntu/Debian): `bat` or `batcat` via apt or latest `.deb` (e.g., `bat_0.25.0_amd64.deb`)  
+         - Ensure installation targets amd64 architecture (matches x86_64 hardware)  
+       * Alpine Linux: `apk add bat` (amd64 packages available)  
+       * Arch Linux: `pacman -S bat` (amd64 packages)  
+       * Fedora: `dnf install bat`  
+       * Gentoo: `emerge sys-apps/bat`  
+       * FreeBSD: `pkg install bat` or ports tree  
+       * OpenBSD: `pkg_add bat`  
+       * openSUSE: `zypper install bat`  
+       * macOS: Homebrew `brew install bat` or MacPorts `port install bat` (if applicable; note hardware is Linux, macOS only for cross-platform docs)  
+       * Windows: one of WinGet, Chocolatey, Scoop, or prebuilt binaries (not applicable for current Linux hardware setup)  
+     - Git (for Git integration features, cloning repositories, and local configuration)  
+       * Use standard x86_64 Linux Git packages  
+     - Optional tools for enhanced integration and usage:  
+       * fzf (for preview integration)  
+       * ripgrep (for batgrep)  
+       * fd (for find-like functionality used in integration)  
+       * less pager (especially on Windows, but also recommended on Linux)  
+       * xclip (for clipboard integration on Linux)  
+       * Visual C++ Redistributable for Windows (not required on Linux x86_64)  
+     - Additional Rust dependencies implied by Cargo.toml and Cargo.lock (for building from source):  
+       * Build dependencies and features as specified in the updated `tests/syntax-tests/source/TOML/Cargo.toml` file:  
+         - Features and dependencies as described, compatible with Rust 1.74.0 and x86_64 Linux  
+       * Rust edition 2018 specified in Cargo.toml; compatible with Rust 1.74.0+  
+       * Build script `build.rs` present as required  
+     - Version compatibility requirements:  
+       * Rust toolchain ≥ 1.74.0 (consistent with Cargo.toml MSRV)  
+       * `bat` version 0.25.0 or higher for binaries; source build version 0.15.4 also supported/tested  
+       * Cargo.lock dependencies versions locked and consistent with Cargo.toml versions for reproducible builds  
+     - Formatting tool:  
+       * Rustfmt included with Rust toolchain; install via `rustup component add rustfmt` if missing  
+       * `rustfmt.toml` with default settings present  
+     - Syntax highlighting and language support:  
+       * `syntect` v4.2.0 used with features enabled as specified  
+       * Support for Dockerfile, Python requirements.txt, DotENV, Java Server Page (JSP) syntax highlighting fully compatible with Linux x86_64 environment  
+       * Licensing compliance for JSP files ensured  
+     - Licensing and compliance:  
+       * Verify compliance with included licenses for JSP files and third-party components as per plan  
+     - No conflicts with existing configuration or version requirements introduced by hardware environment (Linux x86_64)  
+  2. FILES TO CREATE:  
+     - All configuration files, source files, test files, and license/notice files as specified, paths and formats compatible with Linux x86_64 environment  
+     - User configuration file path for `bat` as per Linux conventions (e.g., `$XDG_CONFIG_HOME/bat/config` or `$HOME/.config/bat/config`)  
+     - System-wide configuration file at `/etc/bat/config` (Linux)  
+     - Integration test config files and JSON config file as specified  
+     - Build configuration files `Cargo.toml`, `Cargo.lock`, `build.rs` with correct dependency versions  
+     - Syntax test files for Dockerfile, Python requirements, DotENV, JSP, and license/notice files as specified  
+     - Rustfmt configuration file `rustfmt.toml` with default content  
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - All listed syntax highlighting tests for Dockerfile, Python requirements.txt, DotENV, and JSP files fully applicable for Linux x86_64 environment  
+     - Git integration tests using provided Git config files in Linux paths  
+     - Paging behavior tests including system-wide and additional config files on Linux  
+     - Configuration file precedence and parsing tests including JSON config file handling on Linux  
+     - Non-printable character display tests, integration with fzf, ripgrep, fd, tail, git, man page coloring as specified  
+     - Build system validation, Rust edition and MSRV compatibility, dependency version checks as specified  
+     - Code formatting tests using rustfmt  
+     - Licensing compliance tests for JSP and third-party notices  
+     - Confirm no conflicts or errors arise from presence of JSON config file or Windows-specific configs (Windows-specific config files ignored or tested in Windows environment only)  
+     - No GPU-specific tests or CUDA dependencies required or present  
+     - Tests adjusted to expect Linux file paths and environment variables  
+     - Confirm multi-threaded and parallel build tests pass given available CPUs and memory on x86_64 Linux hardware  
+  4. COMPLETE TODO LIST:  
+     1. Verify system platform and prerequisites on Linux x86_64:  
+        - `rustc --version` (≥ 1.74.0)  
+        - `git --version`  
+        - `less --version` or equivalent pager presence  
+        - `rustfmt --version` (install if missing)  
+        - Install prerequisites as per Linux distro instructions for amd64 architecture  
+     2. Install `bat` using Linux amd64 compatible packages or prebuilt binaries (version ≥ 0.25.0)  
+     3. For building from source (optional):  
+        - Use provided `Cargo.toml`, `Cargo.lock`, and `build.rs` files targeting Linux amd64  
+        - Ensure Rust toolchain 1.74.0+ installed and rustfmt available  
+        - Build with Cargo commands as specified  
+        - Run `bat cache --build` post-build  
+     4. Configure Git test environment using Linux path configs  
+     5. Configure shell environment aliases and functions for Linux shell (bash, zsh, etc.)  
+     6. Create or generate default user config file for `bat` in Linux config directory  
+     7. Create or verify system-wide config file at `/etc/bat/config` with pager settings  
+     8. Add integration test config files as specified  
+     9. Include syntax test files for Dockerfile, Python requirements, DotENV, JSP as specified, verifying Linux path compatibility  
+     10. Install optional tools `fzf`, `ripgrep`, `fd`, `less`, `xclip` as needed on Linux amd64  
+     11. (Optional) Add custom syntaxes/themes in Linux config directories and rebuild cache  
+     12. Test basic functionality on Linux shell environment as specified  
+     13. Test integration with other tools on Linux x86_64 environment  
+     14. Validate configuration persistence, overrides, and precedence on Linux  
+     15. Confirm error handling and edge cases on Linux environment  
+     16. Build system and dependency validation on Linux amd64  
+     17. Document environment setup and usage for Linux amd64 users, including licensing compliance for JSP files  
+     18. (Optional) Setup CI/CD pipeline targeting Linux amd64 platform with build, test, and formatting steps  
+  Verification Methods (Linux x86_64 specific):  
+  - Verify `bat --version` outputs expected version (≥ 0.25.0) on Linux amd64  
+  - Confirm syntax highlighting visually for Dockerfile, Python requirements.txt, DotENV, JSP files on Linux terminal with syntect v4.2.0  
+  - Use `bat --list-themes` and `bat --list-languages` on Linux to verify availability of new languages and themes  
+  - Confirm integration commands execute without error on Linux shell  
+  - Monitor logs and error messages on Linux environment  
+  - Validate all config files load and apply correctly on Linux paths  
+  - Confirm system-wide config `/etc/bat/config` is loaded and effective on Linux  
+  - Confirm no Windows-specific config files interfere on Linux (ignored or skipped)  
+  - Confirm Cargo builds succeed on Linux amd64 with locked dependency versions  
+  - Confirm build scripts and asset generation succeed on Linux  
+  - Run dev-dependency tests on Linux  
+  - Confirm no conflicts from multiple dependency versions on Linux  
+  - Verify error handling with unsupported encodings and terminal capabilities on Linux  
+  - Confirm code formatting compliance via `cargo fmt -- --check` on Linux  
+  - Confirm Git integration tests run using Linux paths for config files  
+  - Confirm configuration precedence order enforced on Linux environment  
+  - Confirm licensing and notice compliance for JSP files on Linux filesystem  
+  - Confirm Dockerfile, Python `requirements.txt`, DotENV `.env`, JSP `.jsp` syntax highlighting produce correct colored output and lexer/parser behavior on Linux terminals  
+  Notes on adjustments:  
+  - No ARM or other architecture support required or included; strictly x86_64 amd64 Linux environment targeted  
+  - No GPU or CUDA dependencies included or required  
+  - Windows-specific installation steps and config files exist in plan for cross-platform completeness, but for this environment, only Linux-specific steps are mandatory; Windows-specific config files will be present for completeness but are ignored in Linux environment  
+  - Paths and environment variables adjusted for Linux conventions (e.g., `/etc/bat/config`, `$HOME/.config/bat/config`)  
+  - All tooling and dependencies installed and tested for Linux amd64 compatibility  
+  - Build and test commands run in Linux shell environment; no Windows PowerShell or CMD specifics needed  
+  - Memory and CPU resources assumed sufficient for parallel builds and multi-stage builds without special adjustments  
+  This adjusted plan ensures full compatibility and optimal operation on the provided hardware environment: x86_64 Linux amd64 architecture, without GPU or Windows dependencies, using standard Linux tools and paths.
+NEXT:
+  current progress
+  - Base image set to Ubuntu 22.04 with noninteractive environment.
+  - Installed essential packages including Rust toolchain 1.74.0 with rustfmt component, git, less, xclip, fzf, ripgrep, fd-find, build tools, and dependencies.
+  - Bat installed via apt, with fallback to download and install version 0.25.0 .deb if apt version is older.
+  - Created system-wide and user bat config directories with pager set to less.
+  - Copied necessary Cargo and test files into /app and built the project with cargo release build.
+  - Executed `bat cache --build` post-build.
+  - Environment variables set for Rust and bat config paths.
+  - Default command set as bash shell.
+  next step
+  - Verify that all optional tools (fzf, ripgrep, fd, less, xclip) installed are the correct amd64 Linux versions and functioning.
+  - Confirm presence and correctness of all required configuration files (including JSON and integration test configs) per plan inside the container.
+  - Add missing integration test config files and syntax test files (Dockerfile, Python requirements.txt, DotENV, JSP) into the container and ensure Linux path compatibility.
+  - Implement Git test environment setup using Linux path configs as per plan.
+  - Add shell environment aliases and functions for Linux shells (bash/zsh) if required.
+  - Add any optional custom syntaxes/themes and rebuild the bat cache if applicable.
+  - Add validation steps to test basic functionality, integration, configuration precedence, error handling, build system validation, and licensing compliance inside the container.
+  - Document environment setup and usage inside the Docker context.
+  - Optionally, prepare the Dockerfile for CI/CD pipeline integration with build, test, and formatting steps.
+  - Remove redundant apt update calls where possible and optimize layer caching.
+STATUS:
+  SUCCESS
+LOG:
+  === Docker Execution Log - 20250828_032522 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1756351379
+  === Build Log ===
+  Build Status: Success
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.87kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/ubuntu:22.04
+  #2 DONE 0.1s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [ 1/14] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+  #4 CACHED
+  #5 [internal] load build context
+  #5 transferring context: 109.72kB 0.1s done
+  #5 DONE 0.1s
+  #6 [ 2/14] RUN dpkg --add-architecture amd64 && apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     git     less     xclip     fzf     ripgrep     fd-find     pkg-config     build-essential     libssl-dev     cmake     && ln -s "$(which fdfind)" /usr/local/bin/fd     && rm -rf /var/lib/apt/lists/*
+  #6 0.406 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+  #6 0.408 Get:2 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+  #6 0.867 Get:3 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1271 kB]
+  #6 0.904 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+  #6 1.024 Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+  #6 1.146 Get:6 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+  #6 1.196 Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+  #6 1.284 Get:8 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [48.5 kB]
+  #6 1.286 Get:9 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [5235 kB]
+  #6 1.432 Get:10 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+  #6 1.502 Get:11 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3253 kB]
+  #6 1.992 Get:12 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+  #6 1.998 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1576 kB]
+  #6 2.027 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [5519 kB]
+  #6 2.197 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [75.9 kB]
+  #6 2.199 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3606 kB]
+  #6 2.302 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.2 kB]
+  #6 2.303 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [83.2 kB]
+  #6 3.317 Fetched 41.1 MB in 3s (13.3 MB/s)
+  #6 3.317 Reading package lists...
+  #6 4.383 Reading package lists...
+  #6 5.377 Building dependency tree...
+  #6 5.536 Reading state information...
+  #6 5.712 The following additional packages will be installed:
+  #6 5.712   binutils binutils-common binutils-x86-64-linux-gnu bzip2 cmake-data cpp
+  #6 5.712   cpp-11 dh-elpa-helper dpkg-dev emacsen-common g++ g++-11 gcc gcc-11
+  #6 5.712   gcc-11-base gcc-12-base git-man libarchive13 libasan6 libatomic1 libbinutils
+  #6 5.712   libbrotli1 libbsd0 libc-dev-bin libc6-dev libcc1-0 libcrypt-dev
+  #6 5.712   libctf-nobfd0 libctf0 libcurl3-gnutls libcurl4 libdpkg-perl liberror-perl
+  #6 5.712   libexpat1 libgcc-11-dev libgcc-s1 libgdbm-compat4 libgdbm6 libglib2.0-0
+  #6 5.712   libgomp1 libice6 libicu70 libisl23 libitm1 libjsoncpp25 libldap-2.5-0
+  #6 5.712   liblsan0 libmd0 libmpc3 libmpfr6 libnghttp2-14 libnsl-dev libperl5.34
+  #6 5.712   libpsl5 libquadmath0 librhash0 librtmp1 libsasl2-2 libsasl2-modules-db
+  #6 5.712   libsm6 libssh-4 libstdc++-11-dev libstdc++6 libtirpc-dev libtsan0 libubsan1
+  #6 5.712   libuv1 libx11-6 libx11-data libxau6 libxcb1 libxdmcp6 libxext6 libxml2
+  #6 5.713   libxmu6 libxt6 linux-libc-dev lto-disabled-list make openssl patch perl
+  #6 5.713   perl-modules-5.34 rpcsvc-proto x11-common xz-utils
+  #6 5.714 Suggested packages:
+  #6 5.714   binutils-doc bzip2-doc cmake-doc ninja-build cmake-format cpp-doc
+  #6 5.714   gcc-11-locales debian-keyring g++-multilib g++-11-multilib gcc-11-doc
+  #6 5.714   gcc-multilib manpages-dev autoconf automake libtool flex bison gdb gcc-doc
+  #6 5.714   gcc-11-multilib gettext-base git-daemon-run | git-daemon-sysvinit git-doc
+  #6 5.714   git-email git-gui gitk gitweb git-cvs git-mediawiki git-svn lrzip glibc-doc
+  #6 5.714   gnupg bzr gdbm-l10n libssl-doc libstdc++-11-doc make-doc ed diffutils-doc
+  #6 5.714   perl-doc libterm-readline-gnu-perl | libterm-readline-perl-perl
+  #6 5.714   libtap-harness-archive-perl
+  #6 5.714 Recommended packages:
+  #6 5.714   fakeroot gnupg libalgorithm-merge-perl ssh-client manpages manpages-dev
+  #6 5.714   libc-devtools libfile-fcntllock-perl liblocale-gettext-perl libglib2.0-data
+  #6 5.714   shared-mime-info xdg-user-dirs libldap-common publicsuffix libsasl2-modules
+  #6 5.714   netbase xauth
+  #6 5.882 The following NEW packages will be installed:
+  #6 5.882   binutils binutils-common binutils-x86-64-linux-gnu build-essential bzip2
+  #6 5.882   ca-certificates cmake cmake-data cpp cpp-11 curl dh-elpa-helper dpkg-dev
+  #6 5.882   emacsen-common fd-find fzf g++ g++-11 gcc gcc-11 gcc-11-base git git-man
+  #6 5.882   less libarchive13 libasan6 libatomic1 libbinutils libbrotli1 libbsd0
+  #6 5.882   libc-dev-bin libc6-dev libcc1-0 libcrypt-dev libctf-nobfd0 libctf0
+  #6 5.882   libcurl3-gnutls libcurl4 libdpkg-perl liberror-perl libexpat1 libgcc-11-dev
+  #6 5.882   libgdbm-compat4 libgdbm6 libglib2.0-0 libgomp1 libice6 libicu70 libisl23
+  #6 5.882   libitm1 libjsoncpp25 libldap-2.5-0 liblsan0 libmd0 libmpc3 libmpfr6
+  #6 5.882   libnghttp2-14 libnsl-dev libperl5.34 libpsl5 libquadmath0 librhash0 librtmp1
+  #6 5.882   libsasl2-2 libsasl2-modules-db libsm6 libssh-4 libssl-dev libstdc++-11-dev
+  #6 5.882   libtirpc-dev libtsan0 libubsan1 libuv1 libx11-6 libx11-data libxau6 libxcb1
+  #6 5.883   libxdmcp6 libxext6 libxml2 libxmu6 libxt6 linux-libc-dev lto-disabled-list
+  #6 5.883   make openssl patch perl perl-modules-5.34 pkg-config ripgrep rpcsvc-proto
+  #6 5.883   x11-common xclip xz-utils
+  #6 5.884 The following packages will be upgraded:
+  #6 5.884   gcc-12-base libgcc-s1 libstdc++6
+  #6 6.080 3 upgraded, 95 newly installed, 0 to remove and 0 not upgraded.
+  #6 6.080 Need to get 108 MB of archives.
+  #6 6.080 After this operation, 394 MB of additional disk space will be used.
+  #6 6.080 Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl-modules-5.34 all 5.34.0-3ubuntu1.5 [2977 kB]
+  #6 6.888 Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm6 amd64 1.23-1 [33.9 kB]
+  #6 6.889 Get:3 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm-compat4 amd64 1.23-1 [6606 B]
+  #6 6.890 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libperl5.34 amd64 5.34.0-3ubuntu1.5 [4797 kB]
+  #6 7.020 Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl amd64 5.34.0-3ubuntu1.5 [232 kB]
+  #6 7.025 Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gcc-12-base amd64 12.3.0-1ubuntu1~22.04.2 [20.6 kB]
+  #6 7.026 Get:7 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libstdc++6 amd64 12.3.0-1ubuntu1~22.04.2 [699 kB]
+  #6 7.037 Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgcc-s1 amd64 12.3.0-1ubuntu1~22.04.2 [53.9 kB]
+  #6 7.038 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 openssl amd64 3.0.2-0ubuntu1.19 [1186 kB]
+  #6 7.086 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 ca-certificates all 20240203~22.04.1 [162 kB]
+  #6 7.089 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 less amd64 590-1ubuntu0.22.04.3 [142 kB]
+  #6 7.093 Get:12 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmd0 amd64 1.0.4-1build1 [23.0 kB]
+  #6 7.094 Get:13 http://archive.ubuntu.com/ubuntu jammy/main amd64 libbsd0 amd64 0.11.5-1 [44.8 kB]
+  #6 7.153 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1 amd64 2.4.7-1ubuntu0.6 [92.1 kB]
+  #6 7.155 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-0 amd64 2.72.4-0ubuntu2.6 [1467 kB]
+  #6 7.185 Get:16 http://archive.ubuntu.com/ubuntu jammy/main amd64 libicu70 amd64 70.1-2 [10.6 MB]
+  #6 7.559 Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libxml2 amd64 2.9.13+dfsg-1ubuntu0.8 [763 kB]
+  #6 7.578 Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnghttp2-14 amd64 1.43.0-1ubuntu0.2 [76.9 kB]
+  #6 7.580 Get:19 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpsl5 amd64 0.21.0-1.2build2 [58.4 kB]
+  #6 7.581 Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libuv1 amd64 1.43.0-1ubuntu0.1 [92.7 kB]
+  #6 7.583 Get:21 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxau6 amd64 1:1.0.9-1build5 [7634 B]
+  #6 7.584 Get:22 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxdmcp6 amd64 1:1.1.3-0ubuntu5 [10.9 kB]
+  #6 7.584 Get:23 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxcb1 amd64 1.14-3ubuntu3 [49.0 kB]
+  #6 7.586 Get:24 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libx11-data all 2:1.7.5-1ubuntu0.3 [120 kB]
+  #6 7.588 Get:25 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libx11-6 amd64 2:1.7.5-1ubuntu0.3 [667 kB]
+  #6 7.653 Get:26 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxext6 amd64 2:1.3.4-1build1 [31.8 kB]
+  #6 7.741 Get:27 http://archive.ubuntu.com/ubuntu jammy/main amd64 xz-utils amd64 5.2.5-2ubuntu1 [84.8 kB]
+  #6 7.744 Get:28 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 binutils-common amd64 2.38-4ubuntu2.8 [223 kB]
+  #6 7.750 Get:29 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libbinutils amd64 2.38-4ubuntu2.8 [661 kB]
+  #6 7.769 Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libctf-nobfd0 amd64 2.38-4ubuntu2.8 [108 kB]
+  #6 7.772 Get:31 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libctf0 amd64 2.38-4ubuntu2.8 [103 kB]
+  #6 7.775 Get:32 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 binutils-x86-64-linux-gnu amd64 2.38-4ubuntu2.8 [2324 kB]
+  #6 7.842 Get:33 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 binutils amd64 2.38-4ubuntu2.8 [3196 B]
+  #6 7.843 Get:34 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc-dev-bin amd64 2.35-0ubuntu3.10 [20.3 kB]
+  #6 7.844 Get:35 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 linux-libc-dev amd64 5.15.0-153.163 [1324 kB]
+  #6 7.880 Get:36 http://archive.ubuntu.com/ubuntu jammy/main amd64 libcrypt-dev amd64 1:4.4.27-1 [112 kB]
+  #6 7.919 Get:37 http://archive.ubuntu.com/ubuntu jammy/main amd64 rpcsvc-proto amd64 1.4.2-0ubuntu6 [68.5 kB]
+  #6 7.921 Get:38 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtirpc-dev amd64 1.3.2-2ubuntu0.1 [192 kB]
+  #6 7.925 Get:39 http://archive.ubuntu.com/ubuntu jammy/main amd64 libnsl-dev amd64 1.3.0-2build2 [71.3 kB]
+  #6 7.927 Get:40 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc6-dev amd64 2.35-0ubuntu3.10 [2100 kB]
+  #6 7.974 Get:41 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gcc-11-base amd64 11.4.0-1ubuntu1~22.04.2 [20.8 kB]
+  #6 8.007 Get:42 http://archive.ubuntu.com/ubuntu jammy/main amd64 libisl23 amd64 0.24-2build1 [727 kB]
+  #6 8.024 Get:43 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpfr6 amd64 4.1.0-3build3 [1425 kB]
+  #6 8.056 Get:44 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpc3 amd64 1.2.1-2build1 [46.9 kB]
+  #6 8.058 Get:45 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 cpp-11 amd64 11.4.0-1ubuntu1~22.04.2 [10.0 MB]
+  #6 8.356 Get:46 http://archive.ubuntu.com/ubuntu jammy/main amd64 cpp amd64 4:11.2.0-1ubuntu1 [27.7 kB]
+  #6 8.357 Get:47 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcc1-0 amd64 12.3.0-1ubuntu1~22.04.2 [48.3 kB]
+  #6 8.358 Get:48 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgomp1 amd64 12.3.0-1ubuntu1~22.04.2 [127 kB]
+  #6 8.360 Get:49 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libitm1 amd64 12.3.0-1ubuntu1~22.04.2 [30.2 kB]
+  #6 8.361 Get:50 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libatomic1 amd64 12.3.0-1ubuntu1~22.04.2 [10.4 kB]
+  #6 8.362 Get:51 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libasan6 amd64 11.4.0-1ubuntu1~22.04.2 [2283 kB]
+  #6 8.413 Get:52 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 liblsan0 amd64 12.3.0-1ubuntu1~22.04.2 [1069 kB]
+  #6 8.455 Get:53 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtsan0 amd64 11.4.0-1ubuntu1~22.04.2 [2262 kB]
+  #6 8.507 Get:54 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libubsan1 amd64 12.3.0-1ubuntu1~22.04.2 [976 kB]
+  #6 8.547 Get:55 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libquadmath0 amd64 12.3.0-1ubuntu1~22.04.2 [154 kB]
+  #6 8.550 Get:56 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgcc-11-dev amd64 11.4.0-1ubuntu1~22.04.2 [2517 kB]
+  #6 8.626 Get:57 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gcc-11 amd64 11.4.0-1ubuntu1~22.04.2 [20.1 MB]
+  #6 9.226 Get:58 http://archive.ubuntu.com/ubuntu jammy/main amd64 gcc amd64 4:11.2.0-1ubuntu1 [5112 B]
+  #6 9.227 Get:59 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libstdc++-11-dev amd64 11.4.0-1ubuntu1~22.04.2 [2101 kB]
+  #6 9.269 Get:60 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 g++-11 amd64 11.4.0-1ubuntu1~22.04.2 [11.4 MB]
+  #6 9.619 Get:61 http://archive.ubuntu.com/ubuntu jammy/main amd64 g++ amd64 4:11.2.0-1ubuntu1 [1412 B]
+  #6 9.619 Get:62 http://archive.ubuntu.com/ubuntu jammy/main amd64 make amd64 4.3-4.1build1 [180 kB]
+  #6 9.622 Get:63 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libdpkg-perl all 1.21.1ubuntu2.3 [237 kB]
+  #6 9.625 Get:64 http://archive.ubuntu.com/ubuntu jammy/main amd64 bzip2 amd64 1.0.8-5build1 [34.8 kB]
+  #6 9.626 Get:65 http://archive.ubuntu.com/ubuntu jammy/main amd64 patch amd64 2.7.6-7build2 [109 kB]
+  #6 9.627 Get:66 http://archive.ubuntu.com/ubuntu jammy/main amd64 lto-disabled-list all 24 [12.5 kB]
+  #6 9.627 Get:67 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 dpkg-dev all 1.21.1ubuntu2.3 [922 kB]
+  #6 9.640 Get:68 http://archive.ubuntu.com/ubuntu jammy/main amd64 build-essential amd64 12.9ubuntu3 [4744 B]
+  #6 9.640 Get:69 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libarchive13 amd64 3.6.0-1ubuntu1.5 [368 kB]
+  #6 9.712 Get:70 http://archive.ubuntu.com/ubuntu jammy/main amd64 libbrotli1 amd64 1.0.9-2build6 [315 kB]
+  #6 9.719 Get:71 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-modules-db amd64 2.1.27+dfsg2-3ubuntu1.2 [20.5 kB]
+  #6 9.800 Get:72 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-2 amd64 2.1.27+dfsg2-3ubuntu1.2 [53.8 kB]
+  #6 9.802 Get:73 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libldap-2.5-0 amd64 2.5.19+dfsg-0ubuntu0.22.04.1 [184 kB]
+  #6 9.808 Get:74 http://archive.ubuntu.com/ubuntu jammy/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2build4 [58.2 kB]
+  #6 9.810 Get:75 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssh-4 amd64 0.9.6-2ubuntu0.22.04.4 [187 kB]
+  #6 9.816 Get:76 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl4 amd64 7.81.0-1ubuntu1.20 [289 kB]
+  #6 9.824 Get:77 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjsoncpp25 amd64 1.9.5-3 [80.0 kB]
+  #6 9.826 Get:78 http://archive.ubuntu.com/ubuntu jammy/main amd64 librhash0 amd64 1.4.2-1ubuntu1 [125 kB]
+  #6 9.830 Get:79 http://archive.ubuntu.com/ubuntu jammy/main amd64 dh-elpa-helper all 2.0.9ubuntu1 [7610 B]
+  #6 9.889 Get:80 http://archive.ubuntu.com/ubuntu jammy/main amd64 emacsen-common all 3.0.4 [14.9 kB]
+  #6 9.890 Get:81 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 cmake-data all 3.22.1-1ubuntu1.22.04.2 [1913 kB]
+  #6 9.977 Get:82 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 cmake amd64 3.22.1-1ubuntu1.22.04.2 [5010 kB]
+  #6 10.11 Get:83 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 curl amd64 7.81.0-1ubuntu1.20 [194 kB]
+  #6 10.12 Get:84 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 fd-find amd64 8.3.1-1ubuntu0.1 [832 kB]
+  #6 10.14 Get:85 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 fzf amd64 0.29.0-1ubuntu0.1 [952 kB]
+  #6 10.17 Get:86 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl3-gnutls amd64 7.81.0-1ubuntu1.20 [284 kB]
+  #6 10.18 Get:87 http://archive.ubuntu.com/ubuntu jammy/main amd64 liberror-perl all 0.17029-1 [26.5 kB]
+  #6 10.18 Get:88 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git-man all 1:2.34.1-1ubuntu1.15 [955 kB]
+  #6 10.20 Get:89 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git amd64 1:2.34.1-1ubuntu1.15 [3166 kB]
+  #6 10.29 Get:90 http://archive.ubuntu.com/ubuntu jammy/main amd64 x11-common all 1:7.7+23ubuntu2 [23.4 kB]
+  #6 10.29 Get:91 http://archive.ubuntu.com/ubuntu jammy/main amd64 libice6 amd64 2:1.0.10-1build2 [42.6 kB]
+  #6 10.29 Get:92 http://archive.ubuntu.com/ubuntu jammy/main amd64 libsm6 amd64 2:1.2.3-1build2 [16.7 kB]
+  #6 10.30 Get:93 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssl-dev amd64 3.0.2-0ubuntu1.19 [2376 kB]
+  #6 10.37 Get:94 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxt6 amd64 1:1.2.1-1 [177 kB]
+  #6 10.37 Get:95 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxmu6 amd64 2:1.1.3-3 [49.6 kB]
+  #6 10.37 Get:96 http://archive.ubuntu.com/ubuntu jammy/main amd64 pkg-config amd64 0.29.2-1ubuntu3 [48.2 kB]
+  #6 10.37 Get:97 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 ripgrep amd64 13.0.0-2ubuntu0.1 [1300 kB]
+  #6 10.42 Get:98 http://archive.ubuntu.com/ubuntu jammy/universe amd64 xclip amd64 0.13-2 [18.3 kB]
+  #6 10.58 debconf: delaying package configuration, since apt-utils is not installed
+  #6 10.60 Fetched 108 MB in 5s (23.8 MB/s)
+  #6 10.62 Selecting previously unselected package perl-modules-5.34.
+  #6 10.62 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 4393 files and directories currently installed.)
+  #6 10.62 Preparing to unpack .../0-perl-modules-5.34_5.34.0-3ubuntu1.5_all.deb ...
+  #6 10.62 Unpacking perl-modules-5.34 (5.34.0-3ubuntu1.5) ...
+  #6 10.79 Selecting previously unselected package libgdbm6:amd64.
+  #6 10.79 Preparing to unpack .../1-libgdbm6_1.23-1_amd64.deb ...
+  #6 10.79 Unpacking libgdbm6:amd64 (1.23-1) ...
+  #6 10.80 Selecting previously unselected package libgdbm-compat4:amd64.
+  #6 10.80 Preparing to unpack .../2-libgdbm-compat4_1.23-1_amd64.deb ...
+  #6 10.80 Unpacking libgdbm-compat4:amd64 (1.23-1) ...
+  #6 10.81 Selecting previously unselected package libperl5.34:amd64.
+  #6 10.81 Preparing to unpack .../3-libperl5.34_5.34.0-3ubuntu1.5_amd64.deb ...
+  #6 10.82 Unpacking libperl5.34:amd64 (5.34.0-3ubuntu1.5) ...
+  #6 10.95 Selecting previously unselected package perl.
+  #6 10.95 Preparing to unpack .../4-perl_5.34.0-3ubuntu1.5_amd64.deb ...
+  #6 10.96 Unpacking perl (5.34.0-3ubuntu1.5) ...
+  #6 10.97 Preparing to unpack .../5-gcc-12-base_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 10.98 Unpacking gcc-12-base:amd64 (12.3.0-1ubuntu1~22.04.2) over (12.3.0-1ubuntu1~22.04) ...
+  #6 11.00 Setting up gcc-12-base:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 11.01 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6381 files and directories currently installed.)
+  #6 11.02 Preparing to unpack .../libstdc++6_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 11.03 Unpacking libstdc++6:amd64 (12.3.0-1ubuntu1~22.04.2) over (12.3.0-1ubuntu1~22.04) ...
+  #6 11.07 Setting up libstdc++6:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 11.09 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6381 files and directories currently installed.)
+  #6 11.09 Preparing to unpack .../libgcc-s1_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 11.09 Unpacking libgcc-s1:amd64 (12.3.0-1ubuntu1~22.04.2) over (12.3.0-1ubuntu1~22.04) ...
+  #6 11.11 Setting up libgcc-s1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 11.13 Selecting previously unselected package openssl.
+  #6 11.13 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6381 files and directories currently installed.)
+  #6 11.13 Preparing to unpack .../00-openssl_3.0.2-0ubuntu1.19_amd64.deb ...
+  #6 11.13 Unpacking openssl (3.0.2-0ubuntu1.19) ...
+  #6 11.15 Selecting previously unselected package ca-certificates.
+  #6 11.16 Preparing to unpack .../01-ca-certificates_20240203~22.04.1_all.deb ...
+  #6 11.16 Unpacking ca-certificates (20240203~22.04.1) ...
+  #6 11.18 Selecting previously unselected package less.
+  #6 11.18 Preparing to unpack .../02-less_590-1ubuntu0.22.04.3_amd64.deb ...
+  #6 11.18 Unpacking less (590-1ubuntu0.22.04.3) ...
+  #6 11.20 Selecting previously unselected package libmd0:amd64.
+  #6 11.20 Preparing to unpack .../03-libmd0_1.0.4-1build1_amd64.deb ...
+  #6 11.20 Unpacking libmd0:amd64 (1.0.4-1build1) ...
+  #6 11.21 Selecting previously unselected package libbsd0:amd64.
+  #6 11.21 Preparing to unpack .../04-libbsd0_0.11.5-1_amd64.deb ...
+  #6 11.21 Unpacking libbsd0:amd64 (0.11.5-1) ...
+  #6 11.22 Selecting previously unselected package libexpat1:amd64.
+  #6 11.22 Preparing to unpack .../05-libexpat1_2.4.7-1ubuntu0.6_amd64.deb ...
+  #6 11.22 Unpacking libexpat1:amd64 (2.4.7-1ubuntu0.6) ...
+  #6 11.24 Selecting previously unselected package libglib2.0-0:amd64.
+  #6 11.24 Preparing to unpack .../06-libglib2.0-0_2.72.4-0ubuntu2.6_amd64.deb ...
+  #6 11.24 Unpacking libglib2.0-0:amd64 (2.72.4-0ubuntu2.6) ...
+  #6 11.27 Selecting previously unselected package libicu70:amd64.
+  #6 11.27 Preparing to unpack .../07-libicu70_70.1-2_amd64.deb ...
+  #6 11.27 Unpacking libicu70:amd64 (70.1-2) ...
+  #6 11.40 Selecting previously unselected package libxml2:amd64.
+  #6 11.40 Preparing to unpack .../08-libxml2_2.9.13+dfsg-1ubuntu0.8_amd64.deb ...
+  #6 11.41 Unpacking libxml2:amd64 (2.9.13+dfsg-1ubuntu0.8) ...
+  #6 11.43 Selecting previously unselected package libnghttp2-14:amd64.
+  #6 11.43 Preparing to unpack .../09-libnghttp2-14_1.43.0-1ubuntu0.2_amd64.deb ...
+  #6 11.43 Unpacking libnghttp2-14:amd64 (1.43.0-1ubuntu0.2) ...
+  #6 11.44 Selecting previously unselected package libpsl5:amd64.
+  #6 11.44 Preparing to unpack .../10-libpsl5_0.21.0-1.2build2_amd64.deb ...
+  #6 11.44 Unpacking libpsl5:amd64 (0.21.0-1.2build2) ...
+  #6 11.45 Selecting previously unselected package libuv1:amd64.
+  #6 11.45 Preparing to unpack .../11-libuv1_1.43.0-1ubuntu0.1_amd64.deb ...
+  #6 11.45 Unpacking libuv1:amd64 (1.43.0-1ubuntu0.1) ...
+  #6 11.46 Selecting previously unselected package libxau6:amd64.
+  #6 11.46 Preparing to unpack .../12-libxau6_1%3a1.0.9-1build5_amd64.deb ...
+  #6 11.47 Unpacking libxau6:amd64 (1:1.0.9-1build5) ...
+  #6 11.48 Selecting previously unselected package libxdmcp6:amd64.
+  #6 11.48 Preparing to unpack .../13-libxdmcp6_1%3a1.1.3-0ubuntu5_amd64.deb ...
+  #6 11.48 Unpacking libxdmcp6:amd64 (1:1.1.3-0ubuntu5) ...
+  #6 11.49 Selecting previously unselected package libxcb1:amd64.
+  #6 11.49 Preparing to unpack .../14-libxcb1_1.14-3ubuntu3_amd64.deb ...
+  #6 11.49 Unpacking libxcb1:amd64 (1.14-3ubuntu3) ...
+  #6 11.50 Selecting previously unselected package libx11-data.
+  #6 11.50 Preparing to unpack .../15-libx11-data_2%3a1.7.5-1ubuntu0.3_all.deb ...
+  #6 11.50 Unpacking libx11-data (2:1.7.5-1ubuntu0.3) ...
+  #6 11.54 Selecting previously unselected package libx11-6:amd64.
+  #6 11.54 Preparing to unpack .../16-libx11-6_2%3a1.7.5-1ubuntu0.3_amd64.deb ...
+  #6 11.54 Unpacking libx11-6:amd64 (2:1.7.5-1ubuntu0.3) ...
+  #6 11.55 Selecting previously unselected package libxext6:amd64.
+  #6 11.56 Preparing to unpack .../17-libxext6_2%3a1.3.4-1build1_amd64.deb ...
+  #6 11.56 Unpacking libxext6:amd64 (2:1.3.4-1build1) ...
+  #6 11.57 Selecting previously unselected package xz-utils.
+  #6 11.57 Preparing to unpack .../18-xz-utils_5.2.5-2ubuntu1_amd64.deb ...
+  #6 11.57 Unpacking xz-utils (5.2.5-2ubuntu1) ...
+  #6 11.58 Selecting previously unselected package binutils-common:amd64.
+  #6 11.58 Preparing to unpack .../19-binutils-common_2.38-4ubuntu2.8_amd64.deb ...
+  #6 11.58 Unpacking binutils-common:amd64 (2.38-4ubuntu2.8) ...
+  #6 11.59 Selecting previously unselected package libbinutils:amd64.
+  #6 11.59 Preparing to unpack .../20-libbinutils_2.38-4ubuntu2.8_amd64.deb ...
+  #6 11.59 Unpacking libbinutils:amd64 (2.38-4ubuntu2.8) ...
+  #6 11.61 Selecting previously unselected package libctf-nobfd0:amd64.
+  #6 11.62 Preparing to unpack .../21-libctf-nobfd0_2.38-4ubuntu2.8_amd64.deb ...
+  #6 11.62 Unpacking libctf-nobfd0:amd64 (2.38-4ubuntu2.8) ...
+  #6 11.63 Selecting previously unselected package libctf0:amd64.
+  #6 11.63 Preparing to unpack .../22-libctf0_2.38-4ubuntu2.8_amd64.deb ...
+  #6 11.63 Unpacking libctf0:amd64 (2.38-4ubuntu2.8) ...
+  #6 11.64 Selecting previously unselected package binutils-x86-64-linux-gnu.
+  #6 11.64 Preparing to unpack .../23-binutils-x86-64-linux-gnu_2.38-4ubuntu2.8_amd64.deb ...
+  #6 11.64 Unpacking binutils-x86-64-linux-gnu (2.38-4ubuntu2.8) ...
+  #6 11.70 Selecting previously unselected package binutils.
+  #6 11.70 Preparing to unpack .../24-binutils_2.38-4ubuntu2.8_amd64.deb ...
+  #6 11.70 Unpacking binutils (2.38-4ubuntu2.8) ...
+  #6 11.71 Selecting previously unselected package libc-dev-bin.
+  #6 11.72 Preparing to unpack .../25-libc-dev-bin_2.35-0ubuntu3.10_amd64.deb ...
+  #6 11.72 Unpacking libc-dev-bin (2.35-0ubuntu3.10) ...
+  #6 11.73 Selecting previously unselected package linux-libc-dev:amd64.
+  #6 11.73 Preparing to unpack .../26-linux-libc-dev_5.15.0-153.163_amd64.deb ...
+  #6 11.73 Unpacking linux-libc-dev:amd64 (5.15.0-153.163) ...
+  #6 11.83 Selecting previously unselected package libcrypt-dev:amd64.
+  #6 11.83 Preparing to unpack .../27-libcrypt-dev_1%3a4.4.27-1_amd64.deb ...
+  #6 11.83 Unpacking libcrypt-dev:amd64 (1:4.4.27-1) ...
+  #6 11.84 Selecting previously unselected package rpcsvc-proto.
+  #6 11.84 Preparing to unpack .../28-rpcsvc-proto_1.4.2-0ubuntu6_amd64.deb ...
+  #6 11.84 Unpacking rpcsvc-proto (1.4.2-0ubuntu6) ...
+  #6 11.86 Selecting previously unselected package libtirpc-dev:amd64.
+  #6 11.86 Preparing to unpack .../29-libtirpc-dev_1.3.2-2ubuntu0.1_amd64.deb ...
+  #6 11.86 Unpacking libtirpc-dev:amd64 (1.3.2-2ubuntu0.1) ...
+  #6 11.87 Selecting previously unselected package libnsl-dev:amd64.
+  #6 11.87 Preparing to unpack .../30-libnsl-dev_1.3.0-2build2_amd64.deb ...
+  #6 11.87 Unpacking libnsl-dev:amd64 (1.3.0-2build2) ...
+  #6 11.89 Selecting previously unselected package libc6-dev:amd64.
+  #6 11.89 Preparing to unpack .../31-libc6-dev_2.35-0ubuntu3.10_amd64.deb ...
+  #6 11.89 Unpacking libc6-dev:amd64 (2.35-0ubuntu3.10) ...
+  #6 11.97 Selecting previously unselected package gcc-11-base:amd64.
+  #6 11.98 Preparing to unpack .../32-gcc-11-base_11.4.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 11.98 Unpacking gcc-11-base:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 11.99 Selecting previously unselected package libisl23:amd64.
+  #6 11.99 Preparing to unpack .../33-libisl23_0.24-2build1_amd64.deb ...
+  #6 11.99 Unpacking libisl23:amd64 (0.24-2build1) ...
+  #6 12.01 Selecting previously unselected package libmpfr6:amd64.
+  #6 12.01 Preparing to unpack .../34-libmpfr6_4.1.0-3build3_amd64.deb ...
+  #6 12.01 Unpacking libmpfr6:amd64 (4.1.0-3build3) ...
+  #6 12.03 Selecting previously unselected package libmpc3:amd64.
+  #6 12.03 Preparing to unpack .../35-libmpc3_1.2.1-2build1_amd64.deb ...
+  #6 12.03 Unpacking libmpc3:amd64 (1.2.1-2build1) ...
+  #6 12.04 Selecting previously unselected package cpp-11.
+  #6 12.04 Preparing to unpack .../36-cpp-11_11.4.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.05 Unpacking cpp-11 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 12.16 Selecting previously unselected package cpp.
+  #6 12.16 Preparing to unpack .../37-cpp_4%3a11.2.0-1ubuntu1_amd64.deb ...
+  #6 12.16 Unpacking cpp (4:11.2.0-1ubuntu1) ...
+  #6 12.18 Selecting previously unselected package libcc1-0:amd64.
+  #6 12.18 Preparing to unpack .../38-libcc1-0_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.18 Unpacking libcc1-0:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 12.19 Selecting previously unselected package libgomp1:amd64.
+  #6 12.19 Preparing to unpack .../39-libgomp1_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.19 Unpacking libgomp1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 12.20 Selecting previously unselected package libitm1:amd64.
+  #6 12.21 Preparing to unpack .../40-libitm1_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.21 Unpacking libitm1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 12.22 Selecting previously unselected package libatomic1:amd64.
+  #6 12.22 Preparing to unpack .../41-libatomic1_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.22 Unpacking libatomic1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 12.23 Selecting previously unselected package libasan6:amd64.
+  #6 12.23 Preparing to unpack .../42-libasan6_11.4.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.23 Unpacking libasan6:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 12.27 Selecting previously unselected package liblsan0:amd64.
+  #6 12.28 Preparing to unpack .../43-liblsan0_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.28 Unpacking liblsan0:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 12.30 Selecting previously unselected package libtsan0:amd64.
+  #6 12.30 Preparing to unpack .../44-libtsan0_11.4.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.30 Unpacking libtsan0:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 12.34 Selecting previously unselected package libubsan1:amd64.
+  #6 12.35 Preparing to unpack .../45-libubsan1_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.35 Unpacking libubsan1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 12.37 Selecting previously unselected package libquadmath0:amd64.
+  #6 12.37 Preparing to unpack .../46-libquadmath0_12.3.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.37 Unpacking libquadmath0:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 12.38 Selecting previously unselected package libgcc-11-dev:amd64.
+  #6 12.38 Preparing to unpack .../47-libgcc-11-dev_11.4.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.38 Unpacking libgcc-11-dev:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 12.44 Selecting previously unselected package gcc-11.
+  #6 12.45 Preparing to unpack .../48-gcc-11_11.4.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.45 Unpacking gcc-11 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 12.66 Selecting previously unselected package gcc.
+  #6 12.66 Preparing to unpack .../49-gcc_4%3a11.2.0-1ubuntu1_amd64.deb ...
+  #6 12.66 Unpacking gcc (4:11.2.0-1ubuntu1) ...
+  #6 12.67 Selecting previously unselected package libstdc++-11-dev:amd64.
+  #6 12.67 Preparing to unpack .../50-libstdc++-11-dev_11.4.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.68 Unpacking libstdc++-11-dev:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 12.80 Selecting previously unselected package g++-11.
+  #6 12.80 Preparing to unpack .../51-g++-11_11.4.0-1ubuntu1~22.04.2_amd64.deb ...
+  #6 12.80 Unpacking g++-11 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 12.92 Selecting previously unselected package g++.
+  #6 12.92 Preparing to unpack .../52-g++_4%3a11.2.0-1ubuntu1_amd64.deb ...
+  #6 12.93 Unpacking g++ (4:11.2.0-1ubuntu1) ...
+  #6 12.94 Selecting previously unselected package make.
+  #6 12.94 Preparing to unpack .../53-make_4.3-4.1build1_amd64.deb ...
+  #6 12.94 Unpacking make (4.3-4.1build1) ...
+  #6 12.95 Selecting previously unselected package libdpkg-perl.
+  #6 12.95 Preparing to unpack .../54-libdpkg-perl_1.21.1ubuntu2.3_all.deb ...
+  #6 12.95 Unpacking libdpkg-perl (1.21.1ubuntu2.3) ...
+  #6 12.97 Selecting previously unselected package bzip2.
+  #6 12.97 Preparing to unpack .../55-bzip2_1.0.8-5build1_amd64.deb ...
+  #6 12.97 Unpacking bzip2 (1.0.8-5build1) ...
+  #6 12.98 Selecting previously unselected package patch.
+  #6 12.98 Preparing to unpack .../56-patch_2.7.6-7build2_amd64.deb ...
+  #6 12.99 Unpacking patch (2.7.6-7build2) ...
+  #6 13.00 Selecting previously unselected package lto-disabled-list.
+  #6 13.00 Preparing to unpack .../57-lto-disabled-list_24_all.deb ...
+  #6 13.00 Unpacking lto-disabled-list (24) ...
+  #6 13.01 Selecting previously unselected package dpkg-dev.
+  #6 13.01 Preparing to unpack .../58-dpkg-dev_1.21.1ubuntu2.3_all.deb ...
+  #6 13.01 Unpacking dpkg-dev (1.21.1ubuntu2.3) ...
+  #6 13.03 Selecting previously unselected package build-essential.
+  #6 13.03 Preparing to unpack .../59-build-essential_12.9ubuntu3_amd64.deb ...
+  #6 13.03 Unpacking build-essential (12.9ubuntu3) ...
+  #6 13.04 Selecting previously unselected package libarchive13:amd64.
+  #6 13.04 Preparing to unpack .../60-libarchive13_3.6.0-1ubuntu1.5_amd64.deb ...
+  #6 13.04 Unpacking libarchive13:amd64 (3.6.0-1ubuntu1.5) ...
+  #6 13.06 Selecting previously unselected package libbrotli1:amd64.
+  #6 13.06 Preparing to unpack .../61-libbrotli1_1.0.9-2build6_amd64.deb ...
+  #6 13.06 Unpacking libbrotli1:amd64 (1.0.9-2build6) ...
+  #6 13.07 Selecting previously unselected package libsasl2-modules-db:amd64.
+  #6 13.08 Preparing to unpack .../62-libsasl2-modules-db_2.1.27+dfsg2-3ubuntu1.2_amd64.deb ...
+  #6 13.08 Unpacking libsasl2-modules-db:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #6 13.09 Selecting previously unselected package libsasl2-2:amd64.
+  #6 13.09 Preparing to unpack .../63-libsasl2-2_2.1.27+dfsg2-3ubuntu1.2_amd64.deb ...
+  #6 13.09 Unpacking libsasl2-2:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #6 13.10 Selecting previously unselected package libldap-2.5-0:amd64.
+  #6 13.10 Preparing to unpack .../64-libldap-2.5-0_2.5.19+dfsg-0ubuntu0.22.04.1_amd64.deb ...
+  #6 13.10 Unpacking libldap-2.5-0:amd64 (2.5.19+dfsg-0ubuntu0.22.04.1) ...
+  #6 13.11 Selecting previously unselected package librtmp1:amd64.
+  #6 13.11 Preparing to unpack .../65-librtmp1_2.4+20151223.gitfa8646d.1-2build4_amd64.deb ...
+  #6 13.12 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build4) ...
+  #6 13.13 Selecting previously unselected package libssh-4:amd64.
+  #6 13.13 Preparing to unpack .../66-libssh-4_0.9.6-2ubuntu0.22.04.4_amd64.deb ...
+  #6 13.13 Unpacking libssh-4:amd64 (0.9.6-2ubuntu0.22.04.4) ...
+  #6 13.14 Selecting previously unselected package libcurl4:amd64.
+  #6 13.14 Preparing to unpack .../67-libcurl4_7.81.0-1ubuntu1.20_amd64.deb ...
+  #6 13.14 Unpacking libcurl4:amd64 (7.81.0-1ubuntu1.20) ...
+  #6 13.16 Selecting previously unselected package libjsoncpp25:amd64.
+  #6 13.16 Preparing to unpack .../68-libjsoncpp25_1.9.5-3_amd64.deb ...
+  #6 13.16 Unpacking libjsoncpp25:amd64 (1.9.5-3) ...
+  #6 13.17 Selecting previously unselected package librhash0:amd64.
+  #6 13.17 Preparing to unpack .../69-librhash0_1.4.2-1ubuntu1_amd64.deb ...
+  #6 13.17 Unpacking librhash0:amd64 (1.4.2-1ubuntu1) ...
+  #6 13.18 Selecting previously unselected package dh-elpa-helper.
+  #6 13.18 Preparing to unpack .../70-dh-elpa-helper_2.0.9ubuntu1_all.deb ...
+  #6 13.19 Unpacking dh-elpa-helper (2.0.9ubuntu1) ...
+  #6 13.20 Selecting previously unselected package emacsen-common.
+  #6 13.20 Preparing to unpack .../71-emacsen-common_3.0.4_all.deb ...
+  #6 13.20 Unpacking emacsen-common (3.0.4) ...
+  #6 13.22 Selecting previously unselected package cmake-data.
+  #6 13.22 Preparing to unpack .../72-cmake-data_3.22.1-1ubuntu1.22.04.2_all.deb ...
+  #6 13.22 Unpacking cmake-data (3.22.1-1ubuntu1.22.04.2) ...
+  #6 13.49 Selecting previously unselected package cmake.
+  #6 13.49 Preparing to unpack .../73-cmake_3.22.1-1ubuntu1.22.04.2_amd64.deb ...
+  #6 13.49 Unpacking cmake (3.22.1-1ubuntu1.22.04.2) ...
+  #6 13.58 Selecting previously unselected package curl.
+  #6 13.58 Preparing to unpack .../74-curl_7.81.0-1ubuntu1.20_amd64.deb ...
+  #6 13.58 Unpacking curl (7.81.0-1ubuntu1.20) ...
+  #6 13.59 Selecting previously unselected package fd-find.
+  #6 13.59 Preparing to unpack .../75-fd-find_8.3.1-1ubuntu0.1_amd64.deb ...
+  #6 13.59 Unpacking fd-find (8.3.1-1ubuntu0.1) ...
+  #6 13.61 Selecting previously unselected package fzf.
+  #6 13.61 Preparing to unpack .../76-fzf_0.29.0-1ubuntu0.1_amd64.deb ...
+  #6 13.61 Unpacking fzf (0.29.0-1ubuntu0.1) ...
+  #6 13.64 Selecting previously unselected package libcurl3-gnutls:amd64.
+  #6 13.64 Preparing to unpack .../77-libcurl3-gnutls_7.81.0-1ubuntu1.20_amd64.deb ...
+  #6 13.64 Unpacking libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.20) ...
+  #6 13.65 Selecting previously unselected package liberror-perl.
+  #6 13.65 Preparing to unpack .../78-liberror-perl_0.17029-1_all.deb ...
+  #6 13.65 Unpacking liberror-perl (0.17029-1) ...
+  #6 13.67 Selecting previously unselected package git-man.
+  #6 13.67 Preparing to unpack .../79-git-man_1%3a2.34.1-1ubuntu1.15_all.deb ...
+  #6 13.67 Unpacking git-man (1:2.34.1-1ubuntu1.15) ...
+  #6 13.68 Selecting previously unselected package git.
+  #6 13.69 Preparing to unpack .../80-git_1%3a2.34.1-1ubuntu1.15_amd64.deb ...
+  #6 13.69 Unpacking git (1:2.34.1-1ubuntu1.15) ...
+  #6 13.78 Selecting previously unselected package x11-common.
+  #6 13.78 Preparing to unpack .../81-x11-common_1%3a7.7+23ubuntu2_all.deb ...
+  #6 13.78 Unpacking x11-common (1:7.7+23ubuntu2) ...
+  #6 13.80 Selecting previously unselected package libice6:amd64.
+  #6 13.80 Preparing to unpack .../82-libice6_2%3a1.0.10-1build2_amd64.deb ...
+  #6 13.80 Unpacking libice6:amd64 (2:1.0.10-1build2) ...
+  #6 13.81 Selecting previously unselected package libsm6:amd64.
+  #6 13.81 Preparing to unpack .../83-libsm6_2%3a1.2.3-1build2_amd64.deb ...
+  #6 13.81 Unpacking libsm6:amd64 (2:1.2.3-1build2) ...
+  #6 13.83 Selecting previously unselected package libssl-dev:amd64.
+  #6 13.83 Preparing to unpack .../84-libssl-dev_3.0.2-0ubuntu1.19_amd64.deb ...
+  #6 13.83 Unpacking libssl-dev:amd64 (3.0.2-0ubuntu1.19) ...
+  #6 13.90 Selecting previously unselected package libxt6:amd64.
+  #6 13.91 Preparing to unpack .../85-libxt6_1%3a1.2.1-1_amd64.deb ...
+  #6 13.91 Unpacking libxt6:amd64 (1:1.2.1-1) ...
+  #6 13.92 Selecting previously unselected package libxmu6:amd64.
+  #6 13.92 Preparing to unpack .../86-libxmu6_2%3a1.1.3-3_amd64.deb ...
+  #6 13.92 Unpacking libxmu6:amd64 (2:1.1.3-3) ...
+  #6 13.93 Selecting previously unselected package pkg-config.
+  #6 13.93 Preparing to unpack .../87-pkg-config_0.29.2-1ubuntu3_amd64.deb ...
+  #6 13.94 Unpacking pkg-config (0.29.2-1ubuntu3) ...
+  #6 13.95 Selecting previously unselected package ripgrep.
+  #6 13.95 Preparing to unpack .../88-ripgrep_13.0.0-2ubuntu0.1_amd64.deb ...
+  #6 13.95 Unpacking ripgrep (13.0.0-2ubuntu0.1) ...
+  #6 13.98 Selecting previously unselected package xclip.
+  #6 13.98 Preparing to unpack .../89-xclip_0.13-2_amd64.deb ...
+  #6 13.98 Unpacking xclip (0.13-2) ...
+  #6 14.00 Setting up libexpat1:amd64 (2.4.7-1ubuntu0.6) ...
+  #6 14.00 Setting up gcc-11-base:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 14.01 Setting up libxau6:amd64 (1:1.0.9-1build5) ...
+  #6 14.01 Setting up lto-disabled-list (24) ...
+  #6 14.01 Setting up libpsl5:amd64 (0.21.0-1.2build2) ...
+  #6 14.01 Setting up libglib2.0-0:amd64 (2.72.4-0ubuntu2.6) ...
+  #6 14.02 No schema files found: doing nothing.
+  #6 14.02 Setting up libbrotli1:amd64 (1.0.9-2build6) ...
+  #6 14.02 Setting up binutils-common:amd64 (2.38-4ubuntu2.8) ...
+  #6 14.03 Setting up x11-common (1:7.7+23ubuntu2) ...
+  #6 14.10 invoke-rc.d: could not determine current runlevel
+  #6 14.10 invoke-rc.d: policy-rc.d denied execution of start.
+  #6 14.10 Setting up libnghttp2-14:amd64 (1.43.0-1ubuntu0.2) ...
+  #6 14.11 Setting up less (590-1ubuntu0.22.04.3) ...
+  #6 14.11 Setting up linux-libc-dev:amd64 (5.15.0-153.163) ...
+  #6 14.11 Setting up libctf-nobfd0:amd64 (2.38-4ubuntu2.8) ...
+  #6 14.12 Setting up fd-find (8.3.1-1ubuntu0.1) ...
+  #6 14.12 Setting up libgomp1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 14.12 Setting up perl-modules-5.34 (5.34.0-3ubuntu1.5) ...
+  #6 14.12 Setting up bzip2 (1.0.8-5build1) ...
+  #6 14.12 Setting up libasan6:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 14.13 Setting up libsasl2-modules-db:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #6 14.13 Setting up libtirpc-dev:amd64 (1.3.2-2ubuntu0.1) ...
+  #6 14.13 Setting up libuv1:amd64 (1.43.0-1ubuntu0.1) ...
+  #6 14.13 Setting up rpcsvc-proto (1.4.2-0ubuntu6) ...
+  #6 14.13 Setting up emacsen-common (3.0.4) ...
+  #6 14.16 Setting up libx11-data (2:1.7.5-1ubuntu0.3) ...
+  #6 14.16 Setting up make (4.3-4.1build1) ...
+  #6 14.16 Setting up libmpfr6:amd64 (4.1.0-3build3) ...
+  #6 14.17 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build4) ...
+  #6 14.17 Setting up dh-elpa-helper (2.0.9ubuntu1) ...
+  #6 14.17 Setting up xz-utils (5.2.5-2ubuntu1) ...
+  #6 14.17 update-alternatives: using /usr/bin/xz to provide /usr/bin/lzma (lzma) in auto mode
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzma.1.gz because associated file /usr/share/man/man1/xz.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/unlzma.1.gz because associated file /usr/share/man/man1/unxz.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcat.1.gz because associated file /usr/share/man/man1/xzcat.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzmore.1.gz because associated file /usr/share/man/man1/xzmore.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzless.1.gz because associated file /usr/share/man/man1/xzless.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzdiff.1.gz because associated file /usr/share/man/man1/xzdiff.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcmp.1.gz because associated file /usr/share/man/man1/xzcmp.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzgrep.1.gz because associated file /usr/share/man/man1/xzgrep.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzegrep.1.gz because associated file /usr/share/man/man1/xzegrep.1.gz (of link group lzma) doesn't exist
+  #6 14.17 update-alternatives: warning: skip creation of /usr/share/man/man1/lzfgrep.1.gz because associated file /usr/share/man/man1/xzfgrep.1.gz (of link group lzma) doesn't exist
+  #6 14.17 Setting up libquadmath0:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 14.18 Setting up libssl-dev:amd64 (3.0.2-0ubuntu1.19) ...
+  #6 14.18 Setting up libmpc3:amd64 (1.2.1-2build1) ...
+  #6 14.18 Setting up libatomic1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 14.18 Setting up patch (2.7.6-7build2) ...
+  #6 14.19 Setting up libjsoncpp25:amd64 (1.9.5-3) ...
+  #6 14.19 Setting up libsasl2-2:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #6 14.19 Setting up libssh-4:amd64 (0.9.6-2ubuntu0.22.04.4) ...
+  #6 14.20 Setting up libubsan1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 14.20 Setting up fzf (0.29.0-1ubuntu0.1) ...
+  #6 14.20 Setting up libmd0:amd64 (1.0.4-1build1) ...
+  #6 14.20 Setting up libnsl-dev:amd64 (1.3.0-2build2) ...
+  #6 14.21 Setting up ripgrep (13.0.0-2ubuntu0.1) ...
+  #6 14.21 Setting up librhash0:amd64 (1.4.2-1ubuntu1) ...
+  #6 14.21 Setting up libcrypt-dev:amd64 (1:4.4.27-1) ...
+  #6 14.21 Setting up git-man (1:2.34.1-1ubuntu1.15) ...
+  #6 14.22 Setting up cmake-data (3.22.1-1ubuntu1.22.04.2) ...
+  #6 14.24 Setting up libbinutils:amd64 (2.38-4ubuntu2.8) ...
+  #6 14.25 Setting up libisl23:amd64 (0.24-2build1) ...
+  #6 14.25 Setting up libc-dev-bin (2.35-0ubuntu3.10) ...
+  #6 14.25 Setting up openssl (3.0.2-0ubuntu1.19) ...
+  #6 14.26 Setting up libbsd0:amd64 (0.11.5-1) ...
+  #6 14.26 Setting up libcc1-0:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 14.26 Setting up liblsan0:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 14.27 Setting up libitm1:amd64 (12.3.0-1ubuntu1~22.04.2) ...
+  #6 14.27 Setting up libgdbm6:amd64 (1.23-1) ...
+  #6 14.27 Setting up libicu70:amd64 (70.1-2) ...
+  #6 14.27 Setting up libtsan0:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 14.28 Setting up libctf0:amd64 (2.38-4ubuntu2.8) ...
+  #6 14.28 Setting up cpp-11 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 14.28 Setting up libice6:amd64 (2:1.0.10-1build2) ...
+  #6 14.28 Setting up libxdmcp6:amd64 (1:1.1.3-0ubuntu5) ...
+  #6 14.29 Setting up libxcb1:amd64 (1.14-3ubuntu3) ...
+  #6 14.29 Setting up libldap-2.5-0:amd64 (2.5.19+dfsg-0ubuntu0.22.04.1) ...
+  #6 14.29 Setting up ca-certificates (20240203~22.04.1) ...
+  #6 14.64 Updating certificates in /etc/ssl/certs...
+  #6 15.10 146 added, 0 removed; done.
+  #6 15.12 Setting up libgdbm-compat4:amd64 (1.23-1) ...
+  #6 15.12 Setting up libgcc-11-dev:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 15.12 Setting up cpp (4:11.2.0-1ubuntu1) ...
+  #6 15.12 Setting up libcurl4:amd64 (7.81.0-1ubuntu1.20) ...
+  #6 15.13 Setting up libc6-dev:amd64 (2.35-0ubuntu3.10) ...
+  #6 15.13 Setting up libx11-6:amd64 (2:1.7.5-1ubuntu0.3) ...
+  #6 15.13 Setting up curl (7.81.0-1ubuntu1.20) ...
+  #6 15.13 Setting up libsm6:amd64 (2:1.2.3-1build2) ...
+  #6 15.14 Setting up libxml2:amd64 (2.9.13+dfsg-1ubuntu0.8) ...
+  #6 15.14 Setting up binutils-x86-64-linux-gnu (2.38-4ubuntu2.8) ...
+  #6 15.14 Setting up libperl5.34:amd64 (5.34.0-3ubuntu1.5) ...
+  #6 15.14 Setting up libarchive13:amd64 (3.6.0-1ubuntu1.5) ...
+  #6 15.14 Setting up libxext6:amd64 (2:1.3.4-1build1) ...
+  #6 15.15 Setting up libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.20) ...
+  #6 15.16 Setting up binutils (2.38-4ubuntu2.8) ...
+  #6 15.16 Setting up perl (5.34.0-3ubuntu1.5) ...
+  #6 15.17 Setting up libxt6:amd64 (1:1.2.1-1) ...
+  #6 15.17 Setting up libdpkg-perl (1.21.1ubuntu2.3) ...
+  #6 15.17 Setting up libstdc++-11-dev:amd64 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 15.17 Setting up gcc-11 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 15.18 Setting up cmake (3.22.1-1ubuntu1.22.04.2) ...
+  #6 15.18 Setting up libxmu6:amd64 (2:1.1.3-3) ...
+  #6 15.18 Setting up g++-11 (11.4.0-1ubuntu1~22.04.2) ...
+  #6 15.19 Setting up gcc (4:11.2.0-1ubuntu1) ...
+  #6 15.19 Setting up dpkg-dev (1.21.1ubuntu2.3) ...
+  #6 15.20 Setting up liberror-perl (0.17029-1) ...
+  #6 15.20 Setting up xclip (0.13-2) ...
+  #6 15.20 Setting up pkg-config (0.29.2-1ubuntu3) ...
+  #6 15.22 Setting up git (1:2.34.1-1ubuntu1.15) ...
+  #6 15.23 Setting up g++ (4:11.2.0-1ubuntu1) ...
+  #6 15.24 update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode
+  #6 15.24 update-alternatives: warning: skip creation of /usr/share/man/man1/c++.1.gz because associated file /usr/share/man/man1/g++.1.gz (of link group c++) doesn't exist
+  #6 15.24 Setting up build-essential (12.9ubuntu3) ...
+  #6 15.25 Processing triggers for libc-bin (2.35-0ubuntu3.10) ...
+  #6 15.26 Processing triggers for ca-certificates (20240203~22.04.1) ...
+  #6 15.26 Updating certificates in /etc/ssl/certs...
+  #6 15.60 0 added, 0 removed; done.
+  #6 15.60 Running hooks in /etc/ca-certificates/update.d...
+  #6 15.61 done.
+  #6 DONE 16.6s
+  #7 [ 3/14] RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.74.0     && rustup component add rustfmt
+  #7 0.351 info: downloading installer
+  #7 2.090 info: profile set to 'default'
+  #7 2.090 info: default host triple is x86_64-unknown-linux-gnu
+  #7 2.090 info: syncing channel updates for '1.74.0-x86_64-unknown-linux-gnu'
+  #7 2.253 info: latest update on 2023-11-16, rust version 1.74.0 (79e9716c9 2023-11-13)
+  #7 2.253 info: downloading component 'cargo'
+  #7 2.548 info: downloading component 'clippy'
+  #7 2.677 info: downloading component 'rust-docs'
+  #7 4.849 info: downloading component 'rust-std'
+  #7 7.092 info: downloading component 'rustc'
+  #7 11.68 info: downloading component 'rustfmt'
+  #7 11.81 info: installing component 'cargo'
+  #7 12.59 info: installing component 'clippy'
+  #7 12.90 info: installing component 'rust-docs'
+  #7 14.63 info: installing component 'rust-std'
+  #7 17.09 info: installing component 'rustc'
+  #7 21.91 info: installing component 'rustfmt'
+  #7 22.30 info: default toolchain set to '1.74.0-x86_64-unknown-linux-gnu'
+  #7 22.30 
+  #7 22.31   1.74.0-x86_64-unknown-linux-gnu installed - rustc 1.74.0 (79e9716c9 2023-11-13)
+  #7 22.31 
+  #7 22.31 
+  #7 22.31 Rust is installed now. Great!
+  #7 22.31 
+  #7 22.31 To get started you may need to restart your current shell.
+  #7 22.31 This would reload your PATH environment variable to include
+  #7 22.31 Cargo's bin directory (/usr/local/cargo/bin).
+  #7 22.31 
+  #7 22.31 To configure your current shell, you need to source
+  #7 22.31 the corresponding env file under /usr/local/cargo.
+  #7 22.31 
+  #7 22.31 This is usually done by running one of the following (note the leading DOT):
+  #7 22.31 . "/usr/local/cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+  #7 22.31 source "/usr/local/cargo/env.fish"  # For fish
+  #7 22.31 source $"/usr/local/cargo/env.nu"  # For nushell
+  #7 22.46 info: component 'rustfmt' for target 'x86_64-unknown-linux-gnu' is up to date
+  #7 DONE 25.8s
+  #8 [ 4/14] RUN apt-get update && apt-get install -y --no-install-recommends bat     && rm -rf /var/lib/apt/lists/*
+  #8 0.313 Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+  #8 0.426 Get:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+  #8 0.440 Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+  #8 0.454 Get:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+  #8 0.508 Get:5 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+  #8 0.550 Get:6 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+  #8 0.557 Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+  #8 0.613 Get:8 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+  #8 0.792 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3606 kB]
+  #8 0.817 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [75.9 kB]
+  #8 0.818 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1576 kB]
+  #8 0.831 Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [5519 kB]
+  #8 0.870 Get:13 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.2 kB]
+  #8 0.870 Get:14 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [83.2 kB]
+  #8 0.882 Get:15 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [5235 kB]
+  #8 1.455 Get:16 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [48.5 kB]
+  #8 1.456 Get:17 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1271 kB]
+  #8 1.482 Get:18 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3253 kB]
+  #8 2.600 Fetched 41.1 MB in 2s (17.6 MB/s)
+  #8 2.600 Reading package lists...
+  #8 3.632 Reading package lists...
+  #8 4.625 Building dependency tree...
+  #8 4.790 Reading state information...
+  #8 4.950 The following additional packages will be installed:
+  #8 4.950   libgit2-1.1 libhttp-parser2.9 libmbedcrypto7 libmbedtls14 libmbedx509-1
+  #8 4.951   libssh2-1
+  #8 5.004 The following NEW packages will be installed:
+  #8 5.005   bat libgit2-1.1 libhttp-parser2.9 libmbedcrypto7 libmbedtls14 libmbedx509-1
+  #8 5.005   libssh2-1
+  #8 5.196 0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.
+  #8 5.196 Need to get 2873 kB of archives.
+  #8 5.196 After this operation, 6919 kB of additional disk space will be used.
+  #8 5.196 Get:1 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libhttp-parser2.9 amd64 2.9.4-4 [21.5 kB]
+  #8 5.381 Get:2 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libmbedcrypto7 amd64 2.28.0-1build1 [204 kB]
+  #8 5.648 Get:3 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libmbedx509-1 amd64 2.28.0-1build1 [47.2 kB]
+  #8 5.674 Get:4 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libmbedtls14 amd64 2.28.0-1build1 [82.7 kB]
+  #8 5.708 Get:5 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libssh2-1 amd64 1.10.0-3 [109 kB]
+  #8 5.743 Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 libgit2-1.1 amd64 1.1.0+dfsg.1-4.1ubuntu0.1 [457 kB]
+  #8 5.832 Get:7 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 bat amd64 0.19.0-1ubuntu0.1 [1951 kB]
+  #8 6.110 debconf: delaying package configuration, since apt-utils is not installed
+  #8 6.137 Fetched 2873 kB in 1s (2983 kB/s)
+  #8 6.152 Selecting previously unselected package libhttp-parser2.9:amd64.
+  #8 6.152 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 15360 files and directories currently installed.)
+  #8 6.159 Preparing to unpack .../0-libhttp-parser2.9_2.9.4-4_amd64.deb ...
+  #8 6.161 Unpacking libhttp-parser2.9:amd64 (2.9.4-4) ...
+  #8 6.176 Selecting previously unselected package libmbedcrypto7:amd64.
+  #8 6.177 Preparing to unpack .../1-libmbedcrypto7_2.28.0-1build1_amd64.deb ...
+  #8 6.178 Unpacking libmbedcrypto7:amd64 (2.28.0-1build1) ...
+  #8 6.193 Selecting previously unselected package libmbedx509-1:amd64.
+  #8 6.194 Preparing to unpack .../2-libmbedx509-1_2.28.0-1build1_amd64.deb ...
+  #8 6.194 Unpacking libmbedx509-1:amd64 (2.28.0-1build1) ...
+  #8 6.206 Selecting previously unselected package libmbedtls14:amd64.
+  #8 6.207 Preparing to unpack .../3-libmbedtls14_2.28.0-1build1_amd64.deb ...
+  #8 6.208 Unpacking libmbedtls14:amd64 (2.28.0-1build1) ...
+  #8 6.220 Selecting previously unselected package libssh2-1:amd64.
+  #8 6.221 Preparing to unpack .../4-libssh2-1_1.10.0-3_amd64.deb ...
+  #8 6.222 Unpacking libssh2-1:amd64 (1.10.0-3) ...
+  #8 6.235 Selecting previously unselected package libgit2-1.1:amd64.
+  #8 6.236 Preparing to unpack .../5-libgit2-1.1_1.1.0+dfsg.1-4.1ubuntu0.1_amd64.deb ...
+  #8 6.236 Unpacking libgit2-1.1:amd64 (1.1.0+dfsg.1-4.1ubuntu0.1) ...
+  #8 6.251 Selecting previously unselected package bat.
+  #8 6.252 Preparing to unpack .../6-bat_0.19.0-1ubuntu0.1_amd64.deb ...
+  #8 6.253 Unpacking bat (0.19.0-1ubuntu0.1) ...
+  #8 6.289 Setting up libmbedcrypto7:amd64 (2.28.0-1build1) ...
+  #8 6.291 Setting up libssh2-1:amd64 (1.10.0-3) ...
+  #8 6.293 Setting up libhttp-parser2.9:amd64 (2.9.4-4) ...
+  #8 6.295 Setting up libmbedx509-1:amd64 (2.28.0-1build1) ...
+  #8 6.297 Setting up libmbedtls14:amd64 (2.28.0-1build1) ...
+  #8 6.299 Setting up libgit2-1.1:amd64 (1.1.0+dfsg.1-4.1ubuntu0.1) ...
+  #8 6.301 Setting up bat (0.19.0-1ubuntu0.1) ...
+  #8 6.303 Processing triggers for libc-bin (2.35-0ubuntu3.10) ...
+  #8 DONE 6.5s
+  #9 [ 5/14] RUN BAT_VERSION=$(bat --version | awk '{print $2}') &&     dpkg --compare-versions "$BAT_VERSION" "ge" "0.25.0" || (     curl -Lo /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v0.25.0/bat_0.25.0_amd64.deb &&     apt-get update && apt-get install -y /tmp/bat.deb && rm -rf /var/lib/apt/lists/* /tmp/bat.deb )
+  #9 0.439 /bin/sh: 1: bat: not found
+  #9 0.446   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+  #9 0.446                                  Dload  Upload   Total   Spent    Left  Speed
+  #9 0.446 
+    0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+    0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  #9 1.019 
+  100 2570k  100 2570k    0     0  4488k      0 --:--:-- --:--:-- --:--:-- 4488k
+  #9 1.106 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+  #9 1.228 Get:2 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+  #9 1.289 Get:3 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [48.5 kB]
+  #9 1.324 Get:4 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [5235 kB]
+  #9 1.457 Get:5 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1271 kB]
+  #9 1.467 Get:6 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3253 kB]
+  #9 1.698 Get:7 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+  #9 1.812 Get:8 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+  #9 1.927 Get:9 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+  #9 1.966 Get:10 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+  #9 2.199 Get:11 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+  #9 2.213 Get:12 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+  #9 2.744 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [75.9 kB]
+  #9 2.746 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1576 kB]
+  #9 2.775 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3606 kB]
+  #9 2.877 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [5519 kB]
+  #9 3.030 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.2 kB]
+  #9 3.031 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [83.2 kB]
+  #9 4.050 Fetched 41.1 MB in 3s (13.7 MB/s)
+  #9 4.050 Reading package lists...
+  #9 5.068 Reading package lists...
+  #9 6.052 Building dependency tree...
+  #9 6.215 Reading state information...
+  #9 6.382 The following packages were automatically installed and are no longer required:
+  #9 6.383   libgit2-1.1 libhttp-parser2.9 libmbedcrypto7 libmbedtls14 libmbedx509-1
+  #9 6.383   libssh2-1
+  #9 6.383 Use 'apt autoremove' to remove them.
+  #9 6.404 The following packages will be upgraded:
+  #9 6.405   bat
+  #9 6.436 1 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+  #9 6.436 Need to get 0 B/2632 kB of archives.
+  #9 6.436 After this operation, 4442 kB disk space will be freed.
+  #9 6.436 Get:1 /tmp/bat.deb bat amd64 0.25.0 [2632 kB]
+  #9 6.533 debconf: delaying package configuration, since apt-utils is not installed
+  #9 6.568 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 15400 files and directories currently installed.)
+  #9 6.575 Preparing to unpack /tmp/bat.deb ...
+  #9 6.577 Unpacking bat (0.25.0) over (0.19.0-1ubuntu0.1) ...
+  #9 6.807 Setting up bat (0.25.0) ...
+  #9 DONE 6.9s
+  #10 [ 6/14] WORKDIR /app
+  #10 DONE 0.0s
+  #11 [ 7/14] COPY Cargo.toml Cargo.lock /app/
+  #11 DONE 0.1s
+  #12 [ 8/14] COPY rustfmt.toml /app/
+  #12 DONE 0.0s
+  #13 [ 9/14] COPY tests/syntax-tests/source/TOML/Cargo.toml /app/tests/syntax-tests/source/TOML/
+  #13 DONE 0.1s
+  #14 [10/14] COPY . .
+  #14 DONE 0.3s
+  #15 [11/14] RUN cargo build --release
+  #15 0.295     Updating crates.io index
+  #15 1.369  Downloading crates ...
+  #15 1.428   Downloaded adler2 v2.0.0
+  #15 1.430   Downloaded clap v4.5.24
+  #15 1.441   Downloaded zerofrom-derive v0.1.5
+  #15 1.442   Downloaded thiserror v1.0.69
+  #15 1.447   Downloaded serde_json v1.0.135
+  #15 1.456   Downloaded serde_derive v1.0.217
+  #15 1.459   Downloaded serde v1.0.217
+  #15 1.463   Downloaded serde_spanned v1.0.0
+  #15 1.465   Downloaded anstyle v1.0.10
+  #15 1.466   Downloaded serde_with_macros v3.12.0
+  #15 1.469   Downloaded serde_with v3.12.0
+  #15 1.479   Downloaded write16 v1.0.0
+  #15 1.480   Downloaded toml_parser v1.0.0
+  #15 1.483   Downloaded thiserror-impl v2.0.11
+  #15 1.486   Downloaded zerofrom v0.1.5
+  #15 1.487   Downloaded time-core v0.1.2
+  #15 1.488   Downloaded unsafe-libyaml v0.2.11
+  #15 1.493   Downloaded yaml-rust v0.4.5
+  #15 1.496   Downloaded zerovec-derive v0.10.3
+  #15 1.498   Downloaded shlex v1.3.0
+  #15 1.499   Downloaded walkdir v2.5.0
+  #15 1.502   Downloaded xterm-color v1.0.1
+  #15 1.503   Downloaded utf8_iter v1.0.4
+  #15 1.504   Downloaded bitflags v1.3.2
+  #15 1.508   Downloaded strsim v0.11.1
+  #15 1.509   Downloaded either v1.13.0
+  #15 1.511   Downloaded time-macros v0.2.19
+  #15 1.513   Downloaded vcpkg v0.2.15
+  #15 1.563   Downloaded zerovec v0.10.4
+  #15 1.572   Downloaded icu_collections v1.5.0
+  #15 1.580   Downloaded num-conv v0.1.0
+  #15 1.581   Downloaded ident_case v1.0.1
+  #15 1.581   Downloaded icu_provider_macros v1.5.0
+  #15 1.582   Downloaded cfg-if v1.0.0
+  #15 1.584   Downloaded home v0.5.9
+  #15 1.585   Downloaded git2 v0.20.0
+  #15 1.595   Downloaded syntect v5.2.0
+  #15 1.610   Downloaded rgb v0.8.50
+  #15 1.612   Downloaded pkg-config v0.3.31
+  #15 1.614   Downloaded idna_adapter v1.2.0
+  #15 1.615   Downloaded displaydoc v0.2.5
+  #15 1.618   Downloaded quote v1.0.40
+  #15 1.621   Downloaded path_abs v0.5.1
+  #15 1.624   Downloaded log v0.4.22
+  #15 1.626   Downloaded icu_normalizer_data v1.5.0
+  #15 1.629   Downloaded onig v6.4.0
+  #15 1.631   Downloaded ryu v1.0.18
+  #15 1.635   Downloaded bytemuck v1.21.0
+  #15 1.638   Downloaded icu_properties v1.5.1
+  #15 1.642   Downloaded proc-macro2 v1.0.95
+  #15 1.645   Downloaded nu-ansi-term v0.50.1
+  #15 1.647   Downloaded icu_provider v1.5.0
+  #15 1.650   Downloaded rayon-core v1.12.1
+  #15 1.655   Downloaded prettyplease v0.2.35
+  #15 1.659   Downloaded miniz_oxide v0.8.9
+  #15 1.662   Downloaded icu_locid_transform_data v1.5.0
+  #15 1.664   Downloaded once_cell v1.20.2
+  #15 1.667   Downloaded memchr v2.7.4
+  #15 1.673   Downloaded litemap v0.7.4
+  #15 1.676   Downloaded plist v1.7.0
+  #15 1.681   Downloaded mio v1.0.3
+  #15 1.687   Downloaded bugreport v0.5.1
+  #15 1.689   Downloaded powerfmt v0.2.0
+  #15 1.691   Downloaded percent-encoding v2.3.1
+  #15 1.692   Downloaded linked-hash-map v0.5.6
+  #15 1.693   Downloaded itoa v1.0.14
+  #15 1.694   Downloaded is_terminal_polyfill v1.70.1
+  #15 1.695   Downloaded bytesize v1.3.0
+  #15 1.696   Downloaded git-version v0.3.9
+  #15 1.697   Downloaded fnv v1.0.7
+  #15 1.698   Downloaded errno v0.3.10
+  #15 1.699   Downloaded equivalent v1.0.1
+  #15 1.700   Downloaded darling_core v0.20.10
+  #15 1.705   Downloaded idna v1.0.3
+  #15 1.711   Downloaded colorchoice v1.0.3
+  #15 1.712   Downloaded winnow v0.7.11
+  #15 1.722   Downloaded sysinfo v0.33.1
+  #15 1.734   Downloaded syn v2.0.104
+  #15 1.748   Downloaded itertools v0.13.0
+  #15 1.756   Downloaded icu_normalizer v1.5.0
+  #15 1.760   Downloaded icu_locid v1.5.0
+  #15 1.765   Downloaded itertools v0.14.0
+  #15 1.773   Downloaded hashbrown v0.15.2
+  #15 1.779   Downloaded grep-cli v0.1.11
+  #15 1.781   Downloaded globset v0.4.15
+  #15 1.782   Downloaded git-version-macro v0.3.9
+  #15 1.783   Downloaded form_urlencoded v1.2.1
+  #15 1.784   Downloaded etcetera v0.10.0
+  #15 1.786   Downloaded deranged v0.3.11
+  #15 1.787   Downloaded darling v0.20.10
+  #15 1.791   Downloaded crossbeam-epoch v0.9.18
+  #15 1.794   Downloaded content_inspector v0.2.4
+  #15 1.795   Downloaded bitflags v2.6.0
+  #15 1.799   Downloaded base64 v0.22.1
+  #15 1.804   Downloaded toml_writer v1.0.0
+  #15 1.805   Downloaded shell-escape v0.1.5
+  #15 1.806   Downloaded console v0.16.0
+  #15 1.809   Downloaded synstructure v0.13.1
+  #15 1.811   Downloaded smallvec v1.13.2
+  #15 1.813   Downloaded icu_locid_transform v1.5.0
+  #15 1.816   Downloaded darling_macro v0.20.10
+  #15 1.816   Downloaded crossbeam-deque v0.8.6
+  #15 1.818   Downloaded std_prelude v0.2.12
+  #15 1.819   Downloaded shell-words v1.1.0
+  #15 1.820   Downloaded toml_datetime v0.7.0
+  #15 1.821   Downloaded rayon v1.10.0
+  #15 1.832   Downloaded quick-xml v0.32.0
+  #15 1.839   Downloaded flate2 v1.1.2
+  #15 1.845   Downloaded clap_lex v0.7.4
+  #15 1.846   Downloaded cc v1.2.7
+  #15 1.850   Downloaded bincode v1.3.3
+  #15 1.853   Downloaded writeable v0.5.5
+  #15 1.855   Downloaded icu_properties_data v1.5.0
+  #15 1.867   Downloaded time v0.3.37
+  #15 1.875   Downloaded stable_deref_trait v1.2.0
+  #15 1.876   Downloaded unicode-width v0.2.0
+  #15 1.884   Downloaded crc32fast v1.4.2
+  #15 1.886   Downloaded clircle v0.6.1
+  #15 1.888   Downloaded thiserror v2.0.11
+  #15 1.893   Downloaded yoke-derive v0.7.5
+  #15 1.894   Downloaded yoke v0.7.5
+  #15 1.896   Downloaded wild v2.2.1
+  #15 1.897   Downloaded utf8parse v0.2.2
+  #15 1.898   Downloaded utf16_iter v1.0.5
+  #15 1.899   Downloaded unicode-segmentation v1.12.0
+  #15 1.904   Downloaded unicode-ident v1.0.14
+  #15 1.907   Downloaded toml v0.9.1
+  #15 1.911   Downloaded thiserror-impl v1.0.69
+  #15 1.913   Downloaded terminal-trx v0.2.4
+  #15 1.914   Downloaded terminal-colorsaurus v1.0.0
+  #15 1.917   Downloaded serde_yaml v0.9.34+deprecated
+  #15 1.921   Downloaded terminal_size v0.4.1
+  #15 1.922   Downloaded termcolor v1.4.1
+  #15 1.923   Downloaded clap_builder v4.5.24
+  #15 1.932   Downloaded ansi_colours v1.2.3
+  #15 1.933   Downloaded crossbeam-utils v0.8.21
+  #15 1.937   Downloaded url v2.5.4
+  #15 1.940   Downloaded regex v1.11.1
+  #15 1.955   Downloaded tinystr v0.7.6
+  #15 1.957   Downloaded semver v1.0.25
+  #15 1.960   Downloaded same-file v1.0.6
+  #15 1.961   Downloaded jobserver v0.1.32
+  #15 1.963   Downloaded indexmap v2.8.0
+  #15 1.968   Downloaded anyhow v1.0.97
+  #15 1.972   Downloaded anstyle-query v1.1.2
+  #15 1.974   Downloaded anstyle-parse v0.2.6
+  #15 1.976   Downloaded anstream v0.6.18
+  #15 1.978   Downloaded aho-corasick v1.1.3
+  #15 2.012   Downloaded regex-syntax v0.8.5
+  #15 2.032   Downloaded rustix v0.38.43
+  #15 2.059   Downloaded bstr v1.11.3
+  #15 2.212   Downloaded regex-automata v0.4.9
+  #15 2.253   Downloaded onig_sys v69.8.1
+  #15 2.323   Downloaded libz-sys v1.1.21
+  #15 2.376   Downloaded libc v0.2.175
+  #15 2.535   Downloaded encoding_rs v0.8.35
+  #15 2.704   Downloaded libgit2-sys v0.18.0+1.9.0
+  #15 2.838   Downloaded linux-raw-sys v0.4.15
+  #15 3.167    Compiling proc-macro2 v1.0.95
+  #15 3.167    Compiling unicode-ident v1.0.14
+  #15 3.167    Compiling libc v0.2.175
+  #15 3.167    Compiling memchr v2.7.4
+  #15 3.167    Compiling stable_deref_trait v1.2.0
+  #15 3.167    Compiling shlex v1.3.0
+  #15 3.168    Compiling rustix v0.38.43
+  #15 3.168    Compiling pkg-config v0.3.31
+  #15 3.168    Compiling serde v1.0.217
+  #15 3.171    Compiling litemap v0.7.4
+  #15 3.174    Compiling strsim v0.11.1
+  #15 3.179    Compiling writeable v0.5.5
+  #15 3.180    Compiling cfg-if v1.0.0
+  #15 3.183    Compiling crossbeam-utils v0.8.21
+  #15 3.183    Compiling fnv v1.0.7
+  #15 3.183    Compiling ident_case v1.0.1
+  #15 3.188    Compiling icu_locid_transform_data v1.5.0
+  #15 3.191    Compiling icu_properties_data v1.5.0
+  #15 3.196    Compiling regex-syntax v0.8.5
+  #15 3.196    Compiling vcpkg v0.2.15
+  #15 3.196    Compiling linux-raw-sys v0.4.15
+  #15 3.196    Compiling utf8parse v0.2.2
+  #15 3.196    Compiling bitflags v2.6.0
+  #15 3.196    Compiling write16 v1.0.0
+  #15 3.196    Compiling icu_normalizer_data v1.5.0
+  #15 3.196    Compiling utf16_iter v1.0.5
+  #15 3.197    Compiling smallvec v1.13.2
+  #15 3.197    Compiling anstyle v1.0.10
+  #15 3.197    Compiling is_terminal_polyfill v1.70.1
+  #15 3.197    Compiling anstyle-query v1.1.2
+  #15 3.197    Compiling utf8_iter v1.0.4
+  #15 3.197    Compiling colorchoice v1.0.3
+  #15 3.198    Compiling itoa v1.0.14
+  #15 3.198    Compiling rayon-core v1.12.1
+  #15 3.198    Compiling either v1.13.0
+  #15 3.198    Compiling powerfmt v0.2.0
+  #15 3.198    Compiling anyhow v1.0.97
+  #15 3.198    Compiling prettyplease v0.2.35
+  #15 3.198    Compiling winnow v0.7.11
+  #15 3.198    Compiling equivalent v1.0.1
+  #15 3.198    Compiling hashbrown v0.15.2
+  #15 3.199    Compiling clap_lex v0.7.4
+  #15 3.199    Compiling serde_json v1.0.135
+  #15 3.199    Compiling thiserror v1.0.69
+  #15 3.199    Compiling num-conv v0.1.0
+  #15 3.199    Compiling percent-encoding v2.3.1
+  #15 3.199    Compiling log v0.4.22
+  #15 3.199    Compiling time-core v0.1.2
+  #15 3.199    Compiling ryu v1.0.18
+  #15 3.199    Compiling toml_writer v1.0.0
+  #15 3.199    Compiling adler2 v2.0.0
+  #15 3.199    Compiling once_cell v1.20.2
+  #15 3.199    Compiling same-file v1.0.6
+  #15 3.200    Compiling thiserror v2.0.11
+  #15 3.200    Compiling semver v1.0.25
+  #15 3.200    Compiling bytemuck v1.21.0
+  #15 3.200    Compiling bugreport v0.5.1
+  #15 3.200    Compiling bitflags v1.3.2
+  #15 3.200    Compiling linked-hash-map v0.5.6
+  #15 3.200    Compiling base64 v0.22.1
+  #15 3.200    Compiling home v0.5.9
+  #15 3.200    Compiling xterm-color v1.0.1
+  #15 3.200    Compiling shell-escape v0.1.5
+  #15 3.200    Compiling unicode-width v0.2.0
+  #15 3.200    Compiling std_prelude v0.2.12
+  #15 3.200    Compiling termcolor v1.4.1
+  #15 3.200    Compiling unsafe-libyaml v0.2.11
+  #15 3.200    Compiling nu-ansi-term v0.50.1
+  #15 3.201    Compiling wild v2.2.1
+  #15 3.201    Compiling shell-words v1.1.0
+  #15 3.201    Compiling bytesize v1.3.0
+  #15 3.201    Compiling unicode-segmentation v1.12.0
+  #15 3.269    Compiling anstyle-parse v0.2.6
+  #15 3.304    Compiling path_abs v0.5.1
+  #15 3.388    Compiling crc32fast v1.4.2
+  #15 3.393    Compiling encoding_rs v0.8.35
+  #15 3.394    Compiling clircle v0.6.1
+  #15 3.409    Compiling walkdir v2.5.0
+  #15 3.508    Compiling form_urlencoded v1.2.1
+  #15 3.509    Compiling etcetera v0.10.0
+  #15 3.549    Compiling miniz_oxide v0.8.9
+  #15 3.553    Compiling yaml-rust v0.4.5
+  #15 3.560    Compiling itertools v0.14.0
+  #15 3.595    Compiling deranged v0.3.11
+  #15 3.629    Compiling aho-corasick v1.1.3
+  #15 3.636    Compiling quick-xml v0.32.0
+  #15 3.636    Compiling content_inspector v0.2.4
+  #15 3.675    Compiling anstream v0.6.18
+  #15 3.694    Compiling rgb v0.8.50
+  #15 3.695    Compiling itertools v0.13.0
+  #15 3.988    Compiling ansi_colours v1.2.3
+  #15 3.992    Compiling flate2 v1.1.2
+  #15 4.013    Compiling quote v1.0.40
+  #15 4.034    Compiling crossbeam-epoch v0.9.18
+  #15 4.139    Compiling syn v2.0.104
+  #15 4.171    Compiling indexmap v2.8.0
+  #15 4.214    Compiling crossbeam-deque v0.8.6
+  #15 4.245    Compiling terminal_size v0.4.1
+  #15 4.284    Compiling mio v1.0.3
+  #15 4.284    Compiling terminal-trx v0.2.4
+  #15 4.284    Compiling console v0.16.0
+  #15 4.293    Compiling clap_builder v4.5.24
+  #15 4.357    Compiling jobserver v0.1.32
+  #15 4.426    Compiling terminal-colorsaurus v1.0.0
+  #15 4.434    Compiling time v0.3.37
+  #15 4.503    Compiling cc v1.2.7
+  #15 4.708    Compiling rayon v1.10.0
+  #15 4.725    Compiling toml_parser v1.0.0
+  #15 4.933    Compiling regex-automata v0.4.9
+  #15 5.431    Compiling libz-sys v1.1.21
+  #15 5.431    Compiling onig_sys v69.8.1
+  #15 5.431    Compiling libgit2-sys v0.18.0+1.9.0
+  #15 5.795    Compiling clap v4.5.24
+  #15 6.024    Compiling toml_datetime v0.7.0
+  #15 6.024    Compiling serde_spanned v1.0.0
+  #15 6.172    Compiling bincode v1.3.3
+  #15 6.172    Compiling plist v1.7.0
+  #15 6.172    Compiling serde_yaml v0.9.34+deprecated
+  #15 6.612    Compiling toml v0.9.1
+  #15 6.755    Compiling sysinfo v0.33.1
+  #15 6.940    Compiling regex v1.11.1
+  #15 7.394    Compiling synstructure v0.13.1
+  #15 7.394    Compiling darling_core v0.20.10
+  #15 7.448    Compiling bstr v1.11.3
+  #15 7.893    Compiling globset v0.4.15
+  #15 7.966    Compiling zerofrom-derive v0.1.5
+  #15 7.966    Compiling yoke-derive v0.7.5
+  #15 7.966    Compiling zerovec-derive v0.10.3
+  #15 7.966    Compiling displaydoc v0.2.5
+  #15 7.966    Compiling icu_provider_macros v1.5.0
+  #15 7.969    Compiling serde_derive v1.0.217
+  #15 7.972    Compiling git-version-macro v0.3.9
+  #15 7.976    Compiling thiserror-impl v1.0.69
+  #15 7.976    Compiling thiserror-impl v2.0.11
+  #15 8.096    Compiling grep-cli v0.1.11
+  #15 8.292    Compiling onig v6.4.0
+  #15 8.528    Compiling git-version v0.3.9
+  #15 8.844    Compiling darling_macro v0.20.10
+  #15 8.998    Compiling zerofrom v0.1.5
+  #15 9.061    Compiling yoke v0.7.5
+  #15 9.181    Compiling zerovec v0.10.4
+  #15 9.341    Compiling darling v0.20.10
+  #15 9.370    Compiling serde_with_macros v3.12.0
+  #15 9.950    Compiling tinystr v0.7.6
+  #15 9.950    Compiling icu_collections v1.5.0
+  #15 10.06    Compiling icu_locid v1.5.0
+  #15 10.23    Compiling serde_with v3.12.0
+  #15 10.23    Compiling syntect v5.2.0
+  #15 10.50    Compiling icu_provider v1.5.0
+  #15 10.75    Compiling icu_locid_transform v1.5.0
+  #15 10.81    Compiling bat v0.25.0 (/app)
+  #15 11.19    Compiling icu_properties v1.5.1
+  #15 12.53    Compiling icu_normalizer v1.5.0
+  #15 12.88    Compiling idna_adapter v1.2.0
+  #15 12.93    Compiling idna v1.0.3
+  #15 13.14    Compiling url v2.5.4
+  #15 13.51    Compiling git2 v0.20.0
+  #15 63.98     Finished release [optimized] target(s) in 1m 03s
+  #15 DONE 64.1s
+  #16 [12/14] RUN ./target/release/bat cache --build
+  #16 0.330 No themes were found in '/etc/bat/themes', using the default set
+  #16 0.487 No syntaxes were found in '/etc/bat/syntaxes', using the default set.
+  #16 1.071 Some referenced contexts could not be found!
+  #16 1.071 - Syntax 'Dockerfile (with bash)' with scope 'source.dockerfile.bash' has unresolved context reference ByScope { scope: <source.json>, sub_context: Some("arrays"), with_escape: false }
+  #16 1.072 Writing theme set to /root/.cache/bat/themes.bin ... okay
+  #16 1.074 Writing syntax set to /root/.cache/bat/syntaxes.bin ... okay
+  #16 1.074 Writing metadata to folder /root/.cache/bat ... okay
+  #16 DONE 1.1s
+  #17 [13/14] RUN mkdir -p /etc/bat && echo "pager = "less"" > /etc/bat/config
+  #17 DONE 0.4s
+  #18 [14/14] RUN mkdir -p /root/.config/bat && echo "[bat]\npager = "less"" > /root/.config/bat/config
+  #18 DONE 0.5s
+  #19 exporting to image
+  #19 exporting layers
+  #19 exporting layers 20.1s done
+  #19 writing image sha256:253b84d0b305cf700dd80b5e24ea4d00ef11dffc22a1ea7559b1893338b7f476 done
+  #19 naming to docker.io/library/envgym_test_1756351379 done
+  #19 DONE 20.1s
+  === Runtime Log ===  
+  Runtime Status: Success
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM ubuntu:22.04
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV RUSTUP_HOME=/usr/local/rustup
+  ENV CARGO_HOME=/usr/local/cargo
+  ENV PATH=$CARGO_HOME/bin:$PATH
+  ENV BAT_CONFIG_DIR=/etc/bat
+  ENV BAT_USER_CONFIG_DIR=/root/.config/bat
+  RUN dpkg --add-architecture amd64 && apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      git \
+      less \
+      xclip \
+      fzf \
+      ripgrep \
+      fd-find \
+      pkg-config \
+      build-essential \
+      libssl-dev \
+      cmake \
+      && ln -s "$(which fdfind)" /usr/local/bin/fd \
+      && rm -rf /var/lib/apt/lists/*
+  RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.74.0 \
+      && rustup component add rustfmt
+  RUN apt-get update && apt-get install -y --no-install-recommends bat \
+      && rm -rf /var/lib/apt/lists/*
+  # Verify bat version >= 0.25.0; if default apt package is older, install latest .deb from github releases
+  RUN BAT_VERSION=$(bat --version | awk '{print $2}') && \
+      dpkg --compare-versions "$BAT_VERSION" "ge" "0.25.0" || ( \
+      curl -Lo /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v0.25.0/bat_0.25.0_amd64.deb && \
+      apt-get update && apt-get install -y /tmp/bat.deb && rm -rf /var/lib/apt/lists/* /tmp/bat.deb )
+  WORKDIR /app
+  COPY Cargo.toml Cargo.lock /app/
+  COPY rustfmt.toml /app/
+  COPY tests/syntax-tests/source/TOML/Cargo.toml /app/tests/syntax-tests/source/TOML/
+  COPY . .
+  RUN cargo build --release
+  RUN ./target/release/bat cache --build
+  # Create system-wide bat config directory and default config with pager settings
+  RUN mkdir -p $BAT_CONFIG_DIR && echo "pager = \"less\"" > $BAT_CONFIG_DIR/config
+  # Create default user config directory and config file
+  RUN mkdir -p $BAT_USER_CONFIG_DIR && echo "[bat]\npager = \"less\"" > $BAT_USER_CONFIG_DIR/config
+  ENV RUST_BACKTRACE=1
+  CMD ["/bin/bash"]
+--- End of Iteration 2 ---
+

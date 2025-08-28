@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250827_202328 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756326208
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+38 |
+39 | >>> RUN getent group docker || groupadd -g 999 docker; \
+40 | >>>     useradd -m -u 1000 user; \
+41 | >>>     usermod -aG docker user
+42 |
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c getent group docker || groupadd -g 999 docker;     useradd -m -u 1000 user;     usermod -aG docker user" did not complete successfully: exit code: 6
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

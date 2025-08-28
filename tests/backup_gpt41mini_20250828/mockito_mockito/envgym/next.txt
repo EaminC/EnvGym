@@ -1,0 +1,22 @@
+current progress
+
+- Base image set to Ubuntu 22.04 with non-interactive frontend and environment variables for Java and Gradle configured.
+- Installed required packages including OpenJDK 11 headless, git, curl, unzip, bash, and ca-certificates.
+- Created user `cc` and set working directory to the project path.
+- Cloned the Mockito repository into the working directory.
+- Created `gradle.properties` with JVM max heap size and parallel build enabled.
+- Created `.gitignore` to exclude Gradle cache, build artifacts, and IDE files.
+- Created `settings.gradle` if missing, to define root project name.
+- Made Gradle wrapper executable and verified Gradle version.
+- Default command set to bash shell.
+
+next step
+
+- Add build execution step in the Dockerfile to run `./gradlew build` to compile and test the project, leveraging parallel builds and memory settings.
+- Include test coverage tool integration and generate coverage report if applicable.
+- Optionally configure snapshot repository credentials and test publishing within the container.
+- Clean up Gradle caches and unnecessary files post-build to reduce image size.
+- Add entrypoint or scripts to facilitate environment setup for development or CI use.
+- Document Dockerfile usage and environment variables for maintainers.
+- Verify network connectivity and retry mechanisms for external dependency downloads during build.
+- Consider multi-stage builds to optimize final image size.

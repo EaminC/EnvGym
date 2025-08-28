@@ -1,0 +1,18 @@
+current progress  
+- Docker image based on ubuntu:22.04 amd64 as per plan.  
+- Installed required development packages (build-essential, clang, cmake, git, make, xz-utils, zlib1g-dev, python3-pip, bash, lldb) consistent with plan.  
+- Created non-root user `pony` with UID 1001 and shell `/bin/bash` matching plan.  
+- Copied repository code and adjusted ownership to `pony` user.  
+- Set working directory to `/repo` and switched to `pony` user.  
+- Configured PATH and Pony environment variables for user environment, though using `/home/pony/.pony` which differs from plan default `/root/.local/share/ponyup/bin` for ponyup environments.  
+- Default shell set to bash and container command is bash shell.  
+
+next step  
+- Align Pony environment variable paths with plan recommendations, especially for amd64 Ubuntu 22.04 GNU ponyup variant (consider `/root/.local/share/ponyup/bin` or explicitly install ponyup if not present).  
+- Install ponyup and required Pony compiler versions inside the image if not already included; verify ponyc installation and functionality.  
+- Ensure Python packages such as cloudsmith-cli, mkdocs, mkdocs-material-insiders are installed if the image will be used for documentation or publishing tasks.  
+- Add environment variable settings persistently (e.g., shell profile) if necessary to ensure ponyup and pony compiler binaries are accessible.  
+- Confirm that all unnecessary ARM or RISC-V components are excluded.  
+- Optionally add scripts or instructions for non-root user environment setup to fully comply with the plan.  
+- Validate that the image builds and runs Pony commands successfully as `pony` user.  
+- Update `.gitignore` and CI configurations if this Dockerfile is part of CI pipeline.

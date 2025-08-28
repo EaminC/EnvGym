@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250828_081019",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756368617",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 454B done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/golang:1.20\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 111B done\n#3 DONE 0.0s\n\n#4 [1/9] FROM docker.io/library/golang:1.20@sha256:8f9af7094d0cb27cc783c697ac5ba25efdc4da35f8526db21f7aebb0b0b4f18a\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 184.59kB 0.1s done\n#5 DONE 0.1s\n\n#6 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends     bash     ca-certificates     git     build-essential     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [3/9] WORKDIR /zeromicro_go-zero\n#7 CACHED\n\n#8 [4/9] COPY go.mod go.sum ./\n#8 CACHED\n\n#9 [5/9] RUN go mod download\n#9 CACHED\n\n#10 [6/9] COPY . .\n#10 DONE 0.2s\n\n#11 [7/9] RUN go clean -modcache\n#11 DONE 1.3s\n\n#12 [8/9] RUN go mod tidy -v\n#12 0.371 go: go.mod file indicates go 1.21, but maximum version supported by tidy is 1.20\n#12 ERROR: process \"/bin/sh -c go mod tidy -v\" did not complete successfully: exit code: 1\n------\n > [8/9] RUN go mod tidy -v:\n0.371 go: go.mod file indicates go 1.21, but maximum version supported by tidy is 1.20\n------\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\nenvgym.dockerfile:20\n--------------------\n  18 |     \n  19 |     RUN go clean -modcache\n  20 | >>> RUN go mod tidy -v\n  21 |     RUN go build -v ./...\n  22 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c go mod tidy -v\" did not complete successfully: exit code: 1\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

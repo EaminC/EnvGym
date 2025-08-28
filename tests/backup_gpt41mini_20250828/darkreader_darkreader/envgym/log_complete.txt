@@ -1,0 +1,137 @@
+=== Docker Execution Log - 20250827_180317 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756317760
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 1.63kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.3s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/17] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#4 DONE 0.0s
+
+#5 [ 2/17] WORKDIR /darkreader_darkreader
+#5 CACHED
+
+#6 [ 3/17] RUN apt-get update && apt-get install -y --no-install-recommends     curl     ca-certificates     git     python3 python3-distutils python3-venv python3-pip     build-essential     software-properties-common     gnupg2     unzip     wget     xz-utils     locales     bash-completion     dumb-init     procps     fontconfig     chromium-browser     firefox     thunderbird     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 4/17] RUN locale-gen en_US.UTF-8
+#7 CACHED
+
+#8 [ 5/17] RUN curl -fsSL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh &&     bash nodesource_setup.sh &&     rm nodesource_setup.sh
+#8 CACHED
+
+#9 [ 6/17] RUN apt-get update && apt-get install -y nodejs &&     node -v && npm -v
+#9 CACHED
+
+#10 [internal] load build context
+#10 transferring context: 542.14kB 0.1s done
+#10 DONE 0.1s
+
+#11 [ 7/17] RUN npm install -g typescript && tsc -v
+#11 1.650 
+#11 1.650 added 1 package in 1s
+#11 1.652 npm notice
+#11 1.652 npm notice New major version of npm available! 10.8.2 -> 11.5.2
+#11 1.652 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+#11 1.652 npm notice To update run: npm install -g npm@11.5.2
+#11 1.652 npm notice
+#11 1.820 Version 5.9.2
+#11 DONE 1.9s
+
+#12 [ 8/17] RUN npm install -g ts-node && ts-node --version
+#12 1.869 
+#12 1.869 added 20 packages in 2s
+#12 1.945 v10.9.2
+#12 DONE 2.1s
+
+#13 [ 9/17] RUN npm install -g yarn && yarn --version
+#13 1.072 
+#13 1.072 added 1 package in 728ms
+#13 1.316 1.22.22
+#13 DONE 1.4s
+
+#14 [10/17] RUN curl -fsSL https://deno.land/install.sh | DENO_INSTALL=/usr/local sh
+#14 0.847 
+#####                                                                      8.3%
+##################################                                        47.9%
+#######################################################                   77.4%
+######################################################################## 100.0%
+#14 1.134 Archive:  /usr/local/bin/deno.zip
+#14 1.134   inflating: /usr/local/bin/deno     
+#14 2.117 Deno was installed successfully to /usr/local/bin/deno
+#14 2.117 Run 'deno --help' to get started
+#14 2.117 
+#14 2.117 Stuck? Join our Discord https://discord.gg/deno
+#14 DONE 2.4s
+
+#15 [11/17] RUN ln -s /usr/local/bin/deno /usr/bin/deno
+#15 DONE 0.2s
+
+#16 [12/17] RUN deno --version
+#16 0.412 deno 2.4.5 (stable, release, x86_64-unknown-linux-gnu)
+#16 0.412 v8 13.7.152.14-rusty
+#16 0.412 typescript 5.8.3
+#16 DONE 0.4s
+
+#17 [13/17] RUN echo "fs.file-max = 65535" >> /etc/sysctl.conf
+#17 DONE 0.4s
+
+#18 [14/17] COPY . /darkreader_darkreader
+#18 DONE 0.3s
+
+#19 [15/17] RUN chown -R root:root /darkreader_darkreader     && chmod -R u+rwX /darkreader_darkreader
+#19 DONE 0.8s
+
+#20 [16/17] WORKDIR /darkreader_darkreader
+#20 DONE 0.0s
+
+#21 [17/17] RUN npm ci --max-old-space-size=4096
+#21 10.98 
+#21 10.98 added 793 packages, and audited 794 packages in 11s
+#21 10.98 
+#21 10.98 177 packages are looking for funding
+#21 10.98   run `npm fund` for details
+#21 10.98 
+#21 10.98 3 low severity vulnerabilities
+#21 10.98 
+#21 10.98 To address all issues, run:
+#21 10.98   npm audit fix
+#21 10.98 
+#21 10.98 Run `npm audit` for details.
+#21 DONE 11.7s
+
+#22 exporting to image
+#22 exporting layers
+#22 exporting layers 14.7s done
+#22 writing image sha256:20b29aa086cb149367bef7116c4e2a36d6297e767a2a05e0aa348b4594e50c72
+#22 writing image sha256:20b29aa086cb149367bef7116c4e2a36d6297e767a2a05e0aa348b4594e50c72 0.1s done
+#22 naming to docker.io/library/envgym_test_1756317760 done
+#22 DONE 15.0s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

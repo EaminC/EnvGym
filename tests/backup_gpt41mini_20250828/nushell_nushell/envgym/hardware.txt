@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/nushell_nushell; project likely user-space code, ensure context paths relative to this
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, alpine) without GPU-specific tags
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU-related instructions needed; consider multi-stage builds for large projects; ensure file paths relative to working directory
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build features available but unused due to no NVIDIA GPU detected

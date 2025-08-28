@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/rfuse; project under /home/cc/EnvGym/data-gpt-4.1mini with rfuse subdirectory
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: x86_64 compatible base images (e.g., ubuntu, debian, alpine amd64 tags)
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU specific instructions; ensure paths in Dockerfile reflect working directory if copying local files
+- Docker Version: 28.3.2; supports BuildKit and --gpus flag though GPU not available on this system

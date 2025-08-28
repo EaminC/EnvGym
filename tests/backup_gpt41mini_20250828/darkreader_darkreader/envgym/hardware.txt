@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/darkreader_darkreader, typical Linux project structure under user home
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: Linux amd64 compatible base images (e.g., ubuntu, debian, alpine for amd64)
+- GPU: No functional NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU-specific instructions needed; large memory and CPU core count enable parallel build optimizations
+- Docker Version: 28.3.2, supports BuildKit and Buildx, GPU builds possible but not applicable due to missing NVIDIA GPU drivers

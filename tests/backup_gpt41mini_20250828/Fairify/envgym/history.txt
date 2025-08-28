@@ -1,0 +1,2513 @@
+=== Iteration 1 - [2025-08-27 08:05:24] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN ===
+  **Note:** This adjusted plan is based on your hardware environment: x86_64 architecture, Linux OS (amd64), no NVIDIA GPU present, project located in `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`, Docker version 28.3.2 with BuildKit support, no GPU acceleration required.
+  ---
+  1. DOWNLOADS NEEDED:  
+     - Python 3.7 (recommended version for compatibility)  
+       * Use x86_64 Linux-compatible installer or package (e.g., Ubuntu/Debian official repos or python.org Linux binaries)  
+       * No ARM or other architecture versions needed, confirm installation for amd64  
+     - Git (for cloning the repository)  
+       * Linux x86_64 binary or package from official repos  
+     - pip (Python package installer, latest version)  
+     - Virtual environment tool (venv, included with Python 3.7+)  
+     - Bash shell environment (Linux default available)  
+       * No Windows-specific bash environments needed (Git Bash or WSL not required)  
+     - System dependencies for TensorFlow 2.5.0 and aif360 (may require additional system libraries depending on Linux distro)  
+       * Since no NVIDIA GPU is detected, install CPU-only TensorFlow 2.5.0 version; avoid CUDA/cuDNN dependencies  
+       * Confirm `tensorflow==2.5.0` installed corresponds to CPU version to prevent GPU dependency errors  
+     - z3-solver (SMT solver Python bindings)  
+       * Install via pip; no GPU or architecture-specific changes needed  
+     - aif360 library for fairness metrics and preprocessing  
+     - Internet access to download Python packages (required during setup)  
+     - Datasets included in artifact; no additional downloads needed  
+     - Awareness of dataset specifics and directory locations as per original plan (paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`)  
+     - Result directories as described, ensure all writable in your Linux environment  
+     - No adjustments needed for GPU or CUDA; CPU-only environment compatible with all planned software versions  
+  ---
+  2. FILES TO CREATE:  
+     - Virtual environment folder: `fenv/` (created by `python3 -m venv fenv`) inside project root  
+     - `requirements.txt` including:  
+       * z3-solver  
+       * tensorflow==2.5.0 (CPU-only)  
+       * aif360  
+     - `.gitignore` with specified content to exclude:  
+       ```
+       *.DS_Store
+       .ipynb_checkpoints/
+       __pycache__/
+       ~$*
+       ```  
+     - (Optional) `.env` or shell script for environment variables if needed  
+     - `INSTALL.md` with setup instructions  
+     - Ensure all bash scripts (`fairify.sh`, `fairify-stress.sh`, `fairify-relaxed.sh`, `fairify-targeted.sh`, `fairify-targeted2.sh`) are executable (`chmod +x`)  
+     - Confirm presence of datasets and artifact components in relative paths under `/home/cc/EnvGym/data-gpt-4.1mini/Fairify/data/` as per original plan  
+     - Confirm existence and write permissions of all result directories under relative paths (e.g., `relaxed/AC/res/`, `targeted2/GC/res/`, `src/AC/res-race/`)  
+     - README files in result directories as described, no path changes needed  
+  ---
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - All original test case requirements apply, with no modification needed for CPU-only environment  
+     - Tests involving TensorFlow must run with CPU backend only; ensure tests do not attempt GPU usage  
+     - Bash script executions run in Linux bash environment as default; no Windows-specific adjustments required  
+     - Paths referenced in tests and scripts remain relative or absolute from `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`  
+     - No changes needed for architecture or OS-specific test logic since x86_64 Linux is compatible  
+     - Confirm tests for loading datasets, running verification, and saving CSV outputs work with CPU-only TensorFlow and z3-solver installed in virtual environment  
+     - Repository hygiene tests and `.gitignore` checks remain unchanged  
+  ---
+  4. COMPLETE TODO LIST (ADJUSTED FOR YOUR HARDWARE & ENVIRONMENT):  
+     1. **Install Python 3.7 (Linux x86_64 CPU version)**  
+        - Use official python.org Linux x86_64 binaries or distro package manager (e.g., `sudo apt install python3.7 python3.7-venv python3.7-dev`)  
+        - Verify with `python3.7 --version` and confirm `python3` points to Python 3.7 or adjust aliases as needed  
+     2. **Install Git (Linux x86_64)**  
+        - Use package manager (e.g., `sudo apt install git`)  
+        - Verify with `git --version`  
+     3. **Bash shell environment**  
+        - Native on Linux; verify with `bash --version`  
+        - No Windows-specific steps needed  
+     4. **Clone Fairify repository**  
+        - `git clone https://github.com/sumonbis/Fairify` into `/home/cc/EnvGym/data-gpt-4.1mini/`  
+        - Confirm presence of all files and directories as per original plan  
+        - Confirm `requirements.txt` includes `tensorflow==2.5.0` (CPU), `z3-solver`, and `aif360`  
+        - Confirm `.gitignore` is present and correctly configured  
+        - Confirm datasets and benchmark models exist in `data/` and appropriate folders  
+     5. **Create Python virtual environment**  
+        - Run: `python3.7 -m venv fenv` inside project root  
+        - Activate: `source fenv/bin/activate`  
+        - Confirm prompt change and `which python` points to `fenv/bin/python`  
+     6. **Upgrade pip inside virtual environment**  
+        - Run: `pip install --upgrade pip`  
+        - Verify with `pip --version`  
+     7. **Install required Python packages**  
+        - Run: `pip install -r requirements.txt`  
+        - TensorFlow 2.5.0 installed will be CPU-only version by default on Linux without GPU detected  
+        - If `z3-solver` fails, try precompiled wheels or install system SMT solver dependencies (`libz3-dev`) via package manager  
+        - For `aif360`, ensure all dependencies are installed; install system libraries if errors occur (e.g., `libxml2-dev`, `libxslt1-dev`)  
+     8. **Verify artifact availability and completeness**  
+        - Confirm all datasets present and accessible at relative paths  
+        - Confirm benchmark `.h5` model files present  
+        - Confirm Python source code files executable and not corrupted  
+        - Confirm `.gitignore` present and correct  
+        - Confirm all result directories exist and writable, including new `targeted2/` directories  
+        - Confirm README files present in result directories  
+     9. **Run basic verification and environment tests**  
+        - Run a Python script to load a benchmark model and verify a simple query (CPU-only)  
+        - Run a minimal script to use `z3-solver` SMT functionality  
+        - Run a minimal TensorFlow 2.5.0 CPU script (e.g., tensor addition) to confirm installation and runtime  
+        - Run a minimal `aif360` test (e.g., load sample dataset and compute fairness metric)  
+        - Load each dataset (`adult`, `bank`, `german`) and confirm feature correctness per documentation  
+        - Execute bash scripts for all experiment types (`fairify.sh`, `fairify-stress.sh`, `fairify-relaxed.sh`, `fairify-targeted.sh`, `fairify-targeted2.sh`) with dataset arguments (`AC`, `BM`, `GC`)  
+        - Run race-based and sex-based verification scripts for Adult Census and German Credit as applicable  
+        - Run Bank Marketing verification scripts  
+        - Confirm all produce CSV result files in designated `res/` directories  
+        - Confirm README files in result directories accurately describe outputs  
+     10. **Verify reproducibility and artifact badge claims**  
+         - Confirm GitHub repo and Zenodo DOI accessibility  
+         - Confirm environment and scripts match STATUS.md description for reproducibility  
+         - Document any deviations or errors encountered  
+     11. **Error handling and troubleshooting**  
+         - For Python version issues, use `pyenv` or package manager to enforce Python 3.7  
+         - For missing system dependencies, install via distro package manager (e.g., `apt`)  
+         - For virtual environment activation errors, check shell and permissions  
+         - For TensorFlow errors, confirm CPU-only installation compatible with x86_64 Linux, no GPU dependencies present  
+         - For `aif360` errors, install missing system libraries as needed  
+         - For `z3-solver` installation errors, ensure `libz3-dev` or equivalent installed  
+         - For bash script execution errors, verify executable permissions (`chmod +x`) and bash shell presence  
+         - For permission errors writing CSV files, check ownership and write permissions on `res/` directories  
+         - Confirm `.gitignore` prevents committing unwanted files  
+     12. **Documentation and reproducibility**  
+         - Document installed versions: Python 3.7.x, pip, tensorflow 2.5.0 (CPU), z3-solver, aif360  
+         - Follow `INSTALL.md` instructions closely for consistency  
+         - Maintain `.gitignore` hygiene  
+         - Refer to dataset documentation files in `data/` directories for clarity  
+         - Maintain README files in result folders for output guidance  
+     13. **Prepare for development or experimentation**  
+         - Create or update test scripts to cover CPU-only environment and new dependencies  
+         - Configure IDE/editor to use `fenv` Python interpreter  
+         - Use provided bash scripts for benchmarking and verification as per instructions  
+         - Account for CPU-only environment in experiment run times (may be longer than GPU runs)  
+         - Use included datasets and models for thorough testing  
+         - Ensure `.gitignore` respected by development tools  
+         - Confirm result directories writable and include descriptive README files, including newly added `targeted2` outputs  
+  ---
+  **Additional Notes Specific to Your Hardware Setup:**  
+  - No NVIDIA GPU detected: skip any CUDA/cuDNN or GPU-specific installations; TensorFlow 2.5.0 CPU-only version is compatible and recommended.  
+  - x86_64 Linux base image compatibility confirmed; no ARM or multi-architecture adjustments needed.  
+  - Use absolute or relative paths consistently from `/home/cc/EnvGym/data-gpt-4.1mini/Fairify` as your working directory.  
+  - Bash shell available natively; no additional shell environment installations required.  
+  - Docker usage not detailed in original plan but if used, base images should be Linux amd64 (e.g., `python:3.7-slim`) without GPU support.  
+  - Memory and storage considerations: project is large but typical for CPU-based ML experiments; ensure sufficient RAM (>=8GB recommended) and disk space (~several GBs for datasets, models, and results).  
+  - Execution times may be longer on CPU-only; plan experiment scheduling accordingly.  
+  ---
+  This adjusted plan ensures full compatibility and feasibility given your x86_64 Linux CPU-only hardware environment and project location. All original steps remain valid with clarifications to avoid GPU dependencies and Windows-specific instructions.
+NEXT:
+  current progress  
+  - Base image python:3.7-slim used with environment variables set for UTF-8 and PATH updated for virtual environment.  
+  - Installed system dependencies including git, bash, build-essential, libz3-dev, libxml2-dev, libxslt1-dev, python3.7-venv via apt-get.  
+  - Cloned Fairify repository into /Fairify directory inside container.  
+  - Created Python virtual environment at /root/fenv.  
+  - Upgraded pip inside virtual environment.  
+  - Attempted to copy requirements.txt from host Fairify directory to container /Fairify/, but failed due to missing source file in build context.  
+  - Failed to install Python packages from requirements.txt because the file was not found during docker build.  
+  - Set executable permissions on bash scripts.  
+  - Default command set to /bin/bash.
+  next step  
+  - Remove or adjust the line `COPY Fairify/requirements.txt /Fairify/requirements.txt` because the requirements.txt is already present inside the cloned /Fairify directory; copying from outside the build context causes the error.  
+  - Instead, rely on the cloned repository's requirements.txt at /Fairify/requirements.txt for pip installation.  
+  - Modify the Dockerfile to install requirements.txt directly from /Fairify/requirements.txt (already inside container after git clone) without COPY.  
+  - Confirm the working directory is /Fairify before running pip install to ensure correct path resolution.  
+  - Verify all subsequent commands reference the correct paths inside container after cloning.  
+  - Rebuild the Docker image after these corrections.
+LOG:
+  === Docker Execution Log - 20250827_080520 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1756281919
+  === Build Log ===
+  Build Status: Failed
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 859B done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/python:3.7-slim
+  #2 DONE 0.5s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [internal] load build context
+  #4 transferring context: 2B done
+  #4 DONE 0.0s
+  #5 [4/9] RUN git clone https://github.com/sumonbis/Fairify.git /Fairify
+  #5 CACHED
+  #6 [2/9] WORKDIR /Fairify
+  #6 CACHED
+  #7 [3/9] RUN apt-get update && apt-get install -y --no-install-recommends     git     bash     build-essential     libz3-dev     libxml2-dev     libxslt1-dev     python3.7-venv     && rm -rf /var/lib/apt/lists/*
+  #7 CACHED
+  #8 [5/9] RUN python3 -m venv /root/fenv
+  #8 CACHED
+  #9 [6/9] RUN /root/fenv/bin/pip install --upgrade pip
+  #9 CACHED
+  #10 [7/9] COPY Fairify/requirements.txt /Fairify/requirements.txt
+  #10 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::24j9eemr9wk8qxvx6aocc1gnd: "/Fairify/requirements.txt": not found
+  #11 [1/9] FROM docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b
+  #11 resolve docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b done
+  #11 sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b 1.86kB / 1.86kB done
+  #11 sha256:ffd28e36ef37b3a4a24f6a771a48d7c5499ea42d6309ac911a3f699e122060be 1.37kB / 1.37kB done
+  #11 sha256:a255ffcb469f2ec40f2958a76beb0c2bbebfe92ce9af67a9b48d84b4cb695ac8 7.54kB / 7.54kB done
+  #11 CANCELED
+  ------
+   > [7/9] COPY Fairify/requirements.txt /Fairify/requirements.txt:
+  ------
+  envgym.dockerfile:26
+  --------------------
+    24 |     RUN /root/fenv/bin/pip install --upgrade pip
+    25 |     
+    26 | >>> COPY Fairify/requirements.txt /Fairify/requirements.txt
+    27 |     
+    28 |     RUN /root/fenv/bin/pip install -r /Fairify/requirements.txt
+  --------------------
+  ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::24j9eemr9wk8qxvx6aocc1gnd: "/Fairify/requirements.txt": not found
+  === Runtime Log ===  
+  Runtime Status: Failed
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM python:3.7-slim
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV LANG=C.UTF-8
+  ENV LC_ALL=C.UTF-8
+  ENV PATH="/root/fenv/bin:$PATH"
+  WORKDIR /Fairify
+  RUN apt-get update && apt-get install -y --no-install-recommends \
+      git \
+      bash \
+      build-essential \
+      libz3-dev \
+      libxml2-dev \
+      libxslt1-dev \
+      python3.7-venv \
+      && rm -rf /var/lib/apt/lists/*
+  RUN git clone https://github.com/sumonbis/Fairify.git /Fairify
+  RUN python3 -m venv /root/fenv
+  RUN /root/fenv/bin/pip install --upgrade pip
+  COPY Fairify/requirements.txt /Fairify/requirements.txt
+  RUN /root/fenv/bin/pip install -r /Fairify/requirements.txt
+  RUN chmod +x /Fairify/fairify.sh \
+      /Fairify/fairify-stress.sh \
+      /Fairify/fairify-relaxed.sh \
+      /Fairify/fairify-targeted.sh \
+      /Fairify/fairify-targeted2.sh
+  CMD ["/bin/bash"]
+--- End of Iteration 1 ---
+
+=== Iteration 2 - [2025-08-27 08:05:46] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN ===
+  **Note:** This adjusted plan is based on your hardware environment: x86_64 architecture, Linux OS (amd64), no NVIDIA GPU present, project located in `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`, Docker version 28.3.2 with BuildKit support, no GPU acceleration required.
+  ---
+  1. DOWNLOADS NEEDED:  
+     - Python 3.7 (recommended version for compatibility)  
+       * Use x86_64 Linux-compatible installer or package (e.g., Ubuntu/Debian official repos or python.org Linux binaries)  
+       * No ARM or other architecture versions needed, confirm installation for amd64  
+     - Git (for cloning the repository)  
+       * Linux x86_64 binary or package from official repos  
+     - pip (Python package installer, latest version)  
+     - Virtual environment tool (venv, included with Python 3.7+)  
+     - Bash shell environment (Linux default available)  
+       * No Windows-specific bash environments needed (Git Bash or WSL not required)  
+     - System dependencies for TensorFlow 2.5.0 and aif360 (may require additional system libraries depending on Linux distro)  
+       * Since no NVIDIA GPU is detected, install CPU-only TensorFlow 2.5.0 version; avoid CUDA/cuDNN dependencies  
+       * Confirm `tensorflow==2.5.0` installed corresponds to CPU version to prevent GPU dependency errors  
+     - z3-solver (SMT solver Python bindings)  
+       * Install via pip; no GPU or architecture-specific changes needed  
+     - aif360 library for fairness metrics and preprocessing  
+     - Internet access to download Python packages (required during setup)  
+     - Datasets included in artifact; no additional downloads needed  
+     - Awareness of dataset specifics and directory locations as per original plan (paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`)  
+     - Result directories as described, ensure all writable in your Linux environment  
+     - No adjustments needed for GPU or CUDA; CPU-only environment compatible with all planned software versions  
+  ---
+  2. FILES TO CREATE:  
+     - Virtual environment folder: `fenv/` (created by `python3 -m venv fenv`) inside project root  
+     - `requirements.txt` including:  
+       * z3-solver  
+       * tensorflow==2.5.0 (CPU-only)  
+       * aif360  
+     - `.gitignore` with specified content to exclude:  
+       ```
+       *.DS_Store
+       .ipynb_checkpoints/
+       __pycache__/
+       ~$*
+       ```  
+     - (Optional) `.env` or shell script for environment variables if needed  
+     - `INSTALL.md` with setup instructions  
+     - Ensure all bash scripts (`fairify.sh`, `fairify-stress.sh`, `fairify-relaxed.sh`, `fairify-targeted.sh`, `fairify-targeted2.sh`) are executable (`chmod +x`)  
+     - Confirm presence of datasets and artifact components in relative paths under `/home/cc/EnvGym/data-gpt-4.1mini/Fairify/data/` as per original plan  
+     - Confirm existence and write permissions of all result directories under relative paths (e.g., `relaxed/AC/res/`, `targeted2/GC/res/`, `src/AC/res-race/`)  
+     - README files in result directories as described, no path changes needed  
+  ---
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - All original test case requirements apply, with no modification needed for CPU-only environment  
+     - Tests involving TensorFlow must run with CPU backend only; ensure tests do not attempt GPU usage  
+     - Bash script executions run in Linux bash environment as default; no Windows-specific adjustments required  
+     - Paths referenced in tests and scripts remain relative or absolute from `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`  
+     - No changes needed for architecture or OS-specific test logic since x86_64 Linux is compatible  
+     - Confirm tests for loading datasets, running verification, and saving CSV outputs work with CPU-only TensorFlow and z3-solver installed in virtual environment  
+     - Repository hygiene tests and `.gitignore` checks remain unchanged  
+  ---
+  4. COMPLETE TODO LIST (ADJUSTED FOR YOUR HARDWARE & ENVIRONMENT):  
+     1. **Install Python 3.7 (Linux x86_64 CPU version)**  
+        - Use official python.org Linux x86_64 binaries or distro package manager (e.g., `sudo apt install python3.7 python3.7-venv python3.7-dev`)  
+        - Verify with `python3.7 --version` and confirm `python3` points to Python 3.7 or adjust aliases as needed  
+     2. **Install Git (Linux x86_64)**  
+        - Use package manager (e.g., `sudo apt install git`)  
+        - Verify with `git --version`  
+     3. **Bash shell environment**  
+        - Native on Linux; verify with `bash --version`  
+        - No Windows-specific steps needed  
+     4. **Clone Fairify repository**  
+        - `git clone https://github.com/sumonbis/Fairify` into `/home/cc/EnvGym/data-gpt-4.1mini/`  
+        - Confirm presence of all files and directories as per original plan  
+        - Confirm `requirements.txt` includes `tensorflow==2.5.0` (CPU), `z3-solver`, and `aif360`  
+        - Confirm `.gitignore` is present and correctly configured  
+        - Confirm datasets and benchmark models exist in `data/` and appropriate folders  
+     5. **Create Python virtual environment**  
+        - Run: `python3.7 -m venv fenv` inside project root  
+        - Activate: `source fenv/bin/activate`  
+        - Confirm prompt change and `which python` points to `fenv/bin/python`  
+     6. **Upgrade pip inside virtual environment**  
+        - Run: `pip install --upgrade pip`  
+        - Verify with `pip --version`  
+     7. **Install required Python packages**  
+        - Run: `pip install -r requirements.txt`  
+        - TensorFlow 2.5.0 installed will be CPU-only version by default on Linux without GPU detected  
+        - If `z3-solver` fails, try precompiled wheels or install system SMT solver dependencies (`libz3-dev`) via package manager  
+        - For `aif360`, ensure all dependencies are installed; install system libraries if errors occur (e.g., `libxml2-dev`, `libxslt1-dev`)  
+     8. **Verify artifact availability and completeness**  
+        - Confirm all datasets present and accessible at relative paths  
+        - Confirm benchmark `.h5` model files present  
+        - Confirm Python source code files executable and not corrupted  
+        - Confirm `.gitignore` present and correct  
+        - Confirm all result directories exist and writable, including new `targeted2/` directories  
+        - Confirm README files present in result directories  
+     9. **Run basic verification and environment tests**  
+        - Run a Python script to load a benchmark model and verify a simple query (CPU-only)  
+        - Run a minimal script to use `z3-solver` SMT functionality  
+        - Run a minimal TensorFlow 2.5.0 CPU script (e.g., tensor addition) to confirm installation and runtime  
+        - Run a minimal `aif360` test (e.g., load sample dataset and compute fairness metric)  
+        - Load each dataset (`adult`, `bank`, `german`) and confirm feature correctness per documentation  
+        - Execute bash scripts for all experiment types (`fairify.sh`, `fairify-stress.sh`, `fairify-relaxed.sh`, `fairify-targeted.sh`, `fairify-targeted2.sh`) with dataset arguments (`AC`, `BM`, `GC`)  
+        - Run race-based and sex-based verification scripts for Adult Census and German Credit as applicable  
+        - Run Bank Marketing verification scripts  
+        - Confirm all produce CSV result files in designated `res/` directories  
+        - Confirm README files in result directories accurately describe outputs  
+     10. **Verify reproducibility and artifact badge claims**  
+         - Confirm GitHub repo and Zenodo DOI accessibility  
+         - Confirm environment and scripts match STATUS.md description for reproducibility  
+         - Document any deviations or errors encountered  
+     11. **Error handling and troubleshooting**  
+         - For Python version issues, use `pyenv` or package manager to enforce Python 3.7  
+         - For missing system dependencies, install via distro package manager (e.g., `apt`)  
+         - For virtual environment activation errors, check shell and permissions  
+         - For TensorFlow errors, confirm CPU-only installation compatible with x86_64 Linux, no GPU dependencies present  
+         - For `aif360` errors, install missing system libraries as needed  
+         - For `z3-solver` installation errors, ensure `libz3-dev` or equivalent installed  
+         - For bash script execution errors, verify executable permissions (`chmod +x`) and bash shell presence  
+         - For permission errors writing CSV files, check ownership and write permissions on `res/` directories  
+         - Confirm `.gitignore` prevents committing unwanted files  
+     12. **Documentation and reproducibility**  
+         - Document installed versions: Python 3.7.x, pip, tensorflow 2.5.0 (CPU), z3-solver, aif360  
+         - Follow `INSTALL.md` instructions closely for consistency  
+         - Maintain `.gitignore` hygiene  
+         - Refer to dataset documentation files in `data/` directories for clarity  
+         - Maintain README files in result folders for output guidance  
+     13. **Prepare for development or experimentation**  
+         - Create or update test scripts to cover CPU-only environment and new dependencies  
+         - Configure IDE/editor to use `fenv` Python interpreter  
+         - Use provided bash scripts for benchmarking and verification as per instructions  
+         - Account for CPU-only environment in experiment run times (may be longer than GPU runs)  
+         - Use included datasets and models for thorough testing  
+         - Ensure `.gitignore` respected by development tools  
+         - Confirm result directories writable and include descriptive README files, including newly added `targeted2` outputs  
+  ---
+  **Additional Notes Specific to Your Hardware Setup:**  
+  - No NVIDIA GPU detected: skip any CUDA/cuDNN or GPU-specific installations; TensorFlow 2.5.0 CPU-only version is compatible and recommended.  
+  - x86_64 Linux base image compatibility confirmed; no ARM or multi-architecture adjustments needed.  
+  - Use absolute or relative paths consistently from `/home/cc/EnvGym/data-gpt-4.1mini/Fairify` as your working directory.  
+  - Bash shell available natively; no additional shell environment installations required.  
+  - Docker usage not detailed in original plan but if used, base images should be Linux amd64 (e.g., `python:3.7-slim`) without GPU support.  
+  - Memory and storage considerations: project is large but typical for CPU-based ML experiments; ensure sufficient RAM (>=8GB recommended) and disk space (~several GBs for datasets, models, and results).  
+  - Execution times may be longer on CPU-only; plan experiment scheduling accordingly.  
+  ---
+  This adjusted plan ensures full compatibility and feasibility given your x86_64 Linux CPU-only hardware environment and project location. All original steps remain valid with clarifications to avoid GPU dependencies and Windows-specific instructions.
+NEXT:
+  current progress  
+  - Base image `python:3.7-slim` is used.  
+  - Environment variables for locale and PATH set.  
+  - Working directory set to `/Fairify`.  
+  - Attempted to install required system packages including `git`, `bash`, `build-essential`, `libz3-dev`, `libxml2-dev`, `libxslt1-dev`, and `python3.7-venv`.  
+  - Clone of the Fairify repository into `/Fairify`.  
+  - Created Python virtual environment at `/root/fenv` and upgraded pip.  
+  - Installed Python packages from `requirements.txt` inside the virtual environment.  
+  - Set executable permissions on specified bash scripts.  
+  - Docker build failed at the `apt-get install` step with exit code 100, indicating package installation issues.  
+  next step  
+  - Modify the Dockerfile to fix the `apt-get install` failure by:  
+    * Ensuring `python3.7-venv` package is available or replaced with the correct package name for the `python3.7` version in `python:3.7-slim` base image (possibly install `python3-venv` or just rely on the base Python 3.7).  
+    * Possibly add `apt-get update` and `apt-get upgrade` before install to ensure package lists are up to date.  
+    * Add missing dependencies or adjust package names according to the base image's Debian/Ubuntu version.  
+    * Consider installing `python3.7-venv` if available or using `python3-venv` or removing it if venv is included in the base image.  
+  - Validate package names and availability inside the base image by testing or using a more complete base image if necessary.  
+  - After system packages install successfully, continue with virtual environment creation and package installation steps.  
+  - Confirm all bash scripts paths are correct, including correcting the last chmod path (`/Fairify/targeted2/fairify-targeted2.sh` assumed instead of duplicate `/fairify-targeted.sh`).  
+  - Rebuild Docker image and verify the build completes without errors.
+LOG:
+  === Docker Execution Log - 20250827_080539 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1756281930
+  === Build Log ===
+  Build Status: Failed
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 839B done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/python:3.7-slim
+  #2 DONE 0.1s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [1/8] FROM docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b
+  #4 resolve docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b done
+  #4 sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b 1.86kB / 1.86kB done
+  #4 sha256:ffd28e36ef37b3a4a24f6a771a48d7c5499ea42d6309ac911a3f699e122060be 1.37kB / 1.37kB done
+  #4 sha256:a255ffcb469f2ec40f2958a76beb0c2bbebfe92ce9af67a9b48d84b4cb695ac8 7.54kB / 7.54kB done
+  #4 sha256:a803e7c4b030119420574a882a52b6431e160fceb7620f61b525d49bc2d58886 0B / 29.12MB 0.1s
+  #4 sha256:bf3336e84c8e00632cdea35b18fec9a5691711bdc8ac885e3ef54a3d5ff500ba 0B / 3.50MB 0.1s
+  #4 sha256:8973eb85275f19b8d72c6047560629116ad902397e5c1885b2508788197de28b 0B / 11.38MB 0.1s
+  #4 sha256:a803e7c4b030119420574a882a52b6431e160fceb7620f61b525d49bc2d58886 5.24MB / 29.12MB 0.2s
+  #4 sha256:bf3336e84c8e00632cdea35b18fec9a5691711bdc8ac885e3ef54a3d5ff500ba 1.38MB / 3.50MB 0.2s
+  #4 sha256:8973eb85275f19b8d72c6047560629116ad902397e5c1885b2508788197de28b 9.44MB / 11.38MB 0.2s
+  #4 sha256:a803e7c4b030119420574a882a52b6431e160fceb7620f61b525d49bc2d58886 20.97MB / 29.12MB 0.4s
+  #4 sha256:bf3336e84c8e00632cdea35b18fec9a5691711bdc8ac885e3ef54a3d5ff500ba 3.50MB / 3.50MB 0.3s done
+  #4 sha256:8973eb85275f19b8d72c6047560629116ad902397e5c1885b2508788197de28b 11.38MB / 11.38MB 0.2s done
+  #4 sha256:f9afc3cc0135aad884dad502f28a5b3d8cd32565116131da818ebf2ea6d46095 244B / 244B 0.3s done
+  #4 sha256:39312d8b4ab77de264678427265a2668073675bb8666caf723da18c9e4b7e3fc 2.10MB / 3.13MB 0.4s
+  #4 sha256:a803e7c4b030119420574a882a52b6431e160fceb7620f61b525d49bc2d58886 29.12MB / 29.12MB 0.5s done
+  #4 sha256:39312d8b4ab77de264678427265a2668073675bb8666caf723da18c9e4b7e3fc 3.13MB / 3.13MB 0.4s done
+  #4 extracting sha256:a803e7c4b030119420574a882a52b6431e160fceb7620f61b525d49bc2d58886 0.1s
+  #4 extracting sha256:a803e7c4b030119420574a882a52b6431e160fceb7620f61b525d49bc2d58886 3.4s done
+  #4 extracting sha256:bf3336e84c8e00632cdea35b18fec9a5691711bdc8ac885e3ef54a3d5ff500ba 0.1s
+  #4 extracting sha256:bf3336e84c8e00632cdea35b18fec9a5691711bdc8ac885e3ef54a3d5ff500ba 0.3s done
+  #4 extracting sha256:8973eb85275f19b8d72c6047560629116ad902397e5c1885b2508788197de28b 0.1s
+  #4 extracting sha256:8973eb85275f19b8d72c6047560629116ad902397e5c1885b2508788197de28b 1.2s done
+  #4 extracting sha256:f9afc3cc0135aad884dad502f28a5b3d8cd32565116131da818ebf2ea6d46095 done
+  #4 extracting sha256:39312d8b4ab77de264678427265a2668073675bb8666caf723da18c9e4b7e3fc 0.1s
+  #4 extracting sha256:39312d8b4ab77de264678427265a2668073675bb8666caf723da18c9e4b7e3fc 0.5s done
+  #4 DONE 6.2s
+  #5 [2/8] WORKDIR /Fairify
+  #5 DONE 0.4s
+  #6 [3/8] RUN apt-get update && apt-get install -y --no-install-recommends     git     bash     build-essential     libz3-dev     libxml2-dev     libxslt1-dev     python3.7-venv     && rm -rf /var/lib/apt/lists/*
+  #6 0.240 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+  #6 0.253 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+  #6 0.253 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+  #6 0.315 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+  #6 0.424 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+  #6 0.424 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [277 kB]
+  #6 1.471 Fetched 9331 kB in 1s (7421 kB/s)
+  #6 1.471 Reading package lists...
+  #6 2.005 Reading package lists...
+  #6 2.491 Building dependency tree...
+  #6 2.579 Reading state information...
+  #6 2.662 E: Unable to locate package python3.7-venv
+  #6 2.662 E: Couldn't find any package by glob 'python3.7-venv'
+  #6 2.662 E: Couldn't find any package by regex 'python3.7-venv'
+  #6 ERROR: process "/bin/sh -c apt-get update && apt-get install -y --no-install-recommends     git     bash     build-essential     libz3-dev     libxml2-dev     libxslt1-dev     python3.7-venv     && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+  ------
+   > [3/8] RUN apt-get update && apt-get install -y --no-install-recommends     git     bash     build-essential     libz3-dev     libxml2-dev     libxslt1-dev     python3.7-venv     && rm -rf /var/lib/apt/lists/*:
+  0.253 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+  0.315 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+  0.424 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+  0.424 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [277 kB]
+  2.662 E: Unable to locate package python3.7-venv
+  2.662 E: Couldn't find any package by glob 'python3.7-venv'
+  2.662 E: Couldn't find any package by regex 'python3.7-venv'
+  ------
+  envgym.dockerfile:10
+  --------------------
+     9 |     
+    10 | >>> RUN apt-get update && apt-get install -y --no-install-recommends \
+    11 | >>>     git \
+    12 | >>>     bash \
+    13 | >>>     build-essential \
+    14 | >>>     libz3-dev \
+    15 | >>>     libxml2-dev \
+    16 | >>>     libxslt1-dev \
+    17 | >>>     python3.7-venv \
+    18 | >>>     && rm -rf /var/lib/apt/lists/*
+    19 |     
+  --------------------
+  ERROR: failed to build: failed to solve: process "/bin/sh -c apt-get update && apt-get install -y --no-install-recommends     git     bash     build-essential     libz3-dev     libxml2-dev     libxslt1-dev     python3.7-venv     && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+  === Runtime Log ===  
+  Runtime Status: Failed
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM python:3.7-slim
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV LANG=C.UTF-8
+  ENV LC_ALL=C.UTF-8
+  ENV PATH="/root/fenv/bin:$PATH"
+  WORKDIR /Fairify
+  RUN apt-get update && apt-get install -y --no-install-recommends \
+      git \
+      bash \
+      build-essential \
+      libz3-dev \
+      libxml2-dev \
+      libxslt1-dev \
+      python3.7-venv \
+      && rm -rf /var/lib/apt/lists/*
+  RUN git clone https://github.com/sumonbis/Fairify.git /Fairify
+  RUN python3 -m venv /root/fenv
+  RUN /root/fenv/bin/pip install --upgrade pip
+  RUN /root/fenv/bin/pip install -r /Fairify/requirements.txt
+  RUN chmod +x /Fairify/src/fairify.sh \
+      /Fairify/stress/fairify-stress.sh \
+      /Fairify/relaxed/fairify-relaxed.sh \
+      /Fairify/targeted/fairify-targeted.sh \
+      /Fairify/targeted2/fairify-targeted.sh
+  CMD ["/bin/bash"]
+--- End of Iteration 2 ---
+
+=== Iteration 3 - [2025-08-27 08:08:43] ===
+PLAN:
+  === ADJUSTED ENVIRONMENT SETUP PLAN ===
+  **Note:** This adjusted plan is based on your hardware environment: x86_64 architecture, Linux OS (amd64), no NVIDIA GPU present, project located in `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`, Docker version 28.3.2 with BuildKit support, no GPU acceleration required.
+  ---
+  1. DOWNLOADS NEEDED:  
+     - Python 3.7 (recommended version for compatibility)  
+       * Use x86_64 Linux-compatible installer or package (e.g., Ubuntu/Debian official repos or python.org Linux binaries)  
+       * No ARM or other architecture versions needed, confirm installation for amd64  
+     - Git (for cloning the repository)  
+       * Linux x86_64 binary or package from official repos  
+     - pip (Python package installer, latest version)  
+     - Virtual environment tool (venv, included with Python 3.7+)  
+     - Bash shell environment (Linux default available)  
+       * No Windows-specific bash environments needed (Git Bash or WSL not required)  
+     - System dependencies for TensorFlow 2.5.0 and aif360 (may require additional system libraries depending on Linux distro)  
+       * Since no NVIDIA GPU is detected, install CPU-only TensorFlow 2.5.0 version; avoid CUDA/cuDNN dependencies  
+       * Confirm `tensorflow==2.5.0` installed corresponds to CPU version to prevent GPU dependency errors  
+     - z3-solver (SMT solver Python bindings)  
+       * Install via pip; no GPU or architecture-specific changes needed  
+     - aif360 library for fairness metrics and preprocessing  
+     - Internet access to download Python packages (required during setup)  
+     - Datasets included in artifact; no additional downloads needed  
+     - Awareness of dataset specifics and directory locations as per original plan (paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`)  
+     - Result directories as described, ensure all writable in your Linux environment  
+     - No adjustments needed for GPU or CUDA; CPU-only environment compatible with all planned software versions  
+  ---
+  2. FILES TO CREATE:  
+     - Virtual environment folder: `fenv/` (created by `python3 -m venv fenv`) inside project root  
+     - `requirements.txt` including:  
+       * z3-solver  
+       * tensorflow==2.5.0 (CPU-only)  
+       * aif360  
+     - `.gitignore` with specified content to exclude:  
+       ```
+       *.DS_Store
+       .ipynb_checkpoints/
+       __pycache__/
+       ~$*
+       ```  
+     - (Optional) `.env` or shell script for environment variables if needed  
+     - `INSTALL.md` with setup instructions  
+     - Ensure all bash scripts (`fairify.sh`, `fairify-stress.sh`, `fairify-relaxed.sh`, `fairify-targeted.sh`, `fairify-targeted2.sh`) are executable (`chmod +x`)  
+     - Confirm presence of datasets and artifact components in relative paths under `/home/cc/EnvGym/data-gpt-4.1mini/Fairify/data/` as per original plan  
+     - Confirm existence and write permissions of all result directories under relative paths (e.g., `relaxed/AC/res/`, `targeted2/GC/res/`, `src/AC/res-race/`)  
+     - README files in result directories as described, no path changes needed  
+  ---
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - All original test case requirements apply, with no modification needed for CPU-only environment  
+     - Tests involving TensorFlow must run with CPU backend only; ensure tests do not attempt GPU usage  
+     - Bash script executions run in Linux bash environment as default; no Windows-specific adjustments required  
+     - Paths referenced in tests and scripts remain relative or absolute from `/home/cc/EnvGym/data-gpt-4.1mini/Fairify`  
+     - No changes needed for architecture or OS-specific test logic since x86_64 Linux is compatible  
+     - Confirm tests for loading datasets, running verification, and saving CSV outputs work with CPU-only TensorFlow and z3-solver installed in virtual environment  
+     - Repository hygiene tests and `.gitignore` checks remain unchanged  
+  ---
+  4. COMPLETE TODO LIST (ADJUSTED FOR YOUR HARDWARE & ENVIRONMENT):  
+     1. **Install Python 3.7 (Linux x86_64 CPU version)**  
+        - Use official python.org Linux x86_64 binaries or distro package manager (e.g., `sudo apt install python3.7 python3.7-venv python3.7-dev`)  
+        - Verify with `python3.7 --version` and confirm `python3` points to Python 3.7 or adjust aliases as needed  
+     2. **Install Git (Linux x86_64)**  
+        - Use package manager (e.g., `sudo apt install git`)  
+        - Verify with `git --version`  
+     3. **Bash shell environment**  
+        - Native on Linux; verify with `bash --version`  
+        - No Windows-specific steps needed  
+     4. **Clone Fairify repository**  
+        - `git clone https://github.com/sumonbis/Fairify` into `/home/cc/EnvGym/data-gpt-4.1mini/`  
+        - Confirm presence of all files and directories as per original plan  
+        - Confirm `requirements.txt` includes `tensorflow==2.5.0` (CPU), `z3-solver`, and `aif360`  
+        - Confirm `.gitignore` is present and correctly configured  
+        - Confirm datasets and benchmark models exist in `data/` and appropriate folders  
+     5. **Create Python virtual environment**  
+        - Run: `python3.7 -m venv fenv` inside project root  
+        - Activate: `source fenv/bin/activate`  
+        - Confirm prompt change and `which python` points to `fenv/bin/python`  
+     6. **Upgrade pip inside virtual environment**  
+        - Run: `pip install --upgrade pip`  
+        - Verify with `pip --version`  
+     7. **Install required Python packages**  
+        - Run: `pip install -r requirements.txt`  
+        - TensorFlow 2.5.0 installed will be CPU-only version by default on Linux without GPU detected  
+        - If `z3-solver` fails, try precompiled wheels or install system SMT solver dependencies (`libz3-dev`) via package manager  
+        - For `aif360`, ensure all dependencies are installed; install system libraries if errors occur (e.g., `libxml2-dev`, `libxslt1-dev`)  
+     8. **Verify artifact availability and completeness**  
+        - Confirm all datasets present and accessible at relative paths  
+        - Confirm benchmark `.h5` model files present  
+        - Confirm Python source code files executable and not corrupted  
+        - Confirm `.gitignore` present and correct  
+        - Confirm all result directories exist and writable, including new `targeted2/` directories  
+        - Confirm README files present in result directories  
+     9. **Run basic verification and environment tests**  
+        - Run a Python script to load a benchmark model and verify a simple query (CPU-only)  
+        - Run a minimal script to use `z3-solver` SMT functionality  
+        - Run a minimal TensorFlow 2.5.0 CPU script (e.g., tensor addition) to confirm installation and runtime  
+        - Run a minimal `aif360` test (e.g., load sample dataset and compute fairness metric)  
+        - Load each dataset (`adult`, `bank`, `german`) and confirm feature correctness per documentation  
+        - Execute bash scripts for all experiment types (`fairify.sh`, `fairify-stress.sh`, `fairify-relaxed.sh`, `fairify-targeted.sh`, `fairify-targeted2.sh`) with dataset arguments (`AC`, `BM`, `GC`)  
+        - Run race-based and sex-based verification scripts for Adult Census and German Credit as applicable  
+        - Run Bank Marketing verification scripts  
+        - Confirm all produce CSV result files in designated `res/` directories  
+        - Confirm README files in result directories accurately describe outputs  
+     10. **Verify reproducibility and artifact badge claims**  
+         - Confirm GitHub repo and Zenodo DOI accessibility  
+         - Confirm environment and scripts match STATUS.md description for reproducibility  
+         - Document any deviations or errors encountered  
+     11. **Error handling and troubleshooting**  
+         - For Python version issues, use `pyenv` or package manager to enforce Python 3.7  
+         - For missing system dependencies, install via distro package manager (e.g., `apt`)  
+         - For virtual environment activation errors, check shell and permissions  
+         - For TensorFlow errors, confirm CPU-only installation compatible with x86_64 Linux, no GPU dependencies present  
+         - For `aif360` errors, install missing system libraries as needed  
+         - For `z3-solver` installation errors, ensure `libz3-dev` or equivalent installed  
+         - For bash script execution errors, verify executable permissions (`chmod +x`) and bash shell presence  
+         - For permission errors writing CSV files, check ownership and write permissions on `res/` directories  
+         - Confirm `.gitignore` prevents committing unwanted files  
+     12. **Documentation and reproducibility**  
+         - Document installed versions: Python 3.7.x, pip, tensorflow 2.5.0 (CPU), z3-solver, aif360  
+         - Follow `INSTALL.md` instructions closely for consistency  
+         - Maintain `.gitignore` hygiene  
+         - Refer to dataset documentation files in `data/` directories for clarity  
+         - Maintain README files in result folders for output guidance  
+     13. **Prepare for development or experimentation**  
+         - Create or update test scripts to cover CPU-only environment and new dependencies  
+         - Configure IDE/editor to use `fenv` Python interpreter  
+         - Use provided bash scripts for benchmarking and verification as per instructions  
+         - Account for CPU-only environment in experiment run times (may be longer than GPU runs)  
+         - Use included datasets and models for thorough testing  
+         - Ensure `.gitignore` respected by development tools  
+         - Confirm result directories writable and include descriptive README files, including newly added `targeted2` outputs  
+  ---
+  **Additional Notes Specific to Your Hardware Setup:**  
+  - No NVIDIA GPU detected: skip any CUDA/cuDNN or GPU-specific installations; TensorFlow 2.5.0 CPU-only version is compatible and recommended.  
+  - x86_64 Linux base image compatibility confirmed; no ARM or multi-architecture adjustments needed.  
+  - Use absolute or relative paths consistently from `/home/cc/EnvGym/data-gpt-4.1mini/Fairify` as your working directory.  
+  - Bash shell available natively; no additional shell environment installations required.  
+  - Docker usage not detailed in original plan but if used, base images should be Linux amd64 (e.g., `python:3.7-slim`) without GPU support.  
+  - Memory and storage considerations: project is large but typical for CPU-based ML experiments; ensure sufficient RAM (>=8GB recommended) and disk space (~several GBs for datasets, models, and results).  
+  - Execution times may be longer on CPU-only; plan experiment scheduling accordingly.  
+  ---
+  This adjusted plan ensures full compatibility and feasibility given your x86_64 Linux CPU-only hardware environment and project location. All original steps remain valid with clarifications to avoid GPU dependencies and Windows-specific instructions.
+NEXT:
+  current progress  
+  - Dockerfile builds successfully on python:3.7-slim base image with apt packages installed including libz3-dev, libxml2-dev, libxslt1-dev, git, bash, build-essential, python3-venv.  
+  - Fairify repository cloned into /Fairify.  
+  - Python virtual environment created at /root/fenv.  
+  - pip upgraded inside virtual environment.  
+  - Python packages installed from /Fairify/requirements.txt inside virtual environment.  
+  - Executable permissions set on all required bash scripts.  
+  - Container CMD set to /bin/bash for interactive use.  
+  - Docker build and runtime logs indicate success without errors.
+  next step  
+  - Modify Dockerfile to ensure environment variables correctly activate virtual environment on container start, e.g., by setting ENV PATH or using an entrypoint script to source /root/fenv/bin/activate.  
+  - Validate that installed tensorflow==2.5.0 is CPU-only (no GPU dependencies).  
+  - Add verification steps or scripts in Dockerfile or container startup to confirm dataset presence and permissions for result directories inside /Fairify.  
+  - Confirm all required data and result directories exist and are writable within container filesystem or mount volumes as needed.  
+  - Optionally, include minimal test commands in Dockerfile or entrypoint to run sample scripts verifying z3-solver, tensorflow CPU, and aif360 functionality.  
+  - Document any environment variable or path adjustments needed for smooth operation within container.  
+  - Consider adding non-root user for safer execution if relevant.
+STATUS:
+  SUCCESS
+LOG:
+  === Docker Execution Log - 20250827_080838 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1756281950
+  === Build Log ===
+  Build Status: Success
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 859B done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/python:3.7-slim
+  #2 DONE 0.1s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [1/8] FROM docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b
+  #4 DONE 0.0s
+  #5 [2/8] WORKDIR /Fairify
+  #5 CACHED
+  #6 [3/8] RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends     git     bash     build-essential     libz3-dev     libxml2-dev     libxslt1-dev     python3-venv     && rm -rf /var/lib/apt/lists/*
+  #6 0.222 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+  #6 0.234 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+  #6 0.235 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+  #6 0.289 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+  #6 0.366 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+  #6 0.369 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [277 kB]
+  #6 1.412 Fetched 9331 kB in 1s (7711 kB/s)
+  #6 1.412 Reading package lists...
+  #6 1.909 Reading package lists...
+  #6 2.390 Building dependency tree...
+  #6 2.475 Reading state information...
+  #6 2.496 Calculating upgrade...
+  #6 2.985 The following packages will be upgraded:
+  #6 2.985   base-files bash bsdutils ca-certificates debian-archive-keyring debianutils
+  #6 2.985   gcc-12-base libblkid1 libc-bin libc6 libcap2 libexpat1 libgcc-s1 libgnutls30
+  #6 2.985   libgssapi-krb5-2 libk5crypto3 libkrb5-3 libkrb5support0 liblzma5 libmount1
+  #6 2.985   libpam-modules libpam-modules-bin libpam-runtime libpam0g libseccomp2
+  #6 2.986   libsmartcols1 libsqlite3-0 libssl3 libstdc++6 libsystemd0 libtasn1-6
+  #6 2.986   libudev1 libuuid1 login mount openssl passwd perl-base tar tzdata
+  #6 2.986   usr-is-merged util-linux util-linux-extra
+  #6 3.020 43 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+  #6 3.020 Need to get 20.1 MB of archives.
+  #6 3.020 After this operation, 98.3 kB of additional disk space will be used.
+  #6 3.020 Get:1 http://deb.debian.org/debian bookworm/main amd64 base-files amd64 12.4+deb12u11 [70.9 kB]
+  #6 3.027 Get:2 http://deb.debian.org/debian bookworm/main amd64 debianutils amd64 5.7-0.5~deb12u1 [103 kB]
+  #6 3.032 Get:3 http://deb.debian.org/debian bookworm/main amd64 bash amd64 5.2.15-2+b8 [1491 kB]
+  #6 3.116 Get:4 http://deb.debian.org/debian bookworm/main amd64 bsdutils amd64 1:2.38.1-5+deb12u3 [94.4 kB]
+  #6 3.126 Get:5 http://deb.debian.org/debian bookworm/main amd64 login amd64 1:4.13+dfsg1-1+deb12u1 [616 kB]
+  #6 3.192 Get:6 http://deb.debian.org/debian bookworm/main amd64 perl-base amd64 5.36.0-7+deb12u2 [1609 kB]
+  #6 3.328 Get:7 http://deb.debian.org/debian bookworm/main amd64 tar amd64 1.34+dfsg-1.2+deb12u1 [836 kB]
+  #6 3.376 Get:8 http://deb.debian.org/debian bookworm/main amd64 gcc-12-base amd64 12.2.0-14+deb12u1 [37.6 kB]
+  #6 3.380 Get:9 http://deb.debian.org/debian bookworm/main amd64 libgcc-s1 amd64 12.2.0-14+deb12u1 [49.9 kB]
+  #6 3.382 Get:10 http://deb.debian.org/debian bookworm/main amd64 libstdc++6 amd64 12.2.0-14+deb12u1 [613 kB]
+  #6 3.440 Get:11 http://deb.debian.org/debian bookworm/main amd64 libc6 amd64 2.36-9+deb12u10 [2757 kB]
+  #6 3.768 Get:12 http://deb.debian.org/debian bookworm/main amd64 libsmartcols1 amd64 2.38.1-5+deb12u3 [107 kB]
+  #6 3.786 Get:13 http://deb.debian.org/debian bookworm/main amd64 util-linux-extra amd64 2.38.1-5+deb12u3 [111 kB]
+  #6 3.808 Get:14 http://deb.debian.org/debian bookworm/main amd64 util-linux amd64 2.38.1-5+deb12u3 [1177 kB]
+  #6 3.915 Get:15 http://deb.debian.org/debian bookworm/main amd64 libc-bin amd64 2.36-9+deb12u10 [608 kB]
+  #6 3.952 Get:16 http://deb.debian.org/debian bookworm/main amd64 libpam0g amd64 1.5.2-6+deb12u1 [92.0 kB]
+  #6 3.957 Get:17 http://deb.debian.org/debian bookworm/main amd64 libpam-modules-bin amd64 1.5.2-6+deb12u1 [75.6 kB]
+  #6 3.961 Get:18 http://deb.debian.org/debian bookworm/main amd64 libpam-modules amd64 1.5.2-6+deb12u1 [291 kB]
+  #6 3.977 Get:19 http://deb.debian.org/debian bookworm/main amd64 mount amd64 2.38.1-5+deb12u3 [134 kB]
+  #6 3.986 Get:20 http://deb.debian.org/debian bookworm/main amd64 libpam-runtime all 1.5.2-6+deb12u1 [161 kB]
+  #6 3.998 Get:21 http://deb.debian.org/debian bookworm/main amd64 passwd amd64 1:4.13+dfsg1-1+deb12u1 [972 kB]
+  #6 4.063 Get:22 http://deb.debian.org/debian bookworm/main amd64 debian-archive-keyring all 2023.3+deb12u2 [179 kB]
+  #6 4.081 Get:23 http://deb.debian.org/debian bookworm/main amd64 libblkid1 amd64 2.38.1-5+deb12u3 [147 kB]
+  #6 4.097 Get:24 http://deb.debian.org/debian bookworm/main amd64 libcap2 amd64 1:2.66-4+deb12u1 [27.2 kB]
+  #6 4.100 Get:25 http://deb.debian.org/debian bookworm/main amd64 libtasn1-6 amd64 4.19.0-2+deb12u1 [48.6 kB]
+  #6 4.105 Get:26 http://deb.debian.org/debian-security bookworm-security/main amd64 libgnutls30 amd64 3.7.9-2+deb12u5 [1406 kB]
+  #6 4.257 Get:27 http://deb.debian.org/debian bookworm/main amd64 liblzma5 amd64 5.4.1-1 [205 kB]
+  #6 4.275 Get:28 http://deb.debian.org/debian bookworm/main amd64 libmount1 amd64 2.38.1-5+deb12u3 [166 kB]
+  #6 4.292 Get:29 http://deb.debian.org/debian bookworm/main amd64 libseccomp2 amd64 2.5.4-1+deb12u1 [46.8 kB]
+  #6 4.297 Get:30 http://deb.debian.org/debian-security bookworm-security/main amd64 libsystemd0 amd64 252.38-1~deb12u1 [333 kB]
+  #6 4.330 Get:31 http://deb.debian.org/debian-security bookworm-security/main amd64 libudev1 amd64 252.38-1~deb12u1 [109 kB]
+  #6 4.338 Get:32 http://deb.debian.org/debian bookworm/main amd64 libuuid1 amd64 2.38.1-5+deb12u3 [28.8 kB]
+  #6 4.341 Get:33 http://deb.debian.org/debian bookworm/main amd64 usr-is-merged all 37~deb12u1 [5616 B]
+  #6 4.342 Get:34 http://deb.debian.org/debian bookworm/main amd64 tzdata all 2025b-0+deb12u1 [299 kB]
+  #6 4.365 Get:35 http://deb.debian.org/debian bookworm-updates/main amd64 libssl3 amd64 3.0.17-1~deb12u2 [2027 kB]
+  #6 4.506 Get:36 http://deb.debian.org/debian bookworm-updates/main amd64 openssl amd64 3.0.17-1~deb12u2 [1430 kB]
+  #6 4.656 Get:37 http://deb.debian.org/debian bookworm-updates/main amd64 ca-certificates all 20230311+deb12u1 [155 kB]
+  #6 4.671 Get:38 http://deb.debian.org/debian bookworm/main amd64 libexpat1 amd64 2.5.0-1+deb12u1 [98.9 kB]
+  #6 4.678 Get:39 http://deb.debian.org/debian bookworm/main amd64 libgssapi-krb5-2 amd64 1.20.1-2+deb12u3 [135 kB]
+  #6 4.689 Get:40 http://deb.debian.org/debian bookworm/main amd64 libkrb5-3 amd64 1.20.1-2+deb12u3 [332 kB]
+  #6 4.714 Get:41 http://deb.debian.org/debian bookworm/main amd64 libkrb5support0 amd64 1.20.1-2+deb12u3 [32.8 kB]
+  #6 4.718 Get:42 http://deb.debian.org/debian bookworm/main amd64 libk5crypto3 amd64 1.20.1-2+deb12u3 [78.9 kB]
+  #6 4.726 Get:43 http://deb.debian.org/debian bookworm/main amd64 libsqlite3-0 amd64 3.40.1-2+deb12u1 [839 kB]
+  #6 4.949 debconf: delaying package configuration, since apt-utils is not installed
+  #6 4.972 Fetched 20.1 MB in 2s (11.2 MB/s)
+  #6 4.986 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6705 files and directories currently installed.)
+  #6 4.991 Preparing to unpack .../base-files_12.4+deb12u11_amd64.deb ...
+  #6 4.993 Unpacking base-files (12.4+deb12u11) over (12.4+deb12u1) ...
+  #6 5.029 Setting up base-files (12.4+deb12u11) ...
+  #6 5.030 Installing new version of config file /etc/debian_version ...
+  #6 5.062 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6705 files and directories currently installed.)
+  #6 5.066 Preparing to unpack .../debianutils_5.7-0.5~deb12u1_amd64.deb ...
+  #6 5.069 Unpacking debianutils (5.7-0.5~deb12u1) over (5.7-0.4) ...
+  #6 5.097 Setting up debianutils (5.7-0.5~deb12u1) ...
+  #6 5.129 update-alternatives: warning: forcing reinstallation of alternative /usr/bin/which.debianutils because link group which is broken
+  #6 5.129 update-alternatives: warning: skip creation of /usr/share/man/man1/which.1.gz because associated file /usr/share/man/man1/which.debianutils.1.gz (of link group which) doesn't exist
+  #6 5.129 update-alternatives: warning: skip creation of /usr/share/man/de/man1/which.1.gz because associated file /usr/share/man/de/man1/which.debianutils.1.gz (of link group which) doesn't exist
+  #6 5.129 update-alternatives: warning: skip creation of /usr/share/man/es/man1/which.1.gz because associated file /usr/share/man/es/man1/which.debianutils.1.gz (of link group which) doesn't exist
+  #6 5.129 update-alternatives: warning: skip creation of /usr/share/man/fr/man1/which.1.gz because associated file /usr/share/man/fr/man1/which.debianutils.1.gz (of link group which) doesn't exist
+  #6 5.129 update-alternatives: warning: skip creation of /usr/share/man/it/man1/which.1.gz because associated file /usr/share/man/it/man1/which.debianutils.1.gz (of link group which) doesn't exist
+  #6 5.129 update-alternatives: warning: skip creation of /usr/share/man/ja/man1/which.1.gz because associated file /usr/share/man/ja/man1/which.debianutils.1.gz (of link group which) doesn't exist
+  #6 5.129 update-alternatives: warning: skip creation of /usr/share/man/pl/man1/which.1.gz because associated file /usr/share/man/pl/man1/which.debianutils.1.gz (of link group which) doesn't exist
+  #6 5.129 update-alternatives: warning: skip creation of /usr/share/man/sl/man1/which.1.gz because associated file /usr/share/man/sl/man1/which.debianutils.1.gz (of link group which) doesn't exist
+  #6 5.144 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6705 files and directories currently installed.)
+  #6 5.147 Preparing to unpack .../bash_5.2.15-2+b8_amd64.deb ...
+  #6 5.150 update-alternatives: warning: alternative /usr/share/man/man7/bash-builtins.7.gz (part of link group builtins.7.gz) doesn't exist; removing from list of alternatives
+  #6 5.150 update-alternatives: warning: /etc/alternatives/builtins.7.gz is dangling; it will be updated with best choice
+  #6 5.152 Unpacking bash (5.2.15-2+b8) over (5.2.15-2+b2) ...
+  #6 5.279 Setting up bash (5.2.15-2+b8) ...
+  #6 5.287 update-alternatives: error: alternative path /usr/share/man/man7/bash-builtins.7.gz doesn't exist
+  #6 5.305 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6705 files and directories currently installed.)
+  #6 5.309 Preparing to unpack .../bsdutils_1%3a2.38.1-5+deb12u3_amd64.deb ...
+  #6 5.311 Unpacking bsdutils (1:2.38.1-5+deb12u3) over (1:2.38.1-5+b1) ...
+  #6 5.340 Setting up bsdutils (1:2.38.1-5+deb12u3) ...
+  #6 5.357 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6704 files and directories currently installed.)
+  #6 5.361 Preparing to unpack .../login_1%3a4.13+dfsg1-1+deb12u1_amd64.deb ...
+  #6 5.373 Unpacking login (1:4.13+dfsg1-1+deb12u1) over (1:4.13+dfsg1-1+b1) ...
+  #6 5.438 Setting up login (1:4.13+dfsg1-1+deb12u1) ...
+  #6 5.463 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6703 files and directories currently installed.)
+  #6 5.467 Preparing to unpack .../perl-base_5.36.0-7+deb12u2_amd64.deb ...
+  #6 5.476 Unpacking perl-base (5.36.0-7+deb12u2) over (5.36.0-7) ...
+  #6 6.000 Setting up perl-base (5.36.0-7+deb12u2) ...
+  #6 6.022 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6704 files and directories currently installed.)
+  #6 6.027 Preparing to unpack .../tar_1.34+dfsg-1.2+deb12u1_amd64.deb ...
+  #6 6.030 Unpacking tar (1.34+dfsg-1.2+deb12u1) over (1.34+dfsg-1.2) ...
+  #6 6.110 Setting up tar (1.34+dfsg-1.2+deb12u1) ...
+  #6 6.113 update-alternatives: warning: forcing reinstallation of alternative /usr/sbin/rmt-tar because link group rmt is broken
+  #6 6.113 update-alternatives: warning: skip creation of /usr/share/man/man8/rmt.8.gz because associated file /usr/share/man/man8/rmt-tar.8.gz (of link group rmt) doesn't exist
+  #6 6.129 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6704 files and directories currently installed.)
+  #6 6.133 Preparing to unpack .../gcc-12-base_12.2.0-14+deb12u1_amd64.deb ...
+  #6 6.135 Unpacking gcc-12-base:amd64 (12.2.0-14+deb12u1) over (12.2.0-14) ...
+  #6 6.154 Setting up gcc-12-base:amd64 (12.2.0-14+deb12u1) ...
+  #6 6.171 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6704 files and directories currently installed.)
+  #6 6.174 Preparing to unpack .../libgcc-s1_12.2.0-14+deb12u1_amd64.deb ...
+  #6 6.177 Unpacking libgcc-s1:amd64 (12.2.0-14+deb12u1) over (12.2.0-14) ...
+  #6 6.198 Setting up libgcc-s1:amd64 (12.2.0-14+deb12u1) ...
+  #6 6.215 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6704 files and directories currently installed.)
+  #6 6.219 Preparing to unpack .../libstdc++6_12.2.0-14+deb12u1_amd64.deb ...
+  #6 6.232 Unpacking libstdc++6:amd64 (12.2.0-14+deb12u1) over (12.2.0-14) ...
+  #6 6.315 Setting up libstdc++6:amd64 (12.2.0-14+deb12u1) ...
+  #6 6.338 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6704 files and directories currently installed.)
+  #6 6.342 Preparing to unpack .../libc6_2.36-9+deb12u10_amd64.deb ...
+  #6 6.422 Unpacking libc6:amd64 (2.36-9+deb12u10) over (2.36-9+deb12u1) ...
+  #6 6.789 Setting up libc6:amd64 (2.36-9+deb12u10) ...
+  #6 7.882 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6704 files and directories currently installed.)
+  #6 7.886 Preparing to unpack .../libsmartcols1_2.38.1-5+deb12u3_amd64.deb ...
+  #6 7.888 Unpacking libsmartcols1:amd64 (2.38.1-5+deb12u3) over (2.38.1-5+b1) ...
+  #6 7.917 Setting up libsmartcols1:amd64 (2.38.1-5+deb12u3) ...
+  #6 7.933 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6703 files and directories currently installed.)
+  #6 7.937 Preparing to unpack .../util-linux-extra_2.38.1-5+deb12u3_amd64.deb ...
+  #6 7.940 Unpacking util-linux-extra (2.38.1-5+deb12u3) over (2.38.1-5+b1) ...
+  #6 7.970 Setting up util-linux-extra (2.38.1-5+deb12u3) ...
+  #6 7.997 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6702 files and directories currently installed.)
+  #6 8.000 Preparing to unpack .../util-linux_2.38.1-5+deb12u3_amd64.deb ...
+  #6 8.003 Unpacking util-linux (2.38.1-5+deb12u3) over (2.38.1-5+b1) ...
+  #6 8.160 Setting up util-linux (2.38.1-5+deb12u3) ...
+  #6 8.170 update-alternatives: warning: forcing reinstallation of alternative /bin/more because link group pager is broken
+  #6 8.170 update-alternatives: warning: skip creation of /usr/share/man/man1/pager.1.gz because associated file /usr/share/man/man1/more.1.gz (of link group pager) doesn't exist
+  #6 8.290 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6701 files and directories currently installed.)
+  #6 8.294 Preparing to unpack .../libc-bin_2.36-9+deb12u10_amd64.deb ...
+  #6 8.297 Unpacking libc-bin (2.36-9+deb12u10) over (2.36-9+deb12u1) ...
+  #6 8.379 Setting up libc-bin (2.36-9+deb12u10) ...
+  #6 8.412 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6701 files and directories currently installed.)
+  #6 8.416 Preparing to unpack .../libpam0g_1.5.2-6+deb12u1_amd64.deb ...
+  #6 8.419 Unpacking libpam0g:amd64 (1.5.2-6+deb12u1) over (1.5.2-6) ...
+  #6 8.445 Setting up libpam0g:amd64 (1.5.2-6+deb12u1) ...
+  #6 8.521 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6701 files and directories currently installed.)
+  #6 8.525 Preparing to unpack .../libpam-modules-bin_1.5.2-6+deb12u1_amd64.deb ...
+  #6 8.528 Unpacking libpam-modules-bin (1.5.2-6+deb12u1) over (1.5.2-6) ...
+  #6 8.550 Setting up libpam-modules-bin (1.5.2-6+deb12u1) ...
+  #6 8.567 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6701 files and directories currently installed.)
+  #6 8.571 Preparing to unpack .../libpam-modules_1.5.2-6+deb12u1_amd64.deb ...
+  #6 8.631 Unpacking libpam-modules:amd64 (1.5.2-6+deb12u1) over (1.5.2-6) ...
+  #6 8.685 Setting up libpam-modules:amd64 (1.5.2-6+deb12u1) ...
+  #6 8.711 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6701 files and directories currently installed.)
+  #6 8.715 Preparing to unpack .../mount_2.38.1-5+deb12u3_amd64.deb ...
+  #6 8.717 Unpacking mount (2.38.1-5+deb12u3) over (2.38.1-5+b1) ...
+  #6 8.748 Preparing to unpack .../libpam-runtime_1.5.2-6+deb12u1_all.deb ...
+  #6 8.751 Unpacking libpam-runtime (1.5.2-6+deb12u1) over (1.5.2-6) ...
+  #6 8.791 Setting up libpam-runtime (1.5.2-6+deb12u1) ...
+  #6 8.905 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6700 files and directories currently installed.)
+  #6 8.908 Preparing to unpack .../passwd_1%3a4.13+dfsg1-1+deb12u1_amd64.deb ...
+  #6 8.920 Unpacking passwd (1:4.13+dfsg1-1+deb12u1) over (1:4.13+dfsg1-1+b1) ...
+  #6 9.022 Setting up passwd (1:4.13+dfsg1-1+deb12u1) ...
+  #6 9.051 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6699 files and directories currently installed.)
+  #6 9.055 Preparing to unpack .../debian-archive-keyring_2023.3+deb12u2_all.deb ...
+  #6 9.217 Unpacking debian-archive-keyring (2023.3+deb12u2) over (2023.3) ...
+  #6 9.299 Setting up debian-archive-keyring (2023.3+deb12u2) ...
+  #6 9.383 Removing obsolete conffile /etc/apt/trusted.gpg.d/debian-archive-buster-stable.asc ...
+  #6 9.388 Removing obsolete conffile /etc/apt/trusted.gpg.d/debian-archive-buster-security-automatic.asc ...
+  #6 9.392 Removing obsolete conffile /etc/apt/trusted.gpg.d/debian-archive-buster-automatic.asc ...
+  #6 9.410 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6699 files and directories currently installed.)
+  #6 9.414 Preparing to unpack .../libblkid1_2.38.1-5+deb12u3_amd64.deb ...
+  #6 9.416 Unpacking libblkid1:amd64 (2.38.1-5+deb12u3) over (2.38.1-5+b1) ...
+  #6 9.449 Setting up libblkid1:amd64 (2.38.1-5+deb12u3) ...
+  #6 9.465 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6698 files and directories currently installed.)
+  #6 9.469 Preparing to unpack .../libcap2_1%3a2.66-4+deb12u1_amd64.deb ...
+  #6 9.471 Unpacking libcap2:amd64 (1:2.66-4+deb12u1) over (1:2.66-4) ...
+  #6 9.491 Setting up libcap2:amd64 (1:2.66-4+deb12u1) ...
+  #6 9.506 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6698 files and directories currently installed.)
+  #6 9.510 Preparing to unpack .../libtasn1-6_4.19.0-2+deb12u1_amd64.deb ...
+  #6 9.513 Unpacking libtasn1-6:amd64 (4.19.0-2+deb12u1) over (4.19.0-2) ...
+  #6 9.534 Setting up libtasn1-6:amd64 (4.19.0-2+deb12u1) ...
+  #6 9.549 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6698 files and directories currently installed.)
+  #6 9.553 Preparing to unpack .../libgnutls30_3.7.9-2+deb12u5_amd64.deb ...
+  #6 9.555 Unpacking libgnutls30:amd64 (3.7.9-2+deb12u5) over (3.7.9-2) ...
+  #6 9.659 Setting up libgnutls30:amd64 (3.7.9-2+deb12u5) ...
+  #6 9.674 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6698 files and directories currently installed.)
+  #6 9.678 Preparing to unpack .../liblzma5_5.4.1-1_amd64.deb ...
+  #6 9.680 Unpacking liblzma5:amd64 (5.4.1-1) over (5.4.1-0.2) ...
+  #6 9.709 Setting up liblzma5:amd64 (5.4.1-1) ...
+  #6 9.727 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6698 files and directories currently installed.)
+  #6 9.731 Preparing to unpack .../libmount1_2.38.1-5+deb12u3_amd64.deb ...
+  #6 9.733 Unpacking libmount1:amd64 (2.38.1-5+deb12u3) over (2.38.1-5+b1) ...
+  #6 9.766 Setting up libmount1:amd64 (2.38.1-5+deb12u3) ...
+  #6 9.782 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6697 files and directories currently installed.)
+  #6 9.786 Preparing to unpack .../libseccomp2_2.5.4-1+deb12u1_amd64.deb ...
+  #6 9.789 Unpacking libseccomp2:amd64 (2.5.4-1+deb12u1) over (2.5.4-1+b3) ...
+  #6 9.809 Setting up libseccomp2:amd64 (2.5.4-1+deb12u1) ...
+  #6 9.824 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6696 files and directories currently installed.)
+  #6 9.828 Preparing to unpack .../libsystemd0_252.38-1~deb12u1_amd64.deb ...
+  #6 9.830 Unpacking libsystemd0:amd64 (252.38-1~deb12u1) over (252.12-1~deb12u1) ...
+  #6 9.875 Setting up libsystemd0:amd64 (252.38-1~deb12u1) ...
+  #6 9.891 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6696 files and directories currently installed.)
+  #6 9.894 Preparing to unpack .../libudev1_252.38-1~deb12u1_amd64.deb ...
+  #6 9.896 Unpacking libudev1:amd64 (252.38-1~deb12u1) over (252.12-1~deb12u1) ...
+  #6 9.921 Setting up libudev1:amd64 (252.38-1~deb12u1) ...
+  #6 9.935 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6696 files and directories currently installed.)
+  #6 9.938 Preparing to unpack .../libuuid1_2.38.1-5+deb12u3_amd64.deb ...
+  #6 9.940 Unpacking libuuid1:amd64 (2.38.1-5+deb12u3) over (2.38.1-5+b1) ...
+  #6 9.958 Setting up libuuid1:amd64 (2.38.1-5+deb12u3) ...
+  #6 9.972 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6695 files and directories currently installed.)
+  #6 9.975 Preparing to unpack .../usr-is-merged_37~deb12u1_all.deb ...
+  #6 9.983 Unpacking usr-is-merged (37~deb12u1) over (35) ...
+  #6 9.999 Setting up usr-is-merged (37~deb12u1) ...
+  #6 10.01 removed '/lib32'
+  #6 10.02 rmdir: removing directory, '/usr/lib32'
+  #6 10.03 removed '/libx32'
+  #6 10.03 rmdir: removing directory, '/usr/libx32'
+  #6 10.06 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6695 files and directories currently installed.)
+  #6 10.06 Preparing to unpack .../0-tzdata_2025b-0+deb12u1_all.deb ...
+  #6 10.16 Unpacking tzdata (2025b-0+deb12u1) over (2023c-5) ...
+  #6 10.80 Preparing to unpack .../1-libssl3_3.0.17-1~deb12u2_amd64.deb ...
+  #6 10.80 Unpacking libssl3:amd64 (3.0.17-1~deb12u2) over (3.0.9-1) ...
+  #6 10.96 Preparing to unpack .../2-openssl_3.0.17-1~deb12u2_amd64.deb ...
+  #6 10.97 Unpacking openssl (3.0.17-1~deb12u2) over (3.0.9-1) ...
+  #6 11.08 Preparing to unpack .../3-ca-certificates_20230311+deb12u1_all.deb ...
+  #6 11.09 Unpacking ca-certificates (20230311+deb12u1) over (20230311) ...
+  #6 11.19 Preparing to unpack .../4-libexpat1_2.5.0-1+deb12u1_amd64.deb ...
+  #6 11.19 Unpacking libexpat1:amd64 (2.5.0-1+deb12u1) over (2.5.0-1) ...
+  #6 11.22 Preparing to unpack .../5-libgssapi-krb5-2_1.20.1-2+deb12u3_amd64.deb ...
+  #6 11.22 Unpacking libgssapi-krb5-2:amd64 (1.20.1-2+deb12u3) over (1.20.1-2) ...
+  #6 11.26 Preparing to unpack .../6-libkrb5-3_1.20.1-2+deb12u3_amd64.deb ...
+  #6 11.26 Unpacking libkrb5-3:amd64 (1.20.1-2+deb12u3) over (1.20.1-2) ...
+  #6 11.31 Preparing to unpack .../7-libkrb5support0_1.20.1-2+deb12u3_amd64.deb ...
+  #6 11.31 Unpacking libkrb5support0:amd64 (1.20.1-2+deb12u3) over (1.20.1-2) ...
+  #6 11.33 Preparing to unpack .../8-libk5crypto3_1.20.1-2+deb12u3_amd64.deb ...
+  #6 11.33 Unpacking libk5crypto3:amd64 (1.20.1-2+deb12u3) over (1.20.1-2) ...
+  #6 11.36 Preparing to unpack .../9-libsqlite3-0_3.40.1-2+deb12u1_amd64.deb ...
+  #6 11.36 Unpacking libsqlite3-0:amd64 (3.40.1-2+deb12u1) over (3.40.1-2) ...
+  #6 11.44 Setting up libexpat1:amd64 (2.5.0-1+deb12u1) ...
+  #6 11.44 Setting up libsqlite3-0:amd64 (3.40.1-2+deb12u1) ...
+  #6 11.44 Setting up libssl3:amd64 (3.0.17-1~deb12u2) ...
+  #6 11.45 Setting up libkrb5support0:amd64 (1.20.1-2+deb12u3) ...
+  #6 11.45 Setting up tzdata (2025b-0+deb12u1) ...
+  #6 11.53 
+  #6 11.53 Current default time zone: 'Etc/UTC'
+  #6 11.53 Local time is now:      Wed Aug 27 08:06:02 UTC 2025.
+  #6 11.53 Universal Time is now:  Wed Aug 27 08:06:02 UTC 2025.
+  #6 11.53 Run 'dpkg-reconfigure tzdata' if you wish to change it.
+  #6 11.53 
+  #6 11.58 Setting up libk5crypto3:amd64 (1.20.1-2+deb12u3) ...
+  #6 11.59 Setting up mount (2.38.1-5+deb12u3) ...
+  #6 11.59 Setting up libkrb5-3:amd64 (1.20.1-2+deb12u3) ...
+  #6 11.59 Setting up openssl (3.0.17-1~deb12u2) ...
+  #6 11.59 Setting up ca-certificates (20230311+deb12u1) ...
+  #6 12.79 Updating certificates in /etc/ssl/certs...
+  #6 13.47 rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+  #6 13.47 2 added, 0 removed; done.
+  #6 13.50 Setting up libgssapi-krb5-2:amd64 (1.20.1-2+deb12u3) ...
+  #6 13.50 Processing triggers for libc-bin (2.36-9+deb12u10) ...
+  #6 13.51 Processing triggers for debianutils (5.7-0.5~deb12u1) ...
+  #6 13.54 Processing triggers for ca-certificates (20230311+deb12u1) ...
+  #6 13.55 Updating certificates in /etc/ssl/certs...
+  #6 13.96 0 added, 0 removed; done.
+  #6 13.96 Running hooks in /etc/ca-certificates/update.d...
+  #6 13.96 done.
+  #6 13.99 Reading package lists...
+  #6 14.48 Building dependency tree...
+  #6 14.57 Reading state information...
+  #6 14.68 bash is already the newest version (5.2.15-2+b8).
+  #6 14.68 bash set to manually installed.
+  #6 14.68 The following additional packages will be installed:
+  #6 14.68   binutils binutils-common binutils-x86-64-linux-gnu bzip2 cpp cpp-12 dpkg-dev
+  #6 14.68   g++ g++-12 gcc gcc-12 git-man icu-devtools libasan8 libatomic1 libbinutils
+  #6 14.68   libbrotli1 libc-dev-bin libc6-dev libcc1-0 libcrypt-dev libctf-nobfd0
+  #6 14.68   libctf0 libcurl3-gnutls libdpkg-perl liberror-perl libgcc-12-dev
+  #6 14.68   libgdbm-compat4 libgomp1 libgprofng0 libicu-dev libicu72 libisl23 libitm1
+  #6 14.68   libjansson4 libldap-2.5-0 liblsan0 libmpc3 libmpfr6 libnghttp2-14 libnsl-dev
+  #6 14.68   libperl5.36 libpsl5 libpython3-stdlib libpython3.11-minimal
+  #6 14.68   libpython3.11-stdlib libquadmath0 librtmp1 libsasl2-2 libsasl2-modules-db
+  #6 14.68   libssh2-1 libstdc++-12-dev libtirpc-dev libtsan2 libubsan1 libxml2
+  #6 14.68   libxslt1.1 libz3-4 linux-libc-dev make media-types patch perl
+  #6 14.68   perl-modules-5.36 python3 python3-distutils python3-lib2to3 python3-minimal
+  #6 14.68   python3-pip-whl python3-setuptools-whl python3.11 python3.11-minimal
+  #6 14.68   python3.11-venv rpcsvc-proto xz-utils
+  #6 14.68 Suggested packages:
+  #6 14.68   binutils-doc bzip2-doc cpp-doc gcc-12-locales cpp-12-doc debian-keyring
+  #6 14.68   g++-multilib g++-12-multilib gcc-12-doc gcc-multilib manpages-dev autoconf
+  #6 14.68   automake libtool flex bison gdb gcc-doc gcc-12-multilib gettext-base
+  #6 14.68   git-daemon-run | git-daemon-sysvinit git-doc git-email git-gui gitk gitweb
+  #6 14.68   git-cvs git-mediawiki git-svn glibc-doc gnupg | sq | sqop | pgpainless-cli
+  #6 14.68   sensible-utils bzr icu-doc libstdc++-12-doc pkg-config make-doc ed
+  #6 14.68   diffutils-doc perl-doc libterm-readline-gnu-perl
+  #6 14.68   | libterm-readline-perl-perl libtap-harness-archive-perl python3-doc
+  #6 14.68   python3-tk python3.11-doc binfmt-support
+  #6 14.68 Recommended packages:
+  #6 14.68   fakeroot gnupg | sq | sqop | pgpainless-cli libalgorithm-merge-perl less
+  #6 14.68   ssh-client manpages manpages-dev libc-devtools libfile-fcntllock-perl
+  #6 14.68   liblocale-gettext-perl libldap-common publicsuffix libsasl2-modules
+  #6 15.14 The following NEW packages will be installed:
+  #6 15.14   binutils binutils-common binutils-x86-64-linux-gnu build-essential bzip2 cpp
+  #6 15.14   cpp-12 dpkg-dev g++ g++-12 gcc gcc-12 git git-man icu-devtools libasan8
+  #6 15.14   libatomic1 libbinutils libbrotli1 libc-dev-bin libc6-dev libcc1-0
+  #6 15.14   libcrypt-dev libctf-nobfd0 libctf0 libcurl3-gnutls libdpkg-perl
+  #6 15.14   liberror-perl libgcc-12-dev libgdbm-compat4 libgomp1 libgprofng0 libicu-dev
+  #6 15.14   libicu72 libisl23 libitm1 libjansson4 libldap-2.5-0 liblsan0 libmpc3
+  #6 15.14   libmpfr6 libnghttp2-14 libnsl-dev libperl5.36 libpsl5 libpython3-stdlib
+  #6 15.14   libpython3.11-minimal libpython3.11-stdlib libquadmath0 librtmp1 libsasl2-2
+  #6 15.14   libsasl2-modules-db libssh2-1 libstdc++-12-dev libtirpc-dev libtsan2
+  #6 15.14   libubsan1 libxml2 libxml2-dev libxslt1-dev libxslt1.1 libz3-4 libz3-dev
+  #6 15.14   linux-libc-dev make media-types patch perl perl-modules-5.36 python3
+  #6 15.14   python3-distutils python3-lib2to3 python3-minimal python3-pip-whl
+  #6 15.14   python3-setuptools-whl python3-venv python3.11 python3.11-minimal
+  #6 15.14   python3.11-venv rpcsvc-proto xz-utils
+  #6 15.18 0 upgraded, 81 newly installed, 0 to remove and 0 not upgraded.
+  #6 15.18 Need to get 122 MB of archives.
+  #6 15.18 After this operation, 510 MB of additional disk space will be used.
+  #6 15.18 Get:1 http://deb.debian.org/debian bookworm/main amd64 perl-modules-5.36 all 5.36.0-7+deb12u2 [2815 kB]
+  #6 15.21 Get:2 http://deb.debian.org/debian bookworm/main amd64 libgdbm-compat4 amd64 1.23-3 [48.2 kB]
+  #6 15.22 Get:3 http://deb.debian.org/debian bookworm/main amd64 libperl5.36 amd64 5.36.0-7+deb12u2 [4207 kB]
+  #6 15.31 Get:4 http://deb.debian.org/debian bookworm/main amd64 perl amd64 5.36.0-7+deb12u2 [239 kB]
+  #6 15.32 Get:5 http://deb.debian.org/debian bookworm/main amd64 libpython3.11-minimal amd64 3.11.2-6+deb12u6 [817 kB]
+  #6 15.35 Get:6 http://deb.debian.org/debian bookworm/main amd64 python3.11-minimal amd64 3.11.2-6+deb12u6 [2064 kB]
+  #6 15.45 Get:7 http://deb.debian.org/debian bookworm/main amd64 python3-minimal amd64 3.11.2-1+b1 [26.3 kB]
+  #6 15.45 Get:8 http://deb.debian.org/debian bookworm/main amd64 media-types all 10.0.0 [26.1 kB]
+  #6 15.45 Get:9 http://deb.debian.org/debian bookworm/main amd64 libpython3.11-stdlib amd64 3.11.2-6+deb12u6 [1798 kB]
+  #6 15.56 Get:10 http://deb.debian.org/debian bookworm/main amd64 python3.11 amd64 3.11.2-6+deb12u6 [573 kB]
+  #6 15.60 Get:11 http://deb.debian.org/debian bookworm/main amd64 libpython3-stdlib amd64 3.11.2-1+b1 [9312 B]
+  #6 15.60 Get:12 http://deb.debian.org/debian bookworm/main amd64 python3 amd64 3.11.2-1+b1 [26.3 kB]
+  #6 15.60 Get:13 http://deb.debian.org/debian bookworm/main amd64 bzip2 amd64 1.0.8-5+b1 [49.8 kB]
+  #6 15.60 Get:14 http://deb.debian.org/debian bookworm/main amd64 xz-utils amd64 5.4.1-1 [471 kB]
+  #6 15.64 Get:15 http://deb.debian.org/debian bookworm/main amd64 binutils-common amd64 2.40-2 [2487 kB]
+  #6 15.83 Get:16 http://deb.debian.org/debian bookworm/main amd64 libbinutils amd64 2.40-2 [572 kB]
+  #6 15.91 Get:17 http://deb.debian.org/debian bookworm/main amd64 libctf-nobfd0 amd64 2.40-2 [153 kB]
+  #6 15.94 Get:18 http://deb.debian.org/debian bookworm/main amd64 libctf0 amd64 2.40-2 [89.8 kB]
+  #6 15.95 Get:19 http://deb.debian.org/debian bookworm/main amd64 libgprofng0 amd64 2.40-2 [812 kB]
+  #6 16.03 Get:20 http://deb.debian.org/debian bookworm/main amd64 libjansson4 amd64 2.14-2 [40.8 kB]
+  #6 16.04 Get:21 http://deb.debian.org/debian bookworm/main amd64 binutils-x86-64-linux-gnu amd64 2.40-2 [2246 kB]
+  #6 16.29 Get:22 http://deb.debian.org/debian bookworm/main amd64 binutils amd64 2.40-2 [65.0 kB]
+  #6 16.29 Get:23 http://deb.debian.org/debian bookworm/main amd64 libc-dev-bin amd64 2.36-9+deb12u10 [47.1 kB]
+  #6 16.30 Get:24 http://deb.debian.org/debian-security bookworm-security/main amd64 linux-libc-dev amd64 6.1.147-1 [2171 kB]
+  #6 16.46 Get:25 http://deb.debian.org/debian bookworm/main amd64 libcrypt-dev amd64 1:4.4.33-2 [118 kB]
+  #6 16.47 Get:26 http://deb.debian.org/debian bookworm/main amd64 libtirpc-dev amd64 1.3.3+ds-1 [191 kB]
+  #6 16.49 Get:27 http://deb.debian.org/debian bookworm/main amd64 libnsl-dev amd64 1.3.0-2 [66.4 kB]
+  #6 16.50 Get:28 http://deb.debian.org/debian bookworm/main amd64 rpcsvc-proto amd64 1.4.3-1 [63.3 kB]
+  #6 16.51 Get:29 http://deb.debian.org/debian bookworm/main amd64 libc6-dev amd64 2.36-9+deb12u10 [1903 kB]
+  #6 16.68 Get:30 http://deb.debian.org/debian bookworm/main amd64 libisl23 amd64 0.25-1.1 [683 kB]
+  #6 16.75 Get:31 http://deb.debian.org/debian bookworm/main amd64 libmpfr6 amd64 4.2.0-1 [701 kB]
+  #6 16.79 Get:32 http://deb.debian.org/debian bookworm/main amd64 libmpc3 amd64 1.3.1-1 [51.5 kB]
+  #6 16.80 Get:33 http://deb.debian.org/debian bookworm/main amd64 cpp-12 amd64 12.2.0-14+deb12u1 [9768 kB]
+  #6 17.51 Get:34 http://deb.debian.org/debian bookworm/main amd64 cpp amd64 4:12.2.0-3 [6836 B]
+  #6 17.51 Get:35 http://deb.debian.org/debian bookworm/main amd64 libcc1-0 amd64 12.2.0-14+deb12u1 [41.7 kB]
+  #6 17.51 Get:36 http://deb.debian.org/debian bookworm/main amd64 libgomp1 amd64 12.2.0-14+deb12u1 [116 kB]
+  #6 17.52 Get:37 http://deb.debian.org/debian bookworm/main amd64 libitm1 amd64 12.2.0-14+deb12u1 [26.1 kB]
+  #6 17.52 Get:38 http://deb.debian.org/debian bookworm/main amd64 libatomic1 amd64 12.2.0-14+deb12u1 [9376 B]
+  #6 17.52 Get:39 http://deb.debian.org/debian bookworm/main amd64 libasan8 amd64 12.2.0-14+deb12u1 [2193 kB]
+  #6 17.74 Get:40 http://deb.debian.org/debian bookworm/main amd64 liblsan0 amd64 12.2.0-14+deb12u1 [969 kB]
+  #6 17.85 Get:41 http://deb.debian.org/debian bookworm/main amd64 libtsan2 amd64 12.2.0-14+deb12u1 [2197 kB]
+  #6 17.99 Get:42 http://deb.debian.org/debian bookworm/main amd64 libubsan1 amd64 12.2.0-14+deb12u1 [883 kB]
+  #6 18.03 Get:43 http://deb.debian.org/debian bookworm/main amd64 libquadmath0 amd64 12.2.0-14+deb12u1 [145 kB]
+  #6 18.04 Get:44 http://deb.debian.org/debian bookworm/main amd64 libgcc-12-dev amd64 12.2.0-14+deb12u1 [2437 kB]
+  #6 18.19 Get:45 http://deb.debian.org/debian bookworm/main amd64 gcc-12 amd64 12.2.0-14+deb12u1 [19.3 MB]
+  #6 19.99 Get:46 http://deb.debian.org/debian bookworm/main amd64 gcc amd64 4:12.2.0-3 [5216 B]
+  #6 19.99 Get:47 http://deb.debian.org/debian bookworm/main amd64 libstdc++-12-dev amd64 12.2.0-14+deb12u1 [2047 kB]
+  #6 20.16 Get:48 http://deb.debian.org/debian bookworm/main amd64 g++-12 amd64 12.2.0-14+deb12u1 [10.7 MB]
+  #6 21.03 Get:49 http://deb.debian.org/debian bookworm/main amd64 g++ amd64 4:12.2.0-3 [1356 B]
+  #6 21.03 Get:50 http://deb.debian.org/debian bookworm/main amd64 make amd64 4.3-4.1 [396 kB]
+  #6 21.06 Get:51 http://deb.debian.org/debian bookworm/main amd64 libdpkg-perl all 1.21.22 [603 kB]
+  #6 21.12 Get:52 http://deb.debian.org/debian bookworm/main amd64 patch amd64 2.7.6-7 [128 kB]
+  #6 21.13 Get:53 http://deb.debian.org/debian bookworm/main amd64 dpkg-dev all 1.21.22 [1353 kB]
+  #6 21.30 Get:54 http://deb.debian.org/debian bookworm/main amd64 build-essential amd64 12.9 [7704 B]
+  #6 21.30 Get:55 http://deb.debian.org/debian bookworm/main amd64 libbrotli1 amd64 1.0.9-2+b6 [275 kB]
+  #6 21.34 Get:56 http://deb.debian.org/debian bookworm/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg-10 [20.3 kB]
+  #6 21.34 Get:57 http://deb.debian.org/debian bookworm/main amd64 libsasl2-2 amd64 2.1.28+dfsg-10 [59.7 kB]
+  #6 21.34 Get:58 http://deb.debian.org/debian bookworm/main amd64 libldap-2.5-0 amd64 2.5.13+dfsg-5 [183 kB]
+  #6 21.37 Get:59 http://deb.debian.org/debian bookworm/main amd64 libnghttp2-14 amd64 1.52.0-1+deb12u2 [73.0 kB]
+  #6 21.38 Get:60 http://deb.debian.org/debian bookworm/main amd64 libpsl5 amd64 0.21.2-1 [58.7 kB]
+  #6 21.39 Get:61 http://deb.debian.org/debian bookworm/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2+b2 [60.8 kB]
+  #6 21.39 Get:62 http://deb.debian.org/debian bookworm/main amd64 libssh2-1 amd64 1.10.0-3+b1 [179 kB]
+  #6 21.41 Get:63 http://deb.debian.org/debian bookworm/main amd64 libcurl3-gnutls amd64 7.88.1-10+deb12u12 [386 kB]
+  #6 21.44 Get:64 http://deb.debian.org/debian bookworm/main amd64 liberror-perl all 0.17029-2 [29.0 kB]
+  #6 21.44 Get:65 http://deb.debian.org/debian bookworm/main amd64 git-man all 1:2.39.5-0+deb12u2 [2053 kB]
+  #6 21.59 Get:66 http://deb.debian.org/debian bookworm/main amd64 git amd64 1:2.39.5-0+deb12u2 [7260 kB]
+  #6 22.25 Get:67 http://deb.debian.org/debian-security bookworm-security/main amd64 libicu72 amd64 72.1-3+deb12u1 [9376 kB]
+  #6 22.84 Get:68 http://deb.debian.org/debian-security bookworm-security/main amd64 icu-devtools amd64 72.1-3+deb12u1 [206 kB]
+  #6 22.86 Get:69 http://deb.debian.org/debian-security bookworm-security/main amd64 libicu-dev amd64 72.1-3+deb12u1 [10.3 MB]
+  #6 23.75 Get:70 http://deb.debian.org/debian-security bookworm-security/main amd64 libxml2 amd64 2.9.14+dfsg-1.3~deb12u2 [687 kB]
+  #6 23.79 Get:71 http://deb.debian.org/debian-security bookworm-security/main amd64 libxml2-dev amd64 2.9.14+dfsg-1.3~deb12u2 [783 kB]
+  #6 23.86 Get:72 http://deb.debian.org/debian-security bookworm-security/main amd64 libxslt1.1 amd64 1.1.35-1+deb12u2 [231 kB]
+  #6 23.88 Get:73 http://deb.debian.org/debian-security bookworm-security/main amd64 libxslt1-dev amd64 1.1.35-1+deb12u2 [346 kB]
+  #6 23.90 Get:74 http://deb.debian.org/debian bookworm/main amd64 libz3-4 amd64 4.8.12-3.1 [7216 kB]
+  #6 24.44 Get:75 http://deb.debian.org/debian bookworm/main amd64 libz3-dev amd64 4.8.12-3.1 [90.6 kB]
+  #6 24.44 Get:76 http://deb.debian.org/debian bookworm/main amd64 python3-lib2to3 all 3.11.2-3 [76.3 kB]
+  #6 24.45 Get:77 http://deb.debian.org/debian bookworm/main amd64 python3-distutils all 3.11.2-3 [131 kB]
+  #6 24.45 Get:78 http://deb.debian.org/debian bookworm/main amd64 python3-pip-whl all 23.0.1+dfsg-1 [1717 kB]
+  #6 24.62 Get:79 http://deb.debian.org/debian bookworm/main amd64 python3-setuptools-whl all 66.1.1-1+deb12u1 [1112 kB]
+  #6 24.71 Get:80 http://deb.debian.org/debian bookworm/main amd64 python3.11-venv amd64 3.11.2-6+deb12u6 [5896 B]
+  #6 24.72 Get:81 http://deb.debian.org/debian bookworm/main amd64 python3-venv amd64 3.11.2-1+b1 [1200 B]
+  #6 24.87 debconf: delaying package configuration, since apt-utils is not installed
+  #6 24.89 Fetched 122 MB in 10s (12.7 MB/s)
+  #6 24.90 Selecting previously unselected package perl-modules-5.36.
+  #6 24.90 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 6698 files and directories currently installed.)
+  #6 24.91 Preparing to unpack .../0-perl-modules-5.36_5.36.0-7+deb12u2_all.deb ...
+  #6 24.91 Unpacking perl-modules-5.36 (5.36.0-7+deb12u2) ...
+  #6 25.19 Selecting previously unselected package libgdbm-compat4:amd64.
+  #6 25.19 Preparing to unpack .../1-libgdbm-compat4_1.23-3_amd64.deb ...
+  #6 25.19 Unpacking libgdbm-compat4:amd64 (1.23-3) ...
+  #6 25.21 Selecting previously unselected package libperl5.36:amd64.
+  #6 25.21 Preparing to unpack .../2-libperl5.36_5.36.0-7+deb12u2_amd64.deb ...
+  #6 25.21 Unpacking libperl5.36:amd64 (5.36.0-7+deb12u2) ...
+  #6 25.54 Selecting previously unselected package perl.
+  #6 25.54 Preparing to unpack .../3-perl_5.36.0-7+deb12u2_amd64.deb ...
+  #6 25.55 Unpacking perl (5.36.0-7+deb12u2) ...
+  #6 25.59 Selecting previously unselected package libpython3.11-minimal:amd64.
+  #6 25.59 Preparing to unpack .../4-libpython3.11-minimal_3.11.2-6+deb12u6_amd64.deb ...
+  #6 25.59 Unpacking libpython3.11-minimal:amd64 (3.11.2-6+deb12u6) ...
+  #6 25.67 Selecting previously unselected package python3.11-minimal.
+  #6 25.67 Preparing to unpack .../5-python3.11-minimal_3.11.2-6+deb12u6_amd64.deb ...
+  #6 25.67 Unpacking python3.11-minimal (3.11.2-6+deb12u6) ...
+  #6 25.86 Setting up libpython3.11-minimal:amd64 (3.11.2-6+deb12u6) ...
+  #6 25.86 Setting up python3.11-minimal (3.11.2-6+deb12u6) ...
+  #6 26.48 Selecting previously unselected package python3-minimal.
+  #6 26.48 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 9003 files and directories currently installed.)
+  #6 26.49 Preparing to unpack .../python3-minimal_3.11.2-1+b1_amd64.deb ...
+  #6 26.49 Unpacking python3-minimal (3.11.2-1+b1) ...
+  #6 26.51 Selecting previously unselected package media-types.
+  #6 26.51 Preparing to unpack .../media-types_10.0.0_all.deb ...
+  #6 26.51 Unpacking media-types (10.0.0) ...
+  #6 26.52 Selecting previously unselected package libpython3.11-stdlib:amd64.
+  #6 26.52 Preparing to unpack .../libpython3.11-stdlib_3.11.2-6+deb12u6_amd64.deb ...
+  #6 26.52 Unpacking libpython3.11-stdlib:amd64 (3.11.2-6+deb12u6) ...
+  #6 26.68 Selecting previously unselected package python3.11.
+  #6 26.68 Preparing to unpack .../python3.11_3.11.2-6+deb12u6_amd64.deb ...
+  #6 26.68 Unpacking python3.11 (3.11.2-6+deb12u6) ...
+  #6 26.71 Selecting previously unselected package libpython3-stdlib:amd64.
+  #6 26.71 Preparing to unpack .../libpython3-stdlib_3.11.2-1+b1_amd64.deb ...
+  #6 26.71 Unpacking libpython3-stdlib:amd64 (3.11.2-1+b1) ...
+  #6 26.73 Setting up python3-minimal (3.11.2-1+b1) ...
+  #6 26.86 Selecting previously unselected package python3.
+  #6 26.86 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 9413 files and directories currently installed.)
+  #6 26.87 Preparing to unpack .../00-python3_3.11.2-1+b1_amd64.deb ...
+  #6 26.87 Unpacking python3 (3.11.2-1+b1) ...
+  #6 26.88 Selecting previously unselected package bzip2.
+  #6 26.89 Preparing to unpack .../01-bzip2_1.0.8-5+b1_amd64.deb ...
+  #6 26.89 Unpacking bzip2 (1.0.8-5+b1) ...
+  #6 26.90 Selecting previously unselected package xz-utils.
+  #6 26.90 Preparing to unpack .../02-xz-utils_5.4.1-1_amd64.deb ...
+  #6 26.91 Unpacking xz-utils (5.4.1-1) ...
+  #6 26.96 Selecting previously unselected package binutils-common:amd64.
+  #6 26.96 Preparing to unpack .../03-binutils-common_2.40-2_amd64.deb ...
+  #6 26.96 Unpacking binutils-common:amd64 (2.40-2) ...
+  #6 27.17 Selecting previously unselected package libbinutils:amd64.
+  #6 27.17 Preparing to unpack .../04-libbinutils_2.40-2_amd64.deb ...
+  #6 27.17 Unpacking libbinutils:amd64 (2.40-2) ...
+  #6 27.24 Selecting previously unselected package libctf-nobfd0:amd64.
+  #6 27.24 Preparing to unpack .../05-libctf-nobfd0_2.40-2_amd64.deb ...
+  #6 27.24 Unpacking libctf-nobfd0:amd64 (2.40-2) ...
+  #6 27.27 Selecting previously unselected package libctf0:amd64.
+  #6 27.27 Preparing to unpack .../06-libctf0_2.40-2_amd64.deb ...
+  #6 27.27 Unpacking libctf0:amd64 (2.40-2) ...
+  #6 27.29 Selecting previously unselected package libgprofng0:amd64.
+  #6 27.29 Preparing to unpack .../07-libgprofng0_2.40-2_amd64.deb ...
+  #6 27.29 Unpacking libgprofng0:amd64 (2.40-2) ...
+  #6 27.37 Selecting previously unselected package libjansson4:amd64.
+  #6 27.37 Preparing to unpack .../08-libjansson4_2.14-2_amd64.deb ...
+  #6 27.37 Unpacking libjansson4:amd64 (2.14-2) ...
+  #6 27.39 Selecting previously unselected package binutils-x86-64-linux-gnu.
+  #6 27.39 Preparing to unpack .../09-binutils-x86-64-linux-gnu_2.40-2_amd64.deb ...
+  #6 27.39 Unpacking binutils-x86-64-linux-gnu (2.40-2) ...
+  #6 27.60 Selecting previously unselected package binutils.
+  #6 27.60 Preparing to unpack .../10-binutils_2.40-2_amd64.deb ...
+  #6 27.60 Unpacking binutils (2.40-2) ...
+  #6 27.63 Selecting previously unselected package libc-dev-bin.
+  #6 27.63 Preparing to unpack .../11-libc-dev-bin_2.36-9+deb12u10_amd64.deb ...
+  #6 27.63 Unpacking libc-dev-bin (2.36-9+deb12u10) ...
+  #6 27.65 Selecting previously unselected package linux-libc-dev:amd64.
+  #6 27.65 Preparing to unpack .../12-linux-libc-dev_6.1.147-1_amd64.deb ...
+  #6 27.65 Unpacking linux-libc-dev:amd64 (6.1.147-1) ...
+  #6 27.78 Selecting previously unselected package libcrypt-dev:amd64.
+  #6 27.78 Preparing to unpack .../13-libcrypt-dev_1%3a4.4.33-2_amd64.deb ...
+  #6 27.79 Unpacking libcrypt-dev:amd64 (1:4.4.33-2) ...
+  #6 27.81 Selecting previously unselected package libtirpc-dev:amd64.
+  #6 27.81 Preparing to unpack .../14-libtirpc-dev_1.3.3+ds-1_amd64.deb ...
+  #6 27.81 Unpacking libtirpc-dev:amd64 (1.3.3+ds-1) ...
+  #6 27.84 Selecting previously unselected package libnsl-dev:amd64.
+  #6 27.84 Preparing to unpack .../15-libnsl-dev_1.3.0-2_amd64.deb ...
+  #6 27.84 Unpacking libnsl-dev:amd64 (1.3.0-2) ...
+  #6 27.86 Selecting previously unselected package rpcsvc-proto.
+  #6 27.86 Preparing to unpack .../16-rpcsvc-proto_1.4.3-1_amd64.deb ...
+  #6 27.86 Unpacking rpcsvc-proto (1.4.3-1) ...
+  #6 27.88 Selecting previously unselected package libc6-dev:amd64.
+  #6 27.88 Preparing to unpack .../17-libc6-dev_2.36-9+deb12u10_amd64.deb ...
+  #6 27.88 Unpacking libc6-dev:amd64 (2.36-9+deb12u10) ...
+  #6 28.06 Selecting previously unselected package libisl23:amd64.
+  #6 28.06 Preparing to unpack .../18-libisl23_0.25-1.1_amd64.deb ...
+  #6 28.06 Unpacking libisl23:amd64 (0.25-1.1) ...
+  #6 28.13 Selecting previously unselected package libmpfr6:amd64.
+  #6 28.13 Preparing to unpack .../19-libmpfr6_4.2.0-1_amd64.deb ...
+  #6 28.13 Unpacking libmpfr6:amd64 (4.2.0-1) ...
+  #6 28.17 Selecting previously unselected package libmpc3:amd64.
+  #6 28.17 Preparing to unpack .../20-libmpc3_1.3.1-1_amd64.deb ...
+  #6 28.18 Unpacking libmpc3:amd64 (1.3.1-1) ...
+  #6 28.19 Selecting previously unselected package cpp-12.
+  #6 28.19 Preparing to unpack .../21-cpp-12_12.2.0-14+deb12u1_amd64.deb ...
+  #6 28.19 Unpacking cpp-12 (12.2.0-14+deb12u1) ...
+  #6 28.82 Selecting previously unselected package cpp.
+  #6 28.82 Preparing to unpack .../22-cpp_4%3a12.2.0-3_amd64.deb ...
+  #6 28.82 Unpacking cpp (4:12.2.0-3) ...
+  #6 28.84 Selecting previously unselected package libcc1-0:amd64.
+  #6 28.84 Preparing to unpack .../23-libcc1-0_12.2.0-14+deb12u1_amd64.deb ...
+  #6 28.84 Unpacking libcc1-0:amd64 (12.2.0-14+deb12u1) ...
+  #6 28.86 Selecting previously unselected package libgomp1:amd64.
+  #6 28.86 Preparing to unpack .../24-libgomp1_12.2.0-14+deb12u1_amd64.deb ...
+  #6 28.86 Unpacking libgomp1:amd64 (12.2.0-14+deb12u1) ...
+  #6 28.88 Selecting previously unselected package libitm1:amd64.
+  #6 28.89 Preparing to unpack .../25-libitm1_12.2.0-14+deb12u1_amd64.deb ...
+  #6 28.89 Unpacking libitm1:amd64 (12.2.0-14+deb12u1) ...
+  #6 28.90 Selecting previously unselected package libatomic1:amd64.
+  #6 28.90 Preparing to unpack .../26-libatomic1_12.2.0-14+deb12u1_amd64.deb ...
+  #6 28.90 Unpacking libatomic1:amd64 (12.2.0-14+deb12u1) ...
+  #6 28.92 Selecting previously unselected package libasan8:amd64.
+  #6 28.92 Preparing to unpack .../27-libasan8_12.2.0-14+deb12u1_amd64.deb ...
+  #6 28.92 Unpacking libasan8:amd64 (12.2.0-14+deb12u1) ...
+  #6 29.12 Selecting previously unselected package liblsan0:amd64.
+  #6 29.12 Preparing to unpack .../28-liblsan0_12.2.0-14+deb12u1_amd64.deb ...
+  #6 29.12 Unpacking liblsan0:amd64 (12.2.0-14+deb12u1) ...
+  #6 29.21 Selecting previously unselected package libtsan2:amd64.
+  #6 29.21 Preparing to unpack .../29-libtsan2_12.2.0-14+deb12u1_amd64.deb ...
+  #6 29.22 Unpacking libtsan2:amd64 (12.2.0-14+deb12u1) ...
+  #6 29.41 Selecting previously unselected package libubsan1:amd64.
+  #6 29.42 Preparing to unpack .../30-libubsan1_12.2.0-14+deb12u1_amd64.deb ...
+  #6 29.42 Unpacking libubsan1:amd64 (12.2.0-14+deb12u1) ...
+  #6 29.50 Selecting previously unselected package libquadmath0:amd64.
+  #6 29.50 Preparing to unpack .../31-libquadmath0_12.2.0-14+deb12u1_amd64.deb ...
+  #6 29.50 Unpacking libquadmath0:amd64 (12.2.0-14+deb12u1) ...
+  #6 29.53 Selecting previously unselected package libgcc-12-dev:amd64.
+  #6 29.53 Preparing to unpack .../32-libgcc-12-dev_12.2.0-14+deb12u1_amd64.deb ...
+  #6 29.53 Unpacking libgcc-12-dev:amd64 (12.2.0-14+deb12u1) ...
+  #6 29.73 Selecting previously unselected package gcc-12.
+  #6 29.73 Preparing to unpack .../33-gcc-12_12.2.0-14+deb12u1_amd64.deb ...
+  #6 29.73 Unpacking gcc-12 (12.2.0-14+deb12u1) ...
+  #6 30.48 Selecting previously unselected package gcc.
+  #6 30.48 Preparing to unpack .../34-gcc_4%3a12.2.0-3_amd64.deb ...
+  #6 30.48 Unpacking gcc (4:12.2.0-3) ...
+  #6 30.50 Selecting previously unselected package libstdc++-12-dev:amd64.
+  #6 30.50 Preparing to unpack .../35-libstdc++-12-dev_12.2.0-14+deb12u1_amd64.deb ...
+  #6 30.50 Unpacking libstdc++-12-dev:amd64 (12.2.0-14+deb12u1) ...
+  #6 30.69 Selecting previously unselected package g++-12.
+  #6 30.70 Preparing to unpack .../36-g++-12_12.2.0-14+deb12u1_amd64.deb ...
+  #6 30.70 Unpacking g++-12 (12.2.0-14+deb12u1) ...
+  #6 31.39 Selecting previously unselected package g++.
+  #6 31.39 Preparing to unpack .../37-g++_4%3a12.2.0-3_amd64.deb ...
+  #6 31.39 Unpacking g++ (4:12.2.0-3) ...
+  #6 31.40 Selecting previously unselected package make.
+  #6 31.40 Preparing to unpack .../38-make_4.3-4.1_amd64.deb ...
+  #6 31.40 Unpacking make (4.3-4.1) ...
+  #6 31.45 Selecting previously unselected package libdpkg-perl.
+  #6 31.45 Preparing to unpack .../39-libdpkg-perl_1.21.22_all.deb ...
+  #6 31.45 Unpacking libdpkg-perl (1.21.22) ...
+  #6 31.51 Selecting previously unselected package patch.
+  #6 31.51 Preparing to unpack .../40-patch_2.7.6-7_amd64.deb ...
+  #6 31.51 Unpacking patch (2.7.6-7) ...
+  #6 31.53 Selecting previously unselected package dpkg-dev.
+  #6 31.53 Preparing to unpack .../41-dpkg-dev_1.21.22_all.deb ...
+  #6 31.54 Unpacking dpkg-dev (1.21.22) ...
+  #6 31.64 Selecting previously unselected package build-essential.
+  #6 31.64 Preparing to unpack .../42-build-essential_12.9_amd64.deb ...
+  #6 31.64 Unpacking build-essential (12.9) ...
+  #6 31.65 Selecting previously unselected package libbrotli1:amd64.
+  #6 31.66 Preparing to unpack .../43-libbrotli1_1.0.9-2+b6_amd64.deb ...
+  #6 31.66 Unpacking libbrotli1:amd64 (1.0.9-2+b6) ...
+  #6 31.69 Selecting previously unselected package libsasl2-modules-db:amd64.
+  #6 31.70 Preparing to unpack .../44-libsasl2-modules-db_2.1.28+dfsg-10_amd64.deb ...
+  #6 31.70 Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg-10) ...
+  #6 31.71 Selecting previously unselected package libsasl2-2:amd64.
+  #6 31.72 Preparing to unpack .../45-libsasl2-2_2.1.28+dfsg-10_amd64.deb ...
+  #6 31.72 Unpacking libsasl2-2:amd64 (2.1.28+dfsg-10) ...
+  #6 31.74 Selecting previously unselected package libldap-2.5-0:amd64.
+  #6 31.74 Preparing to unpack .../46-libldap-2.5-0_2.5.13+dfsg-5_amd64.deb ...
+  #6 31.74 Unpacking libldap-2.5-0:amd64 (2.5.13+dfsg-5) ...
+  #6 31.77 Selecting previously unselected package libnghttp2-14:amd64.
+  #6 31.77 Preparing to unpack .../47-libnghttp2-14_1.52.0-1+deb12u2_amd64.deb ...
+  #6 31.78 Unpacking libnghttp2-14:amd64 (1.52.0-1+deb12u2) ...
+  #6 31.79 Selecting previously unselected package libpsl5:amd64.
+  #6 31.80 Preparing to unpack .../48-libpsl5_0.21.2-1_amd64.deb ...
+  #6 31.80 Unpacking libpsl5:amd64 (0.21.2-1) ...
+  #6 31.81 Selecting previously unselected package librtmp1:amd64.
+  #6 31.81 Preparing to unpack .../49-librtmp1_2.4+20151223.gitfa8646d.1-2+b2_amd64.deb ...
+  #6 31.81 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+  #6 31.83 Selecting previously unselected package libssh2-1:amd64.
+  #6 31.83 Preparing to unpack .../50-libssh2-1_1.10.0-3+b1_amd64.deb ...
+  #6 31.83 Unpacking libssh2-1:amd64 (1.10.0-3+b1) ...
+  #6 31.86 Selecting previously unselected package libcurl3-gnutls:amd64.
+  #6 31.86 Preparing to unpack .../51-libcurl3-gnutls_7.88.1-10+deb12u12_amd64.deb ...
+  #6 31.86 Unpacking libcurl3-gnutls:amd64 (7.88.1-10+deb12u12) ...
+  #6 31.90 Selecting previously unselected package liberror-perl.
+  #6 31.90 Preparing to unpack .../52-liberror-perl_0.17029-2_all.deb ...
+  #6 31.90 Unpacking liberror-perl (0.17029-2) ...
+  #6 31.92 Selecting previously unselected package git-man.
+  #6 31.92 Preparing to unpack .../53-git-man_1%3a2.39.5-0+deb12u2_all.deb ...
+  #6 31.92 Unpacking git-man (1:2.39.5-0+deb12u2) ...
+  #6 32.02 Selecting previously unselected package git.
+  #6 32.02 Preparing to unpack .../54-git_1%3a2.39.5-0+deb12u2_amd64.deb ...
+  #6 32.03 Unpacking git (1:2.39.5-0+deb12u2) ...
+  #6 32.37 Selecting previously unselected package libicu72:amd64.
+  #6 32.38 Preparing to unpack .../55-libicu72_72.1-3+deb12u1_amd64.deb ...
+  #6 32.38 Unpacking libicu72:amd64 (72.1-3+deb12u1) ...
+  #6 32.93 Selecting previously unselected package icu-devtools.
+  #6 32.94 Preparing to unpack .../56-icu-devtools_72.1-3+deb12u1_amd64.deb ...
+  #6 32.94 Unpacking icu-devtools (72.1-3+deb12u1) ...
+  #6 32.97 Selecting previously unselected package libicu-dev:amd64.
+  #6 32.97 Preparing to unpack .../57-libicu-dev_72.1-3+deb12u1_amd64.deb ...
+  #6 32.97 Unpacking libicu-dev:amd64 (72.1-3+deb12u1) ...
+  #6 33.53 Selecting previously unselected package libxml2:amd64.
+  #6 33.54 Preparing to unpack .../58-libxml2_2.9.14+dfsg-1.3~deb12u2_amd64.deb ...
+  #6 33.54 Unpacking libxml2:amd64 (2.9.14+dfsg-1.3~deb12u2) ...
+  #6 33.60 Selecting previously unselected package libxml2-dev:amd64.
+  #6 33.60 Preparing to unpack .../59-libxml2-dev_2.9.14+dfsg-1.3~deb12u2_amd64.deb ...
+  #6 33.60 Unpacking libxml2-dev:amd64 (2.9.14+dfsg-1.3~deb12u2) ...
+  #6 33.68 Selecting previously unselected package libxslt1.1:amd64.
+  #6 33.68 Preparing to unpack .../60-libxslt1.1_1.1.35-1+deb12u2_amd64.deb ...
+  #6 33.68 Unpacking libxslt1.1:amd64 (1.1.35-1+deb12u2) ...
+  #6 33.71 Selecting previously unselected package libxslt1-dev:amd64.
+  #6 33.71 Preparing to unpack .../61-libxslt1-dev_1.1.35-1+deb12u2_amd64.deb ...
+  #6 33.71 Unpacking libxslt1-dev:amd64 (1.1.35-1+deb12u2) ...
+  #6 33.75 Selecting previously unselected package libz3-4:amd64.
+  #6 33.75 Preparing to unpack .../62-libz3-4_4.8.12-3.1_amd64.deb ...
+  #6 33.75 Unpacking libz3-4:amd64 (4.8.12-3.1) ...
+  #6 34.30 Selecting previously unselected package libz3-dev:amd64.
+  #6 34.30 Preparing to unpack .../63-libz3-dev_4.8.12-3.1_amd64.deb ...
+  #6 34.30 Unpacking libz3-dev:amd64 (4.8.12-3.1) ...
+  #6 34.33 Selecting previously unselected package python3-lib2to3.
+  #6 34.33 Preparing to unpack .../64-python3-lib2to3_3.11.2-3_all.deb ...
+  #6 34.33 Unpacking python3-lib2to3 (3.11.2-3) ...
+  #6 34.35 Selecting previously unselected package python3-distutils.
+  #6 34.36 Preparing to unpack .../65-python3-distutils_3.11.2-3_all.deb ...
+  #6 34.36 Unpacking python3-distutils (3.11.2-3) ...
+  #6 34.38 Selecting previously unselected package python3-pip-whl.
+  #6 34.38 Preparing to unpack .../66-python3-pip-whl_23.0.1+dfsg-1_all.deb ...
+  #6 34.38 Unpacking python3-pip-whl (23.0.1+dfsg-1) ...
+  #6 34.49 Selecting previously unselected package python3-setuptools-whl.
+  #6 34.49 Preparing to unpack .../67-python3-setuptools-whl_66.1.1-1+deb12u1_all.deb ...
+  #6 34.49 Unpacking python3-setuptools-whl (66.1.1-1+deb12u1) ...
+  #6 34.56 Selecting previously unselected package python3.11-venv.
+  #6 34.56 Preparing to unpack .../68-python3.11-venv_3.11.2-6+deb12u6_amd64.deb ...
+  #6 34.56 Unpacking python3.11-venv (3.11.2-6+deb12u6) ...
+  #6 34.57 Selecting previously unselected package python3-venv.
+  #6 34.57 Preparing to unpack .../69-python3-venv_3.11.2-1+b1_amd64.deb ...
+  #6 34.58 Unpacking python3-venv (3.11.2-1+b1) ...
+  #6 34.60 Setting up media-types (10.0.0) ...
+  #6 34.60 Setting up python3-setuptools-whl (66.1.1-1+deb12u1) ...
+  #6 34.60 Setting up libpsl5:amd64 (0.21.2-1) ...
+  #6 34.61 Setting up libicu72:amd64 (72.1-3+deb12u1) ...
+  #6 34.61 Setting up python3-pip-whl (23.0.1+dfsg-1) ...
+  #6 34.61 Setting up libpython3.11-stdlib:amd64 (3.11.2-6+deb12u6) ...
+  #6 34.61 Setting up libbrotli1:amd64 (1.0.9-2+b6) ...
+  #6 34.62 Setting up binutils-common:amd64 (2.40-2) ...
+  #6 34.62 Setting up libnghttp2-14:amd64 (1.52.0-1+deb12u2) ...
+  #6 34.62 Setting up linux-libc-dev:amd64 (6.1.147-1) ...
+  #6 34.62 Setting up libctf-nobfd0:amd64 (2.40-2) ...
+  #6 34.62 Setting up libgomp1:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.63 Setting up bzip2 (1.0.8-5+b1) ...
+  #6 34.63 Setting up libjansson4:amd64 (2.14-2) ...
+  #6 34.63 Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg-10) ...
+  #6 34.63 Setting up perl-modules-5.36 (5.36.0-7+deb12u2) ...
+  #6 34.64 Setting up libz3-4:amd64 (4.8.12-3.1) ...
+  #6 34.64 Setting up libtirpc-dev:amd64 (1.3.3+ds-1) ...
+  #6 34.64 Setting up rpcsvc-proto (1.4.3-1) ...
+  #6 34.64 Setting up make (4.3-4.1) ...
+  #6 34.64 Setting up libmpfr6:amd64 (4.2.0-1) ...
+  #6 34.65 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+  #6 34.65 Setting up xz-utils (5.4.1-1) ...
+  #6 34.65 update-alternatives: using /usr/bin/xz to provide /usr/bin/lzma (lzma) in auto mode
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzma.1.gz because associated file /usr/share/man/man1/xz.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/unlzma.1.gz because associated file /usr/share/man/man1/unxz.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcat.1.gz because associated file /usr/share/man/man1/xzcat.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzmore.1.gz because associated file /usr/share/man/man1/xzmore.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzless.1.gz because associated file /usr/share/man/man1/xzless.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzdiff.1.gz because associated file /usr/share/man/man1/xzdiff.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcmp.1.gz because associated file /usr/share/man/man1/xzcmp.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzgrep.1.gz because associated file /usr/share/man/man1/xzgrep.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzegrep.1.gz because associated file /usr/share/man/man1/xzegrep.1.gz (of link group lzma) doesn't exist
+  #6 34.65 update-alternatives: warning: skip creation of /usr/share/man/man1/lzfgrep.1.gz because associated file /usr/share/man/man1/xzfgrep.1.gz (of link group lzma) doesn't exist
+  #6 34.66 Setting up libquadmath0:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.66 Setting up libmpc3:amd64 (1.3.1-1) ...
+  #6 34.66 Setting up libatomic1:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.66 Setting up patch (2.7.6-7) ...
+  #6 34.66 Setting up icu-devtools (72.1-3+deb12u1) ...
+  #6 34.67 Setting up libgdbm-compat4:amd64 (1.23-3) ...
+  #6 34.67 Setting up libsasl2-2:amd64 (2.1.28+dfsg-10) ...
+  #6 34.67 Setting up libubsan1:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.67 Setting up libnsl-dev:amd64 (1.3.0-2) ...
+  #6 34.67 Setting up libcrypt-dev:amd64 (1:4.4.33-2) ...
+  #6 34.68 Setting up libasan8:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.68 Setting up git-man (1:2.39.5-0+deb12u2) ...
+  #6 34.69 Setting up libssh2-1:amd64 (1.10.0-3+b1) ...
+  #6 34.69 Setting up libtsan2:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.69 Setting up libbinutils:amd64 (2.40-2) ...
+  #6 34.69 Setting up libisl23:amd64 (0.25-1.1) ...
+  #6 34.69 Setting up libc-dev-bin (2.36-9+deb12u10) ...
+  #6 34.70 Setting up libxml2:amd64 (2.9.14+dfsg-1.3~deb12u2) ...
+  #6 34.70 Setting up libcc1-0:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.70 Setting up libperl5.36:amd64 (5.36.0-7+deb12u2) ...
+  #6 34.70 Setting up liblsan0:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.71 Setting up libitm1:amd64 (12.2.0-14+deb12u1) ...
+  #6 34.71 Setting up libpython3-stdlib:amd64 (3.11.2-1+b1) ...
+  #6 34.71 Setting up libctf0:amd64 (2.40-2) ...
+  #6 34.71 Setting up libz3-dev:amd64 (4.8.12-3.1) ...
+  #6 34.71 Setting up python3.11 (3.11.2-6+deb12u6) ...
+  #6 35.37 Setting up cpp-12 (12.2.0-14+deb12u1) ...
+  #6 35.37 Setting up python3 (3.11.2-1+b1) ...
+  #6 35.46 Setting up libldap-2.5-0:amd64 (2.5.13+dfsg-5) ...
+  #6 35.46 Setting up perl (5.36.0-7+deb12u2) ...
+  #6 35.47 Setting up libgprofng0:amd64 (2.40-2) ...
+  #6 35.47 Setting up libgcc-12-dev:amd64 (12.2.0-14+deb12u1) ...
+  #6 35.48 Setting up libdpkg-perl (1.21.22) ...
+  #6 35.48 Setting up cpp (4:12.2.0-3) ...
+  #6 35.48 Setting up libxslt1.1:amd64 (1.1.35-1+deb12u2) ...
+  #6 35.49 Setting up libc6-dev:amd64 (2.36-9+deb12u10) ...
+  #6 35.49 Setting up python3-lib2to3 (3.11.2-3) ...
+  #6 35.58 Setting up libicu-dev:amd64 (72.1-3+deb12u1) ...
+  #6 35.59 Setting up binutils-x86-64-linux-gnu (2.40-2) ...
+  #6 35.59 Setting up python3-distutils (3.11.2-3) ...
+  #6 35.70 Setting up libstdc++-12-dev:amd64 (12.2.0-14+deb12u1) ...
+  #6 35.70 Setting up libcurl3-gnutls:amd64 (7.88.1-10+deb12u12) ...
+  #6 35.70 Setting up binutils (2.40-2) ...
+  #6 35.71 Setting up dpkg-dev (1.21.22) ...
+  #6 35.71 Setting up liberror-perl (0.17029-2) ...
+  #6 35.71 Setting up libxml2-dev:amd64 (2.9.14+dfsg-1.3~deb12u2) ...
+  #6 35.71 Setting up python3.11-venv (3.11.2-6+deb12u6) ...
+  #6 35.76 Setting up gcc-12 (12.2.0-14+deb12u1) ...
+  #6 35.76 Setting up git (1:2.39.5-0+deb12u2) ...
+  #6 35.77 Setting up g++-12 (12.2.0-14+deb12u1) ...
+  #6 35.77 Setting up libxslt1-dev:amd64 (1.1.35-1+deb12u2) ...
+  #6 35.77 Setting up gcc (4:12.2.0-3) ...
+  #6 35.78 Setting up python3-venv (3.11.2-1+b1) ...
+  #6 35.78 Setting up g++ (4:12.2.0-3) ...
+  #6 35.79 update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode
+  #6 35.79 Setting up build-essential (12.9) ...
+  #6 35.79 Processing triggers for libc-bin (2.36-9+deb12u10) ...
+  #6 DONE 36.9s
+  #7 [4/8] RUN git clone https://github.com/sumonbis/Fairify.git /Fairify
+  #7 0.187 Cloning into '/Fairify'...
+  #7 DONE 1.0s
+  #8 [5/8] RUN python3 -m venv /root/fenv
+  #8 DONE 3.5s
+  #9 [6/8] RUN /root/fenv/bin/pip install --upgrade pip
+  #9 0.651 Requirement already satisfied: pip in /root/fenv/lib/python3.7/site-packages (23.0.1)
+  #9 0.792 Collecting pip
+  #9 0.861   Downloading pip-24.0-py3-none-any.whl (2.1 MB)
+  #9 0.967      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 20.5 MB/s eta 0:00:00
+  #9 1.018 Installing collected packages: pip
+  #9 1.018   Attempting uninstall: pip
+  #9 1.019     Found existing installation: pip 23.0.1
+  #9 1.211     Uninstalling pip-23.0.1:
+  #9 1.374       Successfully uninstalled pip-23.0.1
+  #9 2.362 Successfully installed pip-24.0
+  #9 DONE 2.6s
+  #10 [7/8] RUN /root/fenv/bin/pip install -r /Fairify/requirements.txt
+  #10 0.758 Collecting z3-solver (from -r /Fairify/requirements.txt (line 1))
+  #10 0.825   Downloading z3_solver-4.15.3.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (602 bytes)
+  #10 1.013 Collecting tensorflow==2.5.0 (from -r /Fairify/requirements.txt (line 2))
+  #10 1.024   Downloading tensorflow-2.5.0-cp37-cp37m-manylinux2010_x86_64.whl.metadata (2.8 kB)
+  #10 1.062 Collecting aif360 (from -r /Fairify/requirements.txt (line 3))
+  #10 1.069   Downloading aif360-0.5.0-py3-none-any.whl.metadata (3.8 kB)
+  #10 1.420 Collecting numpy~=1.19.2 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 1.426   Downloading numpy-1.19.5-cp37-cp37m-manylinux2010_x86_64.whl.metadata (2.0 kB)
+  #10 1.454 Collecting absl-py~=0.10 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 1.460   Downloading absl_py-0.15.0-py3-none-any.whl.metadata (2.4 kB)
+  #10 1.479 Collecting astunparse~=1.6.3 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 1.484   Downloading astunparse-1.6.3-py2.py3-none-any.whl.metadata (4.4 kB)
+  #10 1.509 Collecting flatbuffers~=1.12.0 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 1.515   Downloading flatbuffers-1.12-py2.py3-none-any.whl.metadata (872 bytes)
+  #10 1.535 Collecting google-pasta~=0.2 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 1.540   Downloading google_pasta-0.2.0-py3-none-any.whl.metadata (814 bytes)
+  #10 1.616 Collecting h5py~=3.1.0 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 1.623   Downloading h5py-3.1.0-cp37-cp37m-manylinux1_x86_64.whl.metadata (2.1 kB)
+  #10 1.644 Collecting keras-preprocessing~=1.1.2 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 1.651   Downloading Keras_Preprocessing-1.1.2-py2.py3-none-any.whl.metadata (1.9 kB)
+  #10 1.688 Collecting opt-einsum~=3.3.0 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 1.694   Downloading opt_einsum-3.3.0-py3-none-any.whl.metadata (6.5 kB)
+  #10 2.014 Collecting protobuf>=3.9.2 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 2.020   Downloading protobuf-4.24.4-cp37-abi3-manylinux2014_x86_64.whl.metadata (540 bytes)
+  #10 2.046 Collecting six~=1.15.0 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 2.051   Downloading six-1.15.0-py2.py3-none-any.whl.metadata (1.8 kB)
+  #10 2.073 Collecting termcolor~=1.1.0 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 2.078   Downloading termcolor-1.1.0.tar.gz (3.9 kB)
+  #10 2.086   Installing build dependencies: started
+  #10 3.538   Installing build dependencies: finished with status 'done'
+  #10 3.541   Getting requirements to build wheel: started
+  #10 3.715   Getting requirements to build wheel: finished with status 'done'
+  #10 3.722   Installing backend dependencies: started
+  #10 4.393   Installing backend dependencies: finished with status 'done'
+  #10 4.396   Preparing metadata (pyproject.toml): started
+  #10 4.574   Preparing metadata (pyproject.toml): finished with status 'done'
+  #10 4.662 Collecting typing-extensions~=3.7.4 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 4.669   Downloading typing_extensions-3.7.4.3-py3-none-any.whl.metadata (2.0 kB)
+  #10 4.737 Collecting wheel~=0.35 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 4.739   Using cached wheel-0.42.0-py3-none-any.whl.metadata (2.2 kB)
+  #10 4.937 Collecting wrapt~=1.12.1 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 4.943   Downloading wrapt-1.12.1.tar.gz (27 kB)
+  #10 4.953   Installing build dependencies: started
+  #10 6.251   Installing build dependencies: finished with status 'done'
+  #10 6.254   Getting requirements to build wheel: started
+  #10 6.409   Getting requirements to build wheel: finished with status 'done'
+  #10 6.415   Installing backend dependencies: started
+  #10 6.982   Installing backend dependencies: finished with status 'done'
+  #10 6.985   Preparing metadata (pyproject.toml): started
+  #10 7.157   Preparing metadata (pyproject.toml): finished with status 'done'
+  #10 7.225 Collecting gast==0.4.0 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 7.233   Downloading gast-0.4.0-py3-none-any.whl.metadata (1.1 kB)
+  #10 7.297 Collecting tensorboard~=2.5 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 7.304   Downloading tensorboard-2.11.2-py3-none-any.whl.metadata (1.9 kB)
+  #10 7.335 Collecting tensorflow-estimator<2.6.0,>=2.5.0rc0 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 7.342   Downloading tensorflow_estimator-2.5.0-py2.py3-none-any.whl.metadata (1.2 kB)
+  #10 7.831 Collecting keras-nightly~=2.5.0.dev (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 7.838   Downloading keras_nightly-2.5.0.dev2021032900-py2.py3-none-any.whl.metadata (1.2 kB)
+  #10 8.836 Collecting grpcio~=1.34.0 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 8.842   Downloading grpcio-1.34.1-cp37-cp37m-manylinux2014_x86_64.whl.metadata (4.0 kB)
+  #10 8.905 Collecting importlib-resources (from z3-solver->-r /Fairify/requirements.txt (line 1))
+  #10 8.911   Downloading importlib_resources-5.12.0-py3-none-any.whl.metadata (4.1 kB)
+  #10 9.204 Collecting scipy>=1.2.0 (from aif360->-r /Fairify/requirements.txt (line 3))
+  #10 9.209   Downloading scipy-1.7.3-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (2.2 kB)
+  #10 9.483 Collecting pandas>=0.24.0 (from aif360->-r /Fairify/requirements.txt (line 3))
+  #10 9.490   Downloading pandas-1.3.5-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (12 kB)
+  #10 9.644 Collecting scikit-learn>=1.0 (from aif360->-r /Fairify/requirements.txt (line 3))
+  #10 9.650   Downloading scikit_learn-1.0.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (10 kB)
+  #10 9.897 Collecting matplotlib (from aif360->-r /Fairify/requirements.txt (line 3))
+  #10 9.904   Downloading matplotlib-3.5.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl.metadata (6.7 kB)
+  #10 9.975 Collecting cached-property (from h5py~=3.1.0->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 9.980   Downloading cached_property-1.5.2-py2.py3-none-any.whl.metadata (11 kB)
+  #10 10.12 Collecting python-dateutil>=2.7.3 (from pandas>=0.24.0->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 10.12   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+  #10 10.21 Collecting pytz>=2017.3 (from pandas>=0.24.0->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 10.21   Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+  #10 10.35 Collecting joblib>=0.11 (from scikit-learn>=1.0->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 10.36   Downloading joblib-1.3.2-py3-none-any.whl.metadata (5.4 kB)
+  #10 10.38 Collecting threadpoolctl>=2.0.0 (from scikit-learn>=1.0->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 10.38   Downloading threadpoolctl-3.1.0-py3-none-any.whl.metadata (9.2 kB)
+  #10 10.61 Collecting google-auth<3,>=1.6.3 (from tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 10.61   Downloading google_auth-2.40.3-py2.py3-none-any.whl.metadata (6.2 kB)
+  #10 10.64 Collecting google-auth-oauthlib<0.5,>=0.4.1 (from tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 10.64   Downloading google_auth_oauthlib-0.4.6-py2.py3-none-any.whl.metadata (2.7 kB)
+  #10 10.68 Collecting markdown>=2.6.8 (from tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 10.69   Downloading Markdown-3.4.4-py3-none-any.whl.metadata (6.9 kB)
+  #10 10.75 Collecting protobuf>=3.9.2 (from tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 10.75   Downloading protobuf-3.20.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl.metadata (679 bytes)
+  #10 10.82 Collecting requests<3,>=2.21.0 (from tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 10.82   Downloading requests-2.31.0-py3-none-any.whl.metadata (4.6 kB)
+  #10 10.83 Requirement already satisfied: setuptools>=41.0.0 in /root/fenv/lib/python3.7/site-packages (from tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2)) (47.1.0)
+  #10 10.85 Collecting tensorboard-data-server<0.7.0,>=0.6.0 (from tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 10.85   Downloading tensorboard_data_server-0.6.1-py3-none-manylinux2010_x86_64.whl.metadata (1.1 kB)
+  #10 10.87 Collecting tensorboard-plugin-wit>=1.6.0 (from tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 10.88   Downloading tensorboard_plugin_wit-1.8.1-py3-none-any.whl.metadata (873 bytes)
+  #10 10.93 Collecting werkzeug>=1.0.1 (from tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 10.94   Downloading Werkzeug-2.2.3-py3-none-any.whl.metadata (4.4 kB)
+  #10 11.06 Collecting zipp>=3.1.0 (from importlib-resources->z3-solver->-r /Fairify/requirements.txt (line 1))
+  #10 11.06   Downloading zipp-3.15.0-py3-none-any.whl.metadata (3.7 kB)
+  #10 11.09 Collecting cycler>=0.10 (from matplotlib->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 11.10   Downloading cycler-0.11.0-py3-none-any.whl.metadata (785 bytes)
+  #10 11.44 Collecting fonttools>=4.22.0 (from matplotlib->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 11.45   Downloading fonttools-4.38.0-py3-none-any.whl.metadata (138 kB)
+  #10 11.46      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 138.5/138.5 kB 13.3 MB/s eta 0:00:00
+  #10 11.58 Collecting kiwisolver>=1.0.1 (from matplotlib->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 11.59   Downloading kiwisolver-1.4.5-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl.metadata (6.4 kB)
+  #10 11.66 Collecting packaging>=20.0 (from matplotlib->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 11.66   Downloading packaging-24.0-py3-none-any.whl.metadata (3.2 kB)
+  #10 11.99 Collecting pillow>=6.2.0 (from matplotlib->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 12.00   Downloading Pillow-9.5.0-cp37-cp37m-manylinux_2_28_x86_64.whl.metadata (9.5 kB)
+  #10 12.06 Collecting pyparsing>=2.2.1 (from matplotlib->aif360->-r /Fairify/requirements.txt (line 3))
+  #10 12.06   Downloading pyparsing-3.1.4-py3-none-any.whl.metadata (5.1 kB)
+  #10 12.22 Collecting cachetools<6.0,>=2.0.0 (from google-auth<3,>=1.6.3->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 12.22   Downloading cachetools-5.5.2-py3-none-any.whl.metadata (5.4 kB)
+  #10 12.26 Collecting pyasn1-modules>=0.2.1 (from google-auth<3,>=1.6.3->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 12.27   Downloading pyasn1_modules-0.3.0-py2.py3-none-any.whl.metadata (3.6 kB)
+  #10 12.30 Collecting rsa<5,>=3.1.4 (from google-auth<3,>=1.6.3->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 12.31   Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+  #10 12.38 Collecting requests-oauthlib>=0.7.0 (from google-auth-oauthlib<0.5,>=0.4.1->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 12.39   Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB)
+  #10 12.51 Collecting importlib-metadata>=4.4 (from markdown>=2.6.8->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 12.52   Downloading importlib_metadata-6.7.0-py3-none-any.whl.metadata (4.9 kB)
+  #10 12.75 Collecting charset-normalizer<4,>=2 (from requests<3,>=2.21.0->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 12.76   Downloading charset_normalizer-3.4.3-py3-none-any.whl.metadata (36 kB)
+  #10 12.79 Collecting idna<4,>=2.5 (from requests<3,>=2.21.0->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 12.79   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+  #10 12.95 Collecting urllib3<3,>=1.21.1 (from requests<3,>=2.21.0->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 12.95   Downloading urllib3-2.0.7-py3-none-any.whl.metadata (6.6 kB)
+  #10 12.99 Collecting certifi>=2017.4.17 (from requests<3,>=2.21.0->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 13.00   Downloading certifi-2025.8.3-py3-none-any.whl.metadata (2.4 kB)
+  #10 13.17 Collecting MarkupSafe>=2.1.1 (from werkzeug>=1.0.1->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 13.17   Downloading MarkupSafe-2.1.5-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.0 kB)
+  #10 13.39 Collecting pyasn1<0.6.0,>=0.4.6 (from pyasn1-modules>=0.2.1->google-auth<3,>=1.6.3->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 13.39   Downloading pyasn1-0.5.1-py2.py3-none-any.whl.metadata (8.6 kB)
+  #10 13.44 Collecting oauthlib>=3.0.0 (from requests-oauthlib>=0.7.0->google-auth-oauthlib<0.5,>=0.4.1->tensorboard~=2.5->tensorflow==2.5.0->-r /Fairify/requirements.txt (line 2))
+  #10 13.44   Downloading oauthlib-3.2.2-py3-none-any.whl.metadata (7.5 kB)
+  #10 13.56 Downloading tensorflow-2.5.0-cp37-cp37m-manylinux2010_x86_64.whl (454.3 MB)
+  #10 51.17    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 454.3/454.3 MB 5.1 MB/s eta 0:00:00
+  #10 51.18 Downloading gast-0.4.0-py3-none-any.whl (9.8 kB)
+  #10 51.19 Downloading z3_solver-4.15.3.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (29.1 MB)
+  #10 53.39    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 29.1/29.1 MB 13.8 MB/s eta 0:00:00
+  #10 53.40 Downloading aif360-0.5.0-py3-none-any.whl (214 kB)
+  #10 53.41    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.1/214.1 kB 17.7 MB/s eta 0:00:00
+  #10 53.42 Downloading absl_py-0.15.0-py3-none-any.whl (132 kB)
+  #10 53.43    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.0/132.0 kB 15.5 MB/s eta 0:00:00
+  #10 53.44 Downloading astunparse-1.6.3-py2.py3-none-any.whl (12 kB)
+  #10 53.44 Downloading flatbuffers-1.12-py2.py3-none-any.whl (15 kB)
+  #10 53.45 Downloading google_pasta-0.2.0-py3-none-any.whl (57 kB)
+  #10 53.46    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.5/57.5 kB 9.0 MB/s eta 0:00:00
+  #10 53.47 Downloading grpcio-1.34.1-cp37-cp37m-manylinux2014_x86_64.whl (4.0 MB)
+  #10 53.82    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.0/4.0 MB 11.1 MB/s eta 0:00:00
+  #10 53.83 Downloading h5py-3.1.0-cp37-cp37m-manylinux1_x86_64.whl (4.0 MB)
+  #10 54.15    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.0/4.0 MB 12.7 MB/s eta 0:00:00
+  #10 54.16 Downloading keras_nightly-2.5.0.dev2021032900-py2.py3-none-any.whl (1.2 MB)
+  #10 54.26    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 13.1 MB/s eta 0:00:00
+  #10 54.27 Downloading Keras_Preprocessing-1.1.2-py2.py3-none-any.whl (42 kB)
+  #10 54.27    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 42.6/42.6 kB 11.8 MB/s eta 0:00:00
+  #10 54.28 Downloading numpy-1.19.5-cp37-cp37m-manylinux2010_x86_64.whl (14.8 MB)
+  #10 55.60    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 14.8/14.8 MB 11.3 MB/s eta 0:00:00
+  #10 55.60 Downloading opt_einsum-3.3.0-py3-none-any.whl (65 kB)
+  #10 55.62    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 8.2 MB/s eta 0:00:00
+  #10 55.62 Downloading pandas-1.3.5-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (11.3 MB)
+  #10 56.50    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.3/11.3 MB 12.5 MB/s eta 0:00:00
+  #10 56.52 Downloading scikit_learn-1.0.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (24.8 MB)
+  #10 58.58    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 24.8/24.8 MB 10.8 MB/s eta 0:00:00
+  #10 58.59 Downloading scipy-1.7.3-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (38.1 MB)
+  #10 61.98    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 38.1/38.1 MB 12.1 MB/s eta 0:00:00
+  #10 61.99 Downloading six-1.15.0-py2.py3-none-any.whl (10 kB)
+  #10 62.00 Downloading tensorboard-2.11.2-py3-none-any.whl (6.0 MB)
+  #10 62.57    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.0/6.0 MB 10.6 MB/s eta 0:00:00
+  #10 62.58 Downloading protobuf-3.20.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl (1.0 MB)
+  #10 62.68    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 10.9 MB/s eta 0:00:00
+  #10 62.68 Downloading tensorflow_estimator-2.5.0-py2.py3-none-any.whl (462 kB)
+  #10 62.72    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 462.4/462.4 kB 12.5 MB/s eta 0:00:00
+  #10 62.73 Downloading typing_extensions-3.7.4.3-py3-none-any.whl (22 kB)
+  #10 62.73 Using cached wheel-0.42.0-py3-none-any.whl (65 kB)
+  #10 62.74 Downloading importlib_resources-5.12.0-py3-none-any.whl (36 kB)
+  #10 62.75 Downloading matplotlib-3.5.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl (11.2 MB)
+  #10 63.81    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.2/11.2 MB 10.2 MB/s eta 0:00:00
+  #10 63.82 Downloading cycler-0.11.0-py3-none-any.whl (6.4 kB)
+  #10 63.82 Downloading fonttools-4.38.0-py3-none-any.whl (965 kB)
+  #10 63.91    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 965.4/965.4 kB 12.1 MB/s eta 0:00:00
+  #10 63.91 Downloading google_auth-2.40.3-py2.py3-none-any.whl (216 kB)
+  #10 63.93    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 216.1/216.1 kB 12.5 MB/s eta 0:00:00
+  #10 63.94 Downloading google_auth_oauthlib-0.4.6-py2.py3-none-any.whl (18 kB)
+  #10 63.95 Downloading joblib-1.3.2-py3-none-any.whl (302 kB)
+  #10 63.98    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 302.2/302.2 kB 10.6 MB/s eta 0:00:00
+  #10 63.98 Downloading kiwisolver-1.4.5-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl (1.1 MB)
+  #10 64.09    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 10.5 MB/s eta 0:00:00
+  #10 64.10 Downloading Markdown-3.4.4-py3-none-any.whl (94 kB)
+  #10 64.11    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 94.2/94.2 kB 9.9 MB/s eta 0:00:00
+  #10 64.12 Downloading packaging-24.0-py3-none-any.whl (53 kB)
+  #10 64.13    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 53.5/53.5 kB 7.8 MB/s eta 0:00:00
+  #10 64.13 Downloading Pillow-9.5.0-cp37-cp37m-manylinux_2_28_x86_64.whl (3.4 MB)
+  #10 64.46    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.4/3.4 MB 10.5 MB/s eta 0:00:00
+  #10 64.47 Downloading pyparsing-3.1.4-py3-none-any.whl (104 kB)
+  #10 64.48    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.1/104.1 kB 11.4 MB/s eta 0:00:00
+  #10 64.48 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+  #10 64.50    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 11.7 MB/s eta 0:00:00
+  #10 64.51 Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+  #10 64.54    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 509.2/509.2 kB 14.7 MB/s eta 0:00:00
+  #10 64.55 Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+  #10 64.56    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.6/62.6 kB 12.8 MB/s eta 0:00:00
+  #10 64.56 Downloading tensorboard_data_server-0.6.1-py3-none-manylinux2010_x86_64.whl (4.9 MB)
+  #10 64.84    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 17.9 MB/s eta 0:00:00
+  #10 64.84 Downloading tensorboard_plugin_wit-1.8.1-py3-none-any.whl (781 kB)
+  #10 64.91    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 781.3/781.3 kB 11.4 MB/s eta 0:00:00
+  #10 64.92 Downloading threadpoolctl-3.1.0-py3-none-any.whl (14 kB)
+  #10 64.93 Downloading Werkzeug-2.2.3-py3-none-any.whl (233 kB)
+  #10 64.95    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 233.6/233.6 kB 14.3 MB/s eta 0:00:00
+  #10 64.95 Downloading zipp-3.15.0-py3-none-any.whl (6.8 kB)
+  #10 64.96 Downloading cached_property-1.5.2-py2.py3-none-any.whl (7.6 kB)
+  #10 64.97 Downloading cachetools-5.5.2-py3-none-any.whl (10 kB)
+  #10 64.97 Downloading certifi-2025.8.3-py3-none-any.whl (161 kB)
+  #10 64.99    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 161.2/161.2 kB 9.7 MB/s eta 0:00:00
+  #10 65.00 Downloading charset_normalizer-3.4.3-py3-none-any.whl (53 kB)
+  #10 65.00    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 53.2/53.2 kB 11.7 MB/s eta 0:00:00
+  #10 65.01 Downloading idna-3.10-py3-none-any.whl (70 kB)
+  #10 65.02    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 70.4/70.4 kB 6.9 MB/s eta 0:00:00
+  #10 65.03 Downloading importlib_metadata-6.7.0-py3-none-any.whl (22 kB)
+  #10 65.03 Downloading MarkupSafe-2.1.5-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (25 kB)
+  #10 65.04 Downloading pyasn1_modules-0.3.0-py2.py3-none-any.whl (181 kB)
+  #10 65.06    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.3/181.3 kB 8.3 MB/s eta 0:00:00
+  #10 65.07 Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
+  #10 65.08 Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+  #10 65.09 Downloading urllib3-2.0.7-py3-none-any.whl (124 kB)
+  #10 65.10    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.2/124.2 kB 10.2 MB/s eta 0:00:00
+  #10 65.11 Downloading oauthlib-3.2.2-py3-none-any.whl (151 kB)
+  #10 65.12    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 151.7/151.7 kB 10.1 MB/s eta 0:00:00
+  #10 65.13 Downloading pyasn1-0.5.1-py2.py3-none-any.whl (84 kB)
+  #10 65.14    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.9/84.9 kB 9.2 MB/s eta 0:00:00
+  #10 67.02 Building wheels for collected packages: termcolor, wrapt
+  #10 67.02   Building wheel for termcolor (pyproject.toml): started
+  #10 67.22   Building wheel for termcolor (pyproject.toml): finished with status 'done'
+  #10 67.22   Created wheel for termcolor: filename=termcolor-1.1.0-py3-none-any.whl size=4832 sha256=c359435343782e9a6f81b1999966a7805a13895eead319a8e3b6a77f8110aeb5
+  #10 67.22   Stored in directory: /root/.cache/pip/wheels/3f/e3/ec/8a8336ff196023622fbcb36de0c5a5c218cbb24111d1d4c7f2
+  #10 67.22   Building wheel for wrapt (pyproject.toml): started
+  #10 68.05   Building wheel for wrapt (pyproject.toml): finished with status 'done'
+  #10 68.05   Created wheel for wrapt: filename=wrapt-1.12.1-cp37-cp37m-linux_x86_64.whl size=68823 sha256=182e7570fd9ce27af04cb8ea811380042efbdf6ae56ad3fc1ed29ea391eef42c
+  #10 68.06   Stored in directory: /root/.cache/pip/wheels/62/76/4c/aa25851149f3f6d9785f6c869387ad82b3fd37582fa8147ac6
+  #10 68.06 Successfully built termcolor wrapt
+  #10 68.61 Installing collected packages: wrapt, typing-extensions, termcolor, tensorflow-estimator, tensorboard-plugin-wit, pytz, keras-nightly, flatbuffers, cached-property, zipp, wheel, urllib3, threadpoolctl, tensorboard-data-server, six, pyparsing, pyasn1, protobuf, pillow, packaging, oauthlib, numpy, MarkupSafe, kiwisolver, joblib, idna, gast, fonttools, cycler, charset-normalizer, certifi, cachetools, werkzeug, scipy, rsa, requests, python-dateutil, pyasn1-modules, opt-einsum, keras-preprocessing, importlib-resources, importlib-metadata, h5py, grpcio, google-pasta, astunparse, absl-py, z3-solver, scikit-learn, requests-oauthlib, pandas, matplotlib, markdown, google-auth, google-auth-oauthlib, aif360, tensorboard, tensorflow
+  #10 94.95 Successfully installed MarkupSafe-2.1.5 absl-py-0.15.0 aif360-0.5.0 astunparse-1.6.3 cached-property-1.5.2 cachetools-5.5.2 certifi-2025.8.3 charset-normalizer-3.4.3 cycler-0.11.0 flatbuffers-1.12 fonttools-4.38.0 gast-0.4.0 google-auth-2.40.3 google-auth-oauthlib-0.4.6 google-pasta-0.2.0 grpcio-1.34.1 h5py-3.1.0 idna-3.10 importlib-metadata-6.7.0 importlib-resources-5.12.0 joblib-1.3.2 keras-nightly-2.5.0.dev2021032900 keras-preprocessing-1.1.2 kiwisolver-1.4.5 markdown-3.4.4 matplotlib-3.5.3 numpy-1.19.5 oauthlib-3.2.2 opt-einsum-3.3.0 packaging-24.0 pandas-1.3.5 pillow-9.5.0 protobuf-3.20.3 pyasn1-0.5.1 pyasn1-modules-0.3.0 pyparsing-3.1.4 python-dateutil-2.9.0.post0 pytz-2025.2 requests-2.31.0 requests-oauthlib-2.0.0 rsa-4.9.1 scikit-learn-1.0.2 scipy-1.7.3 six-1.15.0 tensorboard-2.11.2 tensorboard-data-server-0.6.1 tensorboard-plugin-wit-1.8.1 tensorflow-2.5.0 tensorflow-estimator-2.5.0 termcolor-1.1.0 threadpoolctl-3.1.0 typing-extensions-3.7.4.3 urllib3-2.0.7 werkzeug-2.2.3 wheel-0.42.0 wrapt-1.12.1 z3-solver-4.15.3.0 zipp-3.15.0
+  #10 DONE 99.4s
+  #11 [8/8] RUN chmod +x /Fairify/src/fairify.sh     /Fairify/stress/fairify-stress.sh     /Fairify/relaxed/fairify-relaxed.sh     /Fairify/targeted/fairify-targeted.sh     /Fairify/targeted2/fairify-targeted.sh
+  #11 DONE 0.2s
+  #12 exporting to image
+  #12 exporting layers
+  #12 exporting layers 23.8s done
+  #12 writing image sha256:86eb27c053c12ef3f5f67acc16ee88e9c2596033d90c22906cae5ba614484cd6 done
+  #12 naming to docker.io/library/envgym_test_1756281950 done
+  #12 DONE 23.8s
+  === Runtime Log ===  
+  Runtime Status: Success
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM python:3.7-slim
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV LANG=C.UTF-8
+  ENV LC_ALL=C.UTF-8
+  ENV PATH="/root/fenv/bin:$PATH"
+  WORKDIR /Fairify
+  RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+      git \
+      bash \
+      build-essential \
+      libz3-dev \
+      libxml2-dev \
+      libxslt1-dev \
+      python3-venv \
+      && rm -rf /var/lib/apt/lists/*
+  RUN git clone https://github.com/sumonbis/Fairify.git /Fairify
+  RUN python3 -m venv /root/fenv
+  RUN /root/fenv/bin/pip install --upgrade pip
+  RUN /root/fenv/bin/pip install -r /Fairify/requirements.txt
+  RUN chmod +x /Fairify/src/fairify.sh \
+      /Fairify/stress/fairify-stress.sh \
+      /Fairify/relaxed/fairify-relaxed.sh \
+      /Fairify/targeted/fairify-targeted.sh \
+      /Fairify/targeted2/fairify-targeted.sh
+  CMD ["/bin/bash"]
+--- End of Iteration 3 ---
+

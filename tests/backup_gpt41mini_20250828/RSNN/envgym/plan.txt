@@ -1,0 +1,230 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Notes based on hardware info:**  
+- Architecture: x86_64 (amd64) — all software and base images must be amd64 compatible  
+- OS: Linux (recommended) — align all instructions and paths accordingly  
+- GPU: No NVIDIA GPU detected — **omit all GPU- and CUDA-related steps and packages; use CPU-only PyTorch**  
+- Storage: 45.6 GB free — sufficient for environment but avoid unnecessary large installs  
+- Docker: version 28.3.2 with BuildKit/buildx; no native GPU build support — Dockerfile and builds must be CPU-only and platform-aware  
+- Working directory: `/home/cc/EnvGym/data-gpt-4.1mini/RSNN` — use relative paths carefully and set context-aware COPY commands  
+
+---
+
+### 1. DOWNLOADS NEEDED:  
+
+- **Python 3.10.12** (exact version to ensure compatibility)  
+  - Download from https://www.python.org/downloads/release/python-31012/ or manage via pyenv  
+  - Use Linux amd64 compatible binaries or build from source if needed  
+
+- **No NVIDIA GPU drivers, CUDA, or cuDNN needed or installed**  
+  - Since no GPU detected, **skip all GPU driver and CUDA toolkit installation**  
+  - Use CPU-only PyTorch builds compatible with Python 3.10.12  
+
+- **Git** (to clone repository and submodules)  
+
+- **pip** (bundled with Python 3.10)  
+
+- **Virtual environment tool** (venv recommended) for isolated environment  
+
+- **Internet connection** to download Python packages and dependencies  
+
+- (Optional) **Docker** for containerized environment  
+  - Use amd64 Linux base images (e.g., ubuntu, debian, or official python:3.10.12-slim)  
+  - Avoid any CUDA or GPU-specific Docker layers/instructions  
+
+- Python packages listed in `requirements.txt`, including:  
+  - numpy, torch (CPU-only version), scipy, matplotlib, seaborn, h5py, soundfile, tables, torchaudio, torchvision, tonic, xlsxwriter, hydra-core, neurobench, pandas, snntorch, omegaconf, KDEpy  
+  - `stork` installed editable from GitHub commit `40c68fe`  
+  - `randman` installed directly from GitHub  
+  - **Verify that torch and torchvision versions are CPU-only builds compatible with Python 3.10.12 and Linux x86_64**  
+
+---
+
+### 2. FILES TO CREATE:  
+
+- `/conf/data/data-default.yaml`  
+  - Set `data_dir` parameter to absolute path of the challenge dataset location on local filesystem  
+  - If limiting pretraining to challenge dataset only, set `data.pretrain_filenames` to `challenge-data`  
+
+- `/conf/config.yaml`  
+  - Set hydra output directory parameter to desired output path (default `./outputs`) with enough disk space  
+
+- `requirements.txt`  
+  - Confirm full dependencies listed, including pinned versions and GitHub installs for `stork` (commit `40c68fe`) and `randman`  
+
+- (Optional) `.env` or shell script to export environment variables if needed (no CUDA env vars needed)  
+
+- (Optional) `results_extract_from_logs.ipynb` present for post-training analysis  
+
+- Ensure model state dictionaries are present in `/models` for evaluation  
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE:  
+
+- Data Loader Tests: verify loading neural and kinematic data from `data_dir`  
+
+- Model Initialization Tests for `bigRSNN` and `tinyRSNN`  
+
+- Training Script Tests:  
+  - Run `train-bigRSNN.py` and `train-tinyRSNN.py` with single/multiple seeds  
+  - Monitor CPU utilization (no GPU available)  
+  - Confirm checkpoints saved in `/models`  
+
+- Evaluation Script Tests:  
+  - Run `evaluate.py` for both models, confirm JSON outputs in `/results`  
+  - Test `use_snnTorch_model` flag (True/False) for NeuroBench compatibility  
+
+- Configuration Parsing Tests for hydra config files  
+
+- Performance Sanity Tests: check R2 scores and sparsity metrics within expected ranges  
+
+- Error Handling Tests:  
+  - Missing dataset path or files produce informative errors  
+  - GPU non-availability fallback: **since no GPU present, confirm code defaults to CPU mode without error**  
+
+- Dependency and Environment Tests:  
+  - All packages install cleanly including GitHub editable `stork` and `randman`  
+  - Import new dependencies (`neurobench`, `tonic`, `snntorch`, `KDEpy`, `xlsxwriter`) successfully  
+  - `stork` editable install functions correctly  
+  - No breakage of scripts or tests by new dependencies  
+
+---
+
+### 4. COMPLETE TODO LIST:  
+
+#### Step 1: Prepare Python Environment  
+
+- Install Python 3.10.12 on Linux x86_64 system  
+- Verify version:  
+  ```bash
+  python --version  # Should output 3.10.12
+  ```  
+- Set up virtual environment:  
+  ```bash
+  python -m venv env
+  source env/bin/activate
+  ```  
+- Upgrade pip:  
+  ```bash
+  pip install --upgrade pip
+  ```  
+
+#### Step 2: Skip GPU Drivers and CUDA Installation  
+
+- **Do not install NVIDIA GPU drivers, CUDA toolkit, or cuDNN** (no GPU present)  
+- Use CPU-only PyTorch builds  
+- Verify PyTorch CPU-only installation:  
+  ```python
+  import torch
+  print(torch.cuda.is_available())  # Expect False
+  ```  
+
+#### Step 3: Clone Repository and Prepare Codebase  
+
+- Clone repository to working directory `/home/cc/EnvGym/data-gpt-4.1mini/RSNN`  
+- Verify presence of folders `/challenge`, `/conf`, `/models`, `/results`, and training/evaluation scripts  
+- Confirm `requirements.txt` includes pinned versions and GitHub installs for `stork` (commit `40c68fe`) and `randman`  
+
+#### Step 4: Install Python Dependencies  
+
+- Run:  
+  ```bash
+  pip install -r requirements.txt
+  ```  
+- If `stork` fails to install, use editable install:  
+  ```bash
+  pip install -e git+https://github.com/fmi-basel/stork.git@40c68fe#egg=stork
+  ```  
+- Confirm `randman` installs correctly via GitHub pip URL  
+- Test imports in Python shell:  
+  ```python
+  import neurobench, tonic, snntorch, KDEpy, xlsxwriter, stork, randman
+  ```  
+- Confirm torch is CPU-only version and works without GPU  
+
+#### Step 5: Configure Dataset Path and Parameters  
+
+- Edit `/conf/data/data-default.yaml`:  
+  - Set `data_dir` to absolute path for dataset on local system  
+  - If pretraining only on challenge dataset, set `data.pretrain_filenames: challenge-data`  
+
+- Edit `/conf/config.yaml`:  
+  - Set hydra output directory (default `./outputs`) to a location with adequate disk space  
+
+#### Step 6: Verify Dataset Availability and Format  
+
+- Confirm dataset files from "Nonhuman Primate Reaching with Multichannel Sensorimotor Cortex Electrophysiology" exist under `data_dir`  
+- Validate directory structure matches data loader expectations  
+- Run small test snippet or partial loader to verify data shapes and types  
+
+#### Step 7: Run Training Scripts (Optional)  
+
+- Run on CPU only:  
+  ```bash
+  python train-bigRSNN.py --multirun seed=1,2,3,4,5
+  python train-tinyRSNN.py --multirun seed=1,2,3,4,5
+  ```  
+- Monitor CPU and memory utilization  
+- Confirm logs and checkpoints saved correctly  
+- For limited resources, run single seed:  
+  ```bash
+  python train-bigRSNN.py seed=1
+  python train-tinyRSNN.py seed=1
+  ```  
+
+#### Step 8: Run Evaluation Scripts  
+
+- Evaluate pre-trained models (CPU only):  
+  ```bash
+  python evaluate.py modelname=bigRSNN
+  python evaluate.py modelname=tinyRSNN
+  ```  
+- Test `use_snnTorch_model=True` flag for NeuroBench compatibility  
+- Confirm JSON result files created in `/results`  
+- Compare results to README for sanity  
+
+#### Step 9: Post-processing and Results Summary  
+
+- Use `results_extract_from_logs.ipynb` to extract summaries without rerunning evaluation  
+- Verify existence and consistency of `results_summary_bigRSNN.json` and `results_summary_tinyRSNN.json`  
+
+#### Step 10: Error Handling and Validation  
+
+- Test invalid/missing dataset path: expect clear error message  
+- Confirm CPU-only fallback behavior since no GPU detected  
+- Test model loading with corrupted/missing files: expect graceful error  
+- Verify clear error messages for missing/incompatible packages  
+
+#### Step 11: Cross-Platform Compatibility Checks  
+
+- Confirm all steps verified on Linux x86_64 (target platform)  
+- Adjust paths in config files for other OS if used (not primary here)  
+- No GPU support or CUDA dependencies required on this platform  
+
+#### Step 12: Documentation and Maintenance  
+
+- Update README.md with notes about CPU-only setup (no GPU or CUDA)  
+- Document editable installs and GitHub dependencies explicitly  
+- (Optional) Containerize environment with Docker:  
+  - Use amd64 Linux base images (e.g., `python:3.10.12-slim`)  
+  - Avoid GPU/CUDA instructions  
+  - Ensure COPY commands use relative paths from build context `/home/cc/EnvGym/data-gpt-4.1mini/RSNN`  
+  - Keep image size reasonable under storage constraints  
+
+---
+
+### Verification Methods Summary (Adjusted for CPU-only setup):  
+
+- Verify Python version and pip-installed package versions (including GitHub packages)  
+- Confirm `torch.cuda.is_available()` returns False  
+- Run training scripts briefly and check checkpoint creation and CPU resource usage  
+- Run evaluation scripts and verify JSON outputs  
+- Import all new dependencies successfully in Python shell  
+- Confirm editable install of `stork` at commit `40c68fe` works as expected  
+- Validate error messages for missing dataset, GPU unavailability (should fallback silently to CPU), and missing dependencies  
+- Check performance metrics roughly match README values (CPU runs may be slower but results comparable)  
+
+---
+
+This adjusted plan ensures compatibility with your Linux x86_64 CPU-only hardware environment, avoids unnecessary GPU/CUDA-related installations and steps, uses appropriate CPU-only PyTorch builds, and keeps all paths and Docker instructions context-aware and platform-appropriate.

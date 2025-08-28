@@ -1,0 +1,167 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context:**  
+- Working Directory: `/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq` (local source context)  
+- Architecture: `x86_64` (amd64 Linux) - recommended Docker platform flag `--platform=linux/amd64`  
+- Base Images: Use amd64 Linux base images (e.g., Debian 12-slim)  
+- GPU: No NVIDIA GPU detected; **no CUDA or GPU-specific images/tools needed**  
+- Docker Version: 28.3.2 with BuildKit and Buildx support  
+- Storage: overlay2 driver available and supports layering well  
+- Use standard Linux instructions and paths relative to the working directory  
+- No cross-architecture or GPU-specific build required  
+
+---
+
+### 1. DOWNLOADS NEEDED:
+
+- **jq prebuilt binary** (optional) from [GitHub releases](https://github.com/jqlang/jq/releases), latest stable version recommended, x86_64 compatible  
+- **Docker**: Already present at version 28.3.2, supports amd64 builds, no changes needed  
+- Development dependencies for local build (if building from source):  
+  - `build-essential` (gcc, g++, make) - Debian/Ubuntu package; confirm on local system  
+  - `libtool`, `automake`, `autoconf`, `git` - latest stable versions suitable for x86_64 Linux  
+  - Optional: `flex` and `bison` only if skipping autoreconf  
+- C compiler toolchain (gcc or clang) supporting x86_64 Linux - confirm installed and properly configured  
+- `sudo` privileges assumed available for installation steps  
+- Dockerfile builder stage base image: `debian:12-slim` amd64 (default) - no change required  
+- Environment variables for noninteractive apt installs and locale setup handled in Dockerfile (no change)  
+- Oniguruma included via `--with-oniguruma=builtin` (no change)  
+
+---
+
+### 2. FILES TO CREATE:
+
+- `.bashrc` or `.zshrc` updates to add jq binary path if installed manually  
+- Docker volume mount points: ensure host directories are accessible under `/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq`  
+- Optional Makefile or build script wrapper at project root (`/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq`) for convenience  
+- Optional cross-compilation env file skipped unless planning cross-compile (not needed here)  
+- Testing JSON files (e.g. `test/package.json`) in local project directory  
+- **Dockerfile** with multi-stage build using `debian:12-slim` (amd64) base image  
+  - Builder stage installs dependencies, runs autoreconf, configure with `--disable-docs --with-oniguruma=builtin --enable-static --enable-all-static --prefix=/usr/local`  
+  - Builds with `make -j$(nproc)` (adjusted to CPU cores detected)  
+  - Runs `make check VERBOSE=yes`  
+  - Installs stripped binary  
+  - Final stage: minimal `scratch` image with `/jq` binary and metadata files (`AUTHORS`, `COPYING`)  
+  - ENTRYPOINT `/jq` and version check included in build  
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE:
+
+- Validate JSON parsing correctness on amd64 build  
+- Test JSON filtering/mapping (`.version` extraction) on sample files inside `/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq`  
+- Error handling with malformed JSON  
+- CLI commands testing: local binary and Docker container on amd64 platform  
+- Static build correctness verified with `make LDFLAGS=-all-static` or Docker flags  
+- Run `make check` tests in local and Docker builder stages (with verbose output)  
+- Docker image build correctness on amd64 platform: confirm build success and `/jq --version` output  
+- Runtime tests with stdin and mounted files, volume mounts relative to working directory  
+- Cross-compilation tests skipped unless explicitly planned (not needed for current hardware)  
+
+---
+
+### 4. COMPLETE TODO LIST:
+
+**Step 1: Prepare system and install dependencies**  
+- Confirm presence of development tools for x86_64 Linux: git, gcc, make, autoconf, automake, libtool  
+- Install missing tools (Debian/Ubuntu example):  
+  ```bash
+  sudo apt-get update
+  sudo apt-get install git build-essential autoconf automake libtool
+  ```  
+- Verify versions:  
+  ```bash
+  git --version
+  make --version
+  autoconf --version
+  gcc --version
+  ```  
+- Confirm working directory `/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq` accessible and has sufficient storage  
+
+**Step 2: Clone jq source (if building locally)**  
+- Clone repo into working directory if not already done:  
+  ```bash
+  cd /home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq
+  git clone https://github.com/jqlang/jq.git .
+  git submodule update --init
+  ```  
+
+**Step 3: Build jq from source (local build)**  
+- Run in working directory:  
+  ```bash
+  autoreconf -i   # skip if building from tarball release
+  ./configure --with-oniguruma=builtin
+  make clean      # if upgrading
+  make -j8        # adjust -j8 to number of CPU cores available on x86_64 machine
+  make check
+  sudo make install
+  ```  
+- Optional static build:  
+  ```bash
+  make LDFLAGS=-all-static
+  ```  
+
+**Step 4: Build jq using Docker multi-stage build (amd64, no GPU)**  
+- Ensure Docker daemon running and supports amd64 images (default)  
+- Build Docker image inside working directory:  
+  ```bash
+  docker build --platform linux/amd64 -t jq:custom .
+  ```  
+- Run container tests:  
+  ```bash
+  docker run --rm jq:custom --version
+  ```  
+- Test with JSON input via stdin and volume mounts (paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq`):  
+  ```bash
+  docker run --rm -i -v "/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq:/data" -w /data jq:custom '.version' package.json
+  ```  
+
+**Step 5: Verify jq installation (local or Docker)**  
+- Run local:  
+  ```bash
+  jq --version
+  jq '.version' package.json
+  ```  
+- Run Docker container:  
+  ```bash
+  docker run --rm jq:custom --version
+  docker run --rm -i -v "/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq:/data" -w /data jq:custom '.version' package.json
+  ```  
+
+**Step 6: Docker usage (optional)**  
+- Pull official amd64 jq image if preferred:  
+  ```bash
+  docker pull ghcr.io/jqlang/jq:latest
+  ```  
+- Run example commands on amd64 host:  
+  ```bash
+  docker run --rm -i ghcr.io/jqlang/jq:latest < package.json '.version'
+  docker run --rm -i -v "/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq:/data" -w /data ghcr.io/jqlang/jq:latest '.version' package.json
+  ```  
+
+**Step 7: Cross-compilation (optional, skipped)**  
+- Not needed for current hardware (x86_64 native build). Skip unless targeting other architectures.  
+
+**Step 8: Environment configuration and maintenance**  
+- Add jq binary path to system PATH if installed manually in nonstandard location  
+- Document build steps, Docker usage, and environment setup in README or internal wiki at `/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq`  
+- Schedule periodic updates for jq binaries and Docker images  
+- Monitor jq community channels and GitHub for updates  
+
+---
+
+### Verification Methods:
+
+- All commands run without error on x86_64 Linux host  
+- `jq --version` outputs expected version locally and inside Docker container  
+- `make check` passes all tests locally and in Docker build stage with `VERBOSE=yes`  
+- Docker build completes successfully for amd64 platform, ENTRYPOINT `/jq` runs as expected  
+- Metadata files `AUTHORS` and `COPYING` present in final Docker image alongside `/jq` binary  
+- jq CLI outputs expected JSON values on test files located in `/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq`  
+- Volume mounts and working directory settings in Docker commands correctly map local paths  
+- No GPU or CUDA-related steps included, as hardware lacks NVIDIA GPU  
+- Docker builds and runs use `--platform linux/amd64` flag explicitly when needed for clarity and correctness  
+
+---
+
+**Summary:**  
+This adjusted plan ensures compatibility and correctness for x86_64 Linux environment without GPU, using standard amd64 base images, Docker build and run commands aligned with hardware, and paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq`. GPU-specific setup is removed. Cross-compilation steps are optional and skipped here. Docker BuildKit and Buildx features supported by current Docker version can be leveraged for efficient builds.

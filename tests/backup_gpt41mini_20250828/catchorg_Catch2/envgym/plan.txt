@@ -1,0 +1,247 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64 LINUX ENVIRONMENT) ===
+
+**Context:**  
+- Working directory: `/home/cc/EnvGym/data-gpt-4.1mini/catchorg_Catch2`  
+- Project root assumed under `/home/cc/EnvGym/data-gpt-4.1mini` (paths relative to this)  
+- Architecture: x86_64 (amd64) Linux  
+- No GPU present (no CUDA or NVIDIA dependencies)  
+- Base images compatible with x86_64 Linux (Ubuntu, Debian, Alpine)  
+- Docker version 28.3.2 with BuildKit support, no GPU features needed  
+- Overlay2 storage driver with extfs and d_type support  
+- Systemd cgroup driver compatible  
+
+---
+
+### 1. DOWNLOADS NEEDED (ADJUSTED)
+
+- **C++ Compiler:**  
+  - Must support at least C++14, recommended GCC >= 7.0 or Clang >= 5.0.  
+  - For Bazel builds, recommended GCC 9, 11, or 13 with C++20 (`-std=c++2a`) or Clang 13 with C++17.  
+  - On x86_64 Linux, GCC and Clang are readily available via apt/yum/pacman.  
+  - MSVC and Visual Studio are **not applicable** on Linux; omit Windows/MSVC instructions and dependencies.  
+
+- **CMake:**  
+  - Minimum version 3.16 required; recommended 3.19+ for full CMakePresets.json support.  
+  - Install via package manager or official binaries for Linux.  
+
+- **Meson and Ninja:**  
+  - Meson version 0.54.1 or newer required.  
+  - Ninja recommended for Meson builds.  
+  - Install via `pip install meson ninja` or Linux package manager.  
+
+- **Git:**  
+  - Required for repository cloning and version control, standard on Linux.  
+
+- **Python 3 (>= 3.5):**  
+  - Required for AppVeyor scripts (not applicable on Linux), Conan, Meson, codecov uploader, and tooling.  
+  - Ensure `python3` and `pip3` are installed and up-to-date.  
+
+- **Conan package manager:**  
+  - Version 1.53.0 or newer required.  
+  - Install via `pip3 install --upgrade conan`.  
+  - Verify compatibility with installed compiler versions on Linux.  
+
+- **Code coverage tools:**  
+  - Use `lcov` or equivalent on Linux for coverage collection.  
+  - Windows-specific tool OpenCppCoverage is **not applicable**; omit Windows coverage tool installation.  
+  - `codecov` Python package installed conditionally for CI coverage upload.  
+
+- **Visual Studio 2017/2019/2022:**  
+  - **Omit all references and requirements** to Visual Studio and MSVC toolchains, as these are Windows-specific and irrelevant for Linux x86_64 environment.  
+
+- **Bazel build system:**  
+  - Download and install latest stable Bazel for Linux x86_64 from https://bazel.build.  
+  - Ensure Bazel version is compatible with platform and dependencies.  
+  - Use `MODULE.bazel` to declare dependencies with fixed versions:  
+    - `@bazel_skylib` 1.7.1  
+    - `@rules_cc` 0.1.1  
+    - `@rules_license` 1.0.0  
+  - `.bazelrc` to configure platform/compiler-specific flags for Linux GCC/Clang.  
+
+- **Optional CI tools:**  
+  - GitHub Actions is platform-agnostic, keep configuration.  
+  - AppVeyor is Windows-specific; **omit AppVeyor setup and scripts** unless required for cross-platform support (not applicable here).  
+
+- **YAML parser/viewer:**  
+  - Useful for validating `codecov.yml`.  
+
+- **Additional CMake modules:**  
+  - Standard modules included in CMake distribution; no special adjustment needed.  
+  - Python3 interpreter must be findable by CMake.  
+
+---
+
+### 2. FILES TO CREATE / UPDATE (NO PATH CHANGES; OMIT WINDOWS-SPECIFIC CONTENT)
+
+- `conanfile.py` at project root  
+- Updated `CMakeLists.txt` at project root:  
+  - Minimum required version 3.16  
+  - Project `Catch2` v3.9.1, C++ language  
+  - Remove or conditionally exclude Windows-specific linker flags or test entry points (e.g., `/ENTRY:wmainCRTStartup`)  
+  - Retain all other build options and subdirectory logic  
+- `CMakePresets.json` at project root  
+- `.bazelrc` at project root:  
+  - Configure for Linux x86_64 platform and GCC/Clang compiler flags only  
+  - Remove or comment out Windows/MSVC-specific flags  
+- `BUILD.bazel` at project root  
+- `MODULE.bazel` at project root  
+- `meson_options.txt` and `meson.build` at project root: no changes needed  
+- `tests/` directory with test source files  
+- `.gitignore`  
+- **Remove or exclude** Windows-specific files or scripts, e.g., AppVeyor-related files (`appveyor.yml`) unless explicitly required for cross-platform CI  
+- `codecov.yml` at project root  
+- Other directories: `extras/`, `docs/`, `src/catch2/`, `examples/`, `tests/ExtraTests/`, `fuzzing/` remain unchanged  
+
+---
+
+### 3. NECESSARY TEST CASES
+
+- All test cases remain, compatible with GCC and Clang on Linux.  
+- Remove or disable Windows-specific tests using `wmain` entry point.  
+- Tests must run successfully via CMake, Bazel, and Meson build systems on Linux.  
+- Coverage tests enabled with `lcov` on Linux.  
+- CI environment configuration for Linux-based runners (GitHub Actions), exclude AppVeyor.  
+
+---
+
+### 4. COMPLETE TODO LIST (ADJUSTED)
+
+1. **Install C++ compiler for Linux x86_64:**  
+   - GCC >= 7.0 or Clang >= 5.0, preferably GCC 9, 11, or 13 for Bazel C++20 support.  
+   - Verify with `gcc --version` or `clang --version`.  
+
+2. **Install CMake (>=3.16, recommended 3.19+):**  
+   - Via package manager (`apt install cmake`) or official installer.  
+   - Verify with `cmake --version`.  
+
+3. **Install Meson (>=0.54.1) and Ninja:**  
+   - Via `pip3 install meson ninja` or package manager.  
+   - Verify with `meson --version` and `ninja --version`.  
+
+4. **Install Bazel for Linux x86_64:**  
+   - Download from https://bazel.build/releases  
+   - Verify with `bazel version`.  
+   - Place `.bazelrc`, `MODULE.bazel`, and `BUILD.bazel` in project root with Linux-specific flags and dependencies.  
+   - Ensure `MODULE.bazel` dependencies versions align and are compatible with Linux toolchains.  
+
+5. **Install Python 3.5+ and pip3:**  
+   - Verify with `python3 --version` and `pip3 --version`.  
+
+6. **Install Conan (>=1.53.0):**  
+   - `pip3 install --upgrade conan`  
+   - Verify with `conan --version`.  
+
+7. **Clone Catch2 repository:**  
+   - `git clone --branch devel https://github.com/catchorg/Catch2.git`  
+
+8. **Decide integration method:**  
+   - Option A: Conan (recommended for dependency management on Linux).  
+   - Option B: CMake subdirectory usage.  
+   - Option C: System-wide installation and `find_package`.  
+   - Option D: Bazel with `.bazelrc`, `MODULE.bazel`, `BUILD.bazel`.  
+   - Option E: Meson build system with `meson_options.txt` and `meson.build`.  
+
+9. **Directory structure:**  
+   - As specified, no path changes, ensure relative paths respect `/home/cc/EnvGym/data-gpt-4.1mini` as root.  
+
+10. **Update `CMakeLists.txt` to:**  
+    - Remove Windows-specific linker flags or guard with OS checks.  
+    - Enforce out-of-source builds on Linux.  
+    - Include all Linux-appropriate build options and subdirectory enables.  
+
+11. **Meson configuration in `meson_options.txt` and `meson.build`:**  
+    - No change needed; already suitable for Linux.  
+
+12. **Tests:**  
+    - Implement and verify factorial and benchmark tests on Linux.  
+    - Remove Windows-specific test entry points.  
+
+13. **Remove AppVeyor CI (`appveyor.yml`) and Windows-specific CI configurations:**  
+    - Use GitHub Actions or other Linux-compatible CI instead.  
+
+14. **Codecov configuration:**  
+    - Keep as is; ensure Linux coverage tools (`lcov`) produce compatible reports.  
+
+15. **Build steps:**  
+    - CMake + Conan:  
+      ```
+      conan install .. --build=missing
+      cmake --preset=basic-tests
+      cmake --build --preset=basic-tests
+      ```  
+    - Bazel:  
+      ```
+      bazel build //:catch2
+      bazel build //:catch2_main
+      ```  
+    - Meson:  
+      ```
+      meson setup builddir --buildtype=debug -Dtests=true -Dinstall=true
+      meson compile -C builddir
+      meson test -C builddir
+      meson install -C builddir   # optional
+      ```  
+    - Classic CMake (no Conan/Bazel/Meson):  
+      ```
+      mkdir build && cd build
+      cmake ..
+      cmake --build .
+      ```  
+
+16. **Run tests:**  
+    - CMake: `ctest --output-on-failure` or run test binaries.  
+    - Bazel: `bazel test` if test targets added, else manual test execution.  
+    - Meson: `meson test -C builddir`.  
+
+17. **Coverage tools:**  
+    - Install and use `lcov` on Linux, exclude Windows-specific coverage tools.  
+    - Upload coverage reports with Python `codecov` package.  
+
+18. **.gitignore:**  
+    - Exclude build artifacts and optionally Conan cache files.  
+
+19. **Documentation:**  
+    - Update to remove references to Windows/MSVC/AppVeyor.  
+    - Include Linux-specific Bazel, CMake, Meson build instructions.  
+
+20. **Error handling:**  
+    - Ensure Catch2 macros handle failures gracefully on Linux.  
+
+21. **Verify coverage reports:**  
+    - Confirm exclusion of configured files/directories.  
+    - Confirm PR comments and coverage thresholds work with Linux builds.  
+
+22. **CI Badges:**  
+    - Use GitHub Actions badges; remove AppVeyor badges.  
+
+23. **Compiler and dependency version checks:**  
+    - Confirm compatibility of installed GCC/Clang with Conan and Bazel dependencies.  
+
+24. **Maintain synchronization:**  
+    - Between Bazel `MODULE.bazel`, `WORKSPACE` (if used), and `.bazelrc`.  
+
+25. **Optional future additions:**  
+    - Add Bazel test targets, Meson CI steps for Linux.  
+
+26. **Enforce out-of-source builds as per `CMakeLists.txt`.**  
+
+27. **Ensure Python3 interpreter is installed and findable by CMake.**  
+
+28. **Remove or conditionally exclude Windows-specific code, build flags, and tools from all configurations.**  
+
+---
+
+### Summary of Main Adjustments:
+
+- **Exclude all Windows/MSVC/Visual Studio/AppVeyor specific instructions, files, and dependencies.**  
+- **Focus on Linux x86_64 toolchain: GCC and Clang.**  
+- **Use lcov for coverage instead of OpenCppCoverage.**  
+- **Configure `.bazelrc` and Bazel dependencies for Linux x86_64 with GCC/Clang.**  
+- **Paths remain unchanged but ensure relative to provided working directory.**  
+- **CI configuration focuses on GitHub Actions or other Linux-compatible runners.**  
+- **Remove Windows-specific linker flags and test entry points; add OS guards if needed.**  
+- **Maintain consistent versioning and dependency management across build systems for Linux.**  
+
+---
+
+This adjusted plan ensures compatibility and feasibility on the specified Linux x86_64 environment without Windows-specific tools or dependencies, and aligns build tools, dependencies, and CI configurations accordingly.

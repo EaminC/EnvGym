@@ -1,0 +1,254 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Based on the provided hardware information (x86_64 architecture, typical Linux path structure, no GPU, Docker version 28.3.2), the original plan is well aligned with the environment. Minor adjustments and confirmations are made below to ensure compatibility and optimal setup.**
+
+---
+
+### 1. DOWNLOADS NEEDED:  
+- Ubuntu 22.x Linux OS (recommended for compatibility) — **Confirm installation on x86_64 hardware**  
+- Python 3.10.x (including `ctypes` and `readline`) — Use system package or `pyenv` for x86_64  
+- QEMU with KVM support — Ensure installation for x86_64 architecture and that kernel modules are loaded  
+- Guest VM image (`silhouette_guest_vm.qcow2`, ~30 GB) from Zenodo  
+- Git (for cloning repos)  
+- Dependencies installed via `install_dep.sh` — Confirm all dependencies are available for Ubuntu 22.x x86_64  
+- Clang and LLVM tools (version 15.x recommended) compatible with x86_64 Ubuntu 22.x  
+- Build essentials and C++ compiler (`build-essential`) for x86_64  
+- Utilities: `wget`, `bash`, `scp`, `pkill` (default on Ubuntu 22.x)  
+- Linux kernel source 4.15.x (or compatible) for PMFS kernel module building — must match x86_64 architecture  
+- PMFS source code from https://github.com/linux-pmfs/pmfs (clone for PMFS testing)  
+- New scripts and documentation as listed in original plan  
+- Disk space and memory for multiple concurrent VMs:  
+  - Confirm sufficient RAM and disk space on host for running ~20 VMs simultaneously (each ~5 GB image + 4GB RAM minimum)  
+  - Adjust VM concurrency if host RAM is limited (e.g., fewer simultaneous VMs)  
+- No GPU or CUDA-specific images/tools needed — **Skip GPU-related steps**
+
+---
+
+### 2. FILES TO CREATE:  
+- `.ssh/config` (optional) — Use typical Linux paths; no path conflicts expected  
+- Config files in `Silhouette/codebase/scripts/fs_conf/` — Adjust paths as per actual directory structure under `/home/cc/EnvGym/data-gpt-4.1mini/Silhouette`  
+- `vm_instance.py` QEMU arguments — Default is fine for x86_64 with KVM; modify only if KVM disabled or unavailable  
+- Python env files (`env_base.py`, `env_{FS}.py`) — Ensure no extraneous code after class definitions  
+- Bash scripts (`install_dep.sh`, `prepare.sh`, `reproduce_all.sh`, `run.sh`, `run_all.sh`, `plot.sh`) — Verify executable permissions (e.g., `chmod +x`)  
+- Bug reproduction and scalability scripts and directories as per original plan  
+- Build scripts and output files in `codebase/tools/` — Confirm build targets and outputs are compatible with x86_64  
+- PMFS kernel module (`pmfs.ko`) and helper scripts, boot config files for `memmap` parameter  
+- Documentation files in `evaluation/bugs/` and `evaluation/scalability/` as provided  
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE:  
+- Bug reproduction tests under `evaluation/bugs/` — Confirm test execution on x86_64 Ubuntu 22.x with KVM enabled  
+- Scalability tests under `evaluation/scalability/seq1`, `seq2`, `seq3` workloads — Adjust concurrency based on actual available RAM and CPU cores; the hardware supports many cores, so parallel builds and VM runs are feasible  
+- Output directory and file validation per documented layout  
+- VM startup and SSH tests — Use standard Linux paths; no changes needed for x86_64  
+- Dependency installation confirmation (including Clang/LLVM 15.x) — Ubuntu 22.04 x86_64 packages available via official repos or LLVM apt repo  
+- Standalone tools under `codebase/tools/` — Must build and run on x86_64, no GPU dependencies  
+- PMFS-specific tests — Only valid on x86_64 with kernel 4.15.x and NVDIMM/DAX support; confirm kernel config compatibility or plan kernel recompilation accordingly  
+- Scalability tests resource verification — Host RAM and disk space must be confirmed to meet requirements for concurrent VMs  
+
+---
+
+### 4. COMPLETE TODO LIST (ADJUSTED FOR HARDWARE):  
+
+**Step 1: Prepare Host Machine**  
+- Verify KVM support on x86_64 CPU:  
+  ```
+  egrep -c '(vmx|svm)' /proc/cpuinfo
+  ```  
+  Should return >0 for Intel/AMD CPUs — proceed if so.  
+- Ubuntu 22.x installed and fully updated:  
+  ```
+  sudo apt update && sudo apt upgrade -y
+  ```  
+- Install Python 3.10.x and required modules:  
+  ```
+  sudo apt install python3.10 python3.10-venv python3.10-dev python3-pip
+  ```  
+  Verify modules:  
+  ```
+  python3.10 -c "import ctypes, readline"
+  ```  
+- Install QEMU for x86_64 with KVM:  
+  ```
+  sudo apt install qemu-system-x86
+  ```  
+  Verify KVM modules:  
+  ```
+  lsmod | grep kvm
+  ```  
+- Install Git, wget, bash, scp, pkill:  
+  ```
+  sudo apt install git wget bash openssh-client procps
+  ```  
+- Install Clang/LLVM 15.x (Ubuntu 22.04 has LLVM 15 in official repos or add LLVM apt repo for latest):  
+  ```
+  sudo apt install clang-15 llvm-15 llvm-15-dev llvm-15-tools
+  ```  
+- Install build essentials and C++ compiler:  
+  ```
+  sudo apt install build-essential
+  ```  
+- (New) For PMFS testing:  
+  - Install Linux kernel source 4.15.x for x86_64 (download and extract matching kernel source)  
+  - Confirm kernel config enables `CONFIG_BLK_DEV_PMEM` (NVDIMM support) and DAX  
+  - If missing, prepare to recompile kernel with these options enabled on x86_64 hardware  
+  - Add kernel boot parameter `memmap=16G!8G` or as per hardware memory layout to reserve persistent memory  
+- Confirm sufficient disk space and RAM on host to run multiple VMs concurrently (20 VMs × ~5 GB VM image + 4GB RAM each = ~100 GB disk + 80GB RAM minimum)  
+- Adjust concurrency if hardware RAM < 80GB — e.g., run fewer VMs simultaneously  
+
+**Step 2: Setup Silhouette Codebase**  
+- Create working directory consistent with hardware path:  
+  ```
+  mkdir -p /home/cc/EnvGym/data-gpt-4.1mini/Silhouette
+  cd /home/cc/EnvGym/data-gpt-4.1mini
+  git clone https://github.com/iaoing/Silhouette.git
+  ```  
+- Download guest VM image (~30 GB) to local `qemu_imgs` directory:  
+  ```
+  mkdir -p /home/cc/EnvGym/data-gpt-4.1mini/qemu_imgs
+  cd /home/cc/EnvGym/data-gpt-4.1mini/qemu_imgs
+  wget https://zenodo.org/records/14550794/files/silhouette_guest_vm.qcow2
+  ```  
+
+**Step 3: Setup PMFS Source and Kernel Environment (If PMFS testing required)**  
+- Clone PMFS repo:  
+  ```
+  git clone https://github.com/linux-pmfs/pmfs.git /home/cc/EnvGym/data-gpt-4.1mini/pmfs
+  ```  
+- Checkout branch as needed (e.g., `bug1`)  
+- Build PMFS kernel module on Linux kernel 4.15.x source tree for x86_64:  
+  ```
+  cd /home/cc/EnvGym/data-gpt-4.1mini/pmfs
+  make
+  ```  
+- Modify kernel boot parameters to add `memmap` kernel parameter for persistent memory reservation  
+- Reboot and confirm `/dev/pmem0` exists  
+- Use `setup-pmfs.sh` and `remount-pmfs.sh` scripts for setup and mounting  
+- Run ACE test on PMFS as documented  
+
+**Step 4: Install Dependencies and Prepare Environment**  
+- Run Silhouette dependency script:  
+  ```
+  cd /home/cc/EnvGym/data-gpt-4.1mini/Silhouette
+  bash ./install_dep.sh
+  ```  
+- Run preparation script:  
+  ```
+  bash ./prepare.sh
+  ```  
+- Build tools under `codebase/tools/` (e.g., md5, DumpSrcInfo) using LLVM 15 tools:  
+  - Use parallel build with available CPU cores, e.g., `make -j$(nproc)`  
+- Verify generated binaries are compatible with x86_64  
+
+**Step 5: Configure and Adjust Configuration Files**  
+- Edit `codebase/scripts/fs_conf/` configuration files to reflect actual local paths (e.g., `/home/cc/EnvGym/data-gpt-4.1mini/qemu_imgs/silhouette_guest_vm.qcow2`)  
+- Adjust permissions and `sudo` usage if required for Memcached or QEMU  
+- Ensure no trailing code after class definitions in Python env files  
+- Optional: Modify `vm_instance.py` if hardware does not support KVM or persistent memory (not applicable here since hardware is x86_64 with KVM support)  
+
+**Step 6: Use and Verify Tools in `codebase/tools/`**  
+- Use tools as documented with Clang 15 on x86_64  
+- Example commands:  
+  ```
+  ./disk_content ...
+  ./src_info ...
+  ./struct_layout_ast ...
+  ```  
+- Confirm output correctness  
+
+**Step 7: Test VM Startup and SSH Access**  
+- Launch VM with provided QEMU command, adjust paths to match actual location:  
+  ```
+  qemu-system-x86_64 -machine pc-q35-focal,accel=kvm,nvdimm=on -cpu host -smp cpus=1 -m 4G,slots=8,maxmem=128G -enable-kvm -drive file=/home/cc/EnvGym/data-gpt-4.1mini/qemu_imgs/silhouette_guest_vm.qcow2,format=qcow2,index=0,media=disk -boot once=c -vnc :1 -net nic -net user,hostfwd=tcp::9001-:22 -daemonize
+  ```  
+- Wait 30-60 seconds for boot  
+- SSH into VM:  
+  ```
+  ssh -p 9001 bing@localhost
+  ```  
+- Verify VM and workload directories  
+- Stop VM with:  
+  ```
+  pkill qemu-system-x86_64
+  ```  
+
+**Step 8: Run Bug Reproduction Tests**  
+- Run all bugs reproduction in background:  
+  ```
+  cd /home/cc/EnvGym/data-gpt-4.1mini/Silhouette/evaluation/bugs
+  nohup bash ./reproduce_all.sh &
+  ```  
+- Monitor logs (`nohup.out`)  
+- For individual bugs, navigate to bug subdirectory and run `run.sh` or `run_all.sh` as documented  
+- Use cleanup and disable scripts as needed for troubleshooting  
+
+**Step 9: Run Scalability Evaluation Tests**  
+- Navigate to scalability workload directories (`seq1`, `seq2`, `seq3`)  
+- Clean previous results:  
+  ```
+  ./cleanup_all.sh
+  ```  
+- Run entire workload:  
+  ```
+  nohup ./run_all.sh &
+  ```  
+- Generate plots and tables after completion:  
+  ```
+  ./plot.sh
+  less table_9.txt
+  ```  
+- For single test case runs, enter corresponding subdirectory and run `run_all.sh`  
+- Ensure disk and RAM resources are sufficient for number of concurrent VMs (adjust concurrency if RAM < recommended)  
+- Use `nohup`, `tmux`, or screen for stable long-running tests  
+
+**Step 10: Troubleshooting and Cleanup**  
+- Cleanup environment if errors occur:  
+  ```
+  bash evaluation/cleanup_for_testing.sh
+  ```  
+- Remove conflicting SSH hosts from `~/.ssh/known_hosts` if needed  
+- Backup and restore SSH config if conflicts arise  
+- Verify no extraneous Python code after class definitions in env files  
+- Use QEMU image snapshots for safe testing:  
+  ```
+  qemu-img create -f qcow2 -b silhouette_guest_vm.qcow2 snapshot.qcow2
+  ```  
+  Run VMs from snapshots to avoid data loss  
+
+**Step 11: Optional - Modify VM Launch Parameters**  
+- Only if hardware lacks KVM or persistent memory support (not applicable here), modify `vm_instance.py` to adjust QEMU options  
+
+**Step 12: Optional - PMFS Kernel and Environment Customization**  
+- If advanced PMFS testing is needed, prepare kernel 4.15.x source and enable required features on x86_64  
+- Patch PMFS source if necessary  
+- Use PMFS helper scripts as documented  
+- Document kernel crash and bug testing results  
+
+---
+
+### Verification Methods (Confirm on x86_64 host):  
+- VM boots and SSH accessible without errors  
+- Dependencies including Clang/LLVM 15.x installed correctly for x86_64 Ubuntu 22.x  
+- Silhouette scripts run without missing modules or crashes  
+- Standalone tools produce correct outputs on x86_64  
+- Bug reproduction tests complete successfully with expected outputs and logs  
+- PMFS kernel module loads and filesystem mounts if PMFS testing done  
+- Scalability tests complete with expected results, figures, and tables  
+- Disk space and memory usage conform to plan; adjust concurrency if needed  
+- No GPU or CUDA dependencies in any step, consistent with hardware  
+
+---
+
+### Notes and Recommendations:  
+- All paths and directories updated to reflect `/home/cc/EnvGym/data-gpt-4.1mini/Silhouette` base directory  
+- No GPU or CUDA steps needed; skip any GPU-specific instructions  
+- Use multiple CPU cores for parallel builds (e.g., `make -j$(nproc)`) to speed up compilation on x86_64 with many cores  
+- Monitor system resources during scalability tests to avoid overcommitment  
+- PMFS testing requires careful kernel config and boot parameter tuning on x86_64  
+- Maintain backups of VM images before large-scale tests  
+- Follow provided cleanup scripts for clean test cycles  
+
+---
+
+**This adjusted plan ensures full compatibility with your x86_64 Ubuntu 22.x environment and hardware capabilities, with paths and concurrency considerations adapted accordingly.**

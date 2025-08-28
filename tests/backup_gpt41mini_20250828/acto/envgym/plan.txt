@@ -1,0 +1,221 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Note:** This plan is adjusted to your hardware context: x86_64 architecture (amd64 Linux), no GPU present, Docker version 28.3.2, working directory `/home/cc/EnvGym/data-gpt-4.1mini/acto`, and standard Linux amd64 base images. All instructions and tooling are aligned accordingly.
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - **Docker**  
+     - Use latest stable Docker version (you have 28.3.2 installed, which supports BuildKit and modern features).  
+     - Use amd64 Linux base images only (e.g., `ubuntu:20.04`, `debian:stable-amd64`, `alpine:3.18-amd64`). Avoid ARM or other architectures.  
+     - No GPU or CUDA images are needed or applicable due to absence of NVIDIA GPU.  
+     - Verify with:  
+       ```bash  
+       docker --version  
+       docker run --platform=linux/amd64 hello-world  
+       ```  
+     - Use `--platform=linux/amd64` explicitly in Docker commands if multi-arch images are encountered to ensure amd64 images are selected.  
+   
+   - **Golang**  
+     - Install Go 1.20+ (latest stable) for amd64 Linux.  
+     - Use official Go installers or package manager binaries built for amd64 Linux.  
+     - Set `GOPATH` and ensure `$GOPATH/bin` is in your PATH.  
+     - Install Kind v0.20.0 via:  
+       ```bash  
+       GOARCH=amd64 GOOS=linux go install sigs.k8s.io/kind@v0.20.0  
+       ```  
+       or simply:  
+       ```bash  
+       go install sigs.k8s.io/kind@v0.20.0  
+       ```  
+       since your host is amd64 Linux.  
+     - Verify with: `kind version`  
+   
+   - **Kind (Kubernetes in Docker)**  
+     - Use version v0.20.0 as specified.  
+     - Ensure Kind binary is accessible in PATH (`$GOPATH/bin` or `/usr/local/bin`).  
+   
+   - **Python**  
+     - Runtime requires Python 3.12+ (amd64 Linux binaries).  
+     - Development environment requires at least Python 3.10+.  
+     - On older systems (e.g., Ubuntu 20.04 with Python 3.8), manually install Python 3.10+ for dev environment.  
+     - Use system package manager or official Python amd64 Linux installers.  
+     - Verify with `python3 --version` or inside virtual environment.  
+   
+   - **Python dependencies**  
+     - Use pinned `requirements.txt` and `requirements-dev.txt` generated with Python 3.12+ on amd64 Linux.  
+     - Use `pip-compile` from `pip-tools` installed inside Python 3.12+ venv or system environment.  
+     - Development tooling includes black, isort, pylint, mypy (optional), pre-commit, etc.  
+     - Ensure all wheels and binary dependencies are compatible with amd64 Linux.  
+   
+   - **kubectl**  
+     - Install latest stable kubectl client for amd64 Linux.  
+     - Verify with `kubectl version --client`  
+   
+   - **Helm (optional)**  
+     - Use Helm binaries for amd64 Linux if deploying operators with Helm charts.  
+     - Verify with `helm version`  
+   
+   - **Make tool**  
+     - Ensure GNU Make or compatible version installed on amd64 Linux host.  
+     - Verify with `make --version`  
+   
+   - **Pre-commit**  
+     - Install via pip inside Python environment (amd64 Linux).  
+     - Verify with `pre-commit --version`  
+   
+   - **Ansible**  
+     - Install via pip on amd64 Linux.  
+     - Install required collections: `ansible.posix` and `community.general` compatible with your Ansible Core 2.17.5.  
+     - Verify with `ansible --version` and `ansible-playbook --version`  
+   
+   - **Golang code coverage tools**  
+     - Install `gocovmerge` for amd64 Linux environment via:  
+       ```bash  
+       GOARCH=amd64 GOOS=linux go install github.com/wadey/gocovmerge@latest  
+       ```  
+     - Modify Dockerfiles and shell scripts as described for coverage measurement on amd64 Linux containers.  
+   
+   - **System kernel parameters (inotify limits)**  
+     - Apply sysctl settings on your amd64 Linux host before multi-worker Kind cluster creation as described.  
+     - These settings are architecture-independent but ensure your Linux kernel supports these sysctl parameters.  
+
+---
+
+2. FILES TO CREATE:  
+   - All files (`pyproject.toml`, `requirements.txt`, `requirements-dev.txt`, `Makefile`, `.pre-commit-config.yaml`, operator deployment scripts, config files, test data, documentation files, Ansible inventory and playbooks) remain as specified.  
+   - Ensure all file paths and references within the config files and manifests are relative to your project root `/home/cc/EnvGym/data-gpt-4.1mini/acto` or absolute as needed, consistent with your working directory.  
+   - For Docker and Kind related configs, confirm volume mount paths align with your project directory structure and host OS (amd64 Linux).  
+   - No changes needed for file formats or contents due to hardware; all remain compatible with amd64 Linux.  
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All test cases remain valid and applicable.  
+   - Tests involving binary execution, coverage, and container orchestration run on amd64 Linux architecture.  
+   - No ARM-specific test cases or GPU-accelerated tests are present or required.  
+   - For tests involving Docker images, ensure images are amd64 variants or multi-arch images with amd64 manifest support.  
+   - Verify that tests depending on system limits or kernel features are run on compatible amd64 Linux kernel (typical for your environment).  
+
+---
+
+4. COMPLETE TODO LIST (with architecture and path considerations):  
+
+   **Step 1: Install Docker**  
+   - Confirm Docker version 28.3.2 installed on amd64 Linux.  
+   - Verify amd64 image pull and run:  
+     ```bash  
+     docker run --platform=linux/amd64 hello-world  
+     ```  
+   - Troubleshoot daemon or permissions as needed on amd64 Linux host.  
+   
+   **Step 2: Install Golang**  
+   - Download Go binaries for linux-amd64 or use package manager.  
+   - Set environment variables for amd64 Linux and add Go binaries to PATH.  
+   - Verify with `go version`.  
+   
+   **Step 3: Install Kind v0.20.0**  
+   - Install via `go install` on amd64 Linux host.  
+   - Confirm `kind version`.  
+   
+   **Step 4: Adjust system inotify limits**  
+   - Run sysctl commands on your amd64 Linux host:  
+     ```bash  
+     sudo sysctl fs.inotify.max_user_watches=524288  
+     sudo sysctl fs.inotify.max_user_instances=512  
+     ```  
+   - Add to `/etc/sysctl.conf` for persistence.  
+   
+   **Step 5: Install Python 3.12+ for runtime, 3.10+ for development**  
+   - Use amd64 Linux Python binaries or system packages.  
+   - For older distros, manually install Python 3.10+ (amd64).  
+   - Create virtual environments as needed:  
+     ```bash  
+     python3.10 -m venv /path/to/venv  
+     source /path/to/venv/bin/activate  
+     ```  
+   - Verify Python versions and pip packages installed are for amd64 Linux.  
+   
+   **Step 6: Install Ansible and collections**  
+   - Install via pip in amd64 Linux environment.  
+   - Install ansible.posix and community.general collections.  
+   - Verify Ansible versions.  
+   
+   **Step 7: Prepare Python dependencies**  
+   - Install `pip-tools` in Python 3.12+ environment (amd64 Linux).  
+   - Generate `requirements.txt` and `requirements-dev.txt` with `pip-compile`.  
+   - Install dependencies exactly as pinned.  
+   - Install and configure pre-commit hooks.  
+   
+   **Step 8: Use Ansible playbook for automated setup (optional)**  
+   - Create `ansible_hosts` with ssh details for amd64 Linux target machines.  
+   - Run playbook to install Python 3.10+ venv and dependencies on amd64 Linux nodes.  
+   - Activate venv before running Acto.  
+   
+   **Step 9: Install kubectl**  
+   - Install latest kubectl client for amd64 Linux.  
+   - Verify client version.  
+   
+   **Step 10: (Optional) Install Helm**  
+   - Use amd64 Linux Helm binaries.  
+   - Verify Helm version.  
+   
+   **Step 11: Verify Make tool and build Acto libraries**  
+   - Ensure GNU Make installed on amd64 Linux host.  
+   - Run `make lib` in project root; verify shared objects built for amd64 Linux.  
+   - Use `make clean` as needed.  
+   
+   **Step 12: Operator deployment and coverage setup**  
+   - Ensure operator Dockerfiles build amd64 Linux images (base images must be amd64).  
+   - Add `main_test.go` and coverage flags as described.  
+   - Use shell script entrypoint compatible with amd64 Linux containers.  
+   - Configure Kind cluster YAML and operator manifests with proper hostPath volume mounts aligned with your project directory structure and Linux paths.  
+   - Collect coverage files on amd64 Linux host filesystem.  
+   - Use `gocovmerge` amd64 Linux binary to merge coverage files.  
+   - Generate coverage reports with `go tool cover`.  
+   
+   **Step 13: Create operator porting config files**  
+   - Follow JSON schema as documented; file paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/acto` root directory.  
+   - Ensure deployment YAMLs and CR seed files are compatible with amd64 Linux Kubernetes environment.  
+   
+   **Step 14: Run Acto “learn” phase**  
+   - Execute on amd64 Linux host with Python 3.12+ environment active.  
+   - Validate Kubernetes cluster and operator deployment on amd64 Linux Kind clusters.  
+   
+   **Step 15: Run Acto test campaign**  
+   - Run Acto with multi-worker Kind clusters on amd64 Linux.  
+   - Monitor logs, test runs, and output directories under your working directory.  
+   
+   **Step 16: Post-process test results**  
+   - Use Python tools on amd64 Linux to process results and generate CSV reports.  
+   
+   **Step 17: Run unit and end-to-end tests**  
+   - Use pytest and other test tools in Python 3.12+ environment on amd64 Linux.  
+   
+   **Step 18: Linting, formatting, and type checking**  
+   - Run black, isort, pylint, (optional mypy) on amd64 Linux environment.  
+   
+   **Step 19: (Optional) Manual development environment setup**  
+   - Create Python 3.10+ venv manually if needed on amd64 Linux.  
+   - Install dev dependencies and pre-commit hooks.  
+   
+   **Step 20: Maintain pre-commit hooks and requirements synchronization**  
+   - Use pre-commit hooks to keep requirements files and code quality consistent on amd64 Linux environment.  
+   
+   **Step 21: Verify and maintain Golang code coverage setup**  
+   - Ensure all coverage steps work end-to-end on amd64 Linux containers and host filesystem.  
+   - Monitor permissions and binary compatibility for coverage tools.  
+   
+---
+
+**Verification and Validation Notes:**  
+- All binaries, Docker images, tools, and dependencies must be amd64 Linux compatible.  
+- Use `--platform=linux/amd64` explicitly in Docker commands when needed to avoid accidental ARM or other arch pulls.  
+- Confirm all paths in configs and mounts correspond to your actual project root `/home/cc/EnvGym/data-gpt-4.1mini/acto`.  
+- Validate Python virtual environments and Ansible setups target amd64 Linux hosts.  
+- No GPU or CUDA considerations apply; skip any GPU-related steps or tooling.  
+- Ensure Linux kernel on amd64 host supports required sysctl parameters (typical for modern Linux).  
+
+---
+
+This adjusted plan ensures full compatibility and correctness for your hardware environment (amd64 Linux, no GPU) and project directory context.

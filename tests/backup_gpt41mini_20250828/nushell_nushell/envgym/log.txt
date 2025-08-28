@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250828_013532 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756344496
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+56 |
+57 |     # Run install script with tracing
+58 | >>> RUN bash -x ./scripts/install-all.sh
+59 |
+60 |     CMD ["/bin/bash"]
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c bash -x ./scripts/install-all.sh" did not complete successfully: exit code: 101
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

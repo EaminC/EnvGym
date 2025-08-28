@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/SEED-GNN; project under /home/cc/EnvGym/data-gpt-4.1mini with SEED-GNN as subfolder  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: x86_64 compatible images (e.g., ubuntu, debian, python official images with amd64 tags)  
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended  
+- Instruction Notes: Ensure no GPU-specific instructions; consider large memory availability for build caching; use Overlay2 storage driver compatible instructions; relative paths based on /home/cc/EnvGym/data-gpt-4.1mini/SEED-GNN  
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build flags (--gpus) not applicable due to lack of NVIDIA GPU

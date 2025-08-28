@@ -1,0 +1,7 @@
+[
+  "Cargo.toml",
+  "serde/Cargo.toml",
+  "serde_derive/Cargo.toml",
+  "serde_derive_internals/Cargo.toml",
+  "test_suite/no_std/Cargo.toml"
+]

@@ -1,0 +1,80 @@
+=== Docker Execution Log - 20250827_114223 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756294920
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/12] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#4 DONE 0.0s
+
+#5 [ 7/12] RUN mkdir -p /home/cc/EnvGym/data-gpt-4.1mini &&     git clone https://github.com/iaoing/Silhouette.git &&     git clone https://github.com/linux-pmfs/pmfs.git pmfs
+#5 CACHED
+
+#6 [ 2/12] RUN apt-get update && apt-get upgrade -y &&     apt-get install -y --no-install-recommends     software-properties-common     wget     git     bash     openssh-client     procps     python3.10     python3.10-venv     python3.10-dev     python3-pip     qemu-system-x86     build-essential     clang-15     llvm-15     llvm-15-dev     llvm-15-tools     pkg-config     ca-certificates     curl     unzip     sudo     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 4/12] RUN python3 -m pip install --upgrade pip setuptools wheel
+#7 CACHED
+
+#8 [ 5/12] RUN python3 -c "import ctypes, readline"
+#8 CACHED
+
+#9 [ 8/12] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/Silhouette
+#9 CACHED
+
+#10 [ 3/12] RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 &&     update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
+#10 CACHED
+
+#11 [ 6/12] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini
+#11 CACHED
+
+#12 [ 9/12] RUN chmod +x install_dep.sh prepare.sh reproduce_all.sh run.sh run_all.sh plot.sh || true
+#12 CACHED
+
+#13 [10/12] RUN echo "To complete setup, run 'bash install_dep.sh' and 'bash prepare.sh' after container start."
+#13 0.176 To complete setup, run 'bash install_dep.sh' and 'bash prepare.sh' after container start.
+#13 DONE 0.2s
+
+#14 [11/12] RUN echo "To build tools, run 'make -j$(nproc)' in the 'codebase/tools' directory after container start."
+#14 0.386 To build tools, run 'make -j96' in the 'codebase/tools' directory after container start.
+#14 DONE 0.4s
+
+#15 [12/12] RUN echo "NOTE: Please download the guest VM image (~30GB) manually and mount it outside the Docker container."
+#15 0.353 NOTE: Please download the guest VM image (~30GB) manually and mount it outside the Docker container.
+#15 DONE 0.4s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 21.1s done
+#16 writing image sha256:93ef3904fa139340215a5d97e45fab5b34fced38d13885584fdebe53b268176f done
+#16 naming to docker.io/library/envgym_test_1756294920 done
+#16 DONE 21.1s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

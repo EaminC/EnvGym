@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/mui_material-ui, project under user home, no special volume considerations noted  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: compatible with amd64 Linux base images such as ubuntu, debian, alpine, or official language images for amd64  
+- GPU: No NVIDIA GPU detected, no CUDA base image recommended  
+- Instruction Notes: avoid GPU-specific instructions; high CPU core count may benefit from parallel build steps; storage limited to ~45GB free, keep image size optimized; use overlay2 storage driver compatible instructions  
+- Docker Version: 28.3.2, supports BuildKit and Buildx, no native GPU build support due to lack of NVIDIA GPU detected

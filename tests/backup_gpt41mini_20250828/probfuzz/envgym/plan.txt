@@ -1,0 +1,152 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Notes on Hardware Context:**  
+- Architecture: x86_64 (linux/amd64) — fully compatible with all referenced software and base images, no ARM or alternative arch concerns  
+- No NVIDIA GPU detected — CUDA or GPU-accelerated backends are not usable; plan excludes GPU dependencies and CUDA base images  
+- Docker version 28.3.2 with BuildKit and buildx support (GPU features present but unused) — can be leveraged for containerized builds if desired  
+- Working directory and project path are standard Linux filesystem paths, no volume or bind mount constraints reported  
+- Storage driver overlay2 supported, suitable for Docker multi-stage builds and layering  
+- Memory: presumed ample for typical Python scientific stack and probabilistic programming workloads; no explicit memory constraints mentioned  
+
+---
+
+### 1. DOWNLOADS NEEDED:
+
+- **Python**  
+  - Confirm installation of Python 3.7 or higher for x86_64 Linux environment (e.g., Ubuntu, Debian, CentOS)  
+  - Ensure the `python` command in config.json points to the correct Python executable matching installed version and environment (e.g., `/usr/bin/python3` or virtual env python)  
+  - No Python versions built for non-x86_64 needed  
+
+- **Python packages**  
+  - Install all required dependencies via `install.sh` or pip manually:  
+    - numpy, scipy, pandas, matplotlib (optional for visualization)  
+    - pystan (Stan backend) — ensure compatible version for x86_64 Linux  
+    - edward (Edward backend) — depends on tensorflow and tensorflow-probability, install CPU-only versions since no GPU present  
+    - pyro (Pyro backend) — install CPU-only PyTorch version, since no CUDA-compatible GPU detected  
+    - tensorflow and tensorflow-probability — install CPU-only wheels for x86_64 Linux  
+    - torch — install CPU-only version for x86_64 Linux (e.g., `pip install torch` with CPU-only wheel)  
+  - Git is optional, install if cloning repo; available via standard Linux package managers  
+  - Bash shell is available by default on Linux; Windows users must use WSL or Git Bash as documented  
+
+- **Additional notes**  
+  - Since no GPU is present, ensure install.sh or manual installation scripts do **not** attempt to install CUDA or GPU-enabled packages  
+  - Confirm that all Python packages and binaries are x86_64 Linux compatible (standard for PyPI wheels on Linux x86_64)  
+  - Validate that all Python packages support Python 3.7+ and Linux x86_64 architecture to avoid compatibility issues  
+
+---
+
+### 2. FILES TO CREATE:
+
+- **config.json**  
+  - Confirm `python` executable paths match installed Python interpreters on x86_64 Linux system  
+  - Verify all template paths are valid and accessible under `/home/cc/EnvGym/data-gpt-4.1mini/probfuzz` or relative paths used  
+  - Confirm `output_dir` has write permissions under Linux filesystem (e.g., `/home/cc/EnvGym/data-gpt-4.1mini/probfuzz/output`)  
+  - `max_threads` and concurrency parameters suitable for available CPU cores (adjust if needed; current default is 1)  
+  - Validate all backend configurations (Stan, Edward, Pyro) and their enabled flags, timeouts, and algorithm selections  
+  - Double-check Edward and Pyro backend configurations to ensure no GPU-specific options are enabled (e.g., no CUDA device targeting)  
+
+- **models.json**  
+  - Validate correctness and compatibility with Linux environment; no architecture-specific changes needed  
+
+- **Output directory**  
+  - Ensure output directory is created automatically by probfuzz.py with Linux filesystem permissions allowing write access for the running user  
+
+- **Optional virtual environment files**  
+  - Recommend creating `requirements.txt` or `environment.yml` capturing CPU-only dependencies for reproducibility on x86_64 Linux  
+
+- **Log/error files**  
+  - Recommended to monitor runtime logs for troubleshooting, ensure write permissions in output/log directories  
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE:
+
+- Run all tests on x86_64 Linux environment using Python 3.7+ interpreter  
+- Verify that all backends (Stan, Edward, Pyro) generate syntactically correct and runnable programs on CPU-only setup  
+- Confirm differential testing works as expected without GPU acceleration  
+- Validate that all output files are correctly generated with expected naming conventions and content formats on Linux filesystem  
+- Ensure install.sh completes successfully on Linux x86_64 system without GPU or CUDA errors  
+- Verify error handling for missing dependencies, permission issues, and incorrect arguments in Linux environment  
+
+---
+
+### 4. COMPLETE TODO LIST:
+
+**Step 1: Prepare System Environment**  
+- Confirm Python 3.7+ installed on Linux x86_64 system:  
+  - `python3 --version` and `python --version` (adjust config.json accordingly)  
+- Confirm pip installation: `pip3 --version`  
+- Confirm bash shell available (default on Linux)  
+- For Windows users, use WSL or Git Bash (Linux environment simulated)  
+
+**Step 2: Validate and Adjust Configuration Files**  
+- Replace or update `config.json` with provided version  
+- Confirm `max_threads` is suitable for available CPU cores (default 1, increase if desired)  
+- Verify `output_dir` exists or can be created with proper permissions  
+- Confirm `structured` flag and `current_template` match available templates on Linux filesystem  
+- Validate all `runConfigurations` entries (enabled flags, timeouts, algorithms, python executables)  
+- Check template file paths exist and are accessible under Linux paths  
+- Review Edward's `inferences` and Pyro's `optimizers` for correctness and CPU-only compatibility  
+- Confirm `models.json` integrity and completeness  
+
+**Step 3: Install Project Dependencies**  
+- Run `sudo ./install.sh` under Linux x86_64 environment (or without sudo if virtual env used)  
+- Verify install.sh installs CPU-only versions of tensorflow, torch, pystan, edward, pyro, etc.  
+- Confirm console output ends with "Install successful"  
+- If errors occur, manually install missing packages with CPU-only wheels:  
+  - Example: `pip install torch --extra-index-url https://download.pytorch.org/whl/cpu`  
+  - Example: `pip install tensorflow-cpu`  
+- Confirm no CUDA or GPU packages installed  
+
+**Step 4: Setup Virtual Environment (Optional but Recommended)**  
+- Create Python virtual environment on Linux x86_64 (e.g., `python3 -m venv venv`)  
+- Activate virtual environment (`source venv/bin/activate`)  
+- Install dependencies within venv using install.sh or pip  
+- Adjust paths in config.json to point to virtual environment python executable (e.g., `/home/cc/EnvGym/data-gpt-4.1mini/probfuzz/venv/bin/python`)  
+
+**Step 5: Run ProbFuzz Tool**  
+- Execute `./probfuzz.py 5` (or desired number) on Linux x86_64 environment  
+- Monitor runtime output for errors  
+- Confirm creation of `output/progsXXX/prob_rand_X` directories with generated programs for all enabled backends  
+- Verify output files (pplout_*, edwardout_X, pyroout_X) contain expected content  
+
+**Step 6: Verify Backend Outputs**  
+- Stan: check for `model.stan`, `data.json`, `driver.py`, `pplout_*` files  
+- Edward: confirm `edward_prog.py`, `edwardout_X` files with parameter means, CPU-only execution  
+- Pyro: confirm `pyro_prog.py`, `pyroout_X` files with parameter means and variances, CPU-only execution  
+- Confirm configured algorithms are being used (`nuts` for Stan, `all` for Edward and Pyro) without GPU-specific settings  
+
+**Step 7: Test Error Handling and Robustness**  
+- Run probfuzz.py with invalid arguments and verify user-friendly error messages  
+- Simulate missing dependencies and confirm install.sh or probfuzz.py reports issues clearly  
+- Check file permissions on output directories and confirm proper error handling  
+- Test disabling one or more backends in config.json and verify expected behavior  
+
+**Step 8: Test Configuration-Driven Features**  
+- Change `max_threads` and confirm concurrency changes on Linux x86_64 CPU environment  
+- Switch `current_template` and verify generated program correctness  
+- Enable/disable backends and confirm runtime execution respects config.json  
+- Modify Edward inference and Pyro optimizer parameters and confirm expected runtime effects on CPU  
+
+**Step 9: Document Environment Setup and Usage**  
+- Update README or setup guide with Linux x86_64 specific installation notes  
+- Include instructions for CPU-only dependency installation (tensorflow-cpu, torch CPU-only)  
+- Document config.json customization and explanation of key fields  
+- Add troubleshooting tips for common Linux installation/runtime issues  
+- Provide usage examples of probfuzz.py with various config options on Linux x86_64  
+
+---
+
+### Verification Methods:  
+
+- Successful execution of `sudo ./install.sh` on Linux x86_64 with CPU-only package installs and "Install successful" message  
+- Successful run of `./probfuzz.py N` without errors on Linux x86_64, respecting config.json settings  
+- Presence and correctness of generated program and output files in Linux filesystem output directories for all enabled backends  
+- Correct parsing and usage of config.json parameters during runtime on Linux x86_64  
+- Passing of all implemented test cases and error handling scenarios on CPU-only Linux environment  
+- Confirmed runtime behavior changes when modifying configuration parameters (e.g., concurrency, enabled tools, templates)  
+
+---
+
+**Summary:**  
+No major changes to the plan are needed for hardware compatibility because the environment and tools target standard Linux x86_64 architecture. The key adjustments are to ensure CPU-only installations of tensorflow, torch, and related packages due to absence of GPU, and to verify all paths and permissions are valid in the Linux filesystem. The plan’s existing instructions for Linux apply directly; just explicitly exclude GPU/CUDA dependencies and confirm Python executable paths and concurrency settings suit the actual Linux environment.

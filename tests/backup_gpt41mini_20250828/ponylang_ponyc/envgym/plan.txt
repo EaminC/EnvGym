@@ -1,0 +1,217 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN BASED ON HARDWARE INFORMATION ===
+
+**Hardware Context Summary:**  
+- Architecture: x86_64 (amd64) Linux environment  
+- Recommended platform: linux/amd64  
+- Base images: amd64 Linux images (ubuntu, debian, alpine)  
+- No GPU or CUDA required  
+- Optimize for CPU-bound workloads; high CPU core count available  
+- Linux filesystem conventions apply  
+- Docker version 28.3.2 with BuildKit and buildx support  
+- Overlay2 storage driver compatible  
+
+---
+
+1. DOWNLOADS NEEDED:
+
+- Pony compiler and toolchain:  
+  * Focus exclusively on x86_64 Linux builds, specifically linux/amd64 platform.  
+  * Exclude ARM (arm64, armhf, arm 32-bit) and RISC-V cross-compilation binaries and tarballs from default setup unless cross-compilation is explicitly needed (can be optional).  
+  * Use official Pony nightly builds and pre-1.0 stable releases for x86_64 linux/amd64 platforms.  
+  * Windows MSVC builds and Windows Server Core image downloads remain optional and only if Windows container or host usage is planned.  
+  * Avoid downloading ARM or RISC-V nightly builds or cross-compiler toolchains by default to save bandwidth and storage.  
+
+- Development tools and libraries:  
+  * Use amd64 versions of all packages and toolchains.  
+  * For Linux/macOS: install Git, CMake, LLVM/Clang, and other build tools through package managers (apk for Alpine amd64, apt for Ubuntu amd64, pacman for Arch amd64, dnf for Fedora amd64).  
+  * Skip ARM-specific cross-compilation toolchain installs unless explicitly required.  
+  * For Alpine images, use alpine-sdk and related packages for amd64 architecture.  
+  * For Ubuntu images, use amd64 packages and repositories.  
+  * Windows-specific tools installation remains optional.  
+
+- Python packages:  
+  * Install cloudsmith-cli, mkdocs, mkdocs-material-insiders as required in amd64 container environments only.  
+
+- Cross-compilation toolchains:  
+  * By default, exclude ARM 32-bit, ARMhf 32-bit, and RISC-V 64-bit cross-compilation toolchains unless cross-compilation is explicitly targeted.  
+  * If cross-compilation is required, install matching amd64-hosted cross-compilers and emulators accordingly.  
+
+- Docker base images:  
+  * Use amd64 Linux base images only (alpine:3.20, alpine:3.21, ubuntu:22.04, ubuntu:24.04, archlinux:base, fedora:41).  
+  * Exclude ARM64 or ARM-specific base images by default.  
+  * Windows Server Core image usage remains optional and only if Windows container support is needed.  
+
+---
+
+2. FILES TO CREATE:
+
+- Environment configuration files:  
+  * Set environment variables for amd64 Pony compiler paths and build options.  
+  * Omit ARM and RISC-V cross-compilation environment variables unless cross-compilation enabled.  
+  * PATH updates to include `/root/.local/share/ponyup/bin` for amd64 Alpine musl latest, musl release, and Ubuntu 24.04 GNU ponyup environments only.  
+  * Windows PATH update (`C:\ponyc\bin`) optional and only if Windows environment is used.  
+
+- Editor configuration files:  
+  * No change; include Pony language support settings.  
+
+- `.gitignore`:  
+  * Ignore build artifacts and temp files for amd64 build outputs only.  
+  * Exclude ARM and RISC-V cross-compilation temporary files from default ignore rules unless cross-compilation added.  
+  * Ignore Windows-specific files only if Windows builds involved.  
+
+- CI configuration files:  
+  * Include CI jobs for amd64 Linux builder images:  
+    - Alpine 3.20 amd64 builder  
+    - Alpine 3.21 amd64 builder  
+    - Alpine musl builder amd64  
+    - Alpine musl latest amd64  
+    - Alpine musl release amd64 (new)  
+    - Ubuntu 22.04 amd64 builder  
+    - Ubuntu 24.04 amd64 builder (both existing and new GNU ponyup variant)  
+    - Arch Linux amd64 builder  
+    - Fedora 41 amd64 builder  
+    - stdlib-builder amd64  
+  * Exclude ARM64 Alpine arm64 musl latest image CI job unless cross-compilation is explicitly required.  
+  * Exclude ARM 32-bit, ARMhf 32-bit, and RISC-V 64-bit cross-compilation CI jobs unless cross-compilation enabled.  
+  * Windows Server Core CI job included only if Windows container environment targeted.  
+
+- Dockerfiles and Docker Compose:  
+  * Maintain amd64 Dockerfiles only:  
+    - Alpine 3.20 amd64 builder  
+    - Alpine 3.21 amd64 builder  
+    - Alpine musl builder amd64  
+    - Alpine musl latest amd64  
+    - Alpine musl release amd64 (new)  
+    - Ubuntu 22.04 amd64 builder  
+    - Ubuntu 24.04 amd64 builder variants  
+    - Arch Linux amd64 builder  
+    - Fedora 41 amd64 builder  
+    - stdlib-builder amd64  
+  * Remove or comment out ARM64-specific Dockerfiles (e.g., `.dockerfiles/latest/arm64-unknown-linux-musl/Dockerfile`).  
+  * Exclude ARM 32-bit, ARMhf 32-bit, and RISC-V 64-bit cross-compilation Dockerfiles unless needed.  
+  * Windows Server Core Dockerfile included only if Windows environment supported.  
+
+- User and permission configuration:  
+  * Non-root user `pony` with UID 1001 created and used inside all Linux Docker containers for security and test isolation.  
+  * Shell for `pony` user:  
+    - Alpine 3.20, 3.21, musl-builder, musl latest, musl release, Arch Linux: `/bin/sh`  
+    - Ubuntu 22.04, Ubuntu 24.04 (existing variant), Fedora 41, stdlib-builder: `/bin/bash`  
+  * Alpine musl latest, musl release, and Ubuntu 24.04 GNU ponyup variants run as root by default; consider adding non-root user `pony` for security if feasible.  
+  * Windows Server Core containers run as Administrator by default; no change.  
+  * Provide scripts or instructions to set environment variables persistently in Windows containers if used.  
+  * Ensure PATH environment updates are consistent and correct for amd64 Linux and Windows environments.  
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+
+- Compile-time tests:  
+  * Validate Pony compilation on amd64 Linux platforms and containers only:  
+    - Alpine 3.20 amd64 builder  
+    - Alpine 3.21 amd64 builder  
+    - Alpine musl builder amd64  
+    - Alpine musl latest amd64  
+    - Alpine musl release amd64 (new)  
+    - Ubuntu 22.04 amd64 builder  
+    - Ubuntu 24.04 amd64 builder (both variants)  
+    - Arch Linux amd64 builder  
+    - Fedora 41 amd64 builder  
+    - Windows Server Core x86_64 MSVC (optional)  
+  * Exclude ARM (arm64, armhf, arm 32-bit) and RISC-V cross-compilation tests unless cross-compilation explicitly targeted.  
+
+- Runtime tests:  
+  * Validate runtime behavior and concurrency on amd64 Linux containers and environments only.  
+  * Validate runtime correctness inside Alpine musl latest amd64 and musl release amd64 images.  
+  * Validate Windows Server Core runtime only if Windows container used.  
+
+- Platform compatibility tests:  
+  * Confirm no regressions on amd64 Linux platforms and best-effort platforms like DragonFlyBSD and FreeBSD x86 (optional).  
+  * Exclude ARM and RISC-V platform tests unless cross-compilation enabled.  
+
+- Integration tests:  
+  * Run Pony applications in production-like amd64 Linux container environments only.  
+  * Include Docker containerized environment tests only for amd64 Linux images listed above.  
+
+- Error handling tests:  
+  * Verify error reporting on amd64 Linux environments and Windows Server Core (if used).  
+  * Exclude error handling tests specific to ARM and RISC-V cross-compilation and emulation unless explicitly targeted.  
+
+---
+
+4. COMPLETE TODO LIST:
+
+1. Review Pony installation documentation; choose installation method focused on amd64 Linux (and optionally Windows).  
+   - Verify access to official Pony x86_64 linux/amd64 download sources.
+
+2. Download/install required Pony compiler version for amd64 Linux.  
+   - Verification: `ponyc --version` success on amd64 Linux.
+
+3. Install and configure development tools on amd64 Linux:  
+   - Alpine 3.20 amd64: alpine-sdk, binutils-gold, clang, clang-dev, coreutils, linux-headers, cmake, git, zlib-dev, bash, curl, py3-pip, gdb, lldb, py3-lldb.  
+   - Alpine 3.21 amd64: updated packages as above; shell for pony user `/bin/sh`.  
+   - Alpine musl-builder amd64: as Alpine 3.20 amd64 with non-root user pony.  
+   - Alpine musl latest amd64: clang, curl, build-base, binutils-gold, git; ponyup installed via official script; runs as root by default.  
+   - Alpine musl release amd64: same as musl latest but installs release builds; runs as root by default.  
+   - Ubuntu 22.04 amd64: apt-transport-https, build-essential, clang, cmake, git, make, xz-utils, zlib1g-dev, curl, python3-pip, wget, systemtap-sdt-dev, lldb-17 from LLVM repo; non-root user pony with `/bin/bash`.  
+   - Ubuntu 24.04 amd64 (existing variant): similar to Ubuntu 22.04 with tzdata suppression; non-root pony user.  
+   - Ubuntu 24.04 GNU ponyup variant (new): ca-certificates, clang, curl, g++, git, lsb-release, make; ponyup install; runs as root by default.  
+   - Arch Linux amd64: base image, update system, install clang, cmake, diffutils, git, lldb, make; non-root user pony with `/bin/sh`.  
+   - Fedora 41 amd64: install binutils-gold, clang, cmake, diffutils, git, make, zlib, curl, python3-pip, lldb, libstdc++-static; cloudsmith-cli via pip3; non-root pony user with `/bin/bash`.  
+   - Windows Server Core x86_64 MSVC: optional; install Git for Windows, Visual Studio Build Tools workload, and Pony compiler binaries; runs as Administrator.  
+
+4. Cross-compilation toolchains:  
+   - By default, skip installation of ARM 32-bit, ARMhf 32-bit, and RISC-V 64-bit cross-compilers and emulators unless explicitly needed.  
+   - If required, install on amd64 host with appropriate versions, ensuring qemu-user/qemu-arm-static compatibility.  
+
+5. Standard library builder image (stdlib-builder) setup based on amd64 `ghcr.io/ponylang/ponyc:release-alpine` or specified tag:  
+   - Update apk repos, install bash, git-fast-import, libffi, libressl, python3, py3-pip, tar.  
+   - Install mkdocs and mkdocs-material-insiders via pip3.  
+   - Non-root user pony with `/bin/bash`.  
+
+6. Verification steps:  
+   - Run `git --version`, `cmake --version`, `clang --version` on amd64 environments.  
+   - Verify ponyc and corral presence and function in Alpine musl latest/release amd64 and Ubuntu 24.04 GNU ponyup amd64 environments.  
+   - Confirm cloudsmith-cli and mkdocs installations.  
+   - For Windows Server Core container (if used), verify Git, Visual Studio Build Tools, ponyc, and corral.  
+
+7. Create/update Dockerfiles for amd64 platforms only:  
+   - Include all relevant amd64 Dockerfiles as listed.  
+   - Exclude ARM64 and cross-compilation Dockerfiles by default.  
+   - Build and verify images on amd64 host.  
+
+8. Set environment variables and PATH for amd64 Pony toolchain in `build.env` or shell profile:  
+   - Include PATH updates for `/root/.local/share/ponyup/bin` in amd64 Alpine musl latest, musl release, and Ubuntu 24.04 GNU ponyup environments.  
+   - Exclude ARM and RISC-V cross-compilation PATH variables by default.  
+   - Windows PATH update optional and only if Windows used.  
+
+9. Build Pony from source if chosen, on amd64 platforms and Docker containers only.  
+
+10. Install editor/IDE plugins for Pony language support as per EDITORS.md.  
+
+11. Create/update `.gitignore` for amd64 builds and outputs; exclude ARM/RISC-V unless cross-compilation enabled.  
+
+12. Develop test cases covering compilation, runtime, integration, platform compatibility, and error handling on amd64 platforms only by default.  
+
+13. Configure CI pipelines for amd64 platforms only, including all Linux amd64 builder images and Windows Server Core if used.  
+
+14. (Optional) Pull and test official Pony amd64 Docker images.  
+
+15. Document environment setup steps focusing on amd64 Linux environments; optionally include Windows container setup if relevant.  
+
+16. Regularly update Pony toolchain, dependencies, Dockerfiles, Python packages for amd64 builds.  
+
+17. Engage with Pony community and resources for support and updates.  
+
+---
+
+**Summary of Adjustments:**  
+- All ARM (arm64, armhf, arm 32-bit) and RISC-V 64-bit components (toolchains, Dockerfiles, CI jobs, tests) are excluded by default given the x86_64 hardware environment, unless explicit cross-compilation is required.  
+- Focus on amd64 Linux base images and packages.  
+- Windows environment setup and tools included optionally only if Windows container or host environment is targeted.  
+- User permissions, shells, and environment variable updates tailored for amd64 Linux containers.  
+- Cross-compilation environment variables and toolchains omitted from default configuration and documentation.  
+- CI and test cases restricted to amd64 platforms to optimize build/test times and resource usage.  
+- Paths and environment variables use Linux filesystem conventions for amd64 Linux containers.  
+- Avoid installation or download of unnecessary architectures to save storage, bandwidth, and avoid complexity.  
+
+This adjusted plan ensures optimal compatibility, resource usage, and maintainability given the specified hardware environment (amd64 Linux, no GPU).

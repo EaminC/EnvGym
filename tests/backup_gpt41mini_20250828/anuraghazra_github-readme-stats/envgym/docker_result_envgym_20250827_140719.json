@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_140719",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756303638",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.17kB done\n#1 DONE 0.0s\n\n#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.4\n#2 DONE 0.2s\n\n#3 docker-image://docker.io/docker/dockerfile:1.4@sha256:9ba7531bd80fb0a858632727cf7a112fbfd19b17e94c4e84ced81e24ef1a0dbc\n#3 CACHED\n\n#4 [internal] load .dockerignore\n#4 transferring context: 2B done\n#4 DONE 0.0s\n\n#5 [internal] load metadata for docker.io/library/python:3.11-slim-bullseye\n#5 DONE 0.2s\n\n#6 [builder 1/6] FROM docker.io/library/python:3.11-slim-bullseye@sha256:9e25f400253a5fa3191813d6a67eb801ca1e6f012b3bd2588fa6920b59e3eba6\n#6 CACHED\n\n#7 [builder 2/6] WORKDIR /app\n#7 DONE 0.0s\n\n#8 [internal] load build context\n#8 transferring context: 6.89MB 0.1s done\n#8 DONE 0.1s\n\n#9 [builder 4/6] COPY ./requirements.txt ./requirements.txt\n#9 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::k3ghdmrpxh8ghbm85m43jdu9f: \"/requirements.txt\": not found\n\n#10 [builder 3/6] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     curl     git     && rm -rf /var/lib/apt/lists/*\n#10 0.296 runc run failed: container process is already dead\n#10 CANCELED\n------\n > [builder 4/6] COPY ./requirements.txt ./requirements.txt:\n------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::k3ghdmrpxh8ghbm85m43jdu9f: \"/requirements.txt\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

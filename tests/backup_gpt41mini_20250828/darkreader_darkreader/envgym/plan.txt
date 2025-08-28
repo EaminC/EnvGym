@@ -1,0 +1,183 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context:**  
+- Hardware is Linux x86_64 (amd64) architecture, no NVIDIA GPU, ample CPU cores and memory, Docker version 28.3.2 with BuildKit/Buildx, overlay2 storage driver compatible.  
+- Working directory under user home: `/home/cc/EnvGym/data-gpt-4.1mini/darkreader_darkreader` (typical Linux project structure).  
+- No GPU-specific instructions needed.  
+- Large memory and CPU core count enable parallel build optimizations.
+
+---
+
+### 1. DOWNLOADS NEEDED
+
+- **Node.js:**  
+  - Install Node.js version 18 or higher (latest LTS preferred).  
+  - x86_64 Linux binaries from https://nodejs.org/ are fully compatible with your hardware.  
+  - Ensure Node.js supports native ESM modules, which Node 18+ does.  
+  - Use `--max-old-space-size=3072` or higher during builds to leverage ample RAM for large builds.  
+- **Deno (optional):**  
+  - Install latest stable or canary build for Linux amd64 from https://deno.land/.  
+  - No GPU dependency; works fine on your hardware.  
+- **Git:**  
+  - Install latest Git for Linux x86_64 from https://git-scm.com/.  
+- **Code Editor:**  
+  - VSCode or another modern editor for Linux x86_64 recommended.  
+- **Browsers:**  
+  - Chromium-based browsers (Chrome, Edge, Brave) for Linux x86_64 to test Chrome extension builds.  
+  - Firefox (version 78.0+) for Linux x86_64 for Firefox extension tests.  
+- **Thunderbird:**  
+  - Install Thunderbird version 78.0a1 or higher for Linux x86_64 to test Thunderbird extension build.  
+- **Python 3:**  
+  - Required if native modules or puppeteer dependencies need compiling.  
+  - Install Python 3 for Linux x86_64.  
+- **Open file limits:**  
+  - Linux typically supports ulimit; increase open file limits as needed to avoid "Too many open files" errors during build.  
+- **TypeScript tooling:**  
+  - Install TypeScript compiler and ts-node compatible with Linux x86_64.  
+- **npm and yarn:**  
+  - npm comes with Node.js; yarn optional.  
+- **Ensure ESM support:**  
+  - Confirm Node.js environment correctly handles ESM modules, especially for `tasks/` and `tests/` directories with `"type": "module"` in their `package.json`.  
+  - Use appropriate Node.js flags or commands (no CommonJS-specific flags like `--require`) when invoking scripts under these directories.  
+- **Extension development tools:**  
+  - Use browser developer modes and Thunderbird Add-ons Manager on Linux x86_64 environments.  
+
+---
+
+### 2. FILES TO CREATE
+
+All files remain as specified, no change needed for platform. Verify paths and file permissions under Linux file system:  
+
+- `.npmrc` (optional)  
+- `src/manifest.json` (manifest v2)  
+- `src/manifest-chrome-mv3.json` (manifest v3)  
+- `src/manifest-firefox.json`  
+- `src/manifest-thunderbird.json`  
+- `src/tsconfig.json`  
+- `tasks/package.json` (ensure `"type": "module"` present and recognized by Node.js on Linux)  
+- `tests/package.json` (ensure `"type": "module"` present and recognized)  
+- Other config files: `.eslintrc.js`, `jest.config.mjs`, `babel.config.js`, etc.  
+- `CONTRIBUTING.md`  
+- `package.json`, `package-lock.json`  
+
+File paths and naming conventions are fully compatible with Linux filesystem (case-sensitive). Ensure editors and tooling respect case sensitivity.
+
+---
+
+### 3. NECESSARY TEST CASES
+
+Remains unchanged. Confirm test runners and scripts fully support ESM mode on Linux amd64 Node.js 18+.  
+
+- Validate all extension builds (Chrome MV2, Chrome MV3, Firefox, Thunderbird).  
+- Validate ESM execution of scripts under `tasks/` and `tests/`.  
+- Confirm test runners (e.g., Jest or Node.js test runner) are configured for ESM on Linux.  
+- Test build and runtime behavior; no platform-specific test changes required.  
+- Confirm memory limits and open file descriptors on Linux are sufficient for tests involving puppeteer or native modules.  
+
+---
+
+### 4. COMPLETE TODO LIST
+
+**Step 1: Prepare system environment**
+
+- Install Node.js 18+ for Linux x86_64 (download official Linux binaries or via package manager).  
+- Verify installation: `node -v`, `npm -v`.  
+- (Optional) Install Deno for Linux x86_64.  
+- Install Git for Linux x86_64.  
+- Install Python 3 for Linux x86_64 if needed.  
+- Increase Linux open file limits (`ulimit -n`) as needed to avoid build errors.  
+- Choose code editor (VSCode for Linux x86_64 recommended), install TypeScript tooling (`typescript`, `ts-node`).  
+- Configure `.npmrc` if needed.  
+- Install Thunderbird 78.0a1+ for Linux x86_64.  
+- **Ensure Node.js ESM support:**  
+  - Scripts in `tasks/` and `tests/` must run with ESM-aware commands on Linux.  
+  - Avoid CommonJS-only flags when running these scripts.  
+  - Confirm test runners support Linux-based ESM mode.  
+- Confirm all paths and permissions are correct in Linux environment.
+
+**Step 2: Obtain source code**
+
+- Clone repository under `/home/cc/EnvGym/data-gpt-4.1mini/darkreader_darkreader`.  
+- Confirm presence and correctness of manifests and config files.  
+- Linux filesystem is case-sensitive; verify all file references match casing exactly.  
+- Update versions, permissions, manifests, and tsconfig as needed.
+
+**Step 3: Install dependencies**
+
+- Use `npm ci` on Linux x86_64 (no platform conflicts expected).  
+- Clean npm cache if needed.  
+- Run `npm audit` optionally.
+
+**Step 4: Build project**
+
+- Use `npm run build` with `--max-old-space-size=3072` or higher on Linux x86_64 to utilize memory fully.  
+- Confirm outputs in `build/release/`.  
+- Use platform-appropriate Node.js invocation for ESM scripts in `tasks/`.  
+- Use Linux shell environment variables and commands where applicable.  
+- Confirm build scripts handle Linux paths correctly (forward slashes `/`).  
+- Verify all ESM modules load correctly on Linux Node.js environment.
+
+**Step 5: Build/bootstrap with Deno (optional)**
+
+- Run `npm run deno:bootstrap` on Linux x86_64.  
+- Upgrade Deno as needed on Linux.  
+
+**Step 6: Run tests and lint**
+
+- Run test commands on Linux x86_64.  
+- Ensure test runners support ESM on Linux (adjust Jest or Node.js test runner config).  
+- Run linting commands.  
+- Use debug/watch modes as needed.  
+- Run translation scripts if applicable.
+
+**Step 7: Test extension installation and functionality**
+
+- Load extensions into Linux chromium-based browsers and Firefox.  
+- Load Thunderbird extension on Linux Thunderbird client.  
+- Validate full functionality and UI features.
+
+**Step 8: Configure Firefox for restricted pages**
+
+- Use Firefox on Linux x86_64.  
+- Apply required `about:config` settings.
+
+**Step 9: Configure Thunderbird**
+
+- Use Thunderbird on Linux x86_64.  
+- Enable developer options and verify permissions.
+
+**Step 10: Using Dark Reader API**
+
+- Install and test API on Linux environment.
+
+**Step 11: Maintaining and contributing**
+
+- Follow contribution guidelines.
+
+**Step 12: Troubleshooting and verification**
+
+- Verify Node.js version 18+ on Linux x86_64.  
+- Adjust `ulimit` and Node.js memory flags on Linux.  
+- Confirm no GPU dependencies or CUDA instructions are included.  
+- Use Linux-compatible Docker images (ubuntu, debian, alpine x86_64) for containerized builds if needed.  
+- Confirm overlay2 storage driver compatibility with Docker on Linux.  
+- Verify Linux path case sensitivity and permissions to avoid file access errors.  
+- Confirm ESM execution issues in `tasks/` and `tests/` directories are resolved by proper Node.js invocation and test runner configuration on Linux.  
+
+---
+
+### Additional Notes Based on Hardware Info
+
+- **CPU Architecture:** Confirmed x86_64, all Node.js, Deno, Python, and browser binaries and dependencies are compatible. No ARM-specific adjustments needed.  
+- **Memory:** Large memory available; recommended `--max-old-space-size=3072` or higher for builds is appropriate.  
+- **Storage:** No specific storage constraints noted; overlay2 storage driver compatible Docker instructions apply if containerized builds are used.  
+- **OS Compatibility:** Linux x86_64 environment fully compatible; ensure file permissions, ownership, and case sensitivity are handled accordingly.  
+- **No GPU:** No CUDA or NVIDIA GPU dependencies; skip any GPU-specific build steps or base images.  
+- **Docker:** If using Docker for builds, use amd64 Linux base images (ubuntu, debian, alpine), enable BuildKit and Buildx for parallel builds and caching.  
+- **Paths:** Use Linux style paths with forward slashes. Verify all relative paths in scripts and configs are correct.  
+- **Development Tools:** Install latest compatible versions of Node.js, Git, Python, browsers, Thunderbird on Linux x86_64.  
+- **ESM Support:** Node.js 18+ on Linux fully supports ESM; ensure no Windows-specific path or invocation assumptions in scripts.  
+
+---
+
+**Summary:** No major changes required to the plan other than confirming Linux-specific path and permission considerations, ensuring ESM execution compatibility in Node.js 18+ on Linux x86_64, and leveraging ample memory and CPU cores with appropriate Node.js flags and Docker image choices. Avoid GPU-specific steps. Use Linux-compatible tooling versions and base images if containerized. Ensure test runners and build scripts correctly handle ESM modules on Linux platform.

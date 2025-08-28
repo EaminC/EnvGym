@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/P4Ctl, project likely CPU-bound due to lack of NVIDIA GPU support  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: use amd64-compatible base images, no GPU-specific base images required  
+- GPU: No NVIDIA GPU detected, no CUDA base image needed  
+- Instruction Notes: avoid GPU-related instructions; leverage multi-core CPU for build parallelism; consider overlay2 storage driver optimizations; ensure context paths relative to /home/cc/EnvGym/data-gpt-4.1mini/P4Ctl  
+- Docker Version: 28.3.2, supports BuildKit and Buildx; GPU build features not applicable due to absent NVIDIA GPU

@@ -1,0 +1,497 @@
+=== Docker Execution Log - 20250827_104003 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756291110
+
+=== Build Log ===
+Build Status: Success
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 969B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.10-slim
+#2 DONE 0.5s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 399.48kB 0.0s done
+#4 DONE 0.0s
+
+#5 [ 1/11] FROM docker.io/library/python:3.10-slim@sha256:420fbb0e468d3eaf0f7e93ea6f7a48792cbcadc39d43ac95b96bee2afe4367da
+#5 resolve docker.io/library/python:3.10-slim@sha256:420fbb0e468d3eaf0f7e93ea6f7a48792cbcadc39d43ac95b96bee2afe4367da done
+#5 sha256:420fbb0e468d3eaf0f7e93ea6f7a48792cbcadc39d43ac95b96bee2afe4367da 10.37kB / 10.37kB done
+#5 sha256:e3c437eb1623e9086f42038c1273a7eff09cfff44d7c2ece721fa61560af7e1f 1.75kB / 1.75kB done
+#5 sha256:c2c9cfb78b6afd7fa4f08488dabdd4482417fa3bbc3571425c20b53d66636fc0 5.38kB / 5.38kB done
+#5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 0B / 29.77MB 0.1s
+#5 sha256:7732878f45d9e71f91ce50493915297cca1bde392445d9ddcc0f378a200967bf 0B / 1.29MB 0.1s
+#5 sha256:72e8e193aa94d19c7f1bcbc00737a83d1906bcc1e51965c2873f081eb87bd3a0 0B / 14.10MB 0.1s
+#5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 8.39MB / 29.77MB 0.2s
+#5 sha256:7732878f45d9e71f91ce50493915297cca1bde392445d9ddcc0f378a200967bf 1.29MB / 1.29MB 0.2s done
+#5 sha256:72e8e193aa94d19c7f1bcbc00737a83d1906bcc1e51965c2873f081eb87bd3a0 3.15MB / 14.10MB 0.2s
+#5 sha256:3a195ff1e16155a2ca71eee2cc2c4e467119c644d0360b7c2f6e6d9633f9358b 0B / 250B 0.2s
+#5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 24.12MB / 29.77MB 0.4s
+#5 sha256:72e8e193aa94d19c7f1bcbc00737a83d1906bcc1e51965c2873f081eb87bd3a0 14.10MB / 14.10MB 0.4s
+#5 sha256:3a195ff1e16155a2ca71eee2cc2c4e467119c644d0360b7c2f6e6d9633f9358b 250B / 250B 0.3s done
+#5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 29.77MB / 29.77MB 0.5s
+#5 sha256:72e8e193aa94d19c7f1bcbc00737a83d1906bcc1e51965c2873f081eb87bd3a0 14.10MB / 14.10MB 0.4s done
+#5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 29.77MB / 29.77MB 0.5s done
+#5 extracting sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 0.1s
+#5 extracting sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 3.5s done
+#5 extracting sha256:7732878f45d9e71f91ce50493915297cca1bde392445d9ddcc0f378a200967bf
+#5 extracting sha256:7732878f45d9e71f91ce50493915297cca1bde392445d9ddcc0f378a200967bf 0.2s done
+#5 extracting sha256:72e8e193aa94d19c7f1bcbc00737a83d1906bcc1e51965c2873f081eb87bd3a0 0.1s
+#5 extracting sha256:72e8e193aa94d19c7f1bcbc00737a83d1906bcc1e51965c2873f081eb87bd3a0 1.8s done
+#5 extracting sha256:3a195ff1e16155a2ca71eee2cc2c4e467119c644d0360b7c2f6e6d9633f9358b done
+#5 DONE 6.3s
+
+#6 [ 2/11] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/SEED-GNN
+#6 DONE 0.4s
+
+#7 [ 3/11] RUN apt-get update && apt-get install -y --no-install-recommends     git     bash     && rm -rf /var/lib/apt/lists/*
+#7 0.240 Hit:1 http://deb.debian.org/debian trixie InRelease
+#7 0.240 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.1 kB]
+#7 0.242 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+#7 0.259 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9668 kB]
+#7 0.328 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [2432 B]
+#7 0.328 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [30.1 kB]
+#7 1.182 Fetched 9791 kB in 1s (10.1 MB/s)
+#7 1.182 Reading package lists...
+#7 1.806 Reading package lists...
+#7 2.375 Building dependency tree...
+#7 2.478 Reading state information...
+#7 2.637 bash is already the newest version (5.2.37-2+b5).
+#7 2.637 bash set to manually installed.
+#7 2.637 The following additional packages will be installed:
+#7 2.637   git-man libbrotli1 libcom-err2 libcurl3t64-gnutls liberror-perl libexpat1
+#7 2.637   libgdbm-compat4t64 libgnutls30t64 libgssapi-krb5-2 libidn2-0 libk5crypto3
+#7 2.637   libkeyutils1 libkrb5-3 libkrb5support0 libldap2 libnghttp2-14 libnghttp3-9
+#7 2.637   libngtcp2-16 libngtcp2-crypto-gnutls8 libp11-kit0 libperl5.40 libpsl5t64
+#7 2.637   librtmp1 libsasl2-2 libsasl2-modules-db libssh2-1t64 libtasn1-6
+#7 2.638   libunistring5 perl perl-modules-5.40
+#7 2.639 Suggested packages:
+#7 2.639   gettext-base git-doc git-email git-gui gitk gitweb git-cvs git-mediawiki
+#7 2.639   git-svn gnutls-bin krb5-doc krb5-user sensible-utils perl-doc
+#7 2.639   libterm-readline-gnu-perl | libterm-readline-perl-perl make
+#7 2.639   libtap-harness-archive-perl
+#7 2.639 Recommended packages:
+#7 2.639   patch less ssh-client krb5-locales libldap-common publicsuffix
+#7 2.639   libsasl2-modules
+#7 2.851 The following NEW packages will be installed:
+#7 2.851   git git-man libbrotli1 libcom-err2 libcurl3t64-gnutls liberror-perl
+#7 2.852   libexpat1 libgdbm-compat4t64 libgnutls30t64 libgssapi-krb5-2 libidn2-0
+#7 2.852   libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libldap2 libnghttp2-14
+#7 2.852   libnghttp3-9 libngtcp2-16 libngtcp2-crypto-gnutls8 libp11-kit0 libperl5.40
+#7 2.852   libpsl5t64 librtmp1 libsasl2-2 libsasl2-modules-db libssh2-1t64 libtasn1-6
+#7 2.852   libunistring5 perl perl-modules-5.40
+#7 2.895 0 upgraded, 31 newly installed, 0 to remove and 0 not upgraded.
+#7 2.895 Need to get 23.6 MB of archives.
+#7 2.895 After this operation, 119 MB of additional disk space will be used.
+#7 2.895 Get:1 http://deb.debian.org/debian trixie/main amd64 libexpat1 amd64 2.7.1-2 [108 kB]
+#7 2.902 Get:2 http://deb.debian.org/debian trixie/main amd64 perl-modules-5.40 all 5.40.1-6 [3019 kB]
+#7 2.936 Get:3 http://deb.debian.org/debian trixie/main amd64 libgdbm-compat4t64 amd64 1.24-2 [50.3 kB]
+#7 2.936 Get:4 http://deb.debian.org/debian trixie/main amd64 libperl5.40 amd64 5.40.1-6 [4341 kB]
+#7 3.161 Get:5 http://deb.debian.org/debian trixie/main amd64 perl amd64 5.40.1-6 [267 kB]
+#7 3.173 Get:6 http://deb.debian.org/debian trixie/main amd64 libbrotli1 amd64 1.1.0-2+b7 [307 kB]
+#7 3.192 Get:7 http://deb.debian.org/debian trixie/main amd64 libunistring5 amd64 1.3-2 [477 kB]
+#7 3.222 Get:8 http://deb.debian.org/debian trixie/main amd64 libidn2-0 amd64 2.3.8-2 [109 kB]
+#7 3.228 Get:9 http://deb.debian.org/debian trixie/main amd64 libp11-kit0 amd64 0.25.5-3 [425 kB]
+#7 3.253 Get:10 http://deb.debian.org/debian trixie/main amd64 libtasn1-6 amd64 4.20.0-2 [49.9 kB]
+#7 3.255 Get:11 http://deb.debian.org/debian trixie/main amd64 libgnutls30t64 amd64 3.8.9-3 [1465 kB]
+#7 3.320 Get:12 http://deb.debian.org/debian trixie/main amd64 libkrb5support0 amd64 1.21.3-5 [33.0 kB]
+#7 3.321 Get:13 http://deb.debian.org/debian trixie/main amd64 libcom-err2 amd64 1.47.2-3+b3 [25.0 kB]
+#7 3.322 Get:14 http://deb.debian.org/debian trixie/main amd64 libk5crypto3 amd64 1.21.3-5 [81.5 kB]
+#7 3.325 Get:15 http://deb.debian.org/debian trixie/main amd64 libkeyutils1 amd64 1.6.3-6 [9456 B]
+#7 3.326 Get:16 http://deb.debian.org/debian trixie/main amd64 libkrb5-3 amd64 1.21.3-5 [326 kB]
+#7 3.340 Get:17 http://deb.debian.org/debian trixie/main amd64 libgssapi-krb5-2 amd64 1.21.3-5 [138 kB]
+#7 3.346 Get:18 http://deb.debian.org/debian trixie/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg1-9 [19.8 kB]
+#7 3.347 Get:19 http://deb.debian.org/debian trixie/main amd64 libsasl2-2 amd64 2.1.28+dfsg1-9 [57.5 kB]
+#7 3.350 Get:20 http://deb.debian.org/debian trixie/main amd64 libldap2 amd64 2.6.10+dfsg-1 [194 kB]
+#7 3.363 Get:21 http://deb.debian.org/debian trixie/main amd64 libnghttp2-14 amd64 1.64.0-1.1 [76.0 kB]
+#7 3.368 Get:22 http://deb.debian.org/debian trixie/main amd64 libnghttp3-9 amd64 1.8.0-1 [67.7 kB]
+#7 3.373 Get:23 http://deb.debian.org/debian trixie/main amd64 libngtcp2-16 amd64 1.11.0-1 [131 kB]
+#7 3.383 Get:24 http://deb.debian.org/debian trixie/main amd64 libngtcp2-crypto-gnutls8 amd64 1.11.0-1 [29.3 kB]
+#7 3.384 Get:25 http://deb.debian.org/debian trixie/main amd64 libpsl5t64 amd64 0.21.2-1.1+b1 [57.2 kB]
+#7 3.388 Get:26 http://deb.debian.org/debian trixie/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2+b5 [58.8 kB]
+#7 3.392 Get:27 http://deb.debian.org/debian trixie/main amd64 libssh2-1t64 amd64 1.11.1-1 [245 kB]
+#7 3.406 Get:28 http://deb.debian.org/debian trixie/main amd64 libcurl3t64-gnutls amd64 8.14.1-2 [384 kB]
+#7 3.437 Get:29 http://deb.debian.org/debian trixie/main amd64 liberror-perl all 0.17030-1 [26.9 kB]
+#7 3.438 Get:30 http://deb.debian.org/debian trixie/main amd64 git-man all 1:2.47.2-0.2 [2205 kB]
+#7 3.645 Get:31 http://deb.debian.org/debian trixie/main amd64 git amd64 1:2.47.2-0.2 [8858 kB]
+#7 5.711 Fetched 23.6 MB in 2s (15.2 MB/s)
+#7 5.725 Selecting previously unselected package libexpat1:amd64.
+#7 5.725 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 5643 files and directories currently installed.)
+#7 5.729 Preparing to unpack .../00-libexpat1_2.7.1-2_amd64.deb ...
+#7 5.731 Unpacking libexpat1:amd64 (2.7.1-2) ...
+#7 5.752 Selecting previously unselected package perl-modules-5.40.
+#7 5.752 Preparing to unpack .../01-perl-modules-5.40_5.40.1-6_all.deb ...
+#7 5.753 Unpacking perl-modules-5.40 (5.40.1-6) ...
+#7 5.963 Selecting previously unselected package libgdbm-compat4t64:amd64.
+#7 5.964 Preparing to unpack .../02-libgdbm-compat4t64_1.24-2_amd64.deb ...
+#7 5.965 Unpacking libgdbm-compat4t64:amd64 (1.24-2) ...
+#7 5.982 Selecting previously unselected package libperl5.40:amd64.
+#7 5.983 Preparing to unpack .../03-libperl5.40_5.40.1-6_amd64.deb ...
+#7 5.984 Unpacking libperl5.40:amd64 (5.40.1-6) ...
+#7 6.224 Selecting previously unselected package perl.
+#7 6.225 Preparing to unpack .../04-perl_5.40.1-6_amd64.deb ...
+#7 6.226 Unpacking perl (5.40.1-6) ...
+#7 6.251 Selecting previously unselected package libbrotli1:amd64.
+#7 6.252 Preparing to unpack .../05-libbrotli1_1.1.0-2+b7_amd64.deb ...
+#7 6.252 Unpacking libbrotli1:amd64 (1.1.0-2+b7) ...
+#7 6.285 Selecting previously unselected package libunistring5:amd64.
+#7 6.285 Preparing to unpack .../06-libunistring5_1.3-2_amd64.deb ...
+#7 6.286 Unpacking libunistring5:amd64 (1.3-2) ...
+#7 6.325 Selecting previously unselected package libidn2-0:amd64.
+#7 6.326 Preparing to unpack .../07-libidn2-0_2.3.8-2_amd64.deb ...
+#7 6.327 Unpacking libidn2-0:amd64 (2.3.8-2) ...
+#7 6.346 Selecting previously unselected package libp11-kit0:amd64.
+#7 6.347 Preparing to unpack .../08-libp11-kit0_0.25.5-3_amd64.deb ...
+#7 6.347 Unpacking libp11-kit0:amd64 (0.25.5-3) ...
+#7 6.378 Selecting previously unselected package libtasn1-6:amd64.
+#7 6.379 Preparing to unpack .../09-libtasn1-6_4.20.0-2_amd64.deb ...
+#7 6.379 Unpacking libtasn1-6:amd64 (4.20.0-2) ...
+#7 6.394 Selecting previously unselected package libgnutls30t64:amd64.
+#7 6.395 Preparing to unpack .../10-libgnutls30t64_3.8.9-3_amd64.deb ...
+#7 6.396 Unpacking libgnutls30t64:amd64 (3.8.9-3) ...
+#7 6.457 Selecting previously unselected package libkrb5support0:amd64.
+#7 6.458 Preparing to unpack .../11-libkrb5support0_1.21.3-5_amd64.deb ...
+#7 6.459 Unpacking libkrb5support0:amd64 (1.21.3-5) ...
+#7 6.473 Selecting previously unselected package libcom-err2:amd64.
+#7 6.473 Preparing to unpack .../12-libcom-err2_1.47.2-3+b3_amd64.deb ...
+#7 6.474 Unpacking libcom-err2:amd64 (1.47.2-3+b3) ...
+#7 6.489 Selecting previously unselected package libk5crypto3:amd64.
+#7 6.489 Preparing to unpack .../13-libk5crypto3_1.21.3-5_amd64.deb ...
+#7 6.490 Unpacking libk5crypto3:amd64 (1.21.3-5) ...
+#7 6.509 Selecting previously unselected package libkeyutils1:amd64.
+#7 6.510 Preparing to unpack .../14-libkeyutils1_1.6.3-6_amd64.deb ...
+#7 6.511 Unpacking libkeyutils1:amd64 (1.6.3-6) ...
+#7 6.524 Selecting previously unselected package libkrb5-3:amd64.
+#7 6.524 Preparing to unpack .../15-libkrb5-3_1.21.3-5_amd64.deb ...
+#7 6.525 Unpacking libkrb5-3:amd64 (1.21.3-5) ...
+#7 6.555 Selecting previously unselected package libgssapi-krb5-2:amd64.
+#7 6.556 Preparing to unpack .../16-libgssapi-krb5-2_1.21.3-5_amd64.deb ...
+#7 6.557 Unpacking libgssapi-krb5-2:amd64 (1.21.3-5) ...
+#7 6.576 Selecting previously unselected package libsasl2-modules-db:amd64.
+#7 6.579 Preparing to unpack .../17-libsasl2-modules-db_2.1.28+dfsg1-9_amd64.deb ...
+#7 6.580 Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+#7 6.595 Selecting previously unselected package libsasl2-2:amd64.
+#7 6.596 Preparing to unpack .../18-libsasl2-2_2.1.28+dfsg1-9_amd64.deb ...
+#7 6.597 Unpacking libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+#7 6.611 Selecting previously unselected package libldap2:amd64.
+#7 6.612 Preparing to unpack .../19-libldap2_2.6.10+dfsg-1_amd64.deb ...
+#7 6.613 Unpacking libldap2:amd64 (2.6.10+dfsg-1) ...
+#7 6.633 Selecting previously unselected package libnghttp2-14:amd64.
+#7 6.634 Preparing to unpack .../20-libnghttp2-14_1.64.0-1.1_amd64.deb ...
+#7 6.634 Unpacking libnghttp2-14:amd64 (1.64.0-1.1) ...
+#7 6.649 Selecting previously unselected package libnghttp3-9:amd64.
+#7 6.650 Preparing to unpack .../21-libnghttp3-9_1.8.0-1_amd64.deb ...
+#7 6.650 Unpacking libnghttp3-9:amd64 (1.8.0-1) ...
+#7 6.665 Selecting previously unselected package libngtcp2-16:amd64.
+#7 6.666 Preparing to unpack .../22-libngtcp2-16_1.11.0-1_amd64.deb ...
+#7 6.666 Unpacking libngtcp2-16:amd64 (1.11.0-1) ...
+#7 6.685 Selecting previously unselected package libngtcp2-crypto-gnutls8:amd64.
+#7 6.685 Preparing to unpack .../23-libngtcp2-crypto-gnutls8_1.11.0-1_amd64.deb ...
+#7 6.686 Unpacking libngtcp2-crypto-gnutls8:amd64 (1.11.0-1) ...
+#7 6.698 Selecting previously unselected package libpsl5t64:amd64.
+#7 6.699 Preparing to unpack .../24-libpsl5t64_0.21.2-1.1+b1_amd64.deb ...
+#7 6.700 Unpacking libpsl5t64:amd64 (0.21.2-1.1+b1) ...
+#7 6.713 Selecting previously unselected package librtmp1:amd64.
+#7 6.714 Preparing to unpack .../25-librtmp1_2.4+20151223.gitfa8646d.1-2+b5_amd64.deb ...
+#7 6.715 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b5) ...
+#7 6.732 Selecting previously unselected package libssh2-1t64:amd64.
+#7 6.733 Preparing to unpack .../26-libssh2-1t64_1.11.1-1_amd64.deb ...
+#7 6.734 Unpacking libssh2-1t64:amd64 (1.11.1-1) ...
+#7 6.752 Selecting previously unselected package libcurl3t64-gnutls:amd64.
+#7 6.753 Preparing to unpack .../27-libcurl3t64-gnutls_8.14.1-2_amd64.deb ...
+#7 6.754 Unpacking libcurl3t64-gnutls:amd64 (8.14.1-2) ...
+#7 6.783 Selecting previously unselected package liberror-perl.
+#7 6.784 Preparing to unpack .../28-liberror-perl_0.17030-1_all.deb ...
+#7 6.785 Unpacking liberror-perl (0.17030-1) ...
+#7 6.797 Selecting previously unselected package git-man.
+#7 6.798 Preparing to unpack .../29-git-man_1%3a2.47.2-0.2_all.deb ...
+#7 6.798 Unpacking git-man (1:2.47.2-0.2) ...
+#7 6.856 Selecting previously unselected package git.
+#7 6.857 Preparing to unpack .../30-git_1%3a2.47.2-0.2_amd64.deb ...
+#7 6.862 Unpacking git (1:2.47.2-0.2) ...
+#7 7.163 Setting up libexpat1:amd64 (2.7.1-2) ...
+#7 7.165 Setting up libkeyutils1:amd64 (1.6.3-6) ...
+#7 7.167 Setting up libgdbm-compat4t64:amd64 (1.24-2) ...
+#7 7.169 Setting up libbrotli1:amd64 (1.1.0-2+b7) ...
+#7 7.171 Setting up libnghttp2-14:amd64 (1.64.0-1.1) ...
+#7 7.173 Setting up libcom-err2:amd64 (1.47.2-3+b3) ...
+#7 7.175 Setting up libkrb5support0:amd64 (1.21.3-5) ...
+#7 7.177 Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+#7 7.179 Setting up libp11-kit0:amd64 (0.25.5-3) ...
+#7 7.181 Setting up libunistring5:amd64 (1.3-2) ...
+#7 7.183 Setting up libk5crypto3:amd64 (1.21.3-5) ...
+#7 7.185 Setting up libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+#7 7.187 Setting up libnghttp3-9:amd64 (1.8.0-1) ...
+#7 7.189 Setting up perl-modules-5.40 (5.40.1-6) ...
+#7 7.191 Setting up libtasn1-6:amd64 (4.20.0-2) ...
+#7 7.193 Setting up git-man (1:2.47.2-0.2) ...
+#7 7.195 Setting up libngtcp2-16:amd64 (1.11.0-1) ...
+#7 7.197 Setting up libkrb5-3:amd64 (1.21.3-5) ...
+#7 7.199 Setting up libssh2-1t64:amd64 (1.11.1-1) ...
+#7 7.201 Setting up libldap2:amd64 (2.6.10+dfsg-1) ...
+#7 7.204 Setting up libidn2-0:amd64 (2.3.8-2) ...
+#7 7.207 Setting up libperl5.40:amd64 (5.40.1-6) ...
+#7 7.210 Setting up perl (5.40.1-6) ...
+#7 7.216 Setting up libgssapi-krb5-2:amd64 (1.21.3-5) ...
+#7 7.219 Setting up libgnutls30t64:amd64 (3.8.9-3) ...
+#7 7.221 Setting up libpsl5t64:amd64 (0.21.2-1.1+b1) ...
+#7 7.224 Setting up liberror-perl (0.17030-1) ...
+#7 7.225 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b5) ...
+#7 7.228 Setting up libngtcp2-crypto-gnutls8:amd64 (1.11.0-1) ...
+#7 7.230 Setting up libcurl3t64-gnutls:amd64 (8.14.1-2) ...
+#7 7.232 Setting up git (1:2.47.2-0.2) ...
+#7 7.241 Processing triggers for libc-bin (2.41-12) ...
+#7 DONE 7.5s
+
+#8 [ 4/11] RUN python -m venv /venv_seedgnn
+#8 DONE 4.0s
+
+#9 [ 5/11] RUN pip install --upgrade pip
+#9 0.606 Requirement already satisfied: pip in /venv_seedgnn/lib/python3.10/site-packages (23.0.1)
+#9 0.712 Collecting pip
+#9 0.758   Downloading pip-25.2-py3-none-any.whl (1.8 MB)
+#9 0.877      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 14.9 MB/s eta 0:00:00
+#9 0.939 Installing collected packages: pip
+#9 0.939   Attempting uninstall: pip
+#9 0.940     Found existing installation: pip 23.0.1
+#9 1.078     Uninstalling pip-23.0.1:
+#9 1.211       Successfully uninstalled pip-23.0.1
+#9 1.957 Successfully installed pip-25.2
+#9 DONE 2.2s
+
+#10 [ 6/11] RUN pip install torch==2.0.0+cpu torchvision==0.15.1+cpu torchaudio==2.0.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+#10 0.705 Looking in links: https://download.pytorch.org/whl/torch_stable.html
+#10 1.443 Collecting torch==2.0.0+cpu
+#10 1.447   Downloading https://download.pytorch.org/whl/cpu/torch-2.0.0%2Bcpu-cp310-cp310-linux_x86_64.whl (195.4 MB)
+#10 2.529      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 195.4/195.4 MB 181.0 MB/s  0:00:01
+#10 3.403 Collecting torchvision==0.15.1+cpu
+#10 3.417   Downloading https://download.pytorch.org/whl/cpu/torchvision-0.15.1%2Bcpu-cp310-cp310-linux_x86_64.whl (1.5 MB)
+#10 3.428      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 132.3 MB/s  0:00:00
+#10 3.917 Collecting torchaudio==2.0.1+cpu
+#10 3.925   Downloading https://download.pytorch.org/whl/cpu/torchaudio-2.0.1%2Bcpu-cp310-cp310-linux_x86_64.whl (4.1 MB)
+#10 3.967      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.1/4.1 MB 169.1 MB/s  0:00:00
+#10 4.224 Collecting filelock (from torch==2.0.0+cpu)
+#10 4.278   Downloading filelock-3.19.1-py3-none-any.whl.metadata (2.1 kB)
+#10 4.542 Collecting typing-extensions (from torch==2.0.0+cpu)
+#10 4.547   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+#10 4.787 Collecting sympy (from torch==2.0.0+cpu)
+#10 4.792   Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+#10 5.203 Collecting networkx (from torch==2.0.0+cpu)
+#10 5.208   Downloading networkx-3.4.2-py3-none-any.whl.metadata (6.3 kB)
+#10 5.463 Collecting jinja2 (from torch==2.0.0+cpu)
+#10 5.468   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#10 6.127 Collecting numpy (from torchvision==0.15.1+cpu)
+#10 6.132   Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)
+#10 6.650 Collecting requests (from torchvision==0.15.1+cpu)
+#10 6.655   Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+#10 7.193 Collecting pillow!=8.3.*,>=5.3.0 (from torchvision==0.15.1+cpu)
+#10 7.199   Downloading pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+#10 7.664 Collecting MarkupSafe>=2.0 (from jinja2->torch==2.0.0+cpu)
+#10 7.670   Downloading MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.0 kB)
+#10 8.036 Collecting charset_normalizer<4,>=2 (from requests->torchvision==0.15.1+cpu)
+#10 8.041   Downloading charset_normalizer-3.4.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (36 kB)
+#10 8.367 Collecting idna<4,>=2.5 (from requests->torchvision==0.15.1+cpu)
+#10 8.373   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#10 8.673 Collecting urllib3<3,>=1.21.1 (from requests->torchvision==0.15.1+cpu)
+#10 8.678   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+#10 9.143 Collecting certifi>=2017.4.17 (from requests->torchvision==0.15.1+cpu)
+#10 9.148   Downloading certifi-2025.8.3-py3-none-any.whl.metadata (2.4 kB)
+#10 9.411 Collecting mpmath<1.4,>=1.1.0 (from sympy->torch==2.0.0+cpu)
+#10 9.416   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+#10 9.426 Downloading pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+#10 10.17    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 8.8 MB/s  0:00:00
+#10 10.18 Downloading filelock-3.19.1-py3-none-any.whl (15 kB)
+#10 10.19 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#10 10.20 Downloading MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20 kB)
+#10 10.21 Downloading networkx-3.4.2-py3-none-any.whl (1.7 MB)
+#10 10.38    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 10.1 MB/s  0:00:00
+#10 10.38 Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.8 MB)
+#10 12.06    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.8/16.8 MB 10.0 MB/s  0:00:01
+#10 12.07 Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+#10 12.08 Downloading charset_normalizer-3.4.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (152 kB)
+#10 12.10 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#10 12.11 Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+#10 12.13 Downloading certifi-2025.8.3-py3-none-any.whl (161 kB)
+#10 12.15 Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+#10 12.61    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 14.2 MB/s  0:00:00
+#10 12.61 Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+#10 12.65    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 13.7 MB/s  0:00:00
+#10 12.65 Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+#10 12.91 Installing collected packages: mpmath, urllib3, typing-extensions, sympy, pillow, numpy, networkx, MarkupSafe, idna, filelock, charset_normalizer, certifi, requests, jinja2, torch, torchvision, torchaudio
+#10 29.06 
+#10 29.07 Successfully installed MarkupSafe-3.0.2 certifi-2025.8.3 charset_normalizer-3.4.3 filelock-3.19.1 idna-3.10 jinja2-3.1.6 mpmath-1.3.0 networkx-3.4.2 numpy-2.2.6 pillow-11.3.0 requests-2.32.5 sympy-1.14.0 torch-2.0.0+cpu torchaudio-2.0.1+cpu torchvision-0.15.1+cpu typing-extensions-4.15.0 urllib3-2.5.0
+#10 DONE 31.5s
+
+#11 [ 7/11] RUN pip install torch-scatter==2.1.1 torch-cluster==1.6.1 torch-spline-conv==1.2.2 torch-sparse==0.6.17 -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+#11 0.489 Looking in links: https://data.pyg.org/whl/torch-2.0.0+cpu.html
+#11 0.828 Collecting torch-scatter==2.1.1
+#11 0.963   Downloading https://data.pyg.org/whl/torch-2.0.0%2Bcpu/torch_scatter-2.1.1%2Bpt20cpu-cp310-cp310-linux_x86_64.whl (504 kB)
+#11 1.003 Collecting torch-cluster==1.6.1
+#11 1.144   Downloading https://data.pyg.org/whl/torch-2.0.0%2Bcpu/torch_cluster-1.6.1%2Bpt20cpu-cp310-cp310-linux_x86_64.whl (732 kB)
+#11 1.153      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 732.3/732.3 kB 75.9 MB/s  0:00:00
+#11 1.180 Collecting torch-spline-conv==1.2.2
+#11 1.317   Downloading https://data.pyg.org/whl/torch-2.0.0%2Bcpu/torch_spline_conv-1.2.2%2Bpt20cpu-cp310-cp310-linux_x86_64.whl (208 kB)
+#11 1.344 Collecting torch-sparse==0.6.17
+#11 1.479   Downloading https://data.pyg.org/whl/torch-2.0.0%2Bcpu/torch_sparse-0.6.17%2Bpt20cpu-cp310-cp310-linux_x86_64.whl (1.1 MB)
+#11 1.490      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 102.6 MB/s  0:00:00
+#11 1.660 Collecting scipy (from torch-cluster==1.6.1)
+#11 1.708   Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+#11 1.728 Requirement already satisfied: numpy<2.5,>=1.23.5 in /venv_seedgnn/lib/python3.10/site-packages (from scipy->torch-cluster==1.6.1) (2.2.6)
+#11 1.735 Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.7 MB)
+#11 5.159    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 37.7/37.7 MB 11.0 MB/s  0:00:03
+#11 5.357 Installing collected packages: torch-spline-conv, torch-scatter, scipy, torch-sparse, torch-cluster
+#11 8.933 
+#11 8.937 Successfully installed scipy-1.15.3 torch-cluster-1.6.1+pt20cpu torch-scatter-2.1.1+pt20cpu torch-sparse-0.6.17+pt20cpu torch-spline-conv-1.2.2+pt20cpu
+#11 DONE 9.3s
+
+#12 [ 8/11] COPY requirements.txt /home/cc/EnvGym/data-gpt-4.1mini/SEED-GNN/requirements.txt
+#12 DONE 0.0s
+
+#13 [ 9/11] RUN pip install -r requirements.txt
+#13 0.532 Collecting torch-geometric==2.3.1 (from -r requirements.txt (line 3))
+#13 0.570   Downloading torch_geometric-2.3.1.tar.gz (661 kB)
+#13 0.599      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 661.6/661.6 kB 31.3 MB/s  0:00:00
+#13 0.813   Installing build dependencies: started
+#13 1.617   Installing build dependencies: finished with status 'done'
+#13 1.619   Getting requirements to build wheel: started
+#13 2.104   Getting requirements to build wheel: finished with status 'done'
+#13 2.106   Preparing metadata (pyproject.toml): started
+#13 2.336   Preparing metadata (pyproject.toml): finished with status 'done'
+#13 2.369 Requirement already satisfied: torchvision==0.15.1 in /venv_seedgnn/lib/python3.10/site-packages (from -r requirements.txt (line 4)) (0.15.1+cpu)
+#13 2.371 Requirement already satisfied: torchaudio==2.0.1 in /venv_seedgnn/lib/python3.10/site-packages (from -r requirements.txt (line 5)) (2.0.1+cpu)
+#13 2.372 Requirement already satisfied: torch-spline-conv==1.2.2 in /venv_seedgnn/lib/python3.10/site-packages (from -r requirements.txt (line 6)) (1.2.2+pt20cpu)
+#13 2.627 Collecting numpy==1.24.4 (from -r requirements.txt (line 7))
+#13 2.632   Downloading numpy-1.24.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.6 kB)
+#13 2.779 Collecting pandas==2.0.3 (from -r requirements.txt (line 8))
+#13 2.784   Downloading pandas-2.0.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (18 kB)
+#13 2.828 Collecting ogb==1.3.6 (from -r requirements.txt (line 9))
+#13 2.834   Downloading ogb-1.3.6-py3-none-any.whl.metadata (6.2 kB)
+#13 2.878 Collecting tqdm (from torch-geometric==2.3.1->-r requirements.txt (line 3))
+#13 2.883   Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+#13 2.891 Requirement already satisfied: scipy in /venv_seedgnn/lib/python3.10/site-packages (from torch-geometric==2.3.1->-r requirements.txt (line 3)) (1.15.3)
+#13 2.892 Requirement already satisfied: jinja2 in /venv_seedgnn/lib/python3.10/site-packages (from torch-geometric==2.3.1->-r requirements.txt (line 3)) (3.1.6)
+#13 2.892 Requirement already satisfied: requests in /venv_seedgnn/lib/python3.10/site-packages (from torch-geometric==2.3.1->-r requirements.txt (line 3)) (2.32.5)
+#13 2.919 Collecting pyparsing (from torch-geometric==2.3.1->-r requirements.txt (line 3))
+#13 2.924   Downloading pyparsing-3.2.3-py3-none-any.whl.metadata (5.0 kB)
+#13 3.024 Collecting scikit-learn (from torch-geometric==2.3.1->-r requirements.txt (line 3))
+#13 3.032   Downloading scikit_learn-1.7.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (11 kB)
+#13 3.143 Collecting psutil>=5.8.0 (from torch-geometric==2.3.1->-r requirements.txt (line 3))
+#13 3.148   Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (22 kB)
+#13 3.157 Requirement already satisfied: torch==2.0.0 in /venv_seedgnn/lib/python3.10/site-packages (from torchvision==0.15.1->-r requirements.txt (line 4)) (2.0.0+cpu)
+#13 3.158 Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /venv_seedgnn/lib/python3.10/site-packages (from torchvision==0.15.1->-r requirements.txt (line 4)) (11.3.0)
+#13 3.174 Collecting python-dateutil>=2.8.2 (from pandas==2.0.3->-r requirements.txt (line 8))
+#13 3.179   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+#13 3.223 Collecting pytz>=2020.1 (from pandas==2.0.3->-r requirements.txt (line 8))
+#13 3.228   Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+#13 3.245 Collecting tzdata>=2022.1 (from pandas==2.0.3->-r requirements.txt (line 8))
+#13 3.250   Downloading tzdata-2025.2-py2.py3-none-any.whl.metadata (1.4 kB)
+#13 3.304 Collecting six>=1.12.0 (from ogb==1.3.6->-r requirements.txt (line 9))
+#13 3.309   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+#13 3.312 Requirement already satisfied: urllib3>=1.24.0 in /venv_seedgnn/lib/python3.10/site-packages (from ogb==1.3.6->-r requirements.txt (line 9)) (2.5.0)
+#13 3.322 Collecting outdated>=0.2.0 (from ogb==1.3.6->-r requirements.txt (line 9))
+#13 3.329   Downloading outdated-0.2.2-py2.py3-none-any.whl.metadata (4.7 kB)
+#13 3.333 Requirement already satisfied: filelock in /venv_seedgnn/lib/python3.10/site-packages (from torch==2.0.0->torchvision==0.15.1->-r requirements.txt (line 4)) (3.19.1)
+#13 3.334 Requirement already satisfied: typing-extensions in /venv_seedgnn/lib/python3.10/site-packages (from torch==2.0.0->torchvision==0.15.1->-r requirements.txt (line 4)) (4.15.0)
+#13 3.334 Requirement already satisfied: sympy in /venv_seedgnn/lib/python3.10/site-packages (from torch==2.0.0->torchvision==0.15.1->-r requirements.txt (line 4)) (1.14.0)
+#13 3.334 Requirement already satisfied: networkx in /venv_seedgnn/lib/python3.10/site-packages (from torch==2.0.0->torchvision==0.15.1->-r requirements.txt (line 4)) (3.4.2)
+#13 3.336 Requirement already satisfied: setuptools>=44 in /venv_seedgnn/lib/python3.10/site-packages (from outdated>=0.2.0->ogb==1.3.6->-r requirements.txt (line 9)) (65.5.0)
+#13 3.345 Collecting littleutils (from outdated>=0.2.0->ogb==1.3.6->-r requirements.txt (line 9))
+#13 3.351   Downloading littleutils-0.2.4-py3-none-any.whl.metadata (679 bytes)
+#13 3.396 Collecting joblib>=1.2.0 (from scikit-learn->torch-geometric==2.3.1->-r requirements.txt (line 3))
+#13 3.400   Downloading joblib-1.5.1-py3-none-any.whl.metadata (5.6 kB)
+#13 3.413 Collecting threadpoolctl>=3.1.0 (from scikit-learn->torch-geometric==2.3.1->-r requirements.txt (line 3))
+#13 3.420   Downloading threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+#13 3.466 Requirement already satisfied: MarkupSafe>=2.0 in /venv_seedgnn/lib/python3.10/site-packages (from jinja2->torch-geometric==2.3.1->-r requirements.txt (line 3)) (3.0.2)
+#13 3.477 Requirement already satisfied: charset_normalizer<4,>=2 in /venv_seedgnn/lib/python3.10/site-packages (from requests->torch-geometric==2.3.1->-r requirements.txt (line 3)) (3.4.3)
+#13 3.478 Requirement already satisfied: idna<4,>=2.5 in /venv_seedgnn/lib/python3.10/site-packages (from requests->torch-geometric==2.3.1->-r requirements.txt (line 3)) (3.10)
+#13 3.479 Requirement already satisfied: certifi>=2017.4.17 in /venv_seedgnn/lib/python3.10/site-packages (from requests->torch-geometric==2.3.1->-r requirements.txt (line 3)) (2025.8.3)
+#13 3.484 Requirement already satisfied: mpmath<1.4,>=1.1.0 in /venv_seedgnn/lib/python3.10/site-packages (from sympy->torch==2.0.0->torchvision==0.15.1->-r requirements.txt (line 4)) (1.3.0)
+#13 3.494 Downloading numpy-1.24.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.3 MB)
+#13 4.887    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.3/17.3 MB 12.3 MB/s  0:00:01
+#13 4.896 Downloading pandas-2.0.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.3 MB)
+#13 6.057    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.3/12.3 MB 10.5 MB/s  0:00:01
+#13 6.063 Downloading ogb-1.3.6-py3-none-any.whl (78 kB)
+#13 6.078 Downloading outdated-0.2.2-py2.py3-none-any.whl (7.5 kB)
+#13 6.086 Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (277 kB)
+#13 6.118 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#13 6.142 Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+#13 6.182 Downloading scikit_learn-1.7.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.7 MB)
+#13 7.028    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.7/9.7 MB 11.3 MB/s  0:00:00
+#13 7.033 Downloading joblib-1.5.1-py3-none-any.whl (307 kB)
+#13 7.072 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+#13 7.079 Downloading threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+#13 7.086 Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+#13 7.098 Downloading tzdata-2025.2-py2.py3-none-any.whl (347 kB)
+#13 7.134 Downloading littleutils-0.2.4-py3-none-any.whl (8.1 kB)
+#13 7.141 Downloading pyparsing-3.2.3-py3-none-any.whl (111 kB)
+#13 7.299 Building wheels for collected packages: torch-geometric
+#13 7.300   Building wheel for torch-geometric (pyproject.toml): started
+#13 7.920   Building wheel for torch-geometric (pyproject.toml): finished with status 'done'
+#13 7.928   Created wheel for torch-geometric: filename=torch_geometric-2.3.1-py3-none-any.whl size=910496 sha256=c4d44fdce36a1c98ae639a1b46b45a1153e9c0708590cab622553c60d4276fe1
+#13 7.929   Stored in directory: /root/.cache/pip/wheels/ac/dc/30/e2874821ff308ee67dcd7a66dbde912411e19e35a1addda028
+#13 7.948 Successfully built torch-geometric
+#13 8.090 Installing collected packages: pytz, tzdata, tqdm, threadpoolctl, six, pyparsing, psutil, numpy, littleutils, joblib, python-dateutil, outdated, scikit-learn, pandas, torch-geometric, ogb
+#13 8.523   Attempting uninstall: numpy
+#13 8.525     Found existing installation: numpy 2.2.6
+#13 8.581     Uninstalling numpy-2.2.6:
+#13 8.805       Successfully uninstalled numpy-2.2.6
+#13 16.88 
+#13 16.88 Successfully installed joblib-1.5.1 littleutils-0.2.4 numpy-1.24.4 ogb-1.3.6 outdated-0.2.2 pandas-2.0.3 psutil-7.0.0 pyparsing-3.2.3 python-dateutil-2.9.0.post0 pytz-2025.2 scikit-learn-1.7.1 six-1.17.0 threadpoolctl-3.6.0 torch-geometric-2.3.1 tqdm-4.67.1 tzdata-2025.2
+#13 DONE 17.5s
+
+#14 [10/11] COPY . /home/cc/EnvGym/data-gpt-4.1mini/SEED-GNN
+#14 DONE 0.0s
+
+#15 [11/11] RUN chmod +x scripts/pretrain/seed_gnn/cora.sh scripts/edit/seed_gnn/gcn/cora.sh
+#15 DONE 0.2s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 12.8s done
+#16 writing image sha256:c8406671894c8f9a5da0ba9ab8f0119b9aabe37a36a5a422544d59c5bb142200 done
+#16 naming to docker.io/library/envgym_test_1756291110 done
+#16 DONE 12.8s
+
+
+=== Runtime Log ===  
+Runtime Status: Success
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

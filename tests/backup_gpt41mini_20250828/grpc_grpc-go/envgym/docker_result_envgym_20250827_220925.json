@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_220925",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756332563",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.66kB done\n#1 DONE 0.0s\n\n#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.4\n#2 DONE 0.1s\n\n#3 docker-image://docker.io/docker/dockerfile:1.4@sha256:9ba7531bd80fb0a858632727cf7a112fbfd19b17e94c4e84ced81e24ef1a0dbc\n#3 CACHED\n\n#4 [internal] load .dockerignore\n#4 transferring context: 2B done\n#4 DONE 0.0s\n\n#5 [internal] load metadata for docker.io/library/ubuntu:22.04\n#5 DONE 0.1s\n\n#6 [ 1/12] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#6 DONE 0.0s\n\n#7 [ 2/12] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     git     bash     openssl     iproute2     iputils-ping     net-tools     iputils-tracepath     locales     && rm -rf /var/lib/apt/lists/*\n#7 CACHED\n\n#8 [ 3/12] RUN locale-gen en_US.UTF-8\n#8 CACHED\n\n#9 [ 4/12] RUN set -eux;     arch=amd64;     curl -fsSL https://golang.org/dl/go1.20.7.linux-${arch}.tar.gz -o /tmp/go1.20.tar.gz;     tar -C /usr/local -xzf /tmp/go1.20.tar.gz;     mv /usr/local/go /usr/local/go1.20;     rm /tmp/go1.20.tar.gz;     curl -fsSL https://golang.org/dl/go1.21.0.linux-${arch}.tar.gz -o /tmp/go1.21.tar.gz;     tar -C /usr/local -xzf /tmp/go1.21.tar.gz;     rm /tmp/go1.21.tar.gz\n#9 CACHED\n\n#10 [internal] load build context\n#10 transferring context: 262.47kB 0.1s done\n#10 DONE 0.1s\n\n#11 [ 5/12] RUN useradd -m -u 1000 appuser\n#11 DONE 0.2s\n\n#12 [ 6/12] WORKDIR /src\n#12 DONE 0.0s\n\n#13 [ 7/12] COPY --chown=appuser:appuser . /src\n#13 DONE 0.3s\n\n#14 [ 8/12] RUN test -f go.mod && test -f go.sum\n#14 DONE 0.2s\n\n#15 [ 9/12] RUN go mod download\n#15 0.454 go: go: could not create module cache: mkdir /go: permission denied\n#15 ERROR: process \"/bin/sh -c go mod download\" did not complete successfully: exit code: 1\n------\n > [ 9/12] RUN go mod download:\n0.454 go: go: could not create module cache: mkdir /go: permission denied\n------\nERROR: failed to build: failed to solve: process \"/bin/sh -c go mod download\" did not complete successfully: exit code: 1\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

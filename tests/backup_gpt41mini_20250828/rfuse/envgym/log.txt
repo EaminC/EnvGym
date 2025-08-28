@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250828_024123 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756348883
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+16 |     WORKDIR /app
+17 |
+18 | >>> COPY ./rfuse /app/rfuse
+19 |
+20 |     WORKDIR /app/rfuse
+--------------------
+ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::v7g9yeh4wxizyub9lo4idgmyu: "/rfuse": not found
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

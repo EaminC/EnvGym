@@ -1,0 +1,174 @@
+=== Docker Execution Log - 20250828_044602 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756356361
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.17kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/35] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.74kB done
+#5 DONE 0.0s
+
+#6 [26/35] RUN set -eux; cargo generate-lockfile
+#6 CACHED
+
+#7 [22/35] RUN cargo clean
+#7 CACHED
+
+#8 [ 2/35] RUN apt-get update && apt-get install -y --no-install-recommends     curl     git     build-essential     ca-certificates     pkg-config     libssl-dev     llvm     clang     cmake     iproute2     dnsutils     net-tools     && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [28/35] RUN if [ -f Cargo.lock ]; then echo "===== Cargo.lock =====" && head -40 Cargo.lock; fi
+#9 CACHED
+
+#10 [ 4/35] RUN rustup install nightly
+#10 CACHED
+
+#11 [23/35] RUN echo "Network interfaces:" && ip addr show
+#11 CACHED
+
+#12 [25/35] RUN echo "Testing connectivity to crates.io:" && curl -v https://crates.io || true
+#12 CACHED
+
+#13 [10/35] COPY --chown=cc:cc Cargo.toml Cargo.toml
+#13 CACHED
+
+#14 [19/35] COPY --chown=cc:cc SECURITY.md SECURITY.md
+#14 CACHED
+
+#15 [ 5/35] RUN rustc --version && cargo --version && rustc +nightly --version
+#15 CACHED
+
+#16 [12/35] COPY --chown=cc:cc benches benches
+#16 CACHED
+
+#17 [24/35] RUN echo "DNS configuration:" && cat /etc/resolv.conf
+#17 CACHED
+
+#18 [ 3/35] RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+#18 CACHED
+
+#19 [ 6/35] RUN useradd -m cc
+#19 CACHED
+
+#20 [20/35] RUN echo 'msrv = "1.57"' > clippy.toml
+#20 CACHED
+
+#21 [16/35] COPY --chown=cc:cc CHANGELOG.md CHANGELOG.md
+#21 CACHED
+
+#22 [ 9/35] WORKDIR /home/cc/tokio-rs_bytes
+#22 CACHED
+
+#23 [11/35] COPY --chown=cc:cc src src
+#23 CACHED
+
+#24 [ 8/35] RUN chown -R cc:cc /home/cc
+#24 CACHED
+
+#25 [ 7/35] WORKDIR /home/cc/tokio-rs_bytes
+#25 CACHED
+
+#26 [13/35] COPY --chown=cc:cc ci ci
+#26 CACHED
+
+#27 [21/35] RUN mkdir -p .cargo && echo -e '[build]\nrustflags = ["--cfg", "docsrs"]' > .cargo/config.toml
+#27 CACHED
+
+#28 [15/35] COPY --chown=cc:cc clippy.toml clippy.toml
+#28 CACHED
+
+#29 [18/35] COPY --chown=cc:cc README.md README.md
+#29 CACHED
+
+#30 [29/35] RUN cargo metadata --no-deps
+#30 CACHED
+
+#31 [17/35] COPY --chown=cc:cc LICENSE LICENSE
+#31 CACHED
+
+#32 [27/35] RUN echo "===== Cargo.toml =====" && head -40 Cargo.toml
+#32 CACHED
+
+#33 [14/35] COPY --chown=cc:cc tests tests
+#33 CACHED
+
+#34 [30/35] RUN set -eux; cargo update
+#34 CACHED
+
+#35 [31/35] RUN set -eux;     cargo fetch --verbose || (echo "cargo fetch failed, showing target/cargo-fetch.log:" && cat target/cargo-fetch.log || true; false)
+#35 0.185 + cargo fetch --verbose
+#35 0.252     Updating crates.io index
+#35 0.321 warning: failed to write cache, path: /usr/local/cargo/registry/index/index.crates.io-1949cf8c6b5b557f/.cache/po/rt/portable-atomic, error: Permission denied (os error 13)
+#35 0.429 warning: failed to save last-use data
+#35 0.429 This may prevent cargo from accurately tracking what is being used in its global cache. This information is used for automatically removing unused data in the cache.
+#35 0.429 
+#35 0.429 unable to open database file: /usr/local/cargo/.global-cache
+#35 0.429 
+#35 0.429 Caused by:
+#35 0.429   Error code 14: Unable to open the database file
+#35 0.453  Downloading crates ...
+#35 0.501   Downloaded unicode-ident v1.0.18
+#35 0.508 error: failed to create directory `/usr/local/cargo/registry/cache/index.crates.io-1949cf8c6b5b557f`
+#35 0.508 
+#35 0.508 Caused by:
+#35 0.508   Permission denied (os error 13)
+#35 0.512 + echo 'cargo fetch failed, showing target/cargo-fetch.log:'
+#35 0.512 + cat target/cargo-fetch.log
+#35 0.512 cargo fetch failed, showing target/cargo-fetch.log:
+#35 0.513 cat: target/cargo-fetch.log: No such file or directory
+#35 0.513 + true
+#35 0.513 + false
+#35 ERROR: process "/bin/bash -c set -eux;     cargo fetch --verbose || (echo \"cargo fetch failed, showing target/cargo-fetch.log:\" && cat target/cargo-fetch.log || true; false)" did not complete successfully: exit code: 1
+------
+ > [31/35] RUN set -eux;     cargo fetch --verbose || (echo "cargo fetch failed, showing target/cargo-fetch.log:" && cat target/cargo-fetch.log || true; false):
+0.508 error: failed to create directory `/usr/local/cargo/registry/cache/index.crates.io-1949cf8c6b5b557f`
+0.508 
+0.508 Caused by:
+0.508   Permission denied (os error 13)
+0.512 + echo 'cargo fetch failed, showing target/cargo-fetch.log:'
+0.512 + cat target/cargo-fetch.log
+0.512 cargo fetch failed, showing target/cargo-fetch.log:
+0.513 cat: target/cargo-fetch.log: No such file or directory
+0.513 + true
+0.513 + false
+------
+envgym.dockerfile:70
+--------------------
+  69 |     
+  70 | >>> RUN set -eux; \
+  71 | >>>     cargo fetch --verbose || (echo "cargo fetch failed, showing target/cargo-fetch.log:" && cat target/cargo-fetch.log || true; false)
+  72 |     
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/bash -c set -eux;     cargo fetch --verbose || (echo \"cargo fetch failed, showing target/cargo-fetch.log:\" && cat target/cargo-fetch.log || true; false)" did not complete successfully: exit code: 1
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

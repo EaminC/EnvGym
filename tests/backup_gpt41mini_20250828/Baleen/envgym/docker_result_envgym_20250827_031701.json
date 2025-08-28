@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_031701",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756264620",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.24kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.3s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/15] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [ 3/15] RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/1.4.1 -o /tmp/micromamba.tar.bz2     && mkdir -p /opt/micromamba     && tar -xjf /tmp/micromamba.tar.bz2 -C /opt/micromamba --strip-components=1 bin/micromamba     && rm /tmp/micromamba.tar.bz2     && chmod +x /opt/micromamba/micromamba\n#5 CACHED\n\n#6 [ 5/15] WORKDIR /home/cc\n#6 CACHED\n\n#7 [ 4/15] RUN useradd -m cc\n#7 CACHED\n\n#8 [ 6/15] RUN git clone --recurse-submodules https://github.com/wonglkd/Baleen-FAST24.git Baleen-FAST24 &&     chown -R cc:cc /home/cc/Baleen-FAST24\n#8 CACHED\n\n#9 [ 7/15] WORKDIR /home/cc/Baleen-FAST24\n#9 CACHED\n\n#10 [ 2/15] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     wget     git     bash     bzip2     unzip     build-essential     locales     && locale-gen en_US.UTF-8     && rm -rf /var/lib/apt/lists/*\n#10 CACHED\n\n#11 [ 8/15] RUN ls -l BCacheSim/install/env_cachelib-py-3.11.yaml && cat BCacheSim/install/env_cachelib-py-3.11.yaml\n#11 CACHED\n\n#12 [ 9/15] RUN bash -c \"source /opt/micromamba/etc/profile.d/micromamba.sh && micromamba config append channels conda-forge && micromamba config list\"\n#12 0.222 bash: line 1: /opt/micromamba/etc/profile.d/micromamba.sh: No such file or directory\n#12 ERROR: process \"/bin/bash -c bash -c \\\"source /opt/micromamba/etc/profile.d/micromamba.sh && micromamba config append channels conda-forge && micromamba config list\\\"\" did not complete successfully: exit code: 1\n------\n > [ 9/15] RUN bash -c \"source /opt/micromamba/etc/profile.d/micromamba.sh && micromamba config append channels conda-forge && micromamba config list\":\n0.222 bash: line 1: /opt/micromamba/etc/profile.d/micromamba.sh: No such file or directory\n------\nenvgym.dockerfile:44\n--------------------\n  42 |     \n  43 |     # Append channel config separately with debugging\n  44 | >>> RUN bash -c \"source /opt/micromamba/etc/profile.d/micromamba.sh && micromamba config append channels conda-forge && micromamba config list\"\n  45 |     \n  46 |     # Create environment with debugging and explicit bash shell\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/bash -c bash -c \\\"source /opt/micromamba/etc/profile.d/micromamba.sh && micromamba config append channels conda-forge && micromamba config list\\\"\" did not complete successfully: exit code: 1\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

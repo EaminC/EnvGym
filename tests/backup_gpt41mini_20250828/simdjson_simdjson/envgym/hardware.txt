@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/simdjson_simdjson; project likely CPU-based given lack of NVIDIA GPU support  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: CPU-compatible Linux base images (e.g., ubuntu:22.04, debian, or alpine x86_64 variants)  
+- GPU: No NVIDIA GPU detected; no CUDA base image required  
+- Instruction Notes: Use standard Linux tooling; no GPU-specific instructions; leverage overlay2 storage driver efficiency; ensure compatibility with systemd cgroup v2 if using ENTRYPOINT or CMD scripts requiring init  
+- Docker Version: 28.3.2; supports BuildKit and Docker Buildx; GPU builds not applicable due to no NVIDIA GPU detected

@@ -1,0 +1,40 @@
+Adjusted Plan:
+
+- Working Directory: All operations and path references should be relative to `/home/cc/EnvGym/data-gpt-4.1mini/CrossPrefetch` to maintain consistency and avoid path conflicts.
+
+- Architecture and Base Image:
+  - Use Docker base images compatible with x86_64 architecture.
+  - Prefer standard Ubuntu or Debian base images without any GPU or CUDA-specific tags, ensuring compatibility with the detected CPU architecture.
+  - Example base image: `ubuntu:22.04` or `debian:bookworm-slim`.
+
+- GPU and CUDA:
+  - Since no NVIDIA GPU is detected and `nvidia-smi` fails, do not use any CUDA or GPU-specific base images or instructions.
+  - Avoid installing CUDA toolkits or GPU drivers.
+  - Remove any GPU-related environment variables or build arguments.
+
+- Build and Runtime Instructions:
+  - Leverage multi-core CPU capabilities for parallel builds, e.g., setting `make -j$(nproc)` or equivalent in build steps.
+  - Ensure no GPU-specific flags or dependencies are used in compilation or runtime.
+
+- Docker Build:
+  - Use Docker version 28.3.2 features like BuildKit and Buildx for efficient builds.
+  - Do not enable GPU build features or runtime flags such as `--gpus`.
+  - Specify platform explicitly in build and run commands as `--platform=linux/amd64` to ensure the correct architecture.
+
+- Memory and Storage:
+  - Verify available RAM and storage on host to ensure build and runtime requirements are met, adjusting resource limits if necessary.
+  - Since no GPU is used, memory allocation should focus on CPU and typical application needs.
+
+- Development Tools:
+  - Use development tools and libraries compatible with x86_64 Linux environment.
+  - Confirm versions of compilers, interpreters, and libraries are compatible with chosen base image and project requirements.
+
+- Paths and Environment:
+  - All project files, builds, and outputs should reside within `/home/cc/EnvGym/data-gpt-4.1mini/CrossPrefetch` or its subdirectories.
+  - Avoid absolute paths outside this directory to ensure portability and cleanliness.
+
+- Documentation and Scripts:
+  - Update any scripts, Dockerfiles, or documentation to reflect the absence of GPU requirements and the correct platform.
+  - Clearly document the CPU-only environment and any build parallelism flags used.
+
+This adjusted plan ensures full compatibility with the detected hardware environment (x86_64 CPU, no GPU), maintains correct path usage, and leverages available CPU resources efficiently without reliance on GPU-specific features.

@@ -1,0 +1,165 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64 LINUX ENVIRONMENT) ===
+
+1. DOWNLOADS NEEDED:  
+   - Rust toolchain, version **1.80.0** or greater (https://rustup.rs/)  
+     *Ensure rustc version is at least 1.80.0 as required by Rayon, workspace rust-version set to 1.80 for consistency, and CI workflows.*  
+     *Supports Rust editions 2018 and 2021 required by workspace members including `alt-core`, `highlander`, `rayon-core`, and `rayon-demo`.*  
+     *Use rustup default installation for x86_64 Linux platform.*  
+   - Cargo (comes with Rust toolchain)  
+   - Git (for cloning repositories and version control)  
+   - Optional (for WebAssembly support):  
+     - wasm-pack (https://rustwasm.github.io/wasm-pack/installer/)  
+     - Node.js and npm (https://nodejs.org/)  
+     - wasm-bindgen CLI (https://rustwasm.github.io/wasm-bindgen/installer/)  
+     - wasm-bindgen-rayon adapter (https://github.com/RReverser/wasm-bindgen-rayon)  
+   - jq (JSON processor)  
+     *Required by CI workflow success jobs; usually pre-installed on CI runners or installable locally.*  
+   - curl (for fetching wasmtime in CI)  
+     *Ensure availability for WASI WebAssembly testing environment setup.*  
+   - gcc-multilib (for i686 target builds on Ubuntu)  
+     *Required to build and test for 32-bit Linux target in CI environment.*  
+     *Install via `sudo apt-get install gcc-multilib` on Ubuntu or equivalent.*  
+   - bash/sh shell support on CI runners  
+     *Required to execute scripts such as `./ci/highlander.sh` in the workflows.*  
+   - Environment variable `RUST_MIN_STACK=16777216` (16MB stack) set in PR workflow jobs to support deep recursion in tests/debugging  
+   - Ensure network access to GitHub for Dependabot, GitHub Actions operations, and for checkout actions  
+   - CI runners must support GitHub Actions features used: `actions/checkout@v4`, `dtolnay/rust-toolchain@<version>` with component installation (e.g., rustfmt)  
+   - jq tool used in PR workflow success job step to verify job statuses  
+   - Confirm availability of all workspace dependencies and their versions as specified in `Cargo.toml` workspace dependencies:  
+     - crossbeam-deque 0.8.1  
+     - crossbeam-utils 0.8.0  
+     - either 1 (default-features disabled)  
+     - libc 0.2  
+     - rand 0.9  
+     - rand_xorshift 0.4  
+     - scoped-tls 1.0  
+     - wasm_sync 0.1.0 (optional feature for wasm web_spin_lock)  
+     - cgmath 0.18  
+     - docopt 1  
+     - fixedbitset 0.5  
+     - glium 0.36  
+     - regex 1  
+     - winit 0.30  
+     - serde 1.0.85 (with "derive" feature)  
+     - doc-comment 0.3 (dev-dependency in rayon-demo)  
+     - num 0.4 (dev-dependency in rayon-demo)  
+     - winapi 0.3 (with "processthreadsapi" feature, Windows only)  
+   - Rust edition set to 2021 for the main workspace including `rayon-demo`; ensure toolchain supports edition 2021 features  
+   - Rust edition 2018 support required for `alt-core`, `highlander`, and `rayon-core` packages (per their `Cargo.toml`)  
+     *Rust 1.80+ supports edition 2018; no additional toolchain versions required.*  
+   - Build dependencies for `alt-core`, `highlander`, `rayon-core`, and `rayon-demo` packages, including:  
+     - Ensure build scripts (`build.rs`) can be executed during build for `alt-core` and `rayon-core`  
+     - `highlander` and `rayon-demo` have no build scripts but depend on other workspace members via path dependencies  
+     - Confirm these path dependencies are correctly resolved in CI and local builds  
+   - Confirm CI environment supports building packages using different Rust editions within the same workspace or repository (e.g., 2021 and 2018 editions coexist)  
+   - Confirm that the `highlander` package dependencies on `alt-core` and `rayon-core`, and `rayon-demo` dependency on `rayon` package are supported by the build system and CI workflows  
+   - Confirm that the optional `web_spin_lock` feature in `rayon-core` switches synchronization primitives for the `wasm32-unknown-unknown` target and relies on the `wasm_sync` dependency  
+   - Ensure wasm_sync dependency is available and optional in workspace for WebAssembly target builds that enable `web_spin_lock`  
+
+2. FILES TO CREATE:  
+   - `Cargo.toml` at project root  
+     *Workspace manifest configured as per original plan, with members and dependencies updated.*  
+     *Ensure paths and workspace members match Linux filesystem layout (case-sensitive).*  
+   - `rayon-demo/Cargo.toml` (new file)  
+     *As per original content.*  
+   - `rayon-core/Cargo.toml`  
+     *As per original content.*  
+   - `ci/alt-core/Cargo.toml` and `ci/alt-core/build.rs`  
+     *As per original content, ensure build script is executable (`chmod +x ci/alt-core/build.rs` if a script, or proper Rust build.rs file).*  
+   - `ci/highlander/Cargo.toml`  
+     *As per original content.*  
+   - `src/main.rs` or appropriate Rust source files  
+     *Import Rayon prelude and add example usage as per original plan.*  
+   - `src/iter/plumbing/README.md`  
+     *Add detailed design notes per original plan.*  
+   - `rayon-demo/data/` and `rayon-demo/data/tsp/` directories with required files and READMEs  
+   - `rayon-demo/examples/README.md`  
+   - Optional WebAssembly config files (`package.json`, wasm-bindgen setup) if targeting WASM  
+   - `.gitignore`  
+     *Ensure ignore patterns respect Linux filesystem paths.*  
+   - License files: `LICENSE-APACHE`, `LICENSE-MIT`  
+   - `.github/dependabot.yml`  
+   - `.github/workflows/ci.yaml`, `.github/workflows/main.yaml`, `.github/workflows/pr.yaml`  
+     *Include all workspace members (`rayon-core`, `alt-core`, `highlander`, `rayon-demo`) in build and test jobs.*  
+     *Ensure `./ci/highlander.sh` script exists, is executable, and used in workflows.*  
+     *Use bash/sh shell compatible syntax.*  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - As detailed in original plan, covering correctness, data races, performance, edge cases, WebAssembly features, package-specific tests, and CI workflow coverage.  
+   - Ensure tests run on x86_64 Linux environment successfully.  
+   - Confirm platform-specific dependencies:  
+     - `libc` on Unix (Linux) targets in `rayon-demo`  
+     - `winapi` only on Windows targets, no effect on Linux builds  
+   - Maintain verbose output in CI test runs for better diagnostics.  
+   - Confirm `jq` is used in PR workflow success job to verify job statuses.  
+
+4. COMPLETE TODO LIST:  
+   1. **Install Rust Toolchain**  
+      - Use https://rustup.rs/ on x86_64 Linux platform to install Rust ≥1.80.0  
+      - Verify with `rustc --version` and `cargo --version`  
+   2. **Install Git**  
+      - Install via package manager (e.g., `sudo apt-get install git`) or from https://git-scm.com/  
+      - Verify with `git --version`  
+   3. **Set up project directory**  
+      - Clone Rayon repository or create workspace per Linux path conventions  
+      - Verify `Cargo.toml` workspace manifest with correct members and paths  
+   4. **Add dependencies and workspace members**  
+      - Use provided `Cargo.toml` files, ensure Linux path separators and case sensitivity respected  
+      - Make sure build scripts (`build.rs`) are present and executable  
+      - Run `cargo build` to verify no errors on x86_64 Linux  
+   5. **Add internal design documentation**  
+      - Create/update `src/iter/plumbing/README.md`  
+   6. **Write example code using Rayon**  
+      - Add example in `src/main.rs` or module as per original plan  
+      - Run `cargo run` to verify functionality  
+   7. **Create and run test cases**  
+      - Add tests as described, run `cargo test` to verify all pass on Linux x86_64  
+   8. **Set up demo environment**  
+      - Ensure `rayon-demo` directory and data files exist with proper permissions  
+      - Run demos using `cargo run --release -- nbody visualize` on Linux  
+   9. **Configure Dependabot**  
+      - Add `.github/dependabot.yml` as specified  
+      - Confirm permissions and branch protections support Dependabot PRs  
+   10. **Set up GitHub Actions CI workflows**  
+       - Use `.github/workflows/ci.yaml` with multi-OS and multi-toolchain jobs including Ubuntu (matching local Linux x86_64 environment), Windows, and macOS  
+       - `main.yaml` and `pr.yaml` workflows configured as per plan  
+       - Ensure runners have gcc-multilib, curl, jq installed or install them in workflow steps  
+       - Confirm workflows use bash/sh scripts compatible with Linux environment  
+       - Confirm `./ci/highlander.sh` is executable (`chmod +x ./ci/highlander.sh`)  
+       - Confirm environment variable `RUST_MIN_STACK=16777216` set in PR workflows  
+       - Confirm jq used for success checks in PR workflow  
+   11. **(Optional) WebAssembly configuration**  
+       - Install wasm-pack, wasm-bindgen CLI, and wasm-bindgen-rayon adapter as needed for WASM targets  
+       - Build and test WASM targets on Linux host (x86_64) using cross-compilation  
+       - Verify `web_spin_lock` feature behavior with `wasm_sync`  
+   12. **Configure `.gitignore`**  
+       - Add ignore patterns for Linux build artifacts (`target/`), editor files, and optionally demo data files if large  
+   13. **Verify licensing files**  
+       - Confirm presence and correctness of `LICENSE-APACHE` and `LICENSE-MIT`  
+       - Validate README files in `rayon-demo/data/` and `rayon-demo/data/tsp/` state licensing clearly  
+   14. **Documentation and contribution readiness**  
+       - Review and update README files as needed for Linux environment  
+       - Document CI workflows, Dependabot, and contribution guidelines with Linux context  
+   15. **Final verification**  
+       - Perform local build and test on x86_64 Linux environment:  
+         - `cargo check`  
+         - `cargo build --release`  
+         - `cargo test`  
+       - Run demos and TSP solver tests to validate integration and parallel execution  
+       - Manually run interactive tests in `rayon-demo/examples/` following README instructions  
+       - Confirm CI workflows run successfully on GitHub Actions, including Ubuntu runners that match local environment  
+       - Confirm Dependabot PRs trigger workflows and pass tests  
+       - Confirm formatting checks pass with rustfmt  
+       - Confirm environment variable and jq usage in PR workflows  
+       - Monitor CI logs for verbose output and troubleshoot as needed  
+       - Document any Linux-specific setup notes or quirks  
+
+**Notes on Adjustments:**  
+- The plan assumes Linux x86_64 environment and Ubuntu-compatible tooling; paths and case sensitivity must be respected accordingly.  
+- No GPU or CUDA-specific instructions needed; no GPU dependencies.  
+- gcc-multilib installation step specified for i686 target builds on Ubuntu.  
+- Shell scripts and commands assume bash/sh compatibility on Linux.  
+- CI workflows and local environment are aligned on platform and tools to minimize discrepancies.  
+- WebAssembly target builds cross-compile on x86_64 Linux host; WASM tooling installed locally or in CI as optional step.  
+- All file paths and executable permissions should conform to Linux filesystem standards.  
+- No changes needed for memory or storage requirements based on provided hardware info; assume standard modern Linux development environment resources.

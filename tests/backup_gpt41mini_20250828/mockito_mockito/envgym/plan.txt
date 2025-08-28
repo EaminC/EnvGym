@@ -1,0 +1,84 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR HARDWARE) ===
+
+1. DOWNLOADS NEEDED:  
+   - Java Development Kit (JDK) 11 or higher (Mockito 5.x requires Java 11)  
+     - Use x86_64 compatible JDK binaries (Adoptium, Oracle, OpenJDK) for Linux amd64 architecture  
+   - Gradle build tool (compatible with the project Gradle wrapper)  
+     - Use Gradle wrapper included in the project to ensure version consistency; no separate install required unless troubleshooting  
+   - Git (for cloning and version control)  
+     - Ensure installed version supports x86_64 Linux environment  
+   - An IDE that supports Gradle projects, e.g., IntelliJ IDEA, Fleet, or Eclipse (if Eclipse, ensure Gradle Eclipse plugin support)  
+     - Install IDE compatible with Linux x86_64 environment  
+   - Optional: Docker (version 28.3.2 available) for containerizing build environment  
+     - Use amd64 base images (e.g., ubuntu, debian, alpine) for Docker builds, matching host architecture (x86_64)  
+     - GPU-based images and CUDA not applicable—do not use GPU base images  
+
+2. FILES TO CREATE:  
+   - `gradle.properties` (optional, to configure Gradle daemon, memory settings, and proxy if needed)  
+     - Given 187.5GiB RAM available, configure Gradle daemon memory settings generously (e.g., `org.gradle.jvmargs=-Xmx8g`) to optimize build speed  
+   - `.gitignore` (if not present, to exclude build artifacts, IDE files, and logs)  
+   - `settings.gradle` (if not present, to define the Gradle project structure)  
+   - Any project-specific environment config files as needed (e.g., local.properties for IDE-specific settings)  
+   - Documentation or README supplements for environment setup (optional but recommended for team onboarding)  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Unit tests for core mocking capabilities and API correctness – ensure mocks behave as expected  
+   - Integration tests to validate interaction with Java 11 features and inline mockmaker changes (Mockito 5 uses mockito-inline)  
+   - Regression tests for deprecated API removals in versions 4 and 5 to confirm no usage in codebase  
+   - Snapshot build tests to verify `-SNAPSHOT` version artifacts are correctly published and usable from Sonatype snapshot repository  
+   - Release build tests to verify version tagging and release pipeline correctness (e.g., changelog generation, release artifact publishing)  
+   - Tests covering semantic versioning compliance and backward compatibility where applicable  
+
+4. COMPLETE TODO LIST:  
+   1. **Install Java JDK 11 or above:**  
+      - Download and install Linux x86_64 JDK 11+ from official sources (Adoptium, Oracle, OpenJDK) compatible with amd64 architecture  
+      - Verify installation by running `java -version` in terminal/command prompt  
+      - Set `JAVA_HOME` environment variable to point to JDK installation directory  
+   2. **Set up Gradle build environment:**  
+      - Use included Gradle wrapper (`./gradlew` or `gradlew.bat`) for consistent Gradle version usage on Linux x86_64  
+      - Verify Gradle wrapper works by running `./gradlew --version`  
+      - Given high CPU core count (96 cores), configure Gradle for parallel builds by adding `org.gradle.parallel=true` in `gradle.properties` to speed up build times  
+   3. **Clone the Mockito project repository:**  
+      - Use `git clone https://github.com/mockito/mockito.git` on Linux x86_64 environment  
+      - Navigate into project directory and verify presence of `build.gradle` and other files  
+   4. **Import project into IDE:**  
+      - Open project folder in IntelliJ IDEA or Fleet, importing as a Gradle project on Linux x86_64  
+      - For Eclipse, run `./gradlew eclipse` before importing  
+      - Ensure IDE recognizes Gradle tasks and dependencies  
+   5. **Build the project locally:**  
+      - Run `./gradlew build` to compile and run all tests  
+      - Leverage high RAM (187.5GiB) and CPUs (96 cores) by enabling parallel build and daemon memory settings to reduce build time  
+      - Confirm build success and no test failures  
+      - Investigate and fix any build or test errors  
+   6. **Configure Sonatype snapshot repository access (optional for development):**  
+      - If publishing snapshot builds, configure credentials and repository URLs in `gradle.properties` or CI environment variables  
+      - Verify snapshot deployment by running `./gradlew publish` against snapshot repo  
+   7. **Set up release automation prerequisites:**  
+      - Ensure Git tagging capabilities with annotated tags (e.g., `git tag -a -m "Release x.y.z" vx.y.z`)  
+      - Verify CI integration to create changelogs and release notes automatically on tag push  
+      - Confirm no release creation from GitHub Web UI until supported by CI (manual release via tags only)  
+   8. **Establish test coverage verification:**  
+      - Integrate coverage tools (e.g., JaCoCo) if not already configured  
+      - Run coverage report generation and verify coverage levels meet project standards  
+   9. **Document environment setup steps internally:**  
+      - Create or update project documentation with environment setup instructions and troubleshooting tips, including notes about hardware-specific optimizations (parallel builds, memory settings)  
+   10. **Error handling and verification:**  
+       - On build or test failure, first check Java version compatibility and environment variables (`JAVA_HOME`)  
+       - Validate Gradle wrapper integrity and refresh dependencies with `./gradlew clean build --refresh-dependencies`  
+       - For IDE issues, re-import Gradle project or invalidate caches  
+       - Verify network connectivity if publishing to remote repositories fails  
+       - Use logs and CI feedback for debugging release automation issues  
+   11. **Ongoing maintenance:**  
+       - Monitor Mockito release notes and update environment accordingly (e.g., JDK upgrades, dependency version bumps)  
+       - Regularly update Gradle wrapper and plugins to latest supported versions  
+       - Keep local builds and snapshots up to date with main development branch  
+       - Encourage contributors to follow semantic versioning and release guidelines  
+
+5. DOCKER CONSIDERATIONS (If containerizing builds):  
+   - Use base images compatible with Linux x86_64 (amd64), such as `ubuntu`, `debian`, or `alpine`  
+   - Avoid GPU or CUDA base images since no NVIDIA GPU or drivers detected on host  
+   - Optimize Dockerfile for multi-core CPU by parallelizing RUN steps and using BuildKit features supported by Docker 28.3.2  
+   - Keep image size minimal to fit within moderate 46GB free storage; clean up caches and unnecessary files after build steps  
+   - Set working directory inside container to `/home/cc/EnvGym/data-gpt-4.1mini/mockito_mockito` to match host project directory, facilitating volume mounts if needed  
+
+This adjusted plan leverages the high CPU core count and large memory available on the Linux x86_64 environment, uses compatible tooling and images, and respects storage constraints to ensure an optimized and stable development and build environment for Mockito projects requiring Java 11+.

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/TabPFN, standard Linux filesystem layout, no special volume mounts indicated  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: Use amd64-compatible base images (e.g., ubuntu, debian, python official images tagged for amd64)  
+- GPU: No NVIDIA GPU detected, no CUDA base image required or applicable  
+- Instruction Notes: No GPU-specific instructions needed; ensure Dockerfile uses overlay2-compatible storage features; no userxattr support; project likely CPU-only; use COPY or ADD relative to /home/cc/EnvGym/data-gpt-4.1mini/TabPFN  
+- Docker Version: 28.3.2, supports BuildKit and docker buildx, GPU builds possible but not applicable here due to no NVIDIA GPU detected

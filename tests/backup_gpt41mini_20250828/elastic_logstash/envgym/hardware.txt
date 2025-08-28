@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/elastic_logstash; project likely CPU-focused, no GPU dependencies detected  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: Linux x86_64 compatible images (e.g., ubuntu, debian, alpine for amd64); no GPU-specific base images required  
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended  
+- Instruction Notes: Use standard CPU-optimized instructions; no GPU-related environment variables or drivers needed; ensure paths and context relative to /home/cc/EnvGym/data-gpt-4.1mini/elastic_logstash  
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build support present but not applicable due to lack of NVIDIA GPU

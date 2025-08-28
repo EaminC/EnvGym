@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/flex; project root likely at /home/cc/EnvGym/data-gpt-4.1mini
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: x86_64-compatible Linux base images (e.g., ubuntu, debian, alpine for amd64)
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU-specific instructions needed; ensure paths consistent with working directory; leverage Cgroup v2 compatible configurations if controlling resources
+- Docker Version: 28.3.2; supports BuildKit, docker buildx, and docker compose plugins; no native GPU build support needed due to absent NVIDIA GPU

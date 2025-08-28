@@ -1,0 +1,14 @@
+current progress  
+The Dockerfile is successfully building and running on an Ubuntu 20.04 base image targeting a Linux x86_64 environment. It installs all necessary dependencies including Rust (default stable toolchain), cargo-deny, pre-commit, git, python3 and pip, ripgrep, and build-essential tools. The Rust version check ensures the minimum required version 1.74.0 is met. The project source code is copied, pre-commit hooks permission is set, the project is built in release mode, and pre-commit hooks are installed. The last build and runtime logs indicate success.
+
+next step  
+1. Modify the Rust version check step to use a shell command that works correctly within the Docker RUN context, as dpkg --compare-versions might not be available or reliable; consider using Rustup to verify or enforce toolchain version instead.  
+2. Add installation of Rust toolchain components like rustfmt, clippy, and rustdoc to align with the plan’s additional tooling.  
+3. Confirm and install typos or similar spelling check tools as per the plan.  
+4. Add explicit installation and configuration steps for committed tool and other pre-commit hooks if required.  
+5. Ensure cargo-deny version compatibility is verified post-install.  
+6. Set executable permissions for any scripts or hooks beyond pre-commit if present.  
+7. Include environment variables or build arguments for multi-core compilation to optimize build speed (e.g., cargo build -j).  
+8. Add cleanup steps if needed to reduce image size.  
+9. Document environment setup steps in README or Dockerfile comments emphasizing Linux x86_64 compatibility.  
+10. Optionally add CI/CD workflow files and Renovate bot configuration integration inside the container build context.

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/CrossPrefetch, project nested under /home/cc/EnvGym/data-gpt-4.1mini  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: Use x86_64 compatible images, standard Ubuntu or Debian base images recommended (no GPU-specific tags)  
+- GPU: No NVIDIA GPU detected (NVIDIA-SMI fails), no CUDA base image needed  
+- Instruction Notes: Avoid GPU-specific instructions, leverage multi-core CPU for build parallelism if applicable, ensure paths relative to /home/cc/EnvGym/data-gpt-4.1mini/CrossPrefetch  
+- Docker Version: 28.3.2, supports BuildKit and Buildx, GPU build features present but not applicable due to lack of NVIDIA GPU

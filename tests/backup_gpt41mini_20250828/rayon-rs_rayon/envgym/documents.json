@@ -1,0 +1,16 @@
+[
+  "README.md",
+  "rayon-demo/data/tsp/README.md",
+  "rayon-demo/data/README.md",
+  "rayon-demo/examples/README.md",
+  "src/iter/plumbing/README.md",
+  ".github/dependabot.yml",
+  ".github/workflows/ci.yaml",
+  ".github/workflows/main.yaml",
+  ".github/workflows/pr.yaml",
+  "Cargo.toml",
+  "ci/alt-core/Cargo.toml",
+  "ci/highlander/Cargo.toml",
+  "rayon-core/Cargo.toml",
+  "rayon-demo/Cargo.toml"
+]

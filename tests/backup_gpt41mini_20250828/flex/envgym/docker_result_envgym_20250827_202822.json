@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_202822",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756326488",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.58kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/18] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [ 2/18] RUN apt-get update && apt-get install -y --no-install-recommends     wget     curl     ca-certificates     bzip2     git     build-essential     libcurl4-openssl-dev     libssl-dev     libxml2-dev     dos2unix     && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [ 3/18] RUN useradd -m -d /home/cc cc\n#6 CACHED\n\n#7 [ 4/18] WORKDIR /home/cc\n#7 CACHED\n\n#8 [internal] load build context\n#8 transferring context: 1.53kB done\n#8 DONE 0.0s\n\n#9 [ 5/18] RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh\n#9 DONE 2.2s\n\n#10 [ 6/18] RUN /bin/bash /tmp/miniconda.sh -b -p /home/cc/miniconda3 &&     rm /tmp/miniconda.sh &&     /home/cc/miniconda3/bin/conda clean -tipsy\n#10 0.216 PREFIX=/home/cc/miniconda3\n#10 0.553 Unpacking bootstrapper...\n#10 0.626 Unpacking payload...\n#10 4.355 \n#10 4.355 Installing base environment...\n#10 4.355 \n#10 5.254 Preparing transaction: ...working... done\n#10 5.592 Executing transaction: ...working... done\n#10 10.64 installation finished.\n#10 11.09 usage: conda [-h] [-v] [--no-plugins] [-V] COMMAND ...\n#10 11.09 conda: error: unrecognized arguments: -sy\n#10 ERROR: process \"/bin/sh -c /bin/bash /tmp/miniconda.sh -b -p $CONDA_DIR &&     rm /tmp/miniconda.sh &&     $CONDA_DIR/bin/conda clean -tipsy\" did not complete successfully: exit code: 2\n------\n > [ 6/18] RUN /bin/bash /tmp/miniconda.sh -b -p /home/cc/miniconda3 &&     rm /tmp/miniconda.sh &&     /home/cc/miniconda3/bin/conda clean -tipsy:\n0.553 Unpacking bootstrapper...\n0.626 Unpacking payload...\n4.355 \n4.355 Installing base environment...\n4.355 \ndone\ndone\n10.64 installation finished.\n11.09 usage: conda [-h] [-v] [--no-plugins] [-V] COMMAND ...\n11.09 conda: error: unrecognized arguments: -sy\n------\nenvgym.dockerfile:34\n--------------------\n  33 |     # Install Miniconda3 as user cc\n  34 | >>> RUN /bin/bash /tmp/miniconda.sh -b -p $CONDA_DIR && \\\n  35 | >>>     rm /tmp/miniconda.sh && \\\n  36 | >>>     $CONDA_DIR/bin/conda clean -tipsy\n  37 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c /bin/bash /tmp/miniconda.sh -b -p $CONDA_DIR &&     rm /tmp/miniconda.sh &&     $CONDA_DIR/bin/conda clean -tipsy\" did not complete successfully: exit code: 2\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

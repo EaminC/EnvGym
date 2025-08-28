@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/Metis; no special volume mounts indicated, standard Linux file paths
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: Use amd64 Linux base images (e.g., ubuntu, debian, alpine for x86_64)
+- GPU: No NVIDIA GPU detected; no CUDA base images required; no GPU-specific instructions needed
+- Instruction Notes: Overlay2 storage driver with extfs backing; ensure no userxattr-dependent features; cgroup v2 and systemd cgroup driver compatible; large memory available allows caching layers without swap concerns
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build flags (--gpus) irrelevant due to no NVIDIA GPU detected

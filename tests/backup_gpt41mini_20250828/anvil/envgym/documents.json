@@ -1,0 +1,13 @@
+[
+  "README.md",
+  "e2e/README.md",
+  "rust-toolchain.toml",
+  "Cargo.toml",
+  "e2e/Cargo.toml",
+  "src/deps_hack/Cargo.toml",
+  "docker/ae/Dockerfile",
+  "docker/verus/Dockerfile",
+  "docker/controller/Dockerfile.local",
+  "docker/controller/Dockerfile.remote",
+  "rust-toolchain.toml"
+]

@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_031502",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756264502",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.60kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/17] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [ 3/17] RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/1.4.1 -o /tmp/micromamba.tar.bz2     && mkdir -p /opt/micromamba     && tar -xjf /tmp/micromamba.tar.bz2 -C /opt/micromamba --strip-components=1 bin/micromamba     && rm /tmp/micromamba.tar.bz2     && chmod +x /opt/micromamba/micromamba\n#5 CACHED\n\n#6 [ 4/17] WORKDIR /home/cc\n#6 CACHED\n\n#7 [ 6/17] RUN git clone --recurse-submodules https://github.com/wonglkd/Baleen-FAST24.git Baleen-FAST24 &&     chown -R cc:cc /home/cc/Baleen-FAST24\n#7 CACHED\n\n#8 [ 7/17] WORKDIR /home/cc/Baleen-FAST24\n#8 CACHED\n\n#9 [ 5/17] RUN useradd -m cc\n#9 CACHED\n\n#10 [ 2/17] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     wget     git     bash     bzip2     unzip     build-essential     locales     && locale-gen en_US.UTF-8     && rm -rf /var/lib/apt/lists/*\n#10 CACHED\n\n#11 [ 8/17] RUN ls -l BCacheSim/install/env_cachelib-py-3.11.yaml && cat BCacheSim/install/env_cachelib-py-3.11.yaml\n#11 CACHED\n\n#12 [ 9/17] RUN /opt/micromamba/micromamba info\n#12 CACHED\n\n#13 [10/17] RUN /opt/micromamba/micromamba shell init -s bash -p ~/micromamba &&     mkdir -p ~/.mamba &&     touch ~/.mamba/config.yaml\n#13 0.198 critical libmamba filesystem error: cannot create directories: Permission denied [/home/cc/micromamba/conda-meta]\n#13 ERROR: process \"/bin/bash -c /opt/micromamba/micromamba shell init -s bash -p ~/micromamba &&     mkdir -p ~/.mamba &&     touch ~/.mamba/config.yaml\" did not complete successfully: exit code: 1\n------\n > [10/17] RUN /opt/micromamba/micromamba shell init -s bash -p ~/micromamba &&     mkdir -p ~/.mamba &&     touch ~/.mamba/config.yaml:\n0.198 critical libmamba filesystem error: cannot create directories: Permission denied [/home/cc/micromamba/conda-meta]\n------\nenvgym.dockerfile:48\n--------------------\n  47 |     # Initialize micromamba shell and set up config directory for current user\n  48 | >>> RUN /opt/micromamba/micromamba shell init -s bash -p ~/micromamba && \\\n  49 | >>>     mkdir -p ~/.mamba && \\\n  50 | >>>     touch ~/.mamba/config.yaml\n  51 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/bash -c /opt/micromamba/micromamba shell init -s bash -p ~/micromamba &&     mkdir -p ~/.mamba &&     touch ~/.mamba/config.yaml\" did not complete successfully: exit code: 1\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

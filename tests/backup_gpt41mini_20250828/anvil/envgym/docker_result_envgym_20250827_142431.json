@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_142431",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756304670",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 758B done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/8] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 274.22kB 0.0s done\n#5 DONE 0.0s\n\n#6 [4/8] RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.88.0\n#6 CACHED\n\n#7 [5/8] RUN rustup default 1.88.0\n#7 CACHED\n\n#8 [3/8] RUN pip3 install --no-cache-dir tabulate\n#8 CACHED\n\n#9 [2/8] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     curl     git     ca-certificates     python3     python3-pip     pkg-config     libssl-dev     libclang-dev     llvm-dev     clang     cmake     unzip     && rm -rf /var/lib/apt/lists/*\n#9 CACHED\n\n#10 [6/8] WORKDIR /workspace\n#10 CACHED\n\n#11 [7/8] COPY . /workspace\n#11 DONE 0.3s\n\n#12 [8/8] RUN cargo fetch --verbose\n#12 0.284 error: failed to get `builtin` as a dependency of package `verifiable-controllers v0.1.0 (/workspace)`\n#12 0.284 \n#12 0.284 Caused by:\n#12 0.284   failed to load source for dependency `builtin`\n#12 0.284 \n#12 0.284 Caused by:\n#12 0.284   Unable to update /verus/source/builtin\n#12 0.284 \n#12 0.284 Caused by:\n#12 0.284   failed to read `/verus/source/builtin/Cargo.toml`\n#12 0.284 \n#12 0.284 Caused by:\n#12 0.284   No such file or directory (os error 2)\n#12 ERROR: process \"/bin/sh -c cargo fetch --verbose\" did not complete successfully: exit code: 101\n------\n > [8/8] RUN cargo fetch --verbose:\n0.284   failed to load source for dependency `builtin`\n0.284 \n0.284 Caused by:\n0.284   Unable to update /verus/source/builtin\n0.284 \n0.284 Caused by:\n0.284   failed to read `/verus/source/builtin/Cargo.toml`\n0.284 \n0.284 Caused by:\n0.284   No such file or directory (os error 2)\n------\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\nenvgym.dockerfile:33\n--------------------\n  31 |     COPY . /workspace\n  32 |     \n  33 | >>> RUN cargo fetch --verbose\n  34 |     \n  35 |     CMD [\"/bin/bash\"]\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c cargo fetch --verbose\" did not complete successfully: exit code: 101\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

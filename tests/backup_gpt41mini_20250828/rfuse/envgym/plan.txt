@@ -1,0 +1,45 @@
+Adjusted Environment Setup Plan:
+
+1. Base Image Selection:
+   - Use an x86_64 compatible base image such as `ubuntu:22.04`, `debian:bookworm-slim`, or `alpine:3.18` with the `amd64` tag to ensure CPU architecture compatibility.
+   - Avoid CUDA or NVIDIA GPU related base images since no NVIDIA GPU is detected.
+
+2. Dockerfile Configuration:
+   - Use `--platform=linux/amd64` in the `docker build` command to ensure compatibility with the host architecture.
+   - Use overlay2 storage driver compatible commands and configurations.
+   - Ensure all `COPY` instructions reference paths relative to the working directory `/home/cc/EnvGym/data-gpt-4.1mini/rfuse`.
+     For example:
+     ```
+     COPY ./rfuse /app/rfuse
+     ```
+   - Set working directory inside the container appropriately, e.g., `/app` or `/app/rfuse`.
+
+3. GPU and CUDA:
+   - Do not include any GPU-specific instructions or CUDA toolkit installations in the Dockerfile or environment setup.
+
+4. Memory and Storage:
+   - Verify that the host system has sufficient RAM and disk space for the environment, but no specific adjustment is needed here unless known constraints exist.
+   - Use multi-stage builds if the image size is a concern to reduce final image size.
+
+5. Development Tools and Versions:
+   - Install development tools compatible with x86_64 architecture.
+   - Use package managers’ latest stable versions available for the selected base image.
+   - Avoid ARM-specific binaries or libraries.
+
+6. Docker Build Command Example:
+   ```
+   DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t data-gpt4.1mini-rfuse .
+   ```
+
+7. Runtime:
+   - Since no GPU is available, do not pass `--gpus` flag during `docker run`.
+   - Mount volumes or bind mounts if necessary, ensuring paths correspond to the host working directory `/home/cc/EnvGym/data-gpt-4.1mini/rfuse`.
+
+Summary:
+- Use x86_64 (amd64) base images without GPU support.
+- Ensure Docker build and run commands specify `--platform=linux/amd64`.
+- Adjust paths in Dockerfile to be relative to `/home/cc/EnvGym/data-gpt-4.1mini/rfuse`.
+- Exclude CUDA and GPU-related setup.
+- Use overlay2 compatible Docker storage instructions.
+
+This plan aligns with the provided hardware environment ensuring compatibility and smooth operation.

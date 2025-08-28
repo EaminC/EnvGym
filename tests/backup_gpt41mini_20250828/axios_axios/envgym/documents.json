@@ -1,0 +1,15 @@
+[
+  "README.md",
+  "package.json",
+  "package-lock.json",
+  "tsconfig.json",
+  "tslint.json",
+  ".eslintrc.cjs",
+  ".gitignore",
+  ".npmignore",
+  "bower.json",
+  "karma.conf.cjs",
+  "rollup.config.js",
+  "webpack.config.js",
+  "gulpfile.js"
+]

@@ -1,0 +1,130 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+1. DOWNLOADS NEEDED:  
+   - Rust toolchain (Rust 1.74.0 or higher) for building from source and using cargo  
+     * https://rustup.rs/  
+     * Minimum Rust version explicitly specified as 1.74 in Cargo.toml; ensure toolchain matches or exceeds this version  
+     * Use x86_64 Linux binaries/installers compatible with amd64 architecture  
+   - `bat` prebuilt binaries or packages depending on OS:  
+     * Linux (Ubuntu/Debian): `bat` or `batcat` via apt or latest `.deb` (e.g., `bat_0.25.0_amd64.deb`)  
+       - Ensure installation targets amd64 architecture (matches x86_64 hardware)  
+     * Alpine Linux: `apk add bat` (amd64 packages available)  
+     * Arch Linux: `pacman -S bat` (amd64 packages)  
+     * Fedora: `dnf install bat`  
+     * Gentoo: `emerge sys-apps/bat`  
+     * FreeBSD: `pkg install bat` or ports tree  
+     * OpenBSD: `pkg_add bat`  
+     * openSUSE: `zypper install bat`  
+     * macOS: Homebrew `brew install bat` or MacPorts `port install bat` (if applicable; note hardware is Linux, macOS only for cross-platform docs)  
+     * Windows: one of WinGet, Chocolatey, Scoop, or prebuilt binaries (not applicable for current Linux hardware setup)  
+   - Git (for Git integration features, cloning repositories, and local configuration)  
+     * Use standard x86_64 Linux Git packages  
+   - Optional tools for enhanced integration and usage:  
+     * fzf (for preview integration)  
+     * ripgrep (for batgrep)  
+     * fd (for find-like functionality used in integration)  
+     * less pager (especially on Windows, but also recommended on Linux)  
+     * xclip (for clipboard integration on Linux)  
+     * Visual C++ Redistributable for Windows (not required on Linux x86_64)  
+   - Additional Rust dependencies implied by Cargo.toml and Cargo.lock (for building from source):  
+     * Build dependencies and features as specified in the updated `tests/syntax-tests/source/TOML/Cargo.toml` file:  
+       - Features and dependencies as described, compatible with Rust 1.74.0 and x86_64 Linux  
+     * Rust edition 2018 specified in Cargo.toml; compatible with Rust 1.74.0+  
+     * Build script `build.rs` present as required  
+   - Version compatibility requirements:  
+     * Rust toolchain ≥ 1.74.0 (consistent with Cargo.toml MSRV)  
+     * `bat` version 0.25.0 or higher for binaries; source build version 0.15.4 also supported/tested  
+     * Cargo.lock dependencies versions locked and consistent with Cargo.toml versions for reproducible builds  
+   - Formatting tool:  
+     * Rustfmt included with Rust toolchain; install via `rustup component add rustfmt` if missing  
+     * `rustfmt.toml` with default settings present  
+   - Syntax highlighting and language support:  
+     * `syntect` v4.2.0 used with features enabled as specified  
+     * Support for Dockerfile, Python requirements.txt, DotENV, Java Server Page (JSP) syntax highlighting fully compatible with Linux x86_64 environment  
+     * Licensing compliance for JSP files ensured  
+   - Licensing and compliance:  
+     * Verify compliance with included licenses for JSP files and third-party components as per plan  
+   - No conflicts with existing configuration or version requirements introduced by hardware environment (Linux x86_64)  
+
+2. FILES TO CREATE:  
+   - All configuration files, source files, test files, and license/notice files as specified, paths and formats compatible with Linux x86_64 environment  
+   - User configuration file path for `bat` as per Linux conventions (e.g., `$XDG_CONFIG_HOME/bat/config` or `$HOME/.config/bat/config`)  
+   - System-wide configuration file at `/etc/bat/config` (Linux)  
+   - Integration test config files and JSON config file as specified  
+   - Build configuration files `Cargo.toml`, `Cargo.lock`, `build.rs` with correct dependency versions  
+   - Syntax test files for Dockerfile, Python requirements, DotENV, JSP, and license/notice files as specified  
+   - Rustfmt configuration file `rustfmt.toml` with default content  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All listed syntax highlighting tests for Dockerfile, Python requirements.txt, DotENV, and JSP files fully applicable for Linux x86_64 environment  
+   - Git integration tests using provided Git config files in Linux paths  
+   - Paging behavior tests including system-wide and additional config files on Linux  
+   - Configuration file precedence and parsing tests including JSON config file handling on Linux  
+   - Non-printable character display tests, integration with fzf, ripgrep, fd, tail, git, man page coloring as specified  
+   - Build system validation, Rust edition and MSRV compatibility, dependency version checks as specified  
+   - Code formatting tests using rustfmt  
+   - Licensing compliance tests for JSP and third-party notices  
+   - Confirm no conflicts or errors arise from presence of JSON config file or Windows-specific configs (Windows-specific config files ignored or tested in Windows environment only)  
+   - No GPU-specific tests or CUDA dependencies required or present  
+   - Tests adjusted to expect Linux file paths and environment variables  
+   - Confirm multi-threaded and parallel build tests pass given available CPUs and memory on x86_64 Linux hardware  
+
+4. COMPLETE TODO LIST:  
+   1. Verify system platform and prerequisites on Linux x86_64:  
+      - `rustc --version` (≥ 1.74.0)  
+      - `git --version`  
+      - `less --version` or equivalent pager presence  
+      - `rustfmt --version` (install if missing)  
+      - Install prerequisites as per Linux distro instructions for amd64 architecture  
+   2. Install `bat` using Linux amd64 compatible packages or prebuilt binaries (version ≥ 0.25.0)  
+   3. For building from source (optional):  
+      - Use provided `Cargo.toml`, `Cargo.lock`, and `build.rs` files targeting Linux amd64  
+      - Ensure Rust toolchain 1.74.0+ installed and rustfmt available  
+      - Build with Cargo commands as specified  
+      - Run `bat cache --build` post-build  
+   4. Configure Git test environment using Linux path configs  
+   5. Configure shell environment aliases and functions for Linux shell (bash, zsh, etc.)  
+   6. Create or generate default user config file for `bat` in Linux config directory  
+   7. Create or verify system-wide config file at `/etc/bat/config` with pager settings  
+   8. Add integration test config files as specified  
+   9. Include syntax test files for Dockerfile, Python requirements, DotENV, JSP as specified, verifying Linux path compatibility  
+   10. Install optional tools `fzf`, `ripgrep`, `fd`, `less`, `xclip` as needed on Linux amd64  
+   11. (Optional) Add custom syntaxes/themes in Linux config directories and rebuild cache  
+   12. Test basic functionality on Linux shell environment as specified  
+   13. Test integration with other tools on Linux x86_64 environment  
+   14. Validate configuration persistence, overrides, and precedence on Linux  
+   15. Confirm error handling and edge cases on Linux environment  
+   16. Build system and dependency validation on Linux amd64  
+   17. Document environment setup and usage for Linux amd64 users, including licensing compliance for JSP files  
+   18. (Optional) Setup CI/CD pipeline targeting Linux amd64 platform with build, test, and formatting steps  
+
+Verification Methods (Linux x86_64 specific):  
+- Verify `bat --version` outputs expected version (≥ 0.25.0) on Linux amd64  
+- Confirm syntax highlighting visually for Dockerfile, Python requirements.txt, DotENV, JSP files on Linux terminal with syntect v4.2.0  
+- Use `bat --list-themes` and `bat --list-languages` on Linux to verify availability of new languages and themes  
+- Confirm integration commands execute without error on Linux shell  
+- Monitor logs and error messages on Linux environment  
+- Validate all config files load and apply correctly on Linux paths  
+- Confirm system-wide config `/etc/bat/config` is loaded and effective on Linux  
+- Confirm no Windows-specific config files interfere on Linux (ignored or skipped)  
+- Confirm Cargo builds succeed on Linux amd64 with locked dependency versions  
+- Confirm build scripts and asset generation succeed on Linux  
+- Run dev-dependency tests on Linux  
+- Confirm no conflicts from multiple dependency versions on Linux  
+- Verify error handling with unsupported encodings and terminal capabilities on Linux  
+- Confirm code formatting compliance via `cargo fmt -- --check` on Linux  
+- Confirm Git integration tests run using Linux paths for config files  
+- Confirm configuration precedence order enforced on Linux environment  
+- Confirm licensing and notice compliance for JSP files on Linux filesystem  
+- Confirm Dockerfile, Python `requirements.txt`, DotENV `.env`, JSP `.jsp` syntax highlighting produce correct colored output and lexer/parser behavior on Linux terminals  
+
+Notes on adjustments:  
+- No ARM or other architecture support required or included; strictly x86_64 amd64 Linux environment targeted  
+- No GPU or CUDA dependencies included or required  
+- Windows-specific installation steps and config files exist in plan for cross-platform completeness, but for this environment, only Linux-specific steps are mandatory; Windows-specific config files will be present for completeness but are ignored in Linux environment  
+- Paths and environment variables adjusted for Linux conventions (e.g., `/etc/bat/config`, `$HOME/.config/bat/config`)  
+- All tooling and dependencies installed and tested for Linux amd64 compatibility  
+- Build and test commands run in Linux shell environment; no Windows PowerShell or CMD specifics needed  
+- Memory and CPU resources assumed sufficient for parallel builds and multi-stage builds without special adjustments  
+
+This adjusted plan ensures full compatibility and optimal operation on the provided hardware environment: x86_64 Linux amd64 architecture, without GPU or Windows dependencies, using standard Linux tools and paths.

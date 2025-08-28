@@ -1,0 +1,214 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Note:** Adjustments are made to ensure compatibility and optimal use of the given hardware environment: x86_64 architecture, CPU-based Linux host, no GPU/NVIDIA CUDA dependencies, Docker version 28.3.2, and standard Linux toolchain usage.
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - C++ compiler:  
+     * Use g++ version 7 or better on Linux x86_64 (gcc 8, 9, 10 available and supported)  
+     * Use clang++ version 6 or better on Linux x86_64 (clang 6–11 supported)  
+     * Visual Studio 2019 or newer with C++17 for Windows users (not applicable for this Linux x86_64 environment)  
+     * LLVM/Clang custom builds via Dockerfile for controlled toolchain and static reflection support  
+     * No GPU/CUDA or specialized GPU toolchains needed—omit any GPU-specific compiler flags or dependencies  
+   - wget utility for downloading source files and dependencies  
+   - simdjson single-header library files (simdjson.h and simdjson.cpp) from official GitHub URLs  
+   - Sample JSON files: twitter.json and amazon_cellphones.ndjson (for amalgamate_demo example)  
+   - Node.js and npm (recommended Node.js version 14.x or later) for JavaScript dependencies and JSON generation script  
+   - JavaScript dependencies:  
+     * faker package version 4.1.0 (locked via package-lock.json)  
+     * fs package (built-in Node.js module, no separate install needed)  
+   - Rust toolchain for Rust benchmark:  
+     * Rust stable release via rustup or package manager compatible with Linux x86_64  
+     * Cargo package manager  
+     * Rust crate dependencies locked in Cargo.lock for reproducibility  
+   - Build tools and utilities compatible with Linux x86_64:  
+     * cmake (version consistent with CI and Docker builds)  
+     * make, ninja-build  
+     * python3 (for scripts and style checks)  
+     * git  
+     * build-essential (gcc, g++, make, etc.)  
+     * libcurl4-openssl-dev, linux-perf, binutils, sudo  
+     * Docker (version 28.3.2 verified, supporting BuildKit and Buildx)  
+     * Bash shell  
+   - Continuous Integration environment support:  
+     * Linux Drone CI (amd64 and arm64) pipelines remain valid—amd64 matches x86_64 architecture here  
+     * Travis CI with Ubuntu Bionic ppc64le is for PowerPC architecture and not applicable here; Linux amd64 pipelines preferred for native runs  
+     * Windows and FreeBSD CI configurations remain unchanged (not directly related to this hardware)  
+   - Operating system compatibility:  
+     * Debian 12, Ubuntu 20.04/22.04, or equivalent x86_64 Linux distributions are supported and recommended  
+     * No GPU-specific base images or CUDA toolkits are required or to be used  
+   - Version compatibility requirements:  
+     * LLVM/Clang commit ARG remains as d77eff1cbd78fd065668acf93b1f5f400d39134d or updated as needed  
+     * C++17 or higher standard for all regular builds (C++20 and C++26 for specialized pipelines remain valid)  
+     * Docker usage adapted for linux/amd64 platform (default for x86_64)  
+   - Docker-related notes:  
+     * Use `--platform=linux/amd64` explicitly if needed to avoid multi-arch confusion in Docker build/run commands  
+     * No GPU mounts, NVIDIA runtime, or CUDA drivers needed in Dockerfiles or run scripts  
+     * Overlay2 storage driver used by Docker version 28.3.2 is efficient on Linux x86_64 and requires no special configuration  
+     * Container user and group ID mapping in Docker builds uses current Linux user info as before  
+   - Paths and directories:  
+     * Confirm using standard Linux paths and permissions; no Windows-specific paths or mount points  
+     * Cache directories such as `$HOME/.dep_cache` valid for Linux environment caching  
+     * Build and source files located in standard Linux user workspace (e.g., `/home/cc/EnvGym/data-gpt-4.1mini/simdjson_simdjson`)  
+
+---
+
+2. FILES TO CREATE:  
+   - quickstart.cpp and amalgamate_demo.cpp in project root or workspace as per original plan  
+   - Build scripts or Makefile updated for Linux x86_64 builds using `-std=c++17` and `-pthread` flags, no Windows-specific flags  
+   - Dockerfile and Docker scripts (`p2996/Dockerfile`, `p2996/run_docker.sh`, `p2996/remove_docker.sh`) remain unchanged except to ensure default platform is linux/amd64 where applicable  
+   - Rust benchmark configuration files (`Cargo.toml`, `Cargo.lock`, `lib.rs`) remain unchanged  
+   - CI configuration files (`.appveyor.yml`, `.cirrus.yml`, `.drone.yml`, `.travis.yml`) remain unchanged; note `.travis.yml` targets ppc64le and thus not used on this hardware but kept for cross-architecture testing  
+   - JavaScript environment files (`package.json`, `package-lock.json`, `generatelargejson.js`) remain unchanged  
+   - Documentation files updated to reflect Linux x86_64 as primary platform, noting no GPU/CUDA or PowerPC support needed here  
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - All test cases as previously defined remain valid  
+   - Emphasize testing on Linux x86_64 native environment and Docker containers built for linux/amd64  
+   - Skip or conditionally disable ppc64le-specific tests on this hardware unless cross-compilation or cross-testing is intended  
+   - No GPU-specific tests or CUDA runtime tests included  
+   - Validate Docker scripts work with Docker 28.3.2 and overlay2 storage on Linux x86_64  
+   - JavaScript environment tests run with Node.js on Linux x86_64  
+   - Rust benchmarks built and run on native Linux x86_64  
+   - CI tests for Windows and FreeBSD remain for their respective platforms; Linux Drone CI on amd64 is applicable here  
+   - Travis CI ppc64le tests not applicable to local hardware; may run in dedicated CI environments only  
+   - All static reflection tests remain valid inside Docker container on linux/amd64 platform  
+
+---
+
+4. COMPLETE TODO LIST (ADJUSTED FOR LINUX X86_64, CPU-ONLY ENVIRONMENT):
+
+**Step 1: Verify system prerequisites**  
+  - Confirm OS is Linux x86_64 (Debian 12, Ubuntu 20.04/22.04, or equivalent)  
+  - Verify installed compilers (`g++ --version`, `clang++ --version`) are version 7+ and run on x86_64  
+  - Confirm wget is installed or install via apt (`sudo apt install wget`)  
+  - Confirm 64-bit architecture (x86_64)  
+  - Verify bash shell availability  
+  - Confirm Docker version 28.3.2 installed and Docker daemon running; confirm default platform is linux/amd64  
+  - Confirm Node.js version 14.x+ and npm installed, verify via `node -v` and `npm -v`  
+  - Verify Rust toolchain installed via rustup or package manager; confirm rustc and cargo versions  
+  - Ensure build-essential, cmake, make, ninja-build, python3, git, libcurl4-openssl-dev, linux-perf, binutils, sudo installed and up to date  
+  - No GPU or CUDA drivers needed—skip any CUDA-related checks  
+
+**Step 2: Setup Docker-based LLVM/Clang build environment**  
+  - Use provided Dockerfile and scripts; build with explicit platform option if needed:  
+    ```bash  
+    docker build --platform=linux/amd64 --build-arg USER_NAME=$(whoami) --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t clang-env -f p2996/Dockerfile .  
+    ```  
+  - Use `p2996/run_docker.sh` script to run commands inside container, no GPU environment variables or mounts  
+  - SSH agent forwarding and mounting of `~/.ssh` supported as before  
+  - Cleanup with `p2996/remove_docker.sh` remains unchanged  
+
+**Step 3: Download simdjson source files and sample JSON**  
+  - Download simdjson.h, simdjson.cpp, twitter.json, amazon_cellphones.ndjson with wget as before  
+  - Verify file integrity and sizes  
+
+**Step 4: Setup JavaScript environment for JSON generation**  
+  - Navigate to `scripts/javascript/`  
+  - Run `npm install` to install faker 4.1.0 and fs dependencies as locked  
+  - Run generation script `generatelargejson.js` to produce JSON files  
+  - Validate generated files for correctness  
+
+**Step 5: Setup Rust environment for serde-benchmark**  
+  - Navigate to `benchmark/static_reflect/serde-benchmark/`  
+  - Confirm presence of Cargo.toml, Cargo.lock, and lib.rs  
+  - Build with `cargo build --release` ensuring Cargo.lock is respected  
+  - Run benchmarks or tests as applicable  
+
+**Step 6: Create quickstart.cpp and amalgamate_demo.cpp**  
+  - Write and place example files in project root or workspace  
+  - Use `-std=c++17` and `-pthread` flags for compilation on Linux x86_64  
+
+**Step 7: Compile example programs**  
+  - Compile quickstart example:  
+    ```bash  
+    c++ -std=c++17 -o quickstart quickstart.cpp simdjson.cpp  
+    ```  
+  - Compile amalgamate_demo example:  
+    ```bash  
+    c++ -O3 -std=c++17 -pthread -o amalgamate_demo amalgamate_demo.cpp simdjson.cpp  
+    ```  
+  - Optionally specify compiler path inside Docker container if using Dockerized LLVM/Clang  
+
+**Step 8: Run compiled programs**  
+  - Run `./quickstart`, expect output `100 results.`  
+  - Run  
+    ```bash  
+    ./amalgamate_demo ../jsonexamples/twitter.json ../jsonexamples/amazon_cellphones.ndjson  
+    ```  
+  - Verify proper processing of JSON and NDJSON inputs, no errors  
+
+**Step 9: Build and test experimental static reflection environment inside Docker**  
+  - Enter container shell:  
+    ```bash  
+    bash ./p2996/run_docker.sh bash  
+    ```  
+  - Configure and build with:  
+    ```bash  
+    CXX=clang++ cmake -B buildreflect -D SIMDJSON_STATIC_REFLECTION=ON -DSIMDJSON_DEVELOPER_MODE=ON  
+    cmake --build buildreflect --target benchmark_serialization_citm_catalog benchmark_serialization_twitter  
+    ```  
+  - Run tests and benchmarks, verify all pass  
+  - Modify source, rebuild, and rerun tests as needed  
+  - Exit container and clean up with `p2996/remove_docker.sh`  
+
+**Step 10: Setup and verify Windows CI environment**  
+  - Retain `.appveyor.yml` for Windows CI; not applicable for local Linux environment but kept for cross-platform CI  
+
+**Step 11: Setup and verify FreeBSD CI environment**  
+  - Retain `.cirrus.yml` for FreeBSD CI; not applicable locally but kept for completeness  
+
+**Step 12: Setup and verify Linux Drone CI environment**  
+  - Use `.drone.yml` pipelines for Linux amd64 and arm64; amd64 matches local architecture, validate pipeline runs on Linux x86_64  
+
+**Step 13: Setup and verify Travis CI environment**  
+  - `.travis.yml` targets ppc64le; not applicable locally on x86_64 but kept for cross-architecture testing  
+
+**Step 14: Write and run additional tests**  
+  - Implement and run all tests as per plan on Linux x86_64 native and Docker environments  
+  - Skip or conditionally disable ppc64le and GPU-specific tests  
+
+**Step 15: Configure IDE or build system**  
+  - Set C++ standard to C++17 or higher (C++26 for static reflection)  
+  - Include simdjson headers and sources  
+  - Configure for Linux x86_64 toolchain  
+  - Optionally integrate Docker environment for static reflection builds and tests  
+
+**Step 16: Verify cross-platform and container compatibility**  
+  - Focus verification on Linux x86_64 native and Docker environments  
+  - Confirm Node.js and Rust toolchains run correctly on x86_64  
+  - Validate CI results on Linux amd64 pipelines match expectations  
+
+**Step 17: Document environment setup and usage**  
+  - Document Linux x86_64 as primary platform with no GPU dependencies  
+  - Emphasize Docker usage on linux/amd64 platform  
+  - Update notes to exclude GPU/CUDA dependencies and PowerPC architecture for local runs  
+  - Include instructions for JavaScript and Rust environment setup for Linux x86_64  
+  - Maintain documentation for Windows, FreeBSD, and Travis CI environments for cross-platform users  
+
+**Step 18: Stay updated**  
+  - Periodically update simdjson source files, LLVM/Clang Docker images, JavaScript and Rust dependencies  
+  - Rebuild and retest on Linux x86_64 and Docker environments  
+  - Monitor CI pipelines, especially Linux amd64 and Windows environments  
+
+---
+
+**Verification methods (adjusted):**  
+- Successful compilation and execution on Linux x86_64 native and Docker container (linux/amd64)  
+- No GPU or CUDA dependencies invoked or tested  
+- Correct output from quickstart and amalgamate_demo examples on Linux x86_64  
+- All test cases pass on Linux x86_64 and Docker container  
+- Rust benchmarks build and run on Linux x86_64  
+- JavaScript environment installs dependencies exactly and runs generation script without errors  
+- CI pipelines for Linux amd64 and Windows complete successfully; Travis ppc64le tests excluded from local verification  
+- Docker environment cleanly builds and runs with correct user mappings and no permission issues  
+- Cleanup scripts (`p2996/remove_docker.sh`) successfully remove containers and images  
+- Docker run script (`p2996/run_docker.sh`) behaves correctly under Linux x86_64 with no GPU-specific options  
+
+---
+
+**Summary:**  
+The plan is fully compatible with the x86_64 CPU-based Linux environment described. All GPU-related and PowerPC-specific elements are either not used or are only present in CI configurations for other platforms and do not affect local setup. Docker usage is confirmed for linux/amd64 platform with no GPU dependencies. Compilers, tools, and dependencies are all standard Linux x86_64 compatible versions. Paths, cache directories, and build commands are aligned with Linux conventions. The plan is ready for implementation on the specified hardware.

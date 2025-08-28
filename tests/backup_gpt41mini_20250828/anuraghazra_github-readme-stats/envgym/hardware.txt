@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/anuraghazra_github-readme-stats; project likely local code and data, consider COPY relative to this path  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: linux/amd64 compatible images; no GPU-specific base image required  
+- GPU: No functional NVIDIA GPU detected; no CUDA base image recommended  
+- Instruction Notes: avoid GPU-specific instructions; ensure COPY paths align with working directory; leverage overlay2 storage driver features; consider multi-stage builds for large projects due to storage constraints  
+- Docker Version: 28.3.2; supports BuildKit, docker buildx, and --gpus flag though GPU not present here

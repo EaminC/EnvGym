@@ -1,0 +1,154 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+1. DOWNLOADS NEEDED:  
+   - Python 3.7 (exact version recommended for compatibility)  
+     - Download from https://www.python.org/downloads/release/python-370/ or use pyenv/conda for version management  
+     - Ensure to install Linux x86_64 compatible Python binaries or build from source if needed  
+   - pip (Python package installer) - ensure latest version compatible with Python 3.7  
+   - PyTorch 1.2.0 (compatible with Python 3.7)  
+     - Since no functional NVIDIA GPU is detected, install the CPU-only version of PyTorch 1.2.0  
+     - Use pip installation command without CUDA dependencies as per https://pytorch.org/get-started/locally/  
+   - torchvision 0.4.0 (compatible with PyTorch 1.2.0)  
+   - Git (for cloning the repository and version control)  
+   - CUDA Toolkit: **Omit CUDA Toolkit installation** since no NVIDIA GPU is detected and CUDA is not applicable  
+   - Additional Python libraries as per requirements.txt (specific versions listed):  
+     - cycler==0.10.0  
+     - kiwisolver==1.1.0  
+     - matplotlib==3.1.1  
+     - numpy==1.17.2  
+     - pandas==0.25.1  
+     - Pillow==6.2.0  
+     - protobuf==3.9.2  
+     - pyparsing==2.4.2  
+     - python-dateutil==2.8.0  
+     - pytz==2019.2  
+     - scipy==1.3.1  
+     - seaborn==0.9.0  
+     - six==1.12.0  
+     - tensorboardX==1.8  
+     - tqdm==4.36.1  
+     - torch==1.2.0 (CPU-only build)  
+     - torchvision==0.4.0  
+   - Additional system dependencies as required by PyTorch, torchvision and other Python packages (e.g., build-essential, python3-dev on Linux)  
+     - Since the base image is Linux x86_64 (ubuntu, debian, alpine), use standard Linux build tools and development headers  
+     - For example, on Ubuntu/Debian: `sudo apt-get install build-essential python3-dev git`  
+
+2. FILES TO CREATE:  
+   - requirements.txt (updated to include pinned versions as per new file):  
+     - Contains the following Python dependencies with exact versions:  
+       ```
+       cycler==0.10.0  
+       kiwisolver==1.1.0  
+       matplotlib==3.1.1  
+       numpy==1.17.2  
+       pandas==0.25.1  
+       Pillow==6.2.0  
+       protobuf==3.9.2  
+       pyparsing==2.4.2  
+       python-dateutil==2.8.0  
+       pytz==2019.2  
+       scipy==1.3.1  
+       seaborn==0.9.0  
+       six==1.12.0  
+       tensorboardX==1.8  
+       torch==1.2.0  
+       torchvision==0.4.0  
+       tqdm==4.36.1  
+       ```  
+   - .gitignore file (newly added to the plan) to exclude runtime-generated or large data folders:  
+     - Contains the following entries:  
+       ```
+       /data
+       /dumps
+       /plots
+       /runs
+       /saves
+       ```  
+   - (Optional) virtual environment configuration files:  
+     - `venv/` directory or conda environment yaml file for reproducible environments  
+   - Configuration or environment variable files if needed (optional for device selection, but GPU-specific variables not required here)  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Test case for successful loading of default datasets (MNIST, CIFAR10, CIFAR100, FashionMNIST)  
+   - Test case for instantiating default architectures (fc1, LeNet5, AlexNet, VGG16, Resnet18) without errors  
+   - Test case for command-line argument parsing correctness (various pruning types, architectures, datasets, prune percentages, iterations)  
+   - Test case for pruning functionality correctness and stability over multiple iterations  
+   - Test case for CPU-only device usage since GPU is unavailable (ensure `torch.cuda.is_available()` is False)  
+   - Test case for plot generation using combine_plots.py after training runs  
+   - Test case for successful import and compatibility of all Python dependencies as per requirements.txt (including pandas, seaborn, tensorboardX, tqdm)  
+   - Error handling tests: invalid arguments, missing datasets, model initialization failures  
+   - Integration test that runs main.py with default parameters end-to-end to verify training and pruning workflow executes without error on CPU  
+
+4. COMPLETE TODO LIST:  
+   1. Install Python 3.7:  
+      - Download and install Python 3.7 suitable for Linux x86_64  
+      - Verify installation with `python3 --version` returns 3.7.x  
+   2. Create and activate a virtual environment (recommended):  
+      - Linux/macOS: `python3 -m venv venv` then `source venv/bin/activate`  
+   3. Upgrade pip inside virtual environment:  
+      - Run `pip install --upgrade pip`  
+   4. Clone the project repository or place the project files locally.  
+   5. Navigate to the project root directory containing requirements.txt and .gitignore.  
+   6. Create the .gitignore file in the project root directory if not already present:  
+      - Add the following entries to exclude runtime-generated or large folders:  
+        ```
+        /data
+        /dumps
+        /plots
+        /runs
+        /saves
+        ```  
+   7. Install Python dependencies from updated requirements.txt with pinned versions:  
+      - Run `pip install -r requirements.txt`  
+      - Note: Install CPU-only PyTorch 1.2.0 by ensuring no CUDA dependencies are included (default pip install for Linux x86_64 without CUDA)  
+      - Verify installations by importing torch, torchvision, matplotlib, numpy, pandas, seaborn, tensorboardX, and tqdm in Python shell without errors.  
+   8. **Skip CUDA Toolkit installation** as no NVIDIA GPU is detected and CUDA is not applicable.  
+      - Confirm `torch.cuda.is_available()` returns False.  
+   9. Run a baseline training test:  
+      - Run the example command provided:  
+        ```bash  
+        python3 main.py --prune_type=lt --arch_type=fc1 --dataset=mnist --prune_percent=10 --prune_iterations=1  
+        ```  
+      - Verify that training starts, runs without errors on CPU, and outputs logs at specified print frequency  
+   10. Verify output files:  
+       - Check that weight dumps, plots, runs, and saves directories are created and populated accordingly  
+   11. Run combine_plots.py after multiple training runs to verify plotting functionality:  
+       - Run `python3 combine_plots.py`  
+       - Check `/plots/lt/combined_plots/` for generated graphs  
+   12. (Optional) Add and test a new architecture or dataset following README instructions for extensibility  
+   13. Implement and run test cases for:  
+       - Dataset loading  
+       - Model instantiation  
+       - Command-line argument parsing  
+       - Pruning cycles  
+       - CPU usage (since GPU unavailable)  
+       - Plot generation  
+       - Dependency import and version compatibility (including pandas, seaborn, tensorboardX, tqdm)  
+   14. Create documentation or scripts for automated environment setup and testing if required  
+   15. Handle errors gracefully:  
+       - Verify missing dependencies prompt clear error messages  
+       - Validate command-line args and provide usage help if invalid  
+       - Capture runtime exceptions during training and pruning  
+   16. Document environment setup and usage instructions for team members or deployment  
+
+Verification Methods:  
+- Use `python3 --version` and `pip list` to verify Python and dependencies version (check pinned versions as per requirements.txt)  
+- Confirm presence and correctness of .gitignore file contents to exclude specified runtime folders  
+- Run test commands and confirm no exceptions or crashes occur  
+- Confirm that `torch.cuda.is_available()` returns False (indicating CPU-only mode)  
+- Validate expected output files and logs are generated  
+- Review plots visually for correctness after running combine_plots.py  
+- Use pytest or unittest frameworks for automated test execution if test cases are implemented  
+
+---
+
+**Summary of key adjustments:**  
+- Target Linux x86_64 architecture confirmed, no ARM or other arch considerations needed.  
+- Omit CUDA Toolkit installation and GPU-specific instructions due to no functional NVIDIA GPU detected.  
+- Install CPU-only PyTorch 1.2.0 binaries compatible with Python 3.7 on Linux x86_64.  
+- Verify GPU detection and disable GPU-related tests if GPU unavailable, switch tests to confirm CPU usage.  
+- Use standard Linux development tools and dependencies.  
+- Paths and directories remain unchanged and suitable for Linux environment.  
+- No changes needed for storage or memory considerations based on provided hardware info.  
+
+This adjusted plan ensures compatibility and feasibility on your current hardware environment.

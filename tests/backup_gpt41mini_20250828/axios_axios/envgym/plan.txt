@@ -1,0 +1,240 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+(Note: Adjustments are made to ensure full compatibility and optimal setup on x86_64 Linux (Ubuntu 22.04) environment without GPU, targeting amd64 architecture, and considering Docker usage and local development needs.)
+
+---
+
+1. DOWNLOADS NEEDED:
+
+- Node.js (version 16.x or later strongly recommended for full ES6+ support, native AbortController, and compatibility with latest tooling; ensure downloading amd64 Linux binaries or using NodeSource PPA on Ubuntu 22.04 amd64)
+- npm (comes bundled with Node.js 16+)
+- Optional alternative package managers: yarn, pnpm, bun - ensure linux/amd64 compatible versions installed
+- Git (Ubuntu 22.04 package or latest stable version for cloning/version control)
+- Code editor (e.g., VSCode for Linux x64)
+- Browsers for testing: latest Chrome, Firefox, Edge (via Ubuntu packages or official Linux x64 releases), Safari not available natively on Linux (use Sauce Labs or remote testing)
+- Form handling libraries and polyfills:
+  - 'form-data' (runtime)
+  - 'formdata-node' (dev)
+  - 'formdata-polyfill'
+- Query string serialization:
+  - 'qs'
+- Polyfills and helpers:
+  - 'abortcontroller-polyfill' (only for Node.js <16; optional here since Node 16+ recommended)
+  - 'node-domexception'
+  - 'web-streams-polyfill'
+- Dev dependencies: Babel, Rollup with plugins, Webpack and CLI, ESLint and plugins, Husky v8.x, Commitlint packages, Mocha, Karma and Karma plugins, Jasmine, Sinon, dtslint, dts-critic, tslint, cross-env, gulp v4+, gulp-cli, minimist, auto-changelog, release-it, chalk, pretty-bytes, proxy-related libraries, axios (runtime and gulpfile usage)
+- Version compatibility notes:
+  - Node.js: use version 16+ for full compatibility (Ubuntu 22.04 amd64 easily supports Node 16+)
+  - npm: version 6+ (comes with Node 16+)
+  - Browsers: Since Safari is unavailable natively on Linux, rely on Sauce Labs for Safari tests
+  - TypeScript: ^4.9.5 or later, compatible with `"module": "node16"`
+  - Ensure all binaries and tools are linux/amd64 compatible
+
+---
+
+2. FILES TO CREATE:
+
+- package.json:
+  - Initialize with `npm init` or `npm init -y` in /home/cc/EnvGym/data-gpt-4.1mini/axios_axios
+  - Add dependencies and devDependencies as per original plan, explicitly including:
+    - 'tslint' to support tslint.json config
+    - Karma and all Karma plugins listed
+    - Rollup plugins matching rollup.config.js
+    - Webpack and webpack-cli as dev dependencies
+    - gulp v4+, gulp-cli, minimist for gulpfile tasks
+    - axios (runtime and gulpfile.js usage)
+  - Include npm scripts:
+    - `"build:webpack": "webpack --config webpack.config.js"`
+    - Existing rollup build scripts, lint scripts (eslint and tslint), test scripts, release automation scripts, gulp tasks scripts like `"version": "gulp version"`
+  - Ensure dependencies versions are compatible with Node.js 16+ and Ubuntu 22.04 x86_64
+
+- .gitignore:
+  - Use the provided updated entries
+  - Confirm paths are relative to project root `/home/cc/EnvGym/data-gpt-4.1mini/axios_axios`
+  - No adjustment needed for Linux environment paths
+
+- tsconfig.json:
+  - `"module": "node16"` (leverages Node.js native ESM resolution)
+  - `"lib": ["dom", "es2015"]` (DOM typings included; compatible with Node.js and browser testing)
+  - `"strict": true`
+  - `"noEmit": true`
+  - `"types": []` or as needed
+  - Remove `"esModuleInterop"` to avoid incompatibility with `"module": "node16"`
+  - No OS-specific changes needed
+
+- .eslintrc.cjs:
+  - Use provided content unchanged
+  - Compatible with Node.js 16+ and ECMAScript 2018 syntax on Linux x86_64
+
+- tslint.json:
+  - Use provided content unchanged
+  - Exclude `test/module/**` directory as instructed
+
+- .npmignore:
+  - Use provided content unchanged
+  - Ensures clean npm package contents on publish
+
+- bower.json:
+  - Use provided content unchanged
+  - Ensure `dist/axios.js` generated as per build output
+
+- Husky:
+  - Setup Husky v8.x in `.husky/` directory in project root
+  - Configure commit-msg hook for Commitlint
+  - No OS-specific adjustment needed
+
+- Commitlint config:
+  - Conventional commit rules as per original plan
+
+- Karma config (karma.conf.cjs):
+  - Use provided configuration
+  - Note: Safari launcher will be available only via Sauce Labs or macOS CI environments (not local Ubuntu)
+  - Chrome, Firefox, Edge launchers configured for Linux x86_64 compatible browsers
+  - Sauce Labs integration relies on env vars (`SAUCE_USERNAME`, `SAUCE_ACCESS_KEY`)
+  - Travis CI and GitHub Actions fallbacks included, compatible with Linux x86_64
+
+- Rollup config (rollup.config.js):
+  - Use provided config unchanged
+  - Plugins and outputs compatible with amd64 Linux and Node.js 16+
+  - Alias, Babel, Terser, etc. supported on Linux amd64
+
+- Webpack config (webpack.config.js):
+  - Use provided config unchanged
+  - Generates UMD bundles with source maps
+  - Compatible with Node.js 16+ and Linux amd64 environment
+
+- gulpfile.js:
+  - Use provided ES module syntax gulpfile.js
+  - Ensure Node.js version supports ES modules (Node 16+ confirmed)
+  - Tasks for default, clear, bower, package, env, version as provided
+  - Uses local bundled axios client, minimist, fs-extra, gulp
+
+- Sandbox server file (sandbox/server.js):
+  - For testing/demo, no OS-specific change needed
+
+- test/ directory:
+  - Include all tests as specified
+  - Compatible with Linux x86_64 environment
+
+- .npmrc or .yarnrc (optional):
+  - Configure as needed, no OS-specific changes
+
+- .env:
+  - Include Sauce Labs credentials and Browsers selection environment variables
+  - Paths and env vars Linux compatible
+
+- CHANGELOG.md:
+  - Maintained by auto-changelog and release-it as planned
+
+- Additional configuration files (.prettierrc, .editorconfig, .eslintignore, etc.):
+  - Create/maintain as per project needs
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:
+
+- All test cases as per original plan
+- Confirm Karma tests run with available browsers on Linux x86_64
+- Safari tests run on Sauce Labs or macOS CI only (not local Ubuntu)
+- Validate build outputs on amd64 Linux
+- Confirm linters run in Linux environment without path issues
+- Confirm gulp CLI and tasks run on Linux amd64
+
+---
+
+4. COMPLETE TODO LIST:
+
+Step 1: Install prerequisites  
+- Install Node.js 16.x or later for Linux amd64 (use NodeSource PPA or nvm recommended)  
+- Confirm npm version (`npm -v`)  
+- Optionally install yarn/pnpm/bun (linux amd64 versions)  
+- Install Git (Ubuntu package)  
+- Install Karma and plugins (karma, karma-jasmine, karma-jasmine-ajax, karma-sinon, karma-chrome-launcher, karma-firefox-launcher, karma-edge-launcher, karma-sauce-launcher)  
+- Install Rollup and plugins plus Babel packages  
+- Install Webpack and webpack-cli  
+- Install gulp v4+, gulp-cli, minimist  
+- Install 'tslint' alongside 'dtslint'  
+- Install axios runtime and dev dependencies  
+
+Step 2: Initialize project  
+- Run `npm init` or `npm init -y` in `/home/cc/EnvGym/data-gpt-4.1mini/axios_axios`  
+- Add dependencies and devDependencies as per adjusted package.json plan  
+- Add npm scripts for build, lint, test, release, gulp, webpack as detailed  
+- Run `npm install` to generate node_modules and lockfile  
+
+Step 3: Setup configuration files  
+- Create/update tsconfig.json with `"module": "node16"`, no `"esModuleInterop"`  
+- Create/update .eslintrc.cjs as provided  
+- Create tslint.json excluding `test/module/**`  
+- Create/update .gitignore with extended entries  
+- Create .npmignore as provided  
+- Create bower.json as provided  
+- Setup Husky v8.x hooks in `.husky/`  
+- Setup Commitlint configuration  
+- Add karma.conf.cjs with Sauce Labs and local browser configs  
+- Add rollup.config.js and webpack.config.js as provided  
+- Add gulpfile.js with ES modules  
+- Create .env with Sauce Labs credentials (optional) and Browsers variables  
+
+Step 4: Develop sample usage and basic tests  
+- Implement axios usage examples  
+- Test HTTP methods, serialization, and runtime behaviors  
+
+Step 5: Implement advanced features  
+- Add interceptors, cancellation, progress handlers  
+
+Step 6: Enhance error handling and progress support  
+- Test network error cases, timeouts, retries  
+
+Step 7: Configure network and proxy settings  
+- Setup proxy-from-env and related proxy agents  
+
+Step 8: Setup comprehensive testing environment  
+- Integrate Mocha, Karma, Jasmine, Sinon with tests running on Linux amd64  
+- Use Sauce Labs for browsers not available locally (Safari)  
+- Run ESLint and TSLint with provided configs  
+
+Step 9: Enforce code quality and commit standards  
+- Run ESLint with auto-fix  
+- Run TSLint with exclusions  
+- Husky enforcing commit message linting  
+
+Step 10: Build and release automation  
+- Use gulp, rollup, webpack for builds on Linux amd64  
+- Automate versioning, changelog, tagging, publishing  
+- Validate minified ES5 builds, UMD bundles, source maps  
+
+Step 11: Package publishing verification  
+- Run `npm pack` locally on Linux amd64 to verify package contents  
+- Confirm `.npmignore` excludes unwanted files and includes `/dist/`, `/lib/`, main entry files, docs, license  
+- Confirm `bower.json` presence and correctness  
+- Test bower package installation on Linux amd64 (or CI)  
+
+Step 12: Continuous Integration (optional)  
+- Setup CI pipelines targeting Linux amd64 runners (GitHub Actions, Travis CI)  
+- Include Karma tests with Sauce Labs on macOS/Windows runners as needed  
+- Run webpack and gulp tasks in CI  
+- Monitor CI results  
+
+Step 13: Final verification and maintenance  
+- Run full test suite on Linux amd64 environment  
+- Verify environment variables load correctly  
+- Ensure linting and commit hooks work on Ubuntu 22.04 x86_64  
+- Monitor dependencies and update docs accordingly  
+- Maintain build and test tooling up to date for Linux amd64 environment  
+
+---
+
+Additional Notes:
+
+- Since the hardware environment is Linux x86_64 without GPU, no CUDA or GPU-specific tools are needed or included.
+- Node.js 16+ is well-supported on Ubuntu 22.04 amd64; no ARM or other architecture adjustments required.
+- Paths and working directory `/home/cc/EnvGym/data-gpt-4.1mini/axios_axios` are used consistently for all file references and scripts.
+- Docker usage (if any) should specify `--platform=linux/amd64` to match hardware architecture.
+- Browsers for Karma testing will exclude Safari locally; use Sauce Labs for cross-browser coverage including Safari.
+- No Windows or macOS specific path or tooling adjustments needed.
+- All build tools, linters, and test runners are compatible with Linux amd64 and Node.js 16+.
+
+---
+
+This adjusted plan ensures seamless development, build, test, and release workflows on the specified hardware and OS environment with consistent tooling and configuration.

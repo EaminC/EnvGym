@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_tracing; project likely Rust-based given directory name "tokio-rs_tracing"
+- Architecture: x86_64; recommended --platform linux/amd64
+- Base Image: x86_64 compatible images (e.g., official Ubuntu, Debian, or Rust images for amd64)
+- GPU: No NVIDIA GPU available; no CUDA base image recommended
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU-specific instructions needed; large memory and CPU count allow multi-stage builds and parallel build steps without constraints; ensure permissions consistent with cgroupns and apparmor
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build features not applicable due to lack of NVIDIA GPU

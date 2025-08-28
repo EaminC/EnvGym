@@ -1,0 +1,413 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+1. DOWNLOADS NEEDED:  
+   - Node.js (LTS version recommended, 18.x or later; must support Node 20+ due to some dependencies, explicitly confirmed engines constraints for Node >=18 by lockfile)  
+     * Use x86_64 Linux binaries or official Node.js docker images tagged for `linux/amd64` architecture to ensure compatibility with the hardware architecture (x86_64)  
+   - pnpm (version 9.0.0 or later, recommended version 10.4.0 as specified in the `packageManager` field of `package.json`)  
+     * Install via Node.js environment on x86_64 architecture; no ARM or GPU-specific versions needed  
+   - A modern web browser (Chrome, Firefox, Safari, Edge) for testing and development of Svelte apps, ensuring support for HTML5 `<picture>` and `<source>` elements with media queries for `prefers-color-scheme` to properly display banner images in `README.md` and app components  
+     * Use browsers compiled for x86_64 Linux or native installation on the host OS; no GPU acceleration dependencies required  
+   - Git (for version control and repository management)  
+     * Install standard x86_64 Linux compatible Git client  
+   - Optional but recommended: VS Code or any code editor with support/plugins for Svelte, TypeScript, ESLint, Prettier, Vitest, and Playwright  
+     * Use x86_64 Linux compatible VS Code binaries or editors; no ARM or GPU-specific versions needed  
+   - Optional but recommended: Playwright for end-to-end testing (version ^1.46.1 as per `package.json` devDependencies and confirmed in lockfile)  
+     * Note: Playwright browser downloads are disabled by default via `.npmrc` setting (`playwright_skip_browser_download=1`), so manually install or manage browser binaries compatible with x86_64 Linux environment before running tests  
+   - Optional but recommended: Node.js type definitions (`@types/node` version ^20.11.5) for TypeScript support  
+   - ESLint plugins:  
+     * `eslint-plugin-lube` (version ^0.4.3)  
+     * `@sveltejs/eslint-config` (version ^8.3.3)  
+     * Inclusion of a custom ESLint rule `no_compiler_imports` implemented in the new `eslint.config.js` to forbid imports from compiler code in runtime packages, enhancing code correctness and preventing unintended dependencies and ambient type leakage  
+   - Additional devDependencies as listed in `package.json` and confirmed by `pnpm-lock.yaml` to be installed, including but not limited to:  
+     * `@changesets/cli@^2.27.8` (version 2.27.8 locked)  
+     * `@svitejs/changesets-changelog-github-compact@^1.1.0` (version 1.1.0 locked)  
+     * `@vitest/coverage-v8@^2.1.9` (version 2.1.9 locked)  
+     * `eslint@^9.9.1` (version 9.9.1 locked)  
+     * `eslint-plugin-svelte@^3.11.0` (version 3.11.0 locked)  
+     * `eslint-plugin-lube` (version as per lockfile, matching ^0.4.3)  
+     * `playwright@^1.46.1` (version 1.46.1 locked)  
+     * `prettier@^3.2.4` (version 3.2.4 locked)  
+     * `prettier-plugin-svelte@^3.4.0` (version 3.4.0 locked)  
+     * `svelte` as a workspace dependency (`"svelte": "workspace:^"`) linked to `packages/svelte`  
+     * `typescript@^5.5.4` (version 5.5.4 locked)  
+     * `typescript-eslint@^8.24.0`, resolved to version 8.26.0 per lockfile for consistency (override reconciled)  
+     * `v8-natives@^1.2.5` (version 1.2.5 locked, native V8 bindings for benchmarking)  
+     * `vitest@^2.1.9` (version 2.1.9 locked)  
+   - Ensure Node.js and pnpm versions meet engine requirements:  
+     * `pnpm >= 9.0.0` (recommended 10.4.0 per `packageManager` field)  
+     * Node.js >= 18.0.0 (required by core dependencies and plugins, confirmed by lockfile engines)  
+     * Confirm Node.js and pnpm installed are for x86_64 Linux architecture, matching the hardware and Docker base images  
+   - Editors and tools should support EditorConfig for consistent formatting as per `.editorconfig` file settings:  
+     * This includes respecting line endings (`lf`), final newline insertion, tab indentation with size 2, UTF-8 charset, and trimming trailing whitespace  
+     * Special handling for certain files like `package.json` which use spaces for indentation  
+   - Prettier with `prettier-plugin-svelte` installed and properly configured to format `.svelte` files correctly  
+   - Prettier configuration updated to:  
+     * Use tabs for indentation by default (`useTabs: true`)  
+     * Use single quotes for strings (`singleQuote: true`)  
+     * No trailing commas (`trailingComma: none`)  
+     * Print width set to 100 characters (`printWidth: 100`)  
+     * Special overrides:  
+       - For `.svelte` files: `bracketSameLine` set to `false` to ensure closing brackets are on a new line  
+       - For `README.md`, package-level `README.md` files, and all `package.json` files: use spaces for indentation with tab width 2  
+   - Prettier respecting `.prettierignore` to avoid formatting on designated files and directories, now including additional patterns to exclude generated/build files, Svelte internal compiler files, test sample outputs, and configuration files as follows:  
+     * `documentation/docs/`  
+     * `packages/**/dist/*.js`  
+     * `packages/**/build/*.js`  
+     * `packages/**/npm/**/*`  
+     * `packages/**/config/*.js`  
+     * Specific files under `packages/svelte/` such as messages markdown, scripts `_bundle.js`, compiler and internal errors/warnings js files, types folder, tests sample outputs and expected/actual files, and test shards  
+     * `playgrounds/sandbox/src/*`  
+     * Standard ignores: `**/node_modules`, `**/.svelte-kit`, `**/.vercel`, `.github/CODEOWNERS`, `.prettierignore`, `.changeset`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`  
+   - Additional requirement: Modern web browsers must support rendering of HTML5 `<picture>` and `<source>` elements with media queries for `prefers-color-scheme` to properly display the banner images in `README.md` and in source components referencing these assets  
+   - Network access to Svelte website and Discord chat URLs for documentation and community resources  
+   - Inclusion of support for the `FUNDING.json` file for open source funding metadata, specifically containing Ethereum drip funding information (`ownedBy` Ethereum address), which may be used by compatible repository hosting platforms to display or manage funding options  
+
+2. FILES TO CREATE:  
+   - `package.json` at project root with monorepo-style configuration including:  
+     * `"name": "svelte-monorepo"`  
+     * `"version": "0.0.1"`  
+     * `"description": "monorepo for svelte and friends"`  
+     * `"private": true`  
+     * `"type": "module"`  
+     * `"license": "MIT"`  
+     * `"packageManager": "pnpm@10.4.0"` (version locked as per lockfile)  
+     * `"engines"` field specifying `"pnpm": ">=9.0.0"` and adding `"node": ">=18.0.0"` for consistency and enforcement as per lockfile  
+     * `"repository"` field specifying Git URL `"git+https://github.com/sveltejs/svelte.git"`  
+     * Scripts as specified, including build orchestration (`pnpm -r --filter=./packages/* build`), linting, formatting, testing, changeset versioning and publishing, benchmarking, and others as per new `package.json` content  
+     * DevDependencies locked to versions reflecting the provided `pnpm-lock.yaml` and new `package.json`, including updated `typescript-eslint` resolved to 8.26.0 per lockfile (override specifier ^8.24.0 reconciled)  
+   - `pnpm-workspace.yaml` to define workspace packages, explicitly including:  
+     ```yaml
+     packages:
+       - 'packages/*'
+       - 'playgrounds/*'
+     ```  
+     This file is newly added and must be created or updated at project root to explicitly define the workspace packages, ensuring pnpm workspace commands operate correctly across both `packages` and `playgrounds` directories.  
+   - `.gitignore` with standard Node.js and pnpm ignores, including:  
+     * `node_modules/`  
+     * `build/`  
+     * `.env`  
+     * `.pnpm-store/`  
+     * optionally `pnpm-lock.yaml` (commonly included but can be ignored if using lockfile in VCS)  
+     * Other build artifacts and environment files as relevant  
+   - `.npmrc` file at project root containing:  
+     ```
+     playwright_skip_browser_download=1
+     ```  
+     to disable automatic Playwright browser downloads during package installation. This requires manual browser installation or alternative management for Playwright testing.  
+   - `.editorconfig` at project root with the following content to ensure consistent editor and IDE formatting and whitespace rules across contributors and tools:  
+     ```
+     root = true
+
+     [*]
+     end_of_line = lf
+     insert_final_newline = true
+     indent_style = tab
+     indent_size = 2
+     charset = utf-8
+     trim_trailing_whitespace = true
+
+     [test/**/expected.css]
+     insert_final_newline = false
+
+     [package.json]
+     indent_style = space
+     ```  
+     * This `.editorconfig` file is newly confirmed and should replace or update any prior version to ensure all editors respect the defined formatting rules.  
+     * It enforces tab indentation with size 2 by default, except for `package.json` files which use spaces indentation to align with common JSON formatting practices.  
+     * Trailing whitespace is trimmed, and line endings are set to LF, with final newlines inserted.  
+     * The exception for `test/**/expected.css` disables final newline insertion to preserve expected output files exactly.  
+   - `.prettierrc` file at project root updated to exactly match the newly provided content:  
+     ```json
+     {
+       "useTabs": true,
+       "singleQuote": true,
+       "trailingComma": "none",
+       "printWidth": 100,
+       "plugins": ["prettier-plugin-svelte"],
+       "overrides": [
+         {
+           "files": ["*.svelte"],
+           "options": {
+             "bracketSameLine": false
+           }
+         },
+         {
+           "files": ["README.md", "packages/*/README.md", "**/package.json"],
+           "options": {
+             "useTabs": false,
+             "tabWidth": 2
+           }
+         }
+       ]
+     }
+     ```  
+     * This update confirms and replaces any previous `.prettierrc` content to enforce tabs by default and spaces with tabWidth 2 for markdown and JSON files as specified.  
+   - `.prettierignore` file at project root with comprehensive ignore patterns, newly confirmed and updated to include:  
+     * `documentation/docs/`  
+     * `packages/**/dist/*.js`  
+     * `packages/**/build/*.js`  
+     * `packages/**/npm/**/*`  
+     * `packages/**/config/*.js`  
+     * Specific exclusions under `packages/svelte/` including messages markdown files, scripts `_bundle.js`, compiler/internal errors and warnings JS files, types folder, tests sample outputs and expected/actual files, shards, hydration samples, and compiler index JS  
+     * `playgrounds/sandbox/src/*`  
+     * Standard ignores: all `node_modules` folders, `.svelte-kit`, `.vercel`, `.github/CODEOWNERS`, `.prettierignore`, `.changeset`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`  
+   - Bundler configuration files: either `rollup.config.js` or `vite.config.js` configured for monorepo workspace protocols, Svelte compilation, and compatible plugin versions matching lockfile versions (Rollup 4.22.x or 4.40.x, Vite 5.4.x)  
+     * Ensure bundler and plugin versions installed are compatible with x86_64 Linux environment  
+   - Source entry points per package, typically:  
+     * `src/main.ts` (TypeScript) importing and mounting `App.svelte` to an element with id `#app`  
+     * `src/App.svelte` component referencing static assets and links per documentation, including the banner images `assets/banner.png` and `assets/banner_dark.png` as used in the updated `README.md` with alt text `"Svelte - web development for the rest of us"`  
+   - `README.md` updated at project root to exactly match the newly provided content:  
+     * Banner image with dark mode support using `<picture>` and `prefers-color-scheme` media query referencing `assets/banner.png` and `assets/banner_dark.png`  
+     * License badge linking to `LICENSE.md`  
+     * Discord chat badge linking to Svelte Discord chat  
+     * Sections: What is Svelte?, Supporting Svelte, Roadmap, Contributing, Is svelte.dev down?, License  
+     * Links consistent with official Svelte website and chatroom as per provided new content  
+   - `LICENSE.md` containing updated MIT license text consistent with `package.json` and project requirements, specifically:  
+     ```
+     Copyright (c) 2016-2025 [Svelte Contributors](https://github.com/sveltejs/svelte/graphs/contributors)
+
+     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+     The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     ```  
+     * This file is newly added and must be included at project root, referenced in `package.json` `"license"` field and linked in the `README.md`.  
+   - `CONTRIBUTING.md` with contribution guidelines aligned with monorepo architecture and changeset workflows  
+   - Test directories (`test/` or co-located with components) containing Vitest tests  
+   - ESLint configuration now enhanced by replacing or supplementing `.eslintrc.js` with the new `eslint.config.js` (ESLint Flat Config), imported from `@sveltejs/eslint-config` and `eslint-plugin-lube`, and adding the custom `no_compiler_imports` rule that forbids imports from compiler code in runtime packages. This configuration includes:  
+     * Language options with `parserOptions` set for project service and correct `tsconfigRootDir`  
+     * Plugins: `lube` and a custom plugin with `no_compiler_imports` rule  
+     * Rules enforcing strict TypeScript and runtime import policies, such as no console logs, await usage, and Svelte-specific naming conventions  
+     * Temporary disabling of some rules (`object-shorthand`, `@typescript-eslint/prefer-promise-reject-errors`, `no-var`, `@stylistic/quotes`, `@typescript-eslint/no-unused-vars`, `prefer-const`) with TODO comments to enable and fix later  
+     * Disable type-aware rules on `.svelte` files due to ESLint parser current limitations  
+     * File-specific overrides disabling certain rules on `.svelte` files  
+     * Folder-specific overrides for `packages/svelte/src/**/*` ignoring `compiler` subfolder, enforcing the custom `no_compiler_imports` rule and disabling `svelte/no-svelte-internal`  
+     * Ignore patterns for various files and directories not relevant for linting (benchmarking, coverage, playgrounds, config files, documentation, tmp folders)  
+   - Vitest configuration file `vitest.config.js` located either at root or per package, configured to use coverage provider `@vitest/coverage-v8` version 2.1.9 as locked in `pnpm-lock.yaml`  
+   - Changesets configuration folder `.changeset/` containing `config.json` set to use the `@svitejs/changesets-changelog-github-compact` adapter for changelog generation, version 1.1.0 as per lockfile  
+   - Static assets folder `public/assets/` containing files such as `banner.png` and `banner_dark.png` referenced in `README.md` and source components  
+   - Additional configuration files as needed for Playwright and benchmarking tools (Playwright version 1.46.1 confirmed)  
+   - Newly added file:  
+     * `FUNDING.json` at project root containing:  
+       ```json
+       {
+         "drips": {
+           "ethereum": {
+             "ownedBy": "0xCE08E02c37d90d75C2bf7D9e55f7606C8DB80E70"
+           }
+         }
+       }
+       ```  
+       This file should be added to the repository root to provide open source funding metadata compatible with hosting platforms that support Ethereum drip funding info, enabling transparency and community support options.  
+       Its inclusion does not conflict with existing files and should be committed and documented accordingly (e.g., mention in `README.md` or `CONTRIBUTING.md` if relevant).  
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - Component rendering tests for main components (`App.svelte` and others) ensuring proper mount and no runtime errors  
+   - DOM update tests verifying reactive state changes correctly update the DOM  
+   - Accessibility tests ensuring ARIA attributes, alt text for images (e.g., `banner.png` and `banner_dark.png` with alt text `"Svelte - web development for the rest of us"`), and overall a11y compliance  
+   - Routing tests if routing is implemented, verifying navigation correctness and route matching  
+   - Build process tests to confirm bundling completes without errors across all workspace packages with bundler versions 4.22.x or 4.40.x for Rollup and 5.4.x for Vite  
+     * Run on x86_64 Linux environment or Docker containers using `linux/amd64` base images to ensure compatibility  
+   - Edge case tests for missing, invalid, or unexpected props in components  
+   - License and metadata presence checks ensuring the `LICENSE.md` file matches the MIT license text with correct copyright  
+   - Linting and formatting tests to ensure codebase compliance with ESLint and Prettier configurations, including verifying consistency with `.editorconfig` settings  
+     * Specifically verify that editors respect `.editorconfig` rules such as tab indentation with size 2, LF line endings, trailing whitespace trimming, and final newline insertion  
+     * Confirm that `package.json` files are indented with spaces, not tabs, matching `.editorconfig` override  
+   - ESLint-specific tests to verify that the custom `no_compiler_imports` rule triggers correctly on forbidden import patterns within `packages/svelte/src/**/*` except compiler folder  
+   - Tests validating that files and directories listed in `.prettierignore` are correctly excluded from Prettier formatting runs, preventing unintended formatting of build outputs, generated JS files, Svelte internal compiler files, test samples, and node_modules  
+     * Include explicit tests for newly added ignored paths such as `documentation/docs/`, `packages/**/npm/**/*`, `packages/**/config/*.js`, and specific `packages/svelte` files and folders listed in `.prettierignore`  
+   - Tests verifying Prettier formatting respects `.prettierrc` overrides, including:  
+     * Tabs as default indentation except for README and package.json files where spaces with tab width 2 are used  
+     * `bracketSameLine` is false for `.svelte` files to ensure consistent tag formatting  
+   - End-to-end browser tests using Playwright (optional but recommended), covering critical user flows and UI interactions  
+     * Note: Due to `.npmrc` setting disabling Playwright browser auto-download, tests must verify that required browsers are installed manually and compatible with the x86_64 Linux environment before running Playwright tests  
+   - Benchmark tests as indicated by scripts (`bench`, `bench:compare`, `bench:debug`) including tests leveraging the `v8-natives` package for V8 engine native bindings to measure performance characteristics  
+   - Changesets versioning and publishing workflow tests to validate correct version bumps, changelog generation, and package publishing in the monorepo context  
+   - Tests verifying correct TypeScript support and typings, considering usage of `@types/node` (20.12.7 as per lockfile) and TypeScript version 5.5.4  
+   - Tests verifying that editor formatting respects `.editorconfig` rules, especially regarding indentation styles (tabs vs spaces) and newline insertion, to ensure consistent cross-editor formatting and prevent whitespace-related issues in commits  
+   - Tests verifying that the `<picture>` element with `prefers-color-scheme` media query in `README.md` renders correctly in supported browsers (can be part of end-to-end UI tests or manual verification)  
+   - Tests confirming the presence and correctness of badges and links in `README.md` to license and Discord chat (can be static content tests or integration documentation tests)  
+   - Newly added test scenario:  
+     * Verification that `eslint.config.js` correctly enforces the `no_compiler_imports` rule and other configured ESLint rules  
+     * Verification that `eslint.config.js` Flat Config loads correctly and ESLint runs without configuration errors on x86_64 Linux environment  
+     * Verification that `FUNDING.json` exists at project root with correct JSON syntax and valid Ethereum address format under `drips.ethereum.ownedBy` field  
+     * Optional tests or scripts to verify that repository hosting platforms recognize and display funding metadata from `FUNDING.json` if applicable  
+     * Documentation or linting tests ensuring `FUNDING.json` does not introduce JSON syntax errors and is included in the repository appropriately  
+
+4. COMPLETE TODO LIST:  
+   - Step 1: Install prerequisites  
+     * Download and install Node.js LTS (18.x or later, compatible with Node 20+ requirements and matching engines constraints in lockfile) as x86_64 Linux binaries or docker image `node:18` or later tagged `linux/amd64`  
+     * Install pnpm globally via `npm install -g pnpm`, ensuring version >= 9.0.0 (recommended 10.4.0 to match `packageManager` and lockfile)  
+     * Verify versions with `node -v` and `pnpm -v` on x86_64 Linux environment  
+     * Install Git if not present; verify with `git --version`  
+     * (Optional) Install VS Code with recommended extensions: Svelte, TypeScript, ESLint, Prettier, Vitest, Playwright (compatible with x86_64 Linux)  
+     * Configure editor or IDE to respect `.editorconfig` file for consistent indentation, line endings, character sets, and trailing whitespace trimming  
+       - Confirm editor respects the `.editorconfig` overrides for `package.json` files (spaces indentation) and `test/**/expected.css` files (no final newline insertion)  
+       - Validate configuration in editor settings or via plugins/extensions supporting EditorConfig  
+
+   - Step 2: Initialize the monorepo project  
+     * Create or update root `package.json` reflecting monorepo style with exact devDependencies and scripts matching locked versions from the provided `pnpm-lock.yaml` file and new `package.json` content, including:  
+       - Ensure `"engines"` field specifies `"pnpm": ">=9.0.0"` and add `"node": ">=18.0.0"` to enforce engine consistency  
+       - Confirm `packageManager` is `"pnpm@10.4.0"`  
+       - Update or confirm `typescript-eslint` version resolved to 8.26.0 per lockfile (overriding specifier ^8.24.0)  
+       - Add `v8-natives` dependency for benchmarking scripts as before  
+     * Create or update `pnpm-workspace.yaml` at project root with:  
+       ```yaml
+       packages:
+         - 'packages/*'
+         - 'playgrounds/*'
+       ```  
+       This explicit declaration ensures pnpm workspace commands include both `packages` and `playgrounds` directories, critical for workspace package discovery and dependency linking.  
+     * Create `.npmrc` file at the root containing:  
+       ```
+       playwright_skip_browser_download=1
+       ```  
+       to disable automatic Playwright browser downloads during installation, requiring manual browser binary management compatible with x86_64 Linux  
+     * Create or update `.editorconfig` file at project root with specified formatting and whitespace rules to enforce consistent editor behavior across contributors and tools (as above)  
+     * Create or update `.prettierrc` file at project root exactly as per the newly provided content:  
+       - Use tabs by default (`useTabs: true`) for indentation  
+       - Single quotes for strings  
+       - No trailing commas  
+       - Print width 100  
+       - Overrides for `.svelte` files (`bracketSameLine: false`) and markdown/package.json files (spaces, tabWidth 2)  
+     * Create `.prettierignore` file at project root with the provided comprehensive ignore patterns to exclude build files, generated JS, Svelte internal files, test sample outputs, and standard ignores like `node_modules` and config files, now including:  
+       - `documentation/docs/`  
+       - `packages/**/dist/*.js`  
+       - `packages/**/build/*.js`  
+       - `packages/**/npm/**/*`  
+       - `packages/**/config/*.js`  
+       - Specific `packages/svelte` exclusions as detailed above  
+       - `playgrounds/sandbox/src/*`  
+       - Standard ignores: `.github/CODEOWNERS`, `.prettierignore`, `.changeset`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`  
+     * Add the new file `FUNDING.json` at project root with the Ethereum drip funding information as provided, committing it to version control for repository funding metadata support  
+     * Run `pnpm install` to install dependencies, link workspace packages, and generate `pnpm-lock.yaml` (lockfileVersion 9.0) as provided  
+       - Ensure this runs on x86_64 Linux environment or Docker images tagged `linux/amd64` for compatibility  
+     * Create `.gitignore` including standard ignores plus pnpm-specific directories such as `.pnpm-store/` and optionally `pnpm-lock.yaml`  
+     * Establish folder structure:  
+       - `packages/` for Svelte apps and libraries  
+       - `playgrounds/` for sandbox or demo apps (now explicitly included in workspace)  
+       - Inside each package: `src/` for source files  
+       - `public/assets/` at root or per package for static assets such as banner images (`banner.png`, `banner_dark.png`) referenced in `README.md` and components  
+     * Add `LICENSE.md` file at project root with the updated MIT license text reflecting copyright years 2016-2025 and Svelte Contributors attribution  
+
+   - Step 3: Configure build tools and scripts  
+     * Choose bundler: Rollup (4.22.x or 4.40.x) or Vite (5.4.x); configure to support monorepo workspace protocols and Svelte compilation with plugin versions aligned to lockfile (e.g., `@sveltejs/vite-plugin-svelte@4.0.0-next.6`, `@rollup/plugin-commonjs@28.0.1`, `@rollup/plugin-node-resolve@15.3.0`)  
+     * Install bundler dependencies and plugins within workspace packages as needed  
+     * Define scripts in root `package.json` as per new file:  
+       - `"build": "pnpm -r --filter=./packages/* build"`  
+       - `"check": "cd packages/svelte && pnpm build && cd ../../ && pnpm -r check"`  
+       - `"lint": "eslint && prettier --check ."`  
+       - `"format": "prettier --write ."`  
+       - `"test": "vitest run"`  
+       - Changeset scripts: `"changeset:version"` and `"changeset:publish"`  
+       - Benchmarking scripts using `node --allow-natives-syntax` with `v8-natives` support: `"bench"`, `"bench:compare"`, `"bench:debug"`  
+     * Verify bundler configuration by running `pnpm run build` and ensuring no errors occur on x86_64 Linux  
+
+   - Step 4: Create source files and assets  
+     * For each package in the workspace (including those in both `packages/` and `playgrounds/`):  
+       - Create `src/main.ts` (TypeScript) importing `App.svelte` and mounting it to a DOM element with id `#app`  
+       - Create `src/App.svelte` component referencing static assets and links consistent with the updated `README.md`, including the banner images `assets/banner.png` and `assets/banner_dark.png` with proper alt text `"Svelte - web development for the rest of us"`  
+     * Add static assets such as `banner.png` and `banner_dark.png` to `public/assets/` or appropriate static folders per package or root  
+
+   - Step 5: Configure ESLint with Flat Config (`eslint.config.js`)  
+     * Replace or supplement existing `.eslintrc.js` with the new `eslint.config.js` using the Flat Config format  
+     * Import and spread `@sveltejs/eslint-config` configuration  
+     * Add `eslint-plugin-lube` plugin and configure rules including:  
+       - Add custom rule `no_compiler_imports` that forbids imports of compiler code in runtime packages, implemented with a string search to detect forbidden import paths and report errors  
+       - Enable strict rules like `@typescript-eslint/await-thenable`, `@typescript-eslint/require-await`, `no-console`, and `lube/svelte-naming-convention`  
+       - Temporarily disable some rules (`object-shorthand`, `@typescript-eslint/prefer-promise-reject-errors`, `no-var`, `@stylistic/quotes`, `@typescript-eslint/no-unused-vars`, `prefer-const`) with TODO comments to enable and fix later  
+     * Disable type-aware rules on `.svelte` files due to ESLint parser current limitations, as reflected in file-specific overrides  
+     * Define folder-specific overrides for `packages/svelte/src/**/*` ignoring `compiler` subfolder, enforcing the `no_compiler_imports` rule and disabling `svelte/no-svelte-internal`  
+     * Add ignore patterns for files and directories not relevant for linting (benchmarking, coverage, playgrounds, config files, docs, tmp)  
+     * Ensure ESLint runs correctly on x86_64 Linux environment with this configuration and respects all overrides and ignore patterns  
+
+   - Step 6: Configure Prettier  
+     * Create or update `.prettierrc` as detailed above to include `prettier-plugin-svelte` for correct formatting of Svelte files, tabs as default indentation, and file-specific overrides for markdown and JSON files using spaces with tabWidth 2  
+     * Create `.prettierignore` file with comprehensive ignore patterns as detailed above, now including additional paths to prevent formatting of generated/build files, Svelte internal files, test samples, and configuration files  
+     * Ensure Prettier respects `.editorconfig` settings where applicable, maintaining consistency of indentation style, line endings, and final newlines  
+
+   - Step 7: Configure Vitest testing framework  
+     * Use Vitest as the test runner (version ^2.1.9), installing declared dependencies consistent with lockfile  
+     * Create test files in `test/` directories or colocated with components as per monorepo conventions  
+     * Configure `vitest.config.js` at root or per package, using coverage provider `@vitest/coverage-v8` version 2.1.9  
+     * Write tests covering component rendering, DOM updates, accessibility, edge cases, routing (if used), build verification, lint rule enforcement (including custom rules like `no_compiler_imports`), and TypeScript typings  
+     * Add tests verifying that files and directories excluded by `.prettierignore` (including newly added patterns) are not processed by Prettier to prevent unwanted formatting changes  
+     * Add tests verifying Prettier formatting respects `.prettierrc` overrides (tabs vs spaces, bracketSameLine for `.svelte` files)  
+     * Optionally add Playwright (version ^1.46.1) for end-to-end testing, including setup and configuration files  
+       - Important: Because `.npmrc` disables automatic Playwright browser downloads, ensure browsers are installed manually or via CI scripts on x86_64 Linux environment before running Playwright tests  
+     * Add `"test": "vitest run"` script in root `package.json`  
+     * Run tests and verify all pass before proceeding  
+     * Include tests verifying correct rendering of the banner image in `README.md` using `<picture>` element with `prefers-color-scheme` media query in supported browsers (manual or automated UI tests)  
+     * Include tests verifying badges and links in `README.md` (license and Discord chat) are present and correct  
+     * Add new tests verifying presence, syntax, and correctness of `FUNDING.json` file at project root, ensuring Ethereum drip funding metadata is correctly formatted and accessible  
+     * Add new tests verifying ESLint runs using Flat Config with `eslint.config.js` and enforces the `no_compiler_imports` rule as expected  
+
+   - Step 8: Setup linting and formatting scripts  
+     * Add `"lint"` script to run ESLint with the Flat Config setup (`eslint.config.js`)  
+     * Add `"format"` script to run Prettier formatting including Svelte plugin and respecting `.prettierignore`  
+     * Run lint and format checks, fixing issues to maintain code quality and consistency  
+     * Plan to enable currently disabled ESLint rules (`@stylistic/quotes`, `@typescript-eslint/no-unused-vars`, `prefer-const`) and run `pnpm lint:fix` in the future  
+     * Verify that formatting and linting respect `.editorconfig` and `.prettierignore` settings, adjusting configurations if conflicts arise  
+
+   - Step 9: Setup Changesets for versioning and publishing  
+     * Install and configure Changesets CLI (`@changesets/cli@^2.27.8`)  
+     * Use scripts `changeset:version` and `changeset:publish` to manage version bumps and changelog generation within the monorepo workspace  
+     * Ensure `.changeset/` folder with `config.json` exists and is configured to use the GitHub changelog compact adapter (version 1.1.0)  
+     * Verify versioning workflow by creating, applying, and publishing changesets successfully  
+
+   - Step 10: Documentation and contribution guidelines  
+     * Ensure `CONTRIBUTING.md` exists with clear, updated instructions adapted for the monorepo workspace and changeset workflow  
+     * Confirm that `LICENSE.md` exists at the project root with the updated MIT license text reflecting copyright years 2016-2025 and Svelte Contributors attribution  
+     * Confirm `README.md` is updated at project root with:  
+       - Banner image with dark mode support using `<picture>` and `prefers-color-scheme` media query referencing `assets/banner.png` and `assets/banner_dark.png` with alt text `"Svelte - web development for the rest of us"`  
+       - License and Discord chat badges with correct links  
+       - Sections: What is Svelte?, Supporting Svelte, Roadmap, Contributing, Is svelte.dev down?, License  
+       - Correct and up-to-date links to official Svelte website, Discord chat, contributing guide, roadmap, and license  
+     * Add documentation or notes about `.editorconfig`, `.prettierignore`, `.prettierrc`, and `eslint.config.js` usage and importance to ensure consistent code formatting and linting and to avoid formatting of generated/build/test files across all contributors and tools  
+     * Optionally mention the `FUNDING.json` file in `README.md` or `CONTRIBUTING.md` to inform contributors and users about funding options and transparency  
+
+   - Step 11: Verification and troubleshooting  
+     * Run `pnpm install` to cleanly install all dependencies across the entire workspace, confirming `pnpm-lock.yaml` is at version 9.0 as expected and matches provided lockfile contents  
+     * Confirm `.npmrc` is present and contains `playwright_skip_browser_download=1` so that Playwright does not auto-download browsers during install  
+     * Confirm `.editorconfig` is present and contains the updated content enforcing tabs with size 2 indentation by default, spaces indentation for `package.json`, LF line endings, final newline insertion, charset utf-8, and trimming trailing whitespace  
+     * Confirm `.prettierrc` matches the newly provided exact content and `.prettierignore` is present and correctly configured at the project root, with `.prettierignore` including all specified additional patterns for build outputs, generated files, internal compiler files, test samples, and config files  
+     * Confirm `pnpm-workspace.yaml` is present and explicitly includes both `packages/*` and `playgrounds/*` to properly scope workspace commands  
+     * Confirm `eslint.config.js` is present at root, contains the custom `no_compiler_imports` rule, and ESLint runs using Flat Config with this file  
+     * Run `pnpm run lint` to ensure ESLint runs without unexpected errors and respects custom rules (including `no_compiler_imports`)  
+     * Run `pnpm run format` to check formatting consistency and conformance to `.editorconfig`, `.prettierrc`, and `.prettierignore` settings  
+     * Verify that Prettier does not format files/directories listed in `.prettierignore` by running format checks on those files and confirming no changes, including newly added ignores like `documentation/docs/` and `packages/**/npm/**/*`  
+     * Verify that Prettier formatting respects `.prettierrc` overrides, including tabs for general files and spaces for markdown and JSON files, and bracket placement in `.svelte` files  
+     * Run `pnpm test` to execute all test suites, confirming 100% pass rate on x86_64 Linux compatible environment  
+     * For Playwright tests, verify that required browser binaries are installed manually or via CI setup prior to test execution due to disabled auto-download, and that browsers are x86_64 Linux compatible  
+     * Run `pnpm run dev` or equivalent commands in relevant packages to start development servers  
+     * Open browser at localhost for each running package to verify apps load correctly without errors  
+     * Run `pnpm run build` to produce production builds for all packages, verifying outputs and absence of errors  
+     * Execute benchmarking scripts (`bench`, `bench:compare`, `bench:debug`) which now utilize `v8-natives` to enable native V8 performance measurements  
+     * Monitor console logs and browser developer tools for warnings or errors, resolving as necessary  
+     * Test the environment setup and app functionality across multiple operating systems (Windows, macOS, Linux) to ensure cross-platform compatibility (if relevant)  
+     * Verify presence and correctness of `LICENSE.md` file, ensuring it matches the MIT license text and is included in the repository and distributed packages as required  
+     * Verify presence and correctness of `FUNDING.json` file, ensuring it is committed, valid JSON, and correctly formatted for Ethereum drip funding metadata  
+     * Confirm that editor and tooling integrations respect `.editorconfig`, `.prettierignore`, `.prettierrc`, and `eslint.config.js` settings by opening files in supported editors (e.g., VS Code) and verifying indentation, line endings, whitespace trimming, linting rules, and formatting exclusions behave as expected  
+     * Verify that the `README.md` renders correctly, including:  
+       - Banner image with dark mode switching via `<picture>` and `prefers-color-scheme`  
+       - License and Discord chat badges display properly and link correctly  
+       - All links in `README.md` are accessible and correct  
+
+   - Step 12: Source control setup  
+     * Initialize git repository if not already done with `git init`  
+     * Add `.gitignore` reflecting updated ignores, including `node_modules/`, `.pnpm-store/`, build artifacts, environment files, and optionally `pnpm-lock.yaml`  
+     * Commit the initial codebase including `LICENSE.md`, `.npmrc` file with Playwright browser download configuration, `.editorconfig`, `.prettierignore`, `.prettierrc`, `pnpm-workspace.yaml`, `eslint.config.js`, `FUNDING.json`, and updated `README.md` files  
+     * Push to remote repository as applicable  
+
+---
+
+**Summary of adjustments made based on hardware information:**  
+- Confirmed all tool downloads, Node.js, pnpm, Git, editors, and browsers must be x86_64 Linux compatible matching the architecture of the hardware and base Docker images.  
+- Explicitly noted that Playwright browser binaries must be manually installed for x86_64 Linux due to disabled auto-download in `.npmrc`.  
+- Emphasized usage of Docker base images tagged `linux/amd64` for building or running the environment to align with hardware architecture.  
+- No GPU-specific tooling or CUDA base images recommended since no usable NVIDIA GPU detected.  
+- Paths and folder structures remain the same; relative paths in Dockerfile or scripts should be adjusted to the project root `/home/cc/EnvGym/data-gpt-4.1mini/sveltejs_svelte` context as needed.  
+- Memory and CPU core count are sufficient; parallel build and test commands can be optimized but no changes needed in the plan for resource limits.  
+- All tooling versions and configurations remain unchanged but must be installed and run in the indicated architecture environment.  
+- No ARM or alternative architecture support needed; plan assumes x86_64 Linux throughout.

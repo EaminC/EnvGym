@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/sveltejs_svelte; project likely related to SvelteJS frontend framework  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: x86_64 Linux base images (e.g., debian, ubuntu, node official images tagged amd64)  
+- GPU: No usable NVIDIA GPU detected; no CUDA base image recommended  
+- Instruction Notes: Large CPU core count and memory available—can optimize build with parallel RUN commands; no GPU-specific instructions needed; ensure relative paths in Dockerfile match /home/cc/EnvGym/data-gpt-4.1mini/sveltejs_svelte context  
+- Docker Version: 28.3.2; supports BuildKit, docker buildx, and docker compose plugins; GPU build features not applicable due to missing GPU drivers

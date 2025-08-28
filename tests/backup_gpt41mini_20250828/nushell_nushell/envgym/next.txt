@@ -1,0 +1,19 @@
+current progress  
+- Base Debian Bookworm slim image with essential packages installed for Rust and Python environment.  
+- Rust 1.87.0 installed via rustup, confirmed with `rustc --version`.  
+- Coverage tooling (`cargo-llvm-cov`) installed.  
+- Repository copied to `/work` directory with working directory set.  
+- Verified presence of `Cargo.lock`.  
+- Install script (`install-all.sh`) line endings fixed, permissions set, and safe bash options added.  
+- Nushell built with `cargo build --release`.  
+- Debugging commands run before install script.  
+- Dry-run of install script executed with failure allowed and logs attempted to be shown.  
+- Final install script run with tracing resulted in build failure with exit code 101.
+
+next step  
+- Investigate cause of `install-all.sh` failure (exit code 101) by capturing detailed error output from the script execution.  
+- Modify Dockerfile to separate install script steps to isolate failure point, e.g., run individual commands within `install-all.sh` manually in Dockerfile or add more verbose logging inside the script.  
+- Ensure all dependencies and environment variables required by `install-all.sh` are correctly set before execution.  
+- Consider adding explicit Rust toolchain environment variables or paths if missing at install time.  
+- Confirm network access inside Docker build context if `install-all.sh` fetches external resources.  
+- Once failure cause is identified, fix the script or Dockerfile accordingly and re-run build.

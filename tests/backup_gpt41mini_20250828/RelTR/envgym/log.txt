@@ -1,0 +1,26 @@
+=== Docker Execution Log - 20250827_103629 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756290984
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+4.933 ERROR: Command errored out with exit status 1: /opt/conda/envs/reltr/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-req-build-ns0cn6y3/PythonAPI/setup.py'"'"'; __file__='"'"'/tmp/pip-req-build-ns0cn6y3/PythonAPI/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-qptu4j68/install-record.txt --single-version-externally-managed --compile --install-headers /opt/conda/envs/reltr/include/python3.6m/pycocotools Check the logs for full command output.
+4.933
+------
+envgym.dockerfile:58
+--------------------
+56 |     WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/RelTR
+57 |
+58 | >>> RUN conda run -n reltr pip install --no-cache-dir -v -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
+59 |
+60 |     RUN conda run -n reltr bash -c "cd lib/fpn && sh make.sh && python setup.py build_ext --inplace"
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/bash -c conda run -n reltr pip install --no-cache-dir -v -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

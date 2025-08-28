@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250828_081122 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756368678
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+17 |     COPY . .
+18 |
+19 | >>> RUN go version && ls -la && go mod verify && go clean -modcache && go mod tidy -v
+20 |
+21 |     CMD ["/bin/bash"]
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c go version && ls -la && go mod verify && go clean -modcache && go mod tidy -v" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

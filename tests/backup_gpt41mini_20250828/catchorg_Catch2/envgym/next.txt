@@ -1,0 +1,21 @@
+current progress  
+- Base Ubuntu 22.04 image set with working directory aligned to plan.  
+- Essential packages installed including gcc-11, g++-11, clang-13, cmake, python3, pip3, git, lcov, ninja, curl, and others.  
+- gcc and g++ default alternatives set to version 11 as recommended.  
+- Meson and Ninja installed via pip3 with version constraints matching plan.  
+- Conan installed via pip3 with version >=1.53.0.  
+- Bazel latest stable (6.3.2) downloaded and installed correctly, verified via `bazel version`.  
+- Catch2 repository cloned on the devel branch into the specified directory.  
+- Environment variables for CC, CXX, and PATH set per plan.  
+- Python3 symlinked to python to ensure CMake finds it.  
+- Dockerfile CMD set to bash shell.  
+
+next step  
+- Add installation of additional Linux utilities if missing (e.g., yaml parser/viewer) as per plan.  
+- Incorporate copying or creation of configuration files (`conanfile.py`, `CMakeLists.txt`, `.bazelrc`, `MODULE.bazel`, `BUILD.bazel`, `CMakePresets.json`, `codecov.yml`) into the image or volume mount for build.  
+- Remove any Windows/MSVC/AppVeyor related files or ensure their exclusion in the build context.  
+- Verify and enforce out-of-source build practices in CMakeLists.txt and Dockerfile.  
+- Optionally add scripts or commands to run build and test steps for CMake + Conan, Bazel, and Meson within the container for validation.  
+- Ensure coverage tools (lcov) are configured and codecov uploader is installed and configured for CI simulation.  
+- Confirm that environment variables and compiler flags in `.bazelrc` and other configs are Linux-specific and consistent.  
+- Consider adding non-root user setup for safer Docker usage if relevant.

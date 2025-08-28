@@ -1,0 +1,161 @@
+=== Docker Execution Log - 20250827_093827 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756287505
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 2.38kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/22] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 749.90kB 0.0s done
+#5 DONE 0.0s
+
+#6 [ 2/22] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     git     python3     python3-pip     make     libssl-dev     mtd-utils     xfsprogs     rename     libncurses-dev     bison     flex     libelf-dev     nfs-ganesha     sudo     ca-certificates     wget     curl     vim     bc     pkg-config     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 3/22] RUN pip3 install --no-cache-dir numpy scipy matplotlib pulp ply
+#7 CACHED
+
+#8 [ 6/22] WORKDIR /home/cc
+#8 CACHED
+
+#9 [ 4/22] RUN useradd -m -s /bin/bash cc &&     echo "cc ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+#9 CACHED
+
+#10 [ 5/22] RUN mkdir -p /mnt/test-ext4 /mnt/test-jffs2 /mnt/test-nfs-ganesha-export /mnt/test-nfs-client
+#10 CACHED
+
+#11 [ 7/22] RUN mkdir -p EnvGym/data-gpt-4.1mini/Metis
+#11 CACHED
+
+#12 [ 8/22] COPY --chown=cc:cc ./ ./EnvGym/data-gpt-4.1mini/Metis/
+#12 DONE 0.1s
+
+#13 [ 9/22] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/Metis
+#13 DONE 0.0s
+
+#14 [10/22] RUN set -ex && make clean || true
+#14 0.220 + make clean
+#14 0.221 rm -f *.o *.so *.a
+#14 DONE 0.2s
+
+#15 [11/22] RUN set -ex && make V=1 2>&1 | tee build.log
+#15 0.413 + make V=1
+#15 0.413 + tee build.log
+#15 0.415 gcc -Wall -Werror -o log.c.o -fPIC -c common/log.c -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#15 0.490 gcc -Wall -Werror -o circular_buf.c.o -fPIC -c common/circular_buf.c -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#15 0.530 gcc -Wall -Werror -o operations.c.o -fPIC -c common/operations.c -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#15 0.589 gcc -Wall -Werror -o custom_heap.c.o -fPIC -c common/custom_heap.c -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#15 0.626 gcc -Wall -Werror -o errnoname.c.o -fPIC -c common/errnoname.c -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#15 0.650 gcc -Wall -Werror -o swapperf.c.o -fPIC -c common/swapperf.c -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#15 0.704 gcc -Wall -Werror -o nanotiming.c.o -fPIC -c common/nanotiming.c -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#15 0.728 g++ -std=c++11 -Wall -Werror -o abstract_fs.cpp.o -fPIC -c common/abstract_fs.cpp -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#15 0.744 In file included from common/abstract_fs.cpp:12:
+#15 0.744 ./include/abstract_fs.h:54:10: fatal error: xxhash.h: No such file or directory
+#15 0.744    54 | #include <xxhash.h>
+#15 0.744       |          ^~~~~~~~~~
+#15 0.744 compilation terminated.
+#15 0.745 make: *** [Makefile:28: abstract_fs.cpp.o] Error 1
+#15 DONE 0.8s
+
+#16 [12/22] RUN set -ex && ls -l && whoami && env && make install
+#16 0.371 + ls -l
+#16 0.375 total 268
+#16 0.375 -rw-rw-r--  1 cc cc 11357 Aug 25 19:15 LICENSE
+#16 0.375 -rw-rw-r--  1 cc cc   871 Aug 25 19:15 Makefile
+#16 0.375 -rw-rw-r--  1 cc cc  2539 Aug 25 19:15 README-others.md
+#16 0.375 -rw-rw-r--  1 cc cc 44090 Aug 25 19:15 README.md
+#16 0.375 drwxrwxr-x  2 cc cc  4096 Aug 25 19:15 ae-experiments
+#16 0.375 -rw-r--r--  1 cc cc  1615 Aug 27 09:38 build.log
+#16 0.375 -rw-r--r--  1 cc cc 13920 Aug 27 09:38 circular_buf.c.o
+#16 0.375 drwxrwxr-x  2 cc cc  4096 Aug 25 19:15 common
+#16 0.375 -rw-r--r--  1 cc cc 16112 Aug 27 09:38 custom_heap.c.o
+#16 0.375 drwxrwxr-x  3 cc cc  4096 Aug 25 19:15 driver-fs-state
+#16 0.375 drwxrwxr-x  2 cc cc  4096 Aug 27 09:38 envgym
+#16 0.375 -rw-r--r--  1 cc cc 13312 Aug 27 09:38 errnoname.c.o
+#16 0.375 drwxrwxr-x  2 cc cc  4096 Aug 25 19:15 example
+#16 0.375 drwxrwxr-x  3 cc cc  4096 Aug 25 19:15 fs-state
+#16 0.375 drwxrwxr-x 13 cc cc  4096 Aug 25 19:15 fs_bugs
+#16 0.375 drwxrwxr-x  2 cc cc  4096 Aug 25 19:15 include
+#16 0.375 drwxrwxr-x 13 cc cc  4096 Aug 25 19:15 kernel
+#16 0.375 -rw-r--r--  1 cc cc 30360 Aug 27 09:38 log.c.o
+#16 0.375 drwxrwxr-x  2 cc cc  4096 Aug 25 19:15 mcl-demo
+#16 0.375 -rw-r--r--  1 cc cc  9528 Aug 27 09:38 nanotiming.c.o
+#16 0.375 -rw-r--r--  1 cc cc 23888 Aug 27 09:38 operations.c.o
+#16 0.375 drwxrwxr-x 16 cc cc  4096 Aug 25 19:15 promela-demo
+#16 0.375 drwxrwxr-x  3 cc cc  4096 Aug 25 19:15 python-demo
+#16 0.375 drwxrwxr-x  5 cc cc  4096 Aug 25 19:15 scripts
+#16 0.375 -rw-r--r--  1 cc cc 21232 Aug 27 09:38 swapperf.c.o
+#16 0.375 drwxrwxr-x  7 cc cc  4096 Aug 25 19:15 tests
+#16 0.375 drwxrwxr-x  2 cc cc  4096 Aug 25 19:15 verifs1
+#16 0.375 + whoami
+#16 0.377 root
+#16 0.377 + env
+#16 0.378 HOME=/root
+#16 0.378 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#16 0.378 LANG=C.UTF-8
+#16 0.378 DEBIAN_FRONTEND=noninteractive
+#16 0.378 WORKDIR=/home/cc/EnvGym/data-gpt-4.1mini/Metis
+#16 0.378 LC_ALL=C.UTF-8
+#16 0.378 PWD=/home/cc/EnvGym/data-gpt-4.1mini/Metis
+#16 0.378 + make install
+#16 0.380 g++ -std=c++11 -Wall -Werror -o abstract_fs.cpp.o -fPIC -c common/abstract_fs.cpp -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+#16 0.399 In file included from common/abstract_fs.cpp:12:
+#16 0.399 ./include/abstract_fs.h:54:10: fatal error: xxhash.h: No such file or directory
+#16 0.399    54 | #include <xxhash.h>
+#16 0.399       |          ^~~~~~~~~~
+#16 0.399 compilation terminated.
+#16 0.400 make: *** [Makefile:28: abstract_fs.cpp.o] Error 1
+#16 ERROR: process "/bin/sh -c set -ex && ls -l && whoami && env && make install" did not complete successfully: exit code: 2
+------
+ > [12/22] RUN set -ex && ls -l && whoami && env && make install:
+0.378 LC_ALL=C.UTF-8
+0.378 PWD=/home/cc/EnvGym/data-gpt-4.1mini/Metis
+0.378 + make install
+0.380 g++ -std=c++11 -Wall -Werror -o abstract_fs.cpp.o -fPIC -c common/abstract_fs.cpp -g -I./include -D PRINTF  -lssl -lcrypto -lrt -lstdc++ -lstdc++fs -lpthread -lprofiler -lxxhash -lz -lm
+0.399 In file included from common/abstract_fs.cpp:12:
+0.399 ./include/abstract_fs.h:54:10: fatal error: xxhash.h: No such file or directory
+0.399    54 | #include <xxhash.h>
+0.399       |          ^~~~~~~~~~
+0.399 compilation terminated.
+0.400 make: *** [Makefile:28: abstract_fs.cpp.o] Error 1
+------
+envgym.dockerfile:54
+--------------------
+  52 |     # Switch to root user to run make install with proper permissions
+  53 |     USER root
+  54 | >>> RUN set -ex && ls -l && whoami && env && make install
+  55 |     
+  56 |     USER cc
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c set -ex && ls -l && whoami && env && make install" did not complete successfully: exit code: 2
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

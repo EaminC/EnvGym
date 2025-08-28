@@ -1,0 +1,22 @@
+current progress
+- Base Ubuntu 20.04 image used with essential packages installed.
+- User `cc` created with sudo privileges.
+- Working directories and mount points created.
+- Source code copied with proper ownership.
+- Clean and build (`make clean` and `make`) steps executed as user `cc`.
+- Attempted `make install` as root user failed in Docker build.
+- Python packages installed globally and user requirements attempted.
+- Kernel 6.9.4 source downloaded and extraction done.
+- Kernel build script created and made executable.
+- File permissions for scripts set.
+- Environment partially prepared but `make install` failed causing build error.
+
+next step
+- Investigate `make install` failure by examining `build.log` and error messages.
+- Ensure all dependencies and environment variables required by `make install` are present.
+- Consider running `make install` as user `cc` with sudo rather than switching fully to root to maintain environment consistency.
+- Add debugging steps before `make install` to verify current directory contents and permissions.
+- Confirm that `make install` target does not require interactive input or additional environment setup.
+- If permission issues, verify ownership and permissions of install target directories.
+- Optionally split `make install` into smaller commands to isolate failure cause.
+- After fixing `make install`, validate subsequent configuration steps and kernel build script execution.

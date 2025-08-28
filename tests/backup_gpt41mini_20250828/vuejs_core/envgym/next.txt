@@ -1,0 +1,22 @@
+current progress  
+- Dockerfile uses official node:22-bullseye amd64 base image as planned  
+- Working directory set correctly to Linux POSIX path `/home/cc/EnvGym/data-gpt-4.1mini/vuejs_core`  
+- Git, curl, and necessary utilities installed via apt without recommended extras  
+- pnpm 10.15.0 installed globally using npm  
+- Node, pnpm, and git versions verified via RUN commands  
+- Git user configured with placeholder values  
+- Project files copied into container context  
+- Dependencies installed using `pnpm install`  
+- Relevant ports exposed for dev servers (3000, 5173)  
+- Default CMD set to open bash shell at project root  
+- Previous Docker build and runtime logs indicate successful build and execution  
+
+next step  
+- Remove or conditionally handle Git clone step as project files are copied directly, avoiding redundant cloning  
+- Consider adding healthcheck or entrypoint script to automate starting dev server or build tasks if needed  
+- Optionally configure Git user dynamically via build args or environment variables instead of hardcoded placeholders  
+- Add cleanup steps or caching optimizations to reduce image size and build time if appropriate  
+- Verify that pnpm install completes without architecture or platform errors in the container environment  
+- Document usage instructions for running container with volume mounts to sync source code if development mode is intended  
+- Confirm environment variables and Linux shell compatibility for all scripts inside the container  
+- Optionally add multi-core build flags or parallelism tuning for pnpm or test tools if performance improvements are desired

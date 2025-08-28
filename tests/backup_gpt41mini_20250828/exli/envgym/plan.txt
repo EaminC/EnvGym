@@ -1,0 +1,156 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+Based on the provided hardware information and environment details, the following adjustments and confirmations have been made to ensure full compatibility and optimal setup:
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - Docker (latest stable version 28.3.2 confirmed installed on host)  
+   - Ubuntu 22.04 base image:  
+     - Use official `ubuntu:22.04` image with architecture `linux/amd64` explicitly specified in Docker build to match `x86_64` hardware.  
+       - Example: `FROM --platform=linux/amd64 ubuntu:22.04` in Dockerfile  
+   - Conda (Miniconda latest installer inside Docker at `/opt/conda`)  
+     - Use Miniconda installer for `x86_64` Linux architecture to match host and base image.  
+   - Python 3.9 or later installed inside Docker via Conda environment `exli`  
+     - Confirm Miniconda distribution supports Python 3.9+ on `x86_64` Ubuntu 22.04 base.  
+   - Java 8 installed inside Docker via SDKMAN (version 8.0.302-open)  
+     - SDKMAN supports x86_64 Linux, no changes needed.  
+   - JUnit 4, Maven 3.8.3+, Git, and other Linux packages installed inside Docker as per original plan  
+   - GeckoDriver v0.31.0 and Firefox installed inside Docker at appropriate locations  
+     - Confirm x86_64 compatible binaries are downloaded and installed.  
+   - SDKMAN installed inside Docker for Java management  
+   - Python packages from `python/setup.py` dependencies installed in Conda environment  
+     - Ensure all packages support Python 3.9+ and Linux x86_64 architecture.  
+   - Additional notes:  
+     - No GPU or CUDA dependencies, so no GPU-specific instructions or base images are used.  
+     - Overlay2 storage driver compatibility assured by using standard Docker instructions (no special flags needed).  
+
+---
+
+2. FILES TO CREATE:  
+   - Dockerfile:  
+     - Add explicit platform specification for build and base image:  
+       ```dockerfile
+       # Use platform flag to enforce x86_64 architecture
+       FROM --platform=linux/amd64 ubuntu:22.04
+       ```  
+     - All copy/add instructions use relative paths within the build context rooted at `/home/cc/EnvGym/data-gpt-4.1mini/exli`  
+       - Ensure Docker build context is set at `/home/cc/EnvGym/data-gpt-4.1mini/exli` or above so `python/setup.py` and other files are accessible.  
+     - Confirm `exli/python/prepare-conda-env.sh` is updated to install all Python packages listed in `setup.py` including extras if needed.  
+     - During build, activate Conda environment properly before running `pip install .` or `python setup.py install` inside `exli/python`.  
+       - Use:  
+         ```dockerfile
+         RUN /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate exli && pip install ."
+         ```  
+     - Clone `exli` and `inlinetest` repos during build as per plan; verify network access during build.  
+     - Add user `itdocker` with sudo privileges, working dir `/home/itdocker`, consistent with Linux x86_64 environment.  
+   - Conda environment setup script (`exli/python/prepare-conda-env.sh`) updated to:  
+     - Install Python 3.9+ compatible packages for Linux x86_64.  
+     - Install all dependencies from `setup.py` `install_requires` and optionally `extras_require`.  
+     - Confirm packages do not require GPU or architecture-specific binaries incompatible with x86_64.  
+   - `python/setup.py`:  
+     - Confirm all dependencies support Ubuntu 22.04 x86_64 and Python 3.9+  
+   - Environment variables and directory paths:  
+     - Use absolute paths carefully, all mapped within Docker build context and container.  
+     - Working directory inside container: `/home/itdocker`  
+     - Host working directory: `/home/cc/EnvGym/data-gpt-4.1mini/exli`  
+     - Use volume mapping during `docker run` accordingly:  
+       ```bash
+       docker run -it -v /home/cc/EnvGym/data-gpt-4.1mini/exli:/home/itdocker/exli exli /bin/bash
+       ```  
+   - Directory structure for logs, results, tests:  
+     - Created inside `/home/itdocker/exli` inside container and mapped to host path as above  
+     - Permissions set to allow read/write by user `itdocker` and mapped host user.  
+
+---
+
+3. NECESSARY TEST CASES IN THE CODEBASE:  
+   - No architecture-specific adjustments needed for test cases as they are platform-independent Python and Java tests.  
+   - Ensure all tests run under Ubuntu 22.04 x86_64 with installed dependencies.  
+   - Java 8 environment verification via SDKMAN remains unchanged.  
+   - GeckoDriver and Firefox tested on x86_64 Linux; no changes needed.  
+   - Batch command parsing tests confirm compatibility with Docker container Linux shell environment.  
+   - Conda environment activation tested inside container shell.  
+   - Python package import and extras tests run inside Conda environment on x86_64 Linux.  
+   - Docker build logs monitored for any architecture-specific installation failures (none expected).  
+
+---
+
+4. COMPLETE TODO LIST (adjusted for hardware):  
+
+   Step 1: Prepare Host Environment  
+   - Docker version 28.3.2 confirmed, supports BuildKit and Buildx.  
+   - Ensure Docker build commands use `--platform=linux/amd64` where applicable for consistency.  
+   - Disk space: minimum 10GB free confirmed sufficient for base image, conda, and dependencies.  
+   - Git installed or accessible on host (optional).  
+   - Network access confirmed for Docker build stage to pull base image and clone repos.  
+
+   Step 2: Build Docker Image  
+   - Ensure build context root is `/home/cc/EnvGym/data-gpt-4.1mini/exli` or higher to include all necessary files (e.g., `python/setup.py`).  
+   - Dockerfile includes:  
+     - `FROM --platform=linux/amd64 ubuntu:22.04`  
+     - Installation of system dependencies and GeckoDriver for x86_64 Linux.  
+     - Miniconda for Linux x86_64 installed under `/opt/conda`.  
+     - Conda environment `exli` created with Python 3.9+ and all dependencies from `setup.py`.  
+     - SDKMAN installed and Java 8 set as default.  
+     - Cloning `exli` and `inlinetest` repos via HTTPS.  
+     - Running `exli/python/prepare-conda-env.sh`.  
+     - Running `pip install .` inside Conda environment to install `exli-research` package.  
+     - Installation of Java components via `install.sh` scripts.  
+     - Set user `itdocker` with sudo and working dir `/home/itdocker`.  
+   - Build command example:  
+     ```bash
+     DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t exli /home/cc/EnvGym/data-gpt-4.1mini/exli
+     ```  
+   - Confirm no errors, especially in Python package installation and Conda environment activation steps.  
+
+   Step 3: Run Docker Container  
+   - Run with volume mapping:  
+     ```bash
+     docker run -it -v /home/cc/EnvGym/data-gpt-4.1mini/exli:/home/itdocker/exli exli /bin/bash
+     ```  
+   - Inside container verify:  
+     - `conda --version`  
+     - `python --version` (3.9+)  
+     - `java -version` (Java 8)  
+     - `mvn -version`  
+     - `git --version`  
+     - `geckodriver --version`  
+     - `firefox --version`  
+     - Activate conda env:  
+       ```bash
+       source /opt/conda/etc/profile.d/conda.sh
+       conda activate exli
+       ```  
+     - Verify Python packages import without errors:  
+       ```bash
+       python -c "import seutil, xmltodict, tqdm, universalmutator"
+       python -c "import exli_research"
+       ```  
+
+   Step 4: Activate Conda Environment Inside Docker  
+   - Navigate to `/home/itdocker/exli/python`  
+   - Activate environment as above  
+   - Confirm Python version and package imports  
+   - If environment not activated by default, run `conda init bash` and source `.bashrc`  
+
+   Step 5: Setup Directory Structure for Results and Logs  
+   - Create required directories under `/home/itdocker/exli` (mapped to host `/home/cc/EnvGym/data-gpt-4.1mini/exli`)  
+   - Set ownership and permissions for user `itdocker` and mapped host user  
+   - Ensure volume mapping preserves directory structure and permissions  
+
+   Step 6 and onwards: Run commands and tests as per original plan, no changes needed for architecture or environment compatibility.  
+
+---
+
+5. ADDITIONAL NOTES:  
+   - No GPU or CUDA dependencies: confirmed no NVIDIA GPU, so no CUDA base images or GPU flags used.  
+   - Docker storage driver compatibility: use standard instructions; overlay2 driver supported by Docker 28.3.2 on host, no changes needed.  
+   - Paths and volumes: ensure absolute host paths are correctly mapped inside container as `/home/itdocker/exli`.  
+   - Build concurrency optimizations can be done via Docker BuildKit but no explicit flags needed.  
+   - Monitor all installation logs during Docker build for errors related to architecture or missing dependencies.  
+   - For Windows or Mac hosts, ensure Docker Desktop is configured for Linux containers and volume mapping; no changes needed for Linux host as per given info.  
+
+---
+
+This adjusted plan ensures full compatibility with the given hardware environment (x86_64 Linux, Ubuntu 22.04, no GPU), aligns Docker build and run steps with platform architecture, verifies software version compatibility, and respects file paths and volume mappings. The integration of the `python/setup.py` package installation inside the Conda environment is confirmed safe and compatible.

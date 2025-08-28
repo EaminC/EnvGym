@@ -1,0 +1,15 @@
+current progress  
+- Dockerfile based on python:3.7-slim successfully installs system dependencies and Python packages from requirements.txt with pinned versions.  
+- Virtual environment created and activated in /app/venv.  
+- pip upgraded and dependencies installed without cache.  
+- Verified python and pip versions.  
+- Confirmed torch.cuda.is_available() returns False in build stage ensuring CPU-only PyTorch.  
+- .gitignore and requirements.txt copied into container.  
+- Build and runtime logs show successful build and execution of container.  
+
+next step  
+- Add copying of project source code files into /app directory after installing dependencies to enable running code inside container.  
+- Add entrypoint or CMD to run baseline test command (e.g., `python3 main.py --prune_type=lt ...`) to verify runtime functionality.  
+- Ensure runtime directories (/data, /dumps, /plots, /runs, /saves) are created or mounted as volumes if needed.  
+- Optionally add scripts or commands to run test cases validating dataset loading, model instantiation, pruning, plotting, and CPU-only operation.  
+- Document usage instructions and automate environment setup and tests within container.

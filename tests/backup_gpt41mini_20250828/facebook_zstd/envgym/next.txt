@@ -1,0 +1,17 @@
+current progress  
+- Base image set to ubuntu:24.04 with environment variables configured.  
+- Installed essential build tools, compilers, Docker, QEMU emulators, Swift, and dependencies.  
+- Setup alternatives for gcc and g++ to version 14.  
+- Installed Swift via package manager.  
+- Attempted to create docker group, user, and add user to docker group, but build failed due to exit code 6 on the usermod command.  
+- Cloned the zstd repository with submodules.  
+- Built the project using make.  
+- Verified versions of installed tools.  
+- Set environment variables and default CMD to bash.
+
+next step  
+- Modify the Dockerfile to fix the usermod failure by ensuring the docker group exists before usermod command or restructuring the RUN command into separate steps with checks.  
+- Consider splitting the groupadd, useradd, and usermod commands into separate RUN statements with error checks and debugging outputs.  
+- Verify if the docker group is properly created and accessible before adding user to it.  
+- Alternatively, remove or adjust the use of usermod if not needed or replace with safer user group management commands.  
+- Test incremental builds to isolate the failing step.

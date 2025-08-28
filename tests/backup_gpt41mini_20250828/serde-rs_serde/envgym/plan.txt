@@ -1,0 +1,91 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Adjustments based on hardware information:**
+
+- Architecture: x86_64 (amd64) confirmed; use compatible base images and toolchains.
+- OS compatibility: Use Linux x86_64 base images (e.g., ubuntu:22.04, debian, alpine x86_64).
+- No GPU dependencies; no CUDA or GPU-specific tooling needed.
+- Use multi-core CPU to speed up builds.
+- Paths and directories should be relative or absolute inside `/home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde`.
+- Docker version supports BuildKit and advanced features; leverage these for efficient builds if using Docker.
+- Memory and storage requirements assumed typical for Rust build environments; no adjustments needed.
+- Development tools versions and features remain as specified; no changes needed.
+
+---
+
+1. DOWNLOADS NEEDED:  
+   - Rust toolchain (stable version ≥ 1.61, preferably latest stable 1.70+):  
+     - Install via rustup from https://rustup.rs/  
+     - Install the x86_64-unknown-linux-gnu target (default) matching hardware architecture.  
+   - Cargo (bundled with Rust).  
+   - Optional: Rust Analyzer (compatible with x86_64 Linux).  
+   - Git (latest stable version).  
+   - Workspace dependencies:  
+     - `proc-macro2` with `proc-macro` feature for `serde_derive`  
+     - `quote` with `proc-macro` feature for `serde_derive`  
+     - `syn` with appropriate features per crate as specified, no default features enabled across workspace.  
+     - `libc` v0.2 with default features disabled for no_std test crate.  
+   - Documentation tools compatible with `rustdoc` arguments (optional).  
+
+2. FILES TO CREATE:  
+   - `.cargo/config.toml` with workspace-specific dependency feature overrides as specified, ensuring no default features enabled and correct features per crate.  
+   - `rustfmt.toml` (optional).  
+   - `clippy.toml` (optional).  
+   - `README.md` documenting setup with minimum Rust 1.61, features, crates, and no_std test usage.  
+   - `.gitignore` including `target/`, backup files (`**/*.rs.bk`), Cargo.lock if applicable, and other build artifacts.  
+   - `crates-io.md` (required by `serde` and `serde_derive` readme fields).  
+   - Test files in respective crates (`serde/tests/`, `serde_derive/tests/`, `serde_derive_internals/tests/`, `test_suite/no_std/`).  
+   - `serde/build.rs` present and verified.  
+   - Confirm absence of `build.rs` in `serde_derive` and `serde_derive_internals` (excluded explicitly).  
+   - `test_suite/no_std/Cargo.toml` configured with:  
+     - Package name: `serde_derive_tests_no_std`  
+     - Edition: 2021  
+     - Dependencies: `libc` v0.2 (default features disabled), `serde` (path, default features disabled), `serde_derive` (path)  
+     - Profiles `dev` and `release` with `panic = "abort"`  
+     - Workspace field defined (empty).  
+
+3. NECESSARY TEST CASES:  
+   - All serialization, deserialization, macro expansion, feature flag, and error handling tests as specified remain unchanged.  
+   - Include no_std environment tests verifying procedural macro usage and panic abort behavior in `test_suite/no_std`.  
+   - Verify `serde_derive` version lock at 1.0.219 and correct linkage.  
+   - Performance benchmarks optional, can leverage multi-core CPU for faster execution.  
+
+4. COMPLETE TODO LIST:  
+   1. Install Rust via rustup on x86_64 Linux (confirmed hardware/OS compatibility):  
+      - `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`  
+      - Confirm `rustc --version` ≥ 1.61 and `cargo --version`.  
+   2. Install Git and verify with `git --version`.  
+   3. Clone repository into `/home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde`.  
+   4. Verify workspace structure and member crates including `test_suite/no_std`.  
+   5. Confirm patch override path correctness relative to working directory.  
+   6. Verify/create `serde/build.rs`.  
+   7. Confirm no `build.rs` in `serde_derive` and `serde_derive_internals`.  
+   8. `.gitignore` includes `target/`, backup files, and build artifacts.  
+   9. Optional: Create/update `rustfmt.toml` and `clippy.toml`.  
+   10. Ensure `crates-io.md` present.  
+   11. Verify `.cargo/config.toml` dependencies feature sets with no default features.  
+   12. Verify `test_suite/no_std/Cargo.toml` with specified dependencies and profiles.  
+   13. Write/update tests as specified, including no_std tests with panic abort.  
+   14. Run `cargo build --workspace` and `cargo test --workspace` leveraging multi-core CPU for parallel builds/tests.  
+   15. Document setup and no_std test instructions in `README.md`.  
+   16. (Optional) Configure CI/CD for Linux x86_64 environments without GPU dependencies, including no_std test execution.  
+   17. Verify environment variables if needed (none indicated).  
+   18. Regularly update dependencies (`proc-macro2`, `quote`, `syn`, `libc`) with no default features enabled, per workspace declarations.  
+   19. Backup and version control all configuration and documentation files.  
+
+Verification Methods:  
+- Successful `cargo build --workspace` on x86_64 Linux with no errors.  
+- All tests pass (`cargo test --workspace`), including no_std tests with panic abort profiles.  
+- Code formatting (`cargo fmt --all`) and linting (`cargo clippy --workspace`) pass cleanly.  
+- Patch overrides and dependency versions verified with `cargo tree`.  
+- Confirm `serde_derive` configured as procedural macro crate with correct features.  
+- Confirm `serde_derive_internals` excludes `build.rs` and uses correct dependency features.  
+- Confirm no_std test crate builds and runs correctly under no_std profiles with `libc` disabled features.  
+- Cross-platform compatibility verified on Linux x86_64; Windows/macOS verification optional but recommended separately.  
+- Paths in all Docker or build scripts use relative or absolute paths within `/home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde`.  
+- Docker builds (if used) leverage BuildKit features for efficiency, without GPU-specific flags.  
+
+---
+
+**Summary:**  
+No major changes required beyond ensuring all tooling and base images are compatible with the x86_64 Linux platform, confirming paths relative to the specified working directory, and omitting GPU/CUDA-related tooling or configuration. Build and test procedures should leverage multi-core CPUs for efficiency. All Rust dependencies and features remain as specified, with careful attention to no default features and correct feature flags per crate. The inclusion of no_std tests and panic abort profiles is maintained and confirmed compatible with the hardware and OS environment.

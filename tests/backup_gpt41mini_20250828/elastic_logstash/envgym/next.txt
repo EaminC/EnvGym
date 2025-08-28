@@ -1,0 +1,22 @@
+current progress  
+- Base Ubuntu 22.04 image setup with necessary packages installed, including OpenJDK 11 headless and RVM dependencies.  
+- RVM installed and initialized.  
+- JRuby 9.2.19.0 installed and set as default via RVM.  
+- Ruby gems `rake` and `bundler` installed with specific versions.  
+- Logstash repository cloned into `/home/elastic_logstash`.  
+- Environment variables set in root’s `.bashrc` including JAVA_HOME, OSS, LOGSTASH_SOURCE, LOGSTASH_HOME, and RVM sourcing.  
+- Gradle wrapper permission set to executable.  
+- Executed Gradle commands `clean` and attempted `installDevelopmentGems` and `installDefaultGems` with JRuby environment sourced.  
+- Docker build failed at the step running `installDevelopmentGems` with error exit code 1.
+
+next step  
+- Investigate and fix the failure in the `installDevelopmentGems` Gradle task:  
+  * Ensure RVM environment is fully loaded in non-interactive shell during Docker RUN steps.  
+  * Confirm that the `.ruby-version` file is correctly placed and matches the installed JRuby version.  
+  * Verify network access inside the build environment for gem downloads.  
+  * Add debugging steps/logs before the failing command to identify the cause (e.g., check Ruby/Gem environment, Gradle logs).  
+  * Consider running `rvm use jruby-9.2.19.0` with `--install --default` flags or reinstall JRuby if needed.  
+  * Confirm Gradle wrapper is functional and dependencies can be resolved.  
+- Optionally simplify the RUN commands by chaining environment sourcing and commands in a single shell script or inline script for better error tracing.  
+- Add error handling or retry logic if network or gem installation issues are suspected.  
+- After fixing, proceed to run remaining Gradle tasks (`installDefaultGems`, `test`, `assemble`, etc.) for full setup.

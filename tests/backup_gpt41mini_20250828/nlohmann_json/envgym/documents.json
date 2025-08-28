@@ -1,0 +1,7 @@
+[
+  ".github/dependabot.yml",
+  "docs/mkdocs/requirements.txt",
+  "tools/astyle/requirements.txt",
+  "tools/generate_natvis/requirements.txt",
+  "tools/serve_header/requirements.txt"
+]

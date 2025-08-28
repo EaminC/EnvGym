@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/catchorg_Catch2; project under /home/cc/EnvGym/data-gpt-4.1mini, ensure context paths relative to this
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: x86_64 compatible images (e.g., ubuntu, debian, alpine for amd64); no ARM or other architecture needed
+- GPU: No NVIDIA GPU detected; no CUDA base image required; omit NVIDIA GPU-related layers or drivers
+- Instruction Notes: Overlay2 storage driver with extfs supports d_type; use systemd cgroup driver compatibility; no GPU-related instructions; ensure build context paths fit high core count and large memory (no specific limitation)
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build features present but not applicable due to no NVIDIA GPU

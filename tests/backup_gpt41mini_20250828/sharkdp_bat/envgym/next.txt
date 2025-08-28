@@ -1,0 +1,23 @@
+current progress
+
+- Base image set to Ubuntu 22.04 with noninteractive environment.
+- Installed essential packages including Rust toolchain 1.74.0 with rustfmt component, git, less, xclip, fzf, ripgrep, fd-find, build tools, and dependencies.
+- Bat installed via apt, with fallback to download and install version 0.25.0 .deb if apt version is older.
+- Created system-wide and user bat config directories with pager set to less.
+- Copied necessary Cargo and test files into /app and built the project with cargo release build.
+- Executed `bat cache --build` post-build.
+- Environment variables set for Rust and bat config paths.
+- Default command set as bash shell.
+
+next step
+
+- Verify that all optional tools (fzf, ripgrep, fd, less, xclip) installed are the correct amd64 Linux versions and functioning.
+- Confirm presence and correctness of all required configuration files (including JSON and integration test configs) per plan inside the container.
+- Add missing integration test config files and syntax test files (Dockerfile, Python requirements.txt, DotENV, JSP) into the container and ensure Linux path compatibility.
+- Implement Git test environment setup using Linux path configs as per plan.
+- Add shell environment aliases and functions for Linux shells (bash/zsh) if required.
+- Add any optional custom syntaxes/themes and rebuild the bat cache if applicable.
+- Add validation steps to test basic functionality, integration, configuration precedence, error handling, build system validation, and licensing compliance inside the container.
+- Document environment setup and usage inside the Docker context.
+- Optionally, prepare the Dockerfile for CI/CD pipeline integration with build, test, and formatting steps.
+- Remove redundant apt update calls where possible and optimize layer caching.

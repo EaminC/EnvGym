@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/Fairify, project located in user home, large project likely
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, python) compatible; no ARM or other arch images needed
+- GPU: No NVIDIA GPU detected, no CUDA or GPU-specific base images required
+- Instruction Notes: No GPU-specific instructions required; ensure paths use absolute or relative from /home/cc/EnvGym/data-gpt-4.1mini/Fairify; no special adjustments for large CPU/memory needed in Dockerfile
+- Docker Version: 28.3.2, supports BuildKit and docker buildx; GPU build features not applicable due to missing NVIDIA GPU

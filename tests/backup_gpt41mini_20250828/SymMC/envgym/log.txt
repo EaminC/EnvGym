@@ -1,0 +1,29 @@
+=== Docker Execution Log - 20250827_121150 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756296600
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+1.285 ninja: build stopped: subcommand failed.
+------
+envgym.dockerfile:47
+--------------------
+46 |
+47 | >>> RUN git clone https://github.com/niklasso/minisat.git /tmp/minisat && \
+48 | >>>     cd /tmp/minisat && \
+49 | >>>     git fetch --all && \
+50 | >>>     git checkout 2e6f5f2d0b1c2e6a0f9a3a6bc9d9d8fa9b1e1a3d || git checkout master && \
+51 | >>>     mkdir -p build && \
+52 | >>>     cd build && \
+53 | >>>     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 .. && \
+54 | >>>     ninja && \
+55 | >>>     test -f minisat && \
+56 | >>>     cp minisat /usr/local/bin/ && \
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

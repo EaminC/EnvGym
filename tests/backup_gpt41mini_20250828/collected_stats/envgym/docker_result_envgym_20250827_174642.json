@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250827_174642",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756316790",
+  "build": {
+    "success": true,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 650B done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/5] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 161.82kB done\n#5 DONE 0.0s\n\n#6 [2/5] RUN apt-get update && apt-get install -y --no-install-recommends     bash     build-essential     ca-certificates     curl     git     python3     python3-pip     python3-setuptools     python3-venv     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [3/5] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/collected_stats\n#7 CACHED\n\n#8 [4/5] COPY . /home/cc/EnvGym/data-gpt-4.1mini/collected_stats\n#8 DONE 0.0s\n\n#9 [5/5] RUN python3 -m venv /home/cc/EnvGym/venv &&     /home/cc/EnvGym/venv/bin/pip install --upgrade pip setuptools wheel\n#9 3.395 Requirement already satisfied: pip in /home/cc/EnvGym/venv/lib/python3.10/site-packages (22.0.2)\n#9 3.545 Collecting pip\n#9 3.628   Downloading pip-25.2-py3-none-any.whl (1.8 MB)\n#9 3.790      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 11.0 MB/s eta 0:00:00\n#9 3.814 Requirement already satisfied: setuptools in /home/cc/EnvGym/venv/lib/python3.10/site-packages (59.6.0)\n#9 4.167 Collecting setuptools\n#9 4.173   Downloading setuptools-80.9.0-py3-none-any.whl (1.2 MB)\n#9 4.253      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 15.2 MB/s eta 0:00:00\n#9 4.305 Collecting wheel\n#9 4.310   Downloading wheel-0.45.1-py3-none-any.whl (72 kB)\n#9 4.316      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.5/72.5 KB 23.3 MB/s eta 0:00:00\n#9 4.452 Installing collected packages: wheel, setuptools, pip\n#9 4.492   Attempting uninstall: setuptools\n#9 4.493     Found existing installation: setuptools 59.6.0\n#9 4.564     Uninstalling setuptools-59.6.0:\n#9 4.573       Successfully uninstalled setuptools-59.6.0\n#9 5.184   Attempting uninstall: pip\n#9 5.185     Found existing installation: pip 22.0.2\n#9 5.448     Uninstalling pip-22.0.2:\n#9 5.455       Successfully uninstalled pip-22.0.2\n#9 6.166 Successfully installed pip-25.2 setuptools-80.9.0 wheel-0.45.1\n#9 DONE 6.3s\n\n#10 exporting to image\n#10 exporting layers\n#10 exporting layers 4.6s done\n#10 writing image sha256:dc3c08b1eefea219fd40122c5af7f57cf0a2dc2a7e1cf2d354abdedcd4bd5fbe done\n#10 naming to docker.io/library/envgym_test_1756316790 done\n#10 DONE 4.6s\n"
+  },
+  "run": {
+    "success": true,
+    "stdout": "",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,726 @@
+=== Iteration 1 - [2025-08-27 22:33:47] ===
+PLAN:
+  === ENVIRONMENT SETUP PLAN (ADJUSTED FOR HARDWARE) ===
+  1. DOWNLOADS NEEDED:  
+     - Java Development Kit (JDK) 11 or higher (Mockito 5.x requires Java 11)  
+       - Use x86_64 compatible JDK binaries (Adoptium, Oracle, OpenJDK) for Linux amd64 architecture  
+     - Gradle build tool (compatible with the project Gradle wrapper)  
+       - Use Gradle wrapper included in the project to ensure version consistency; no separate install required unless troubleshooting  
+     - Git (for cloning and version control)  
+       - Ensure installed version supports x86_64 Linux environment  
+     - An IDE that supports Gradle projects, e.g., IntelliJ IDEA, Fleet, or Eclipse (if Eclipse, ensure Gradle Eclipse plugin support)  
+       - Install IDE compatible with Linux x86_64 environment  
+     - Optional: Docker (version 28.3.2 available) for containerizing build environment  
+       - Use amd64 base images (e.g., ubuntu, debian, alpine) for Docker builds, matching host architecture (x86_64)  
+       - GPU-based images and CUDA not applicable—do not use GPU base images  
+  2. FILES TO CREATE:  
+     - `gradle.properties` (optional, to configure Gradle daemon, memory settings, and proxy if needed)  
+       - Given 187.5GiB RAM available, configure Gradle daemon memory settings generously (e.g., `org.gradle.jvmargs=-Xmx8g`) to optimize build speed  
+     - `.gitignore` (if not present, to exclude build artifacts, IDE files, and logs)  
+     - `settings.gradle` (if not present, to define the Gradle project structure)  
+     - Any project-specific environment config files as needed (e.g., local.properties for IDE-specific settings)  
+     - Documentation or README supplements for environment setup (optional but recommended for team onboarding)  
+  3. NECESSARY TEST CASES IN THE CODEBASE:  
+     - Unit tests for core mocking capabilities and API correctness – ensure mocks behave as expected  
+     - Integration tests to validate interaction with Java 11 features and inline mockmaker changes (Mockito 5 uses mockito-inline)  
+     - Regression tests for deprecated API removals in versions 4 and 5 to confirm no usage in codebase  
+     - Snapshot build tests to verify `-SNAPSHOT` version artifacts are correctly published and usable from Sonatype snapshot repository  
+     - Release build tests to verify version tagging and release pipeline correctness (e.g., changelog generation, release artifact publishing)  
+     - Tests covering semantic versioning compliance and backward compatibility where applicable  
+  4. COMPLETE TODO LIST:  
+     1. **Install Java JDK 11 or above:**  
+        - Download and install Linux x86_64 JDK 11+ from official sources (Adoptium, Oracle, OpenJDK) compatible with amd64 architecture  
+        - Verify installation by running `java -version` in terminal/command prompt  
+        - Set `JAVA_HOME` environment variable to point to JDK installation directory  
+     2. **Set up Gradle build environment:**  
+        - Use included Gradle wrapper (`./gradlew` or `gradlew.bat`) for consistent Gradle version usage on Linux x86_64  
+        - Verify Gradle wrapper works by running `./gradlew --version`  
+        - Given high CPU core count (96 cores), configure Gradle for parallel builds by adding `org.gradle.parallel=true` in `gradle.properties` to speed up build times  
+     3. **Clone the Mockito project repository:**  
+        - Use `git clone https://github.com/mockito/mockito.git` on Linux x86_64 environment  
+        - Navigate into project directory and verify presence of `build.gradle` and other files  
+     4. **Import project into IDE:**  
+        - Open project folder in IntelliJ IDEA or Fleet, importing as a Gradle project on Linux x86_64  
+        - For Eclipse, run `./gradlew eclipse` before importing  
+        - Ensure IDE recognizes Gradle tasks and dependencies  
+     5. **Build the project locally:**  
+        - Run `./gradlew build` to compile and run all tests  
+        - Leverage high RAM (187.5GiB) and CPUs (96 cores) by enabling parallel build and daemon memory settings to reduce build time  
+        - Confirm build success and no test failures  
+        - Investigate and fix any build or test errors  
+     6. **Configure Sonatype snapshot repository access (optional for development):**  
+        - If publishing snapshot builds, configure credentials and repository URLs in `gradle.properties` or CI environment variables  
+        - Verify snapshot deployment by running `./gradlew publish` against snapshot repo  
+     7. **Set up release automation prerequisites:**  
+        - Ensure Git tagging capabilities with annotated tags (e.g., `git tag -a -m "Release x.y.z" vx.y.z`)  
+        - Verify CI integration to create changelogs and release notes automatically on tag push  
+        - Confirm no release creation from GitHub Web UI until supported by CI (manual release via tags only)  
+     8. **Establish test coverage verification:**  
+        - Integrate coverage tools (e.g., JaCoCo) if not already configured  
+        - Run coverage report generation and verify coverage levels meet project standards  
+     9. **Document environment setup steps internally:**  
+        - Create or update project documentation with environment setup instructions and troubleshooting tips, including notes about hardware-specific optimizations (parallel builds, memory settings)  
+     10. **Error handling and verification:**  
+         - On build or test failure, first check Java version compatibility and environment variables (`JAVA_HOME`)  
+         - Validate Gradle wrapper integrity and refresh dependencies with `./gradlew clean build --refresh-dependencies`  
+         - For IDE issues, re-import Gradle project or invalidate caches  
+         - Verify network connectivity if publishing to remote repositories fails  
+         - Use logs and CI feedback for debugging release automation issues  
+     11. **Ongoing maintenance:**  
+         - Monitor Mockito release notes and update environment accordingly (e.g., JDK upgrades, dependency version bumps)  
+         - Regularly update Gradle wrapper and plugins to latest supported versions  
+         - Keep local builds and snapshots up to date with main development branch  
+         - Encourage contributors to follow semantic versioning and release guidelines  
+  5. DOCKER CONSIDERATIONS (If containerizing builds):  
+     - Use base images compatible with Linux x86_64 (amd64), such as `ubuntu`, `debian`, or `alpine`  
+     - Avoid GPU or CUDA base images since no NVIDIA GPU or drivers detected on host  
+     - Optimize Dockerfile for multi-core CPU by parallelizing RUN steps and using BuildKit features supported by Docker 28.3.2  
+     - Keep image size minimal to fit within moderate 46GB free storage; clean up caches and unnecessary files after build steps  
+     - Set working directory inside container to `/home/cc/EnvGym/data-gpt-4.1mini/mockito_mockito` to match host project directory, facilitating volume mounts if needed  
+  This adjusted plan leverages the high CPU core count and large memory available on the Linux x86_64 environment, uses compatible tooling and images, and respects storage constraints to ensure an optimized and stable development and build environment for Mockito projects requiring Java 11+.
+NEXT:
+  current progress
+  - Base image set to Ubuntu 22.04 with non-interactive frontend and environment variables for Java and Gradle configured.
+  - Installed required packages including OpenJDK 11 headless, git, curl, unzip, bash, and ca-certificates.
+  - Created user `cc` and set working directory to the project path.
+  - Cloned the Mockito repository into the working directory.
+  - Created `gradle.properties` with JVM max heap size and parallel build enabled.
+  - Created `.gitignore` to exclude Gradle cache, build artifacts, and IDE files.
+  - Created `settings.gradle` if missing, to define root project name.
+  - Made Gradle wrapper executable and verified Gradle version.
+  - Default command set to bash shell.
+  next step
+  - Add build execution step in the Dockerfile to run `./gradlew build` to compile and test the project, leveraging parallel builds and memory settings.
+  - Include test coverage tool integration and generate coverage report if applicable.
+  - Optionally configure snapshot repository credentials and test publishing within the container.
+  - Clean up Gradle caches and unnecessary files post-build to reduce image size.
+  - Add entrypoint or scripts to facilitate environment setup for development or CI use.
+  - Document Dockerfile usage and environment variables for maintainers.
+  - Verify network connectivity and retry mechanisms for external dependency downloads during build.
+  - Consider multi-stage builds to optimize final image size.
+STATUS:
+  SUCCESS
+LOG:
+  === Docker Execution Log - 20250827_223342 ===
+  Dockerfile: envgym/envgym.dockerfile
+  Image Name: envgym_test_1756333986
+  === Build Log ===
+  Build Status: Success
+  Build Output:
+  Build Error:
+  #0 building with "default" instance using docker driver
+  #1 [internal] load build definition from envgym.dockerfile
+  #1 transferring dockerfile: 1.02kB done
+  #1 DONE 0.0s
+  #2 [internal] load metadata for docker.io/library/ubuntu:22.04
+  #2 DONE 0.3s
+  #3 [internal] load .dockerignore
+  #3 transferring context: 2B done
+  #3 DONE 0.0s
+  #4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+  #4 CACHED
+  #5 [2/6] RUN apt-get update && apt-get install -y --no-install-recommends     openjdk-11-jdk-headless     git     curl     unzip     bash     ca-certificates     && rm -rf /var/lib/apt/lists/*
+  #5 0.280 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+  #5 0.399 Get:2 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+  #5 0.444 Get:3 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3253 kB]
+  #5 0.580 Get:4 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [48.5 kB]
+  #5 0.581 Get:5 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1271 kB]
+  #5 0.598 Get:6 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [5235 kB]
+  #5 0.881 Get:7 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+  #5 0.992 Get:8 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+  #5 1.109 Get:9 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+  #5 1.874 Get:10 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+  #5 1.908 Get:11 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+  #5 1.912 Get:12 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+  #5 1.914 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1576 kB]
+  #5 1.964 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [75.9 kB]
+  #5 1.966 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3606 kB]
+  #5 2.070 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [5519 kB]
+  #5 2.226 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.2 kB]
+  #5 2.227 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [83.2 kB]
+  #5 3.289 Fetched 41.1 MB in 3s (13.5 MB/s)
+  #5 3.289 Reading package lists...
+  #5 4.362 Reading package lists...
+  #5 5.337 Building dependency tree...
+  #5 5.497 Reading state information...
+  #5 5.662 bash is already the newest version (5.1-6ubuntu1.1).
+  #5 5.662 The following additional packages will be installed:
+  #5 5.662   ca-certificates-java fontconfig-config fonts-dejavu-core git-man java-common
+  #5 5.662   libasound2 libasound2-data libavahi-client3 libavahi-common-data
+  #5 5.662   libavahi-common3 libbrotli1 libcups2 libcurl3-gnutls libcurl4 libdbus-1-3
+  #5 5.663   liberror-perl libexpat1 libfontconfig1 libfreetype6 libgdbm-compat4 libgdbm6
+  #5 5.663   libglib2.0-0 libgraphite2-3 libharfbuzz0b libjpeg-turbo8 libjpeg8 liblcms2-2
+  #5 5.663   libldap-2.5-0 libnghttp2-14 libnspr4 libnss3 libpcsclite1 libperl5.34
+  #5 5.663   libpng16-16 libpsl5 librtmp1 libsasl2-2 libsasl2-modules-db libsqlite3-0
+  #5 5.663   libssh-4 openjdk-11-jre-headless openssl perl perl-modules-5.34 ucf
+  #5 5.664 Suggested packages:
+  #5 5.664   gettext-base git-daemon-run | git-daemon-sysvinit git-doc git-email git-gui
+  #5 5.664   gitk gitweb git-cvs git-mediawiki git-svn default-jre libasound2-plugins
+  #5 5.664   alsa-utils cups-common gdbm-l10n liblcms2-utils pcscd openjdk-11-demo
+  #5 5.664   openjdk-11-source libnss-mdns fonts-dejavu-extra fonts-ipafont-gothic
+  #5 5.664   fonts-ipafont-mincho fonts-wqy-microhei | fonts-wqy-zenhei fonts-indic
+  #5 5.664   perl-doc libterm-readline-gnu-perl | libterm-readline-perl-perl make
+  #5 5.664   libtap-harness-archive-perl zip
+  #5 5.664 Recommended packages:
+  #5 5.664   patch less ssh-client alsa-ucm-conf alsa-topology-conf dbus libglib2.0-data
+  #5 5.664   shared-mime-info xdg-user-dirs libldap-common publicsuffix libsasl2-modules
+  #5 5.664   netbase
+  #5 5.769 The following NEW packages will be installed:
+  #5 5.769   ca-certificates ca-certificates-java curl fontconfig-config
+  #5 5.769   fonts-dejavu-core git git-man java-common libasound2 libasound2-data
+  #5 5.769   libavahi-client3 libavahi-common-data libavahi-common3 libbrotli1 libcups2
+  #5 5.769   libcurl3-gnutls libcurl4 libdbus-1-3 liberror-perl libexpat1 libfontconfig1
+  #5 5.770   libfreetype6 libgdbm-compat4 libgdbm6 libglib2.0-0 libgraphite2-3
+  #5 5.770   libharfbuzz0b libjpeg-turbo8 libjpeg8 liblcms2-2 libldap-2.5-0 libnghttp2-14
+  #5 5.770   libnspr4 libnss3 libpcsclite1 libperl5.34 libpng16-16 libpsl5 librtmp1
+  #5 5.770   libsasl2-2 libsasl2-modules-db libsqlite3-0 libssh-4 openjdk-11-jdk-headless
+  #5 5.770   openjdk-11-jre-headless openssl perl perl-modules-5.34 ucf unzip
+  #5 5.847 0 upgraded, 50 newly installed, 0 to remove and 3 not upgraded.
+  #5 5.847 Need to get 139 MB of archives.
+  #5 5.847 After this operation, 356 MB of additional disk space will be used.
+  #5 5.847 Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl-modules-5.34 all 5.34.0-3ubuntu1.5 [2977 kB]
+  #5 6.072 Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm6 amd64 1.23-1 [33.9 kB]
+  #5 6.073 Get:3 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm-compat4 amd64 1.23-1 [6606 B]
+  #5 6.074 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libperl5.34 amd64 5.34.0-3ubuntu1.5 [4797 kB]
+  #5 6.150 Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl amd64 5.34.0-3ubuntu1.5 [232 kB]
+  #5 6.152 Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 openssl amd64 3.0.2-0ubuntu1.19 [1186 kB]
+  #5 6.163 Get:7 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 ca-certificates all 20240203~22.04.1 [162 kB]
+  #5 6.165 Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libdbus-1-3 amd64 1.12.20-2ubuntu4.1 [189 kB]
+  #5 6.167 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1 amd64 2.4.7-1ubuntu0.6 [92.1 kB]
+  #5 6.168 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-0 amd64 2.72.4-0ubuntu2.6 [1467 kB]
+  #5 6.182 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsqlite3-0 amd64 3.37.2-2ubuntu0.5 [643 kB]
+  #5 6.188 Get:12 http://archive.ubuntu.com/ubuntu jammy/main amd64 ucf all 3.0043 [56.1 kB]
+  #5 6.189 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnghttp2-14 amd64 1.43.0-1ubuntu0.2 [76.9 kB]
+  #5 6.190 Get:14 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpng16-16 amd64 1.6.37-3build5 [191 kB]
+  #5 6.203 Get:15 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpsl5 amd64 0.21.0-1.2build2 [58.4 kB]
+  #5 6.204 Get:16 http://archive.ubuntu.com/ubuntu jammy/main amd64 java-common all 0.72build2 [6782 B]
+  #5 6.204 Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libavahi-common-data amd64 0.8-5ubuntu5.2 [23.8 kB]
+  #5 6.205 Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libavahi-common3 amd64 0.8-5ubuntu5.2 [23.9 kB]
+  #5 6.205 Get:19 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libavahi-client3 amd64 0.8-5ubuntu5.2 [28.0 kB]
+  #5 6.226 Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcups2 amd64 2.4.1op1-1ubuntu4.11 [263 kB]
+  #5 6.229 Get:21 http://archive.ubuntu.com/ubuntu jammy/main amd64 libbrotli1 amd64 1.0.9-2build6 [315 kB]
+  #5 6.232 Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libfreetype6 amd64 2.11.1+dfsg-1ubuntu0.3 [388 kB]
+  #5 6.236 Get:23 http://archive.ubuntu.com/ubuntu jammy/main amd64 fonts-dejavu-core all 2.37-2build1 [1041 kB]
+  #5 6.245 Get:24 http://archive.ubuntu.com/ubuntu jammy/main amd64 fontconfig-config all 2.13.1-4.2ubuntu5 [29.1 kB]
+  #5 6.250 Get:25 http://archive.ubuntu.com/ubuntu jammy/main amd64 libfontconfig1 amd64 2.13.1-4.2ubuntu5 [131 kB]
+  #5 6.251 Get:26 http://archive.ubuntu.com/ubuntu jammy/main amd64 liblcms2-2 amd64 2.12~rc1-2build2 [159 kB]
+  #5 6.253 Get:27 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg-turbo8 amd64 2.1.2-0ubuntu1 [134 kB]
+  #5 6.254 Get:28 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg8 amd64 8c-2ubuntu10 [2264 B]
+  #5 6.254 Get:29 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnspr4 amd64 2:4.35-0ubuntu0.22.04.1 [119 kB]
+  #5 6.273 Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnss3 amd64 2:3.98-0ubuntu0.22.04.2 [1347 kB]
+  #5 6.285 Get:31 http://archive.ubuntu.com/ubuntu jammy/main amd64 libasound2-data all 1.2.6.1-1ubuntu1 [19.1 kB]
+  #5 6.285 Get:32 http://archive.ubuntu.com/ubuntu jammy/main amd64 libasound2 amd64 1.2.6.1-1ubuntu1 [390 kB]
+  #5 6.289 Get:33 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgraphite2-3 amd64 1.3.14-1build2 [71.3 kB]
+  #5 6.289 Get:34 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libharfbuzz0b amd64 2.7.4-1ubuntu3.2 [353 kB]
+  #5 6.296 Get:35 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpcsclite1 amd64 1.9.5-3ubuntu1 [19.8 kB]
+  #5 6.296 Get:36 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 openjdk-11-jre-headless amd64 11.0.28+6-1ubuntu1~22.04.1 [42.6 MB]
+  #5 6.731 Get:37 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 ca-certificates-java all 20190909ubuntu1.2 [12.1 kB]
+  #5 6.732 Get:38 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-modules-db amd64 2.1.27+dfsg2-3ubuntu1.2 [20.5 kB]
+  #5 6.732 Get:39 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-2 amd64 2.1.27+dfsg2-3ubuntu1.2 [53.8 kB]
+  #5 6.733 Get:40 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libldap-2.5-0 amd64 2.5.19+dfsg-0ubuntu0.22.04.1 [184 kB]
+  #5 6.734 Get:41 http://archive.ubuntu.com/ubuntu jammy/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2build4 [58.2 kB]
+  #5 6.735 Get:42 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssh-4 amd64 0.9.6-2ubuntu0.22.04.4 [187 kB]
+  #5 6.737 Get:43 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl4 amd64 7.81.0-1ubuntu1.20 [289 kB]
+  #5 6.740 Get:44 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 curl amd64 7.81.0-1ubuntu1.20 [194 kB]
+  #5 6.741 Get:45 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl3-gnutls amd64 7.81.0-1ubuntu1.20 [284 kB]
+  #5 6.755 Get:46 http://archive.ubuntu.com/ubuntu jammy/main amd64 liberror-perl all 0.17029-1 [26.5 kB]
+  #5 6.778 Get:47 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git-man all 1:2.34.1-1ubuntu1.15 [955 kB]
+  #5 6.787 Get:48 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git amd64 1:2.34.1-1ubuntu1.15 [3166 kB]
+  #5 6.815 Get:49 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 openjdk-11-jdk-headless amd64 11.0.28+6-1ubuntu1~22.04.1 [73.6 MB]
+  #5 7.555 Get:50 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 unzip amd64 6.0-26ubuntu3.2 [175 kB]
+  #5 7.676 debconf: delaying package configuration, since apt-utils is not installed
+  #5 7.701 Fetched 139 MB in 2s (77.9 MB/s)
+  #5 7.717 Selecting previously unselected package perl-modules-5.34.
+  #5 7.717 (Reading database ... 
+  (Reading database ... 5%
+  (Reading database ... 10%
+  (Reading database ... 15%
+  (Reading database ... 20%
+  (Reading database ... 25%
+  (Reading database ... 30%
+  (Reading database ... 35%
+  (Reading database ... 40%
+  (Reading database ... 45%
+  (Reading database ... 50%
+  (Reading database ... 55%
+  (Reading database ... 60%
+  (Reading database ... 65%
+  (Reading database ... 70%
+  (Reading database ... 75%
+  (Reading database ... 80%
+  (Reading database ... 85%
+  (Reading database ... 90%
+  (Reading database ... 95%
+  (Reading database ... 100%
+  (Reading database ... 4393 files and directories currently installed.)
+  #5 7.721 Preparing to unpack .../00-perl-modules-5.34_5.34.0-3ubuntu1.5_all.deb ...
+  #5 7.721 Unpacking perl-modules-5.34 (5.34.0-3ubuntu1.5) ...
+  #5 7.891 Selecting previously unselected package libgdbm6:amd64.
+  #5 7.892 Preparing to unpack .../01-libgdbm6_1.23-1_amd64.deb ...
+  #5 7.893 Unpacking libgdbm6:amd64 (1.23-1) ...
+  #5 7.908 Selecting previously unselected package libgdbm-compat4:amd64.
+  #5 7.909 Preparing to unpack .../02-libgdbm-compat4_1.23-1_amd64.deb ...
+  #5 7.909 Unpacking libgdbm-compat4:amd64 (1.23-1) ...
+  #5 7.921 Selecting previously unselected package libperl5.34:amd64.
+  #5 7.922 Preparing to unpack .../03-libperl5.34_5.34.0-3ubuntu1.5_amd64.deb ...
+  #5 7.923 Unpacking libperl5.34:amd64 (5.34.0-3ubuntu1.5) ...
+  #5 8.061 Selecting previously unselected package perl.
+  #5 8.062 Preparing to unpack .../04-perl_5.34.0-3ubuntu1.5_amd64.deb ...
+  #5 8.067 Unpacking perl (5.34.0-3ubuntu1.5) ...
+  #5 8.083 Selecting previously unselected package openssl.
+  #5 8.084 Preparing to unpack .../05-openssl_3.0.2-0ubuntu1.19_amd64.deb ...
+  #5 8.085 Unpacking openssl (3.0.2-0ubuntu1.19) ...
+  #5 8.109 Selecting previously unselected package ca-certificates.
+  #5 8.110 Preparing to unpack .../06-ca-certificates_20240203~22.04.1_all.deb ...
+  #5 8.110 Unpacking ca-certificates (20240203~22.04.1) ...
+  #5 8.137 Selecting previously unselected package libdbus-1-3:amd64.
+  #5 8.137 Preparing to unpack .../07-libdbus-1-3_1.12.20-2ubuntu4.1_amd64.deb ...
+  #5 8.138 Unpacking libdbus-1-3:amd64 (1.12.20-2ubuntu4.1) ...
+  #5 8.151 Selecting previously unselected package libexpat1:amd64.
+  #5 8.151 Preparing to unpack .../08-libexpat1_2.4.7-1ubuntu0.6_amd64.deb ...
+  #5 8.152 Unpacking libexpat1:amd64 (2.4.7-1ubuntu0.6) ...
+  #5 8.166 Selecting previously unselected package libglib2.0-0:amd64.
+  #5 8.167 Preparing to unpack .../09-libglib2.0-0_2.72.4-0ubuntu2.6_amd64.deb ...
+  #5 8.168 Unpacking libglib2.0-0:amd64 (2.72.4-0ubuntu2.6) ...
+  #5 8.196 Selecting previously unselected package libsqlite3-0:amd64.
+  #5 8.197 Preparing to unpack .../10-libsqlite3-0_3.37.2-2ubuntu0.5_amd64.deb ...
+  #5 8.197 Unpacking libsqlite3-0:amd64 (3.37.2-2ubuntu0.5) ...
+  #5 8.214 Selecting previously unselected package ucf.
+  #5 8.215 Preparing to unpack .../11-ucf_3.0043_all.deb ...
+  #5 8.217 Moving old data out of the way
+  #5 8.218 Unpacking ucf (3.0043) ...
+  #5 8.234 Selecting previously unselected package libnghttp2-14:amd64.
+  #5 8.234 Preparing to unpack .../12-libnghttp2-14_1.43.0-1ubuntu0.2_amd64.deb ...
+  #5 8.235 Unpacking libnghttp2-14:amd64 (1.43.0-1ubuntu0.2) ...
+  #5 8.246 Selecting previously unselected package libpng16-16:amd64.
+  #5 8.246 Preparing to unpack .../13-libpng16-16_1.6.37-3build5_amd64.deb ...
+  #5 8.247 Unpacking libpng16-16:amd64 (1.6.37-3build5) ...
+  #5 8.259 Selecting previously unselected package libpsl5:amd64.
+  #5 8.260 Preparing to unpack .../14-libpsl5_0.21.0-1.2build2_amd64.deb ...
+  #5 8.261 Unpacking libpsl5:amd64 (0.21.0-1.2build2) ...
+  #5 8.272 Selecting previously unselected package java-common.
+  #5 8.272 Preparing to unpack .../15-java-common_0.72build2_all.deb ...
+  #5 8.273 Unpacking java-common (0.72build2) ...
+  #5 8.284 Selecting previously unselected package libavahi-common-data:amd64.
+  #5 8.284 Preparing to unpack .../16-libavahi-common-data_0.8-5ubuntu5.2_amd64.deb ...
+  #5 8.285 Unpacking libavahi-common-data:amd64 (0.8-5ubuntu5.2) ...
+  #5 8.296 Selecting previously unselected package libavahi-common3:amd64.
+  #5 8.296 Preparing to unpack .../17-libavahi-common3_0.8-5ubuntu5.2_amd64.deb ...
+  #5 8.297 Unpacking libavahi-common3:amd64 (0.8-5ubuntu5.2) ...
+  #5 8.308 Selecting previously unselected package libavahi-client3:amd64.
+  #5 8.309 Preparing to unpack .../18-libavahi-client3_0.8-5ubuntu5.2_amd64.deb ...
+  #5 8.309 Unpacking libavahi-client3:amd64 (0.8-5ubuntu5.2) ...
+  #5 8.321 Selecting previously unselected package libcups2:amd64.
+  #5 8.322 Preparing to unpack .../19-libcups2_2.4.1op1-1ubuntu4.11_amd64.deb ...
+  #5 8.322 Unpacking libcups2:amd64 (2.4.1op1-1ubuntu4.11) ...
+  #5 8.336 Selecting previously unselected package libbrotli1:amd64.
+  #5 8.336 Preparing to unpack .../20-libbrotli1_1.0.9-2build6_amd64.deb ...
+  #5 8.337 Unpacking libbrotli1:amd64 (1.0.9-2build6) ...
+  #5 8.352 Selecting previously unselected package libfreetype6:amd64.
+  #5 8.353 Preparing to unpack .../21-libfreetype6_2.11.1+dfsg-1ubuntu0.3_amd64.deb ...
+  #5 8.353 Unpacking libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.3) ...
+  #5 8.367 Selecting previously unselected package fonts-dejavu-core.
+  #5 8.368 Preparing to unpack .../22-fonts-dejavu-core_2.37-2build1_all.deb ...
+  #5 8.368 Unpacking fonts-dejavu-core (2.37-2build1) ...
+  #5 8.464 Selecting previously unselected package fontconfig-config.
+  #5 8.465 Preparing to unpack .../23-fontconfig-config_2.13.1-4.2ubuntu5_all.deb ...
+  #5 8.466 Unpacking fontconfig-config (2.13.1-4.2ubuntu5) ...
+  #5 8.480 Selecting previously unselected package libfontconfig1:amd64.
+  #5 8.481 Preparing to unpack .../24-libfontconfig1_2.13.1-4.2ubuntu5_amd64.deb ...
+  #5 8.482 Unpacking libfontconfig1:amd64 (2.13.1-4.2ubuntu5) ...
+  #5 8.494 Selecting previously unselected package liblcms2-2:amd64.
+  #5 8.495 Preparing to unpack .../25-liblcms2-2_2.12~rc1-2build2_amd64.deb ...
+  #5 8.496 Unpacking liblcms2-2:amd64 (2.12~rc1-2build2) ...
+  #5 8.509 Selecting previously unselected package libjpeg-turbo8:amd64.
+  #5 8.509 Preparing to unpack .../26-libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb ...
+  #5 8.510 Unpacking libjpeg-turbo8:amd64 (2.1.2-0ubuntu1) ...
+  #5 8.522 Selecting previously unselected package libjpeg8:amd64.
+  #5 8.523 Preparing to unpack .../27-libjpeg8_8c-2ubuntu10_amd64.deb ...
+  #5 8.523 Unpacking libjpeg8:amd64 (8c-2ubuntu10) ...
+  #5 8.536 Selecting previously unselected package libnspr4:amd64.
+  #5 8.537 Preparing to unpack .../28-libnspr4_2%3a4.35-0ubuntu0.22.04.1_amd64.deb ...
+  #5 8.538 Unpacking libnspr4:amd64 (2:4.35-0ubuntu0.22.04.1) ...
+  #5 8.550 Selecting previously unselected package libnss3:amd64.
+  #5 8.550 Preparing to unpack .../29-libnss3_2%3a3.98-0ubuntu0.22.04.2_amd64.deb ...
+  #5 8.551 Unpacking libnss3:amd64 (2:3.98-0ubuntu0.22.04.2) ...
+  #5 8.664 Selecting previously unselected package libasound2-data.
+  #5 8.665 Preparing to unpack .../30-libasound2-data_1.2.6.1-1ubuntu1_all.deb ...
+  #5 8.666 Unpacking libasound2-data (1.2.6.1-1ubuntu1) ...
+  #5 8.683 Selecting previously unselected package libasound2:amd64.
+  #5 8.683 Preparing to unpack .../31-libasound2_1.2.6.1-1ubuntu1_amd64.deb ...
+  #5 8.684 Unpacking libasound2:amd64 (1.2.6.1-1ubuntu1) ...
+  #5 8.699 Selecting previously unselected package libgraphite2-3:amd64.
+  #5 8.700 Preparing to unpack .../32-libgraphite2-3_1.3.14-1build2_amd64.deb ...
+  #5 8.701 Unpacking libgraphite2-3:amd64 (1.3.14-1build2) ...
+  #5 8.713 Selecting previously unselected package libharfbuzz0b:amd64.
+  #5 8.713 Preparing to unpack .../33-libharfbuzz0b_2.7.4-1ubuntu3.2_amd64.deb ...
+  #5 8.714 Unpacking libharfbuzz0b:amd64 (2.7.4-1ubuntu3.2) ...
+  #5 8.729 Selecting previously unselected package libpcsclite1:amd64.
+  #5 8.730 Preparing to unpack .../34-libpcsclite1_1.9.5-3ubuntu1_amd64.deb ...
+  #5 8.730 Unpacking libpcsclite1:amd64 (1.9.5-3ubuntu1) ...
+  #5 8.745 Selecting previously unselected package openjdk-11-jre-headless:amd64.
+  #5 8.745 Preparing to unpack .../35-openjdk-11-jre-headless_11.0.28+6-1ubuntu1~22.04.1_amd64.deb ...
+  #5 8.746 Unpacking openjdk-11-jre-headless:amd64 (11.0.28+6-1ubuntu1~22.04.1) ...
+  #5 9.277 Selecting previously unselected package ca-certificates-java.
+  #5 9.278 Preparing to unpack .../36-ca-certificates-java_20190909ubuntu1.2_all.deb ...
+  #5 9.279 Unpacking ca-certificates-java (20190909ubuntu1.2) ...
+  #5 9.290 Selecting previously unselected package libsasl2-modules-db:amd64.
+  #5 9.291 Preparing to unpack .../37-libsasl2-modules-db_2.1.27+dfsg2-3ubuntu1.2_amd64.deb ...
+  #5 9.291 Unpacking libsasl2-modules-db:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #5 9.302 Selecting previously unselected package libsasl2-2:amd64.
+  #5 9.303 Preparing to unpack .../38-libsasl2-2_2.1.27+dfsg2-3ubuntu1.2_amd64.deb ...
+  #5 9.304 Unpacking libsasl2-2:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #5 9.316 Selecting previously unselected package libldap-2.5-0:amd64.
+  #5 9.317 Preparing to unpack .../39-libldap-2.5-0_2.5.19+dfsg-0ubuntu0.22.04.1_amd64.deb ...
+  #5 9.317 Unpacking libldap-2.5-0:amd64 (2.5.19+dfsg-0ubuntu0.22.04.1) ...
+  #5 9.331 Selecting previously unselected package librtmp1:amd64.
+  #5 9.332 Preparing to unpack .../40-librtmp1_2.4+20151223.gitfa8646d.1-2build4_amd64.deb ...
+  #5 9.332 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build4) ...
+  #5 9.344 Selecting previously unselected package libssh-4:amd64.
+  #5 9.344 Preparing to unpack .../41-libssh-4_0.9.6-2ubuntu0.22.04.4_amd64.deb ...
+  #5 9.345 Unpacking libssh-4:amd64 (0.9.6-2ubuntu0.22.04.4) ...
+  #5 9.360 Selecting previously unselected package libcurl4:amd64.
+  #5 9.361 Preparing to unpack .../42-libcurl4_7.81.0-1ubuntu1.20_amd64.deb ...
+  #5 9.362 Unpacking libcurl4:amd64 (7.81.0-1ubuntu1.20) ...
+  #5 9.375 Selecting previously unselected package curl.
+  #5 9.376 Preparing to unpack .../43-curl_7.81.0-1ubuntu1.20_amd64.deb ...
+  #5 9.376 Unpacking curl (7.81.0-1ubuntu1.20) ...
+  #5 9.388 Selecting previously unselected package libcurl3-gnutls:amd64.
+  #5 9.389 Preparing to unpack .../44-libcurl3-gnutls_7.81.0-1ubuntu1.20_amd64.deb ...
+  #5 9.390 Unpacking libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.20) ...
+  #5 9.403 Selecting previously unselected package liberror-perl.
+  #5 9.403 Preparing to unpack .../45-liberror-perl_0.17029-1_all.deb ...
+  #5 9.404 Unpacking liberror-perl (0.17029-1) ...
+  #5 9.419 Selecting previously unselected package git-man.
+  #5 9.419 Preparing to unpack .../46-git-man_1%3a2.34.1-1ubuntu1.15_all.deb ...
+  #5 9.420 Unpacking git-man (1:2.34.1-1ubuntu1.15) ...
+  #5 9.436 Selecting previously unselected package git.
+  #5 9.437 Preparing to unpack .../47-git_1%3a2.34.1-1ubuntu1.15_amd64.deb ...
+  #5 9.442 Unpacking git (1:2.34.1-1ubuntu1.15) ...
+  #5 9.532 Selecting previously unselected package openjdk-11-jdk-headless:amd64.
+  #5 9.533 Preparing to unpack .../48-openjdk-11-jdk-headless_11.0.28+6-1ubuntu1~22.04.1_amd64.deb ...
+  #5 9.535 Unpacking openjdk-11-jdk-headless:amd64 (11.0.28+6-1ubuntu1~22.04.1) ...
+  #5 9.769 Selecting previously unselected package unzip.
+  #5 9.770 Preparing to unpack .../49-unzip_6.0-26ubuntu3.2_amd64.deb ...
+  #5 9.771 Unpacking unzip (6.0-26ubuntu3.2) ...
+  #5 9.794 Setting up libexpat1:amd64 (2.4.7-1ubuntu0.6) ...
+  #5 9.797 Setting up libgraphite2-3:amd64 (1.3.14-1build2) ...
+  #5 9.799 Setting up liblcms2-2:amd64 (2.12~rc1-2build2) ...
+  #5 9.800 Setting up libpsl5:amd64 (0.21.0-1.2build2) ...
+  #5 9.803 Setting up java-common (0.72build2) ...
+  #5 9.812 Setting up libglib2.0-0:amd64 (2.72.4-0ubuntu2.6) ...
+  #5 9.817 No schema files found: doing nothing.
+  #5 9.820 Setting up unzip (6.0-26ubuntu3.2) ...
+  #5 9.823 Setting up libbrotli1:amd64 (1.0.9-2build6) ...
+  #5 9.825 Setting up libsqlite3-0:amd64 (3.37.2-2ubuntu0.5) ...
+  #5 9.827 Setting up libnghttp2-14:amd64 (1.43.0-1ubuntu0.2) ...
+  #5 9.829 Setting up perl-modules-5.34 (5.34.0-3ubuntu1.5) ...
+  #5 9.831 Setting up libsasl2-modules-db:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #5 9.833 Setting up libasound2-data (1.2.6.1-1ubuntu1) ...
+  #5 9.835 Setting up libnspr4:amd64 (2:4.35-0ubuntu0.22.04.1) ...
+  #5 9.837 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build4) ...
+  #5 9.838 Setting up libavahi-common-data:amd64 (0.8-5ubuntu5.2) ...
+  #5 9.840 Setting up libdbus-1-3:amd64 (1.12.20-2ubuntu4.1) ...
+  #5 9.842 Setting up libpng16-16:amd64 (1.6.37-3build5) ...
+  #5 9.844 Setting up fonts-dejavu-core (2.37-2build1) ...
+  #5 9.854 Setting up libpcsclite1:amd64 (1.9.5-3ubuntu1) ...
+  #5 9.855 Setting up ucf (3.0043) ...
+  #5 9.919 Setting up libjpeg-turbo8:amd64 (2.1.2-0ubuntu1) ...
+  #5 9.921 Setting up libsasl2-2:amd64 (2.1.27+dfsg2-3ubuntu1.2) ...
+  #5 9.923 Setting up libssh-4:amd64 (0.9.6-2ubuntu0.22.04.4) ...
+  #5 9.924 Setting up libasound2:amd64 (1.2.6.1-1ubuntu1) ...
+  #5 9.926 Setting up git-man (1:2.34.1-1ubuntu1.15) ...
+  #5 9.928 Setting up openssl (3.0.2-0ubuntu1.19) ...
+  #5 9.931 Setting up libgdbm6:amd64 (1.23-1) ...
+  #5 9.933 Setting up libjpeg8:amd64 (8c-2ubuntu10) ...
+  #5 9.935 Setting up fontconfig-config (2.13.1-4.2ubuntu5) ...
+  #5 9.965 Setting up libavahi-common3:amd64 (0.8-5ubuntu5.2) ...
+  #5 9.967 Setting up libnss3:amd64 (2:3.98-0ubuntu0.22.04.2) ...
+  #5 9.969 Setting up libldap-2.5-0:amd64 (2.5.19+dfsg-0ubuntu0.22.04.1) ...
+  #5 9.971 Setting up ca-certificates (20240203~22.04.1) ...
+  #5 10.41 Updating certificates in /etc/ssl/certs...
+  #5 10.98 146 added, 0 removed; done.
+  #5 11.00 Setting up libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.3) ...
+  #5 11.00 Setting up libgdbm-compat4:amd64 (1.23-1) ...
+  #5 11.00 Setting up libcurl4:amd64 (7.81.0-1ubuntu1.20) ...
+  #5 11.01 Setting up libharfbuzz0b:amd64 (2.7.4-1ubuntu3.2) ...
+  #5 11.01 Setting up curl (7.81.0-1ubuntu1.20) ...
+  #5 11.01 Setting up libfontconfig1:amd64 (2.13.1-4.2ubuntu5) ...
+  #5 11.01 Setting up libavahi-client3:amd64 (0.8-5ubuntu5.2) ...
+  #5 11.01 Setting up libperl5.34:amd64 (5.34.0-3ubuntu1.5) ...
+  #5 11.02 Setting up libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.20) ...
+  #5 11.02 Setting up perl (5.34.0-3ubuntu1.5) ...
+  #5 11.03 Setting up libcups2:amd64 (2.4.1op1-1ubuntu4.11) ...
+  #5 11.03 Setting up liberror-perl (0.17029-1) ...
+  #5 11.03 Setting up git (1:2.34.1-1ubuntu1.15) ...
+  #5 11.04 Setting up openjdk-11-jre-headless:amd64 (11.0.28+6-1ubuntu1~22.04.1) ...
+  #5 11.06 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/java to provide /usr/bin/java (java) in auto mode
+  #5 11.06 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jjs to provide /usr/bin/jjs (jjs) in auto mode
+  #5 11.06 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/keytool to provide /usr/bin/keytool (keytool) in auto mode
+  #5 11.06 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/rmid to provide /usr/bin/rmid (rmid) in auto mode
+  #5 11.06 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/rmiregistry to provide /usr/bin/rmiregistry (rmiregistry) in auto mode
+  #5 11.07 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/pack200 to provide /usr/bin/pack200 (pack200) in auto mode
+  #5 11.07 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/unpack200 to provide /usr/bin/unpack200 (unpack200) in auto mode
+  #5 11.07 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/lib/jexec to provide /usr/bin/jexec (jexec) in auto mode
+  #5 11.42 Setting up openjdk-11-jdk-headless:amd64 (11.0.28+6-1ubuntu1~22.04.1) ...
+  #5 11.43 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jar to provide /usr/bin/jar (jar) in auto mode
+  #5 11.43 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jarsigner to provide /usr/bin/jarsigner (jarsigner) in auto mode
+  #5 11.43 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/javac to provide /usr/bin/javac (javac) in auto mode
+  #5 11.43 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/javadoc to provide /usr/bin/javadoc (javadoc) in auto mode
+  #5 11.43 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/javap to provide /usr/bin/javap (javap) in auto mode
+  #5 11.43 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jcmd to provide /usr/bin/jcmd (jcmd) in auto mode
+  #5 11.44 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jdb to provide /usr/bin/jdb (jdb) in auto mode
+  #5 11.44 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jdeprscan to provide /usr/bin/jdeprscan (jdeprscan) in auto mode
+  #5 11.44 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jdeps to provide /usr/bin/jdeps (jdeps) in auto mode
+  #5 11.44 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jfr to provide /usr/bin/jfr (jfr) in auto mode
+  #5 11.44 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jimage to provide /usr/bin/jimage (jimage) in auto mode
+  #5 11.44 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jinfo to provide /usr/bin/jinfo (jinfo) in auto mode
+  #5 11.45 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jlink to provide /usr/bin/jlink (jlink) in auto mode
+  #5 11.45 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jmap to provide /usr/bin/jmap (jmap) in auto mode
+  #5 11.45 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jmod to provide /usr/bin/jmod (jmod) in auto mode
+  #5 11.45 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jps to provide /usr/bin/jps (jps) in auto mode
+  #5 11.45 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jrunscript to provide /usr/bin/jrunscript (jrunscript) in auto mode
+  #5 11.46 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jshell to provide /usr/bin/jshell (jshell) in auto mode
+  #5 11.46 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jstack to provide /usr/bin/jstack (jstack) in auto mode
+  #5 11.46 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jstat to provide /usr/bin/jstat (jstat) in auto mode
+  #5 11.46 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jstatd to provide /usr/bin/jstatd (jstatd) in auto mode
+  #5 11.46 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/rmic to provide /usr/bin/rmic (rmic) in auto mode
+  #5 11.47 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/serialver to provide /usr/bin/serialver (serialver) in auto mode
+  #5 11.47 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jaotc to provide /usr/bin/jaotc (jaotc) in auto mode
+  #5 11.47 update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/jhsdb to provide /usr/bin/jhsdb (jhsdb) in auto mode
+  #5 11.47 Setting up ca-certificates-java (20190909ubuntu1.2) ...
+  #5 11.48 head: cannot open '/etc/ssl/certs/java/cacerts' for reading: No such file or directory
+  #5 11.63 Adding debian:Amazon_Root_CA_1.pem
+  #5 11.64 Adding debian:OISTE_WISeKey_Global_Root_GC_CA.pem
+  #5 11.64 Adding debian:Amazon_Root_CA_2.pem
+  #5 11.65 Adding debian:CommScope_Public_Trust_RSA_Root-01.pem
+  #5 11.65 Adding debian:SecureTrust_CA.pem
+  #5 11.65 Adding debian:HARICA_TLS_ECC_Root_CA_2021.pem
+  #5 11.65 Adding debian:Microsoft_RSA_Root_Certificate_Authority_2017.pem
+  #5 11.65 Adding debian:QuoVadis_Root_CA_2_G3.pem
+  #5 11.66 Adding debian:SSL.com_EV_Root_Certification_Authority_RSA_R2.pem
+  #5 11.66 Adding debian:Microsoft_ECC_Root_Certificate_Authority_2017.pem
+  #5 11.66 Adding debian:UCA_Global_G2_Root.pem
+  #5 11.66 Adding debian:GTS_Root_R3.pem
+  #5 11.66 Adding debian:IdenTrust_Public_Sector_Root_CA_1.pem
+  #5 11.66 Adding debian:Sectigo_Public_Server_Authentication_Root_E46.pem
+  #5 11.66 Adding debian:emSign_Root_CA_-_G1.pem
+  #5 11.67 Adding debian:BJCA_Global_Root_CA1.pem
+  #5 11.67 Adding debian:ANF_Secure_Server_Root_CA.pem
+  #5 11.67 Adding debian:vTrus_Root_CA.pem
+  #5 11.67 Adding debian:QuoVadis_Root_CA_2.pem
+  #5 11.67 Adding debian:HiPKI_Root_CA_-_G1.pem
+  #5 11.68 Adding debian:AffirmTrust_Premium.pem
+  #5 11.68 Adding debian:BJCA_Global_Root_CA2.pem
+  #5 11.68 Adding debian:Go_Daddy_Root_Certificate_Authority_-_G2.pem
+  #5 11.68 Adding debian:NAVER_Global_Root_Certification_Authority.pem
+  #5 11.68 Adding debian:COMODO_RSA_Certification_Authority.pem
+  #5 11.68 Adding debian:Certum_EC-384_CA.pem
+  #5 11.68 Adding debian:Security_Communication_RootCA3.pem
+  #5 11.69 Adding debian:Izenpe.com.pem
+  #5 11.69 Adding debian:Entrust.net_Premium_2048_Secure_Server_CA.pem
+  #5 11.69 Adding debian:SwissSign_Silver_CA_-_G2.pem
+  #5 11.69 Adding debian:CommScope_Public_Trust_RSA_Root-02.pem
+  #5 11.69 Adding debian:Buypass_Class_2_Root_CA.pem
+  #5 11.69 Adding debian:T-TeleSec_GlobalRoot_Class_3.pem
+  #5 11.70 Adding debian:Atos_TrustedRoot_Root_CA_ECC_TLS_2021.pem
+  #5 11.70 Adding debian:Security_Communication_RootCA2.pem
+  #5 11.70 Adding debian:CommScope_Public_Trust_ECC_Root-01.pem
+  #5 11.70 Adding debian:CommScope_Public_Trust_ECC_Root-02.pem
+  #5 11.70 Adding debian:Certum_Trusted_Network_CA_2.pem
+  #5 11.70 Adding debian:Certum_Trusted_Network_CA.pem
+  #5 11.70 Adding debian:Certigna_Root_CA.pem
+  #5 11.70 Adding debian:DigiCert_Assured_ID_Root_CA.pem
+  #5 11.71 Adding debian:GlobalSign_Root_CA.pem
+  #5 11.71 Adding debian:IdenTrust_Commercial_Root_CA_1.pem
+  #5 11.71 Adding debian:Entrust_Root_Certification_Authority_-_G4.pem
+  #5 11.71 Adding debian:Certainly_Root_E1.pem
+  #5 11.71 Adding debian:Microsec_e-Szigno_Root_CA_2009.pem
+  #5 11.71 Adding debian:SSL.com_EV_Root_Certification_Authority_ECC.pem
+  #5 11.71 Adding debian:DigiCert_Global_Root_G2.pem
+  #5 11.71 Adding debian:vTrus_ECC_Root_CA.pem
+  #5 11.72 Adding debian:COMODO_Certification_Authority.pem
+  #5 11.72 Adding debian:DigiCert_TLS_ECC_P384_Root_G5.pem
+  #5 11.72 Adding debian:D-TRUST_BR_Root_CA_1_2020.pem
+  #5 11.72 Adding debian:GlobalSign_Root_CA_-_R6.pem
+  #5 11.72 Adding debian:OISTE_WISeKey_Global_Root_GB_CA.pem
+  #5 11.72 Adding debian:Certigna.pem
+  #5 11.72 Adding debian:SSL.com_TLS_RSA_Root_CA_2022.pem
+  #5 11.72 Adding debian:Hellenic_Academic_and_Research_Institutions_ECC_RootCA_2015.pem
+  #5 11.72 Adding debian:Comodo_AAA_Services_root.pem
+  #5 11.73 Adding debian:DigiCert_Trusted_Root_G4.pem
+  #5 11.73 Adding debian:Baltimore_CyberTrust_Root.pem
+  #5 11.73 Adding debian:Trustwave_Global_ECC_P256_Certification_Authority.pem
+  #5 11.73 Adding debian:SSL.com_Root_Certification_Authority_ECC.pem
+  #5 11.73 Adding debian:DigiCert_High_Assurance_EV_Root_CA.pem
+  #5 11.73 Adding debian:Secure_Global_CA.pem
+  #5 11.73 Adding debian:NetLock_Arany_=Class_Gold=_Főtanúsítvány.pem
+  #5 11.74 Adding debian:TrustAsia_Global_Root_CA_G4.pem
+  #5 11.74 Adding debian:Starfield_Class_2_CA.pem
+  #5 11.74 Adding debian:certSIGN_Root_CA_G2.pem
+  #5 11.74 Adding debian:SwissSign_Gold_CA_-_G2.pem
+  #5 11.74 Adding debian:Amazon_Root_CA_3.pem
+  #5 11.74 Adding debian:SZAFIR_ROOT_CA2.pem
+  #5 11.74 Adding debian:GlobalSign_Root_CA_-_R3.pem
+  #5 11.74 Adding debian:DigiCert_Global_Root_CA.pem
+  #5 11.75 Adding debian:TrustAsia_Global_Root_CA_G3.pem
+  #5 11.75 Adding debian:Hongkong_Post_Root_CA_3.pem
+  #5 11.75 Adding debian:emSign_ECC_Root_CA_-_G3.pem
+  #5 11.75 Adding debian:QuoVadis_Root_CA_3_G3.pem
+  #5 11.75 Adding debian:Entrust_Root_Certification_Authority_-_EC1.pem
+  #5 11.75 Adding debian:Entrust_Root_Certification_Authority.pem
+  #5 11.75 Adding debian:GlobalSign_Root_E46.pem
+  #5 11.75 Adding debian:T-TeleSec_GlobalRoot_Class_2.pem
+  #5 11.75 Adding debian:Actalis_Authentication_Root_CA.pem
+  #5 11.76 Adding debian:XRamp_Global_CA_Root.pem
+  #5 11.76 Adding debian:SecureSign_RootCA11.pem
+  #5 11.76 Adding debian:AC_RAIZ_FNMT-RCM_SERVIDORES_SEGUROS.pem
+  #5 11.76 Adding debian:GlobalSign_ECC_Root_CA_-_R4.pem
+  #5 11.76 Adding debian:Entrust_Root_Certification_Authority_-_G2.pem
+  #5 11.76 Adding debian:Autoridad_de_Certificacion_Firmaprofesional_CIF_A62634068.pem
+  #5 11.76 Adding debian:Hellenic_Academic_and_Research_Institutions_RootCA_2015.pem
+  #5 11.76 Adding debian:certSIGN_ROOT_CA.pem
+  #5 11.77 Adding debian:DigiCert_Global_Root_G3.pem
+  #5 11.77 Adding debian:ACCVRAIZ1.pem
+  #5 11.77 Adding debian:Security_Communication_ECC_RootCA1.pem
+  #5 11.77 Adding debian:D-TRUST_Root_Class_3_CA_2_2009.pem
+  #5 11.77 Adding debian:QuoVadis_Root_CA_1_G3.pem
+  #5 11.77 Adding debian:TWCA_Root_Certification_Authority.pem
+  #5 11.77 Adding debian:emSign_ECC_Root_CA_-_C3.pem
+  #5 11.77 Adding debian:Atos_TrustedRoot_2011.pem
+  #5 11.78 Adding debian:Telia_Root_CA_v2.pem
+  #5 11.78 Adding debian:DigiCert_Assured_ID_Root_G2.pem
+  #5 11.78 Adding debian:Security_Communication_Root_CA.pem
+  #5 11.78 Adding debian:Certainly_Root_R1.pem
+  #5 11.78 Adding debian:COMODO_ECC_Certification_Authority.pem
+  #5 11.78 Adding debian:AffirmTrust_Networking.pem
+  #5 11.78 Adding debian:TUBITAK_Kamu_SM_SSL_Kok_Sertifikasi_-_Surum_1.pem
+  #5 11.78 Adding debian:ePKI_Root_Certification_Authority.pem
+  #5 11.78 Adding debian:Trustwave_Global_ECC_P384_Certification_Authority.pem
+  #5 11.79 Adding debian:Sectigo_Public_Server_Authentication_Root_R46.pem
+  #5 11.79 Adding debian:AffirmTrust_Commercial.pem
+  #5 11.79 Adding debian:ISRG_Root_X1.pem
+  #5 11.79 Adding debian:DigiCert_Assured_ID_Root_G3.pem
+  #5 11.79 Adding debian:CFCA_EV_ROOT.pem
+  #5 11.79 Adding debian:Buypass_Class_3_Root_CA.pem
+  #5 11.79 Adding debian:Certum_Trusted_Root_CA.pem
+  #5 11.79 Adding debian:e-Szigno_Root_CA_2017.pem
+  #5 11.80 Adding debian:USERTrust_ECC_Certification_Authority.pem
+  #5 11.80 Adding debian:GTS_Root_R4.pem
+  #5 11.80 Adding debian:TunTrust_Root_CA.pem
+  #5 11.80 Adding debian:Amazon_Root_CA_4.pem
+  #5 11.80 Adding debian:TWCA_Global_Root_CA.pem
+  #5 11.80 Adding debian:USERTrust_RSA_Certification_Authority.pem
+  #5 11.80 Adding debian:Starfield_Root_Certificate_Authority_-_G2.pem
+  #5 11.80 Adding debian:ISRG_Root_X2.pem
+  #5 11.80 Adding debian:Atos_TrustedRoot_Root_CA_RSA_TLS_2021.pem
+  #5 11.81 Adding debian:CA_Disig_Root_R2.pem
+  #5 11.81 Adding debian:QuoVadis_Root_CA_3.pem
+  #5 11.81 Adding debian:GTS_Root_R1.pem
+  #5 11.81 Adding debian:GDCA_TrustAUTH_R5_ROOT.pem
+  #5 11.81 Adding debian:UCA_Extended_Validation_Root.pem
+  #5 11.81 Adding debian:GTS_Root_R2.pem
+  #5 11.81 Adding debian:Go_Daddy_Class_2_CA.pem
+  #5 11.82 Adding debian:AffirmTrust_Premium_ECC.pem
+  #5 11.82 Adding debian:AC_RAIZ_FNMT-RCM.pem
+  #5 11.82 Adding debian:GlobalSign_ECC_Root_CA_-_R5.pem
+  #5 11.82 Adding debian:HARICA_TLS_RSA_Root_CA_2021.pem
+  #5 11.82 Adding debian:D-TRUST_EV_Root_CA_1_2020.pem
+  #5 11.82 Adding debian:Starfield_Services_Root_Certificate_Authority_-_G2.pem
+  #5 11.82 Adding debian:Trustwave_Global_Certification_Authority.pem
+  #5 11.82 Adding debian:emSign_Root_CA_-_C1.pem
+  #5 11.82 Adding debian:GlobalSign_Root_R46.pem
+  #5 11.83 Adding debian:SSL.com_TLS_ECC_Root_CA_2022.pem
+  #5 11.83 Adding debian:DigiCert_TLS_RSA4096_Root_G5.pem
+  #5 11.83 Adding debian:GLOBALTRUST_2020.pem
+  #5 11.83 Adding debian:D-TRUST_Root_Class_3_CA_2_EV_2009.pem
+  #5 11.83 Adding debian:TeliaSonera_Root_CA_v1.pem
+  #5 11.83 Adding debian:SSL.com_Root_Certification_Authority_RSA.pem
+  #5 11.86 done.
+  #5 11.86 Processing triggers for libc-bin (2.35-0ubuntu3.10) ...
+  #5 11.87 Processing triggers for ca-certificates (20240203~22.04.1) ...
+  #5 11.88 Updating certificates in /etc/ssl/certs...
+  #5 12.30 0 added, 0 removed; done.
+  #5 12.30 Running hooks in /etc/ca-certificates/update.d...
+  #5 12.30 
+  #5 12.47 done.
+  #5 12.47 done.
+  #5 DONE 13.4s
+  #6 [3/6] RUN useradd -m -s /bin/bash cc
+  #6 DONE 0.3s
+  #7 [4/6] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/mockito_mockito
+  #7 DONE 0.0s
+  #8 [5/6] RUN git clone https://github.com/mockito/mockito.git . &&     echo "org.gradle.jvmargs=-Xmx8g" > gradle.properties &&     echo "org.gradle.parallel=true" >> gradle.properties &&     echo ".gradle/" > .gitignore &&     echo "build/" >> .gitignore &&     echo "*.iml" >> .gitignore &&     echo ".idea/" >> .gitignore &&     if [ ! -f settings.gradle ]; then echo "rootProject.name = 'mockito'" > settings.gradle; fi
+  #8 0.318 Cloning into '.'...
+  #8 DONE 2.3s
+  #9 [6/6] RUN chmod +x ./gradlew && ./gradlew --version
+  #9 0.456 Downloading https://services.gradle.org/distributions/gradle-8.14.2-bin.zip
+  #9 1.072 .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%..............100%
+  #9 14.89 
+  #9 14.89 Welcome to Gradle 8.14.2!
+  #9 14.89 
+  #9 14.89 Here are the highlights of this release:
+  #9 14.89  - Java 24 support
+  #9 14.89  - GraalVM Native Image toolchain selection
+  #9 14.89  - Enhancements to test reporting
+  #9 14.89  - Build Authoring improvements
+  #9 14.89 
+  #9 14.89 For more details see https://docs.gradle.org/8.14.2/release-notes.html
+  #9 14.89 
+  #9 14.90 
+  #9 14.90 ------------------------------------------------------------
+  #9 14.90 Gradle 8.14.2
+  #9 14.90 ------------------------------------------------------------
+  #9 14.90 
+  #9 14.90 Build time:    2025-06-05 13:32:01 UTC
+  #9 14.90 Revision:      30db2a3bdfffa9f8b40e798095675f9dab990a9a
+  #9 14.90 
+  #9 14.90 Kotlin:        2.0.21
+  #9 14.90 Groovy:        3.0.24
+  #9 14.90 Ant:           Apache Ant(TM) version 1.10.15 compiled on August 25 2024
+  #9 14.90 Launcher JVM:  11.0.28 (Ubuntu 11.0.28+6-post-Ubuntu-1ubuntu122.04.1)
+  #9 14.90 Daemon JVM:    /usr/lib/jvm/java-11-openjdk-amd64 (no JDK specified, using current Java home)
+  #9 14.90 OS:            Linux 5.15.0-139-generic amd64
+  #9 14.90 
+  #9 DONE 15.3s
+  #10 exporting to image
+  #10 exporting layers
+  #10 exporting layers 4.7s done
+  #10 writing image sha256:9eb916d7183c52918b4c7b73fe1ef1cbb17ffbd6124b82d50ff9bda0517f050d done
+  #10 naming to docker.io/library/envgym_test_1756333986 done
+  #10 DONE 4.7s
+  === Runtime Log ===  
+  Runtime Status: Success
+  Runtime Output:
+  Runtime Error:
+  === Execution End ===
+DOCKERFILE:
+  FROM ubuntu:22.04
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV LANG=C.UTF-8
+  ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+  ENV PATH=$JAVA_HOME/bin:$PATH
+  ENV GRADLE_USER_HOME=/home/cc/.gradle
+  RUN apt-get update && apt-get install -y --no-install-recommends \
+      openjdk-11-jdk-headless \
+      git \
+      curl \
+      unzip \
+      bash \
+      ca-certificates \
+      && rm -rf /var/lib/apt/lists/*
+  RUN useradd -m -s /bin/bash cc
+  USER cc
+  WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/mockito_mockito
+  RUN git clone https://github.com/mockito/mockito.git . && \
+      echo "org.gradle.jvmargs=-Xmx8g" > gradle.properties && \
+      echo "org.gradle.parallel=true" >> gradle.properties && \
+      echo ".gradle/" > .gitignore && \
+      echo "build/" >> .gitignore && \
+      echo "*.iml" >> .gitignore && \
+      echo ".idea/" >> .gitignore && \
+      if [ ! -f settings.gradle ]; then echo "rootProject.name = 'mockito'" > settings.gradle; fi
+  RUN chmod +x ./gradlew && ./gradlew --version
+  CMD ["/bin/bash"]
+--- End of Iteration 1 ---
+

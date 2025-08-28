@@ -1,0 +1,14 @@
+[
+  "README.md",
+  "Makefile",
+  "pyproject.toml",
+  "requirements.txt",
+  "requirements-dev.txt",
+  ".pre-commit-config.yaml",
+  "scripts/ansible/README.md",
+  "docs/FAQ.md",
+  "docs/development.md",
+  "docs/test_generator.md",
+  "docs/resource.md",
+  "docs/port.md"
+]

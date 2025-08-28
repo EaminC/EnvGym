@@ -1,0 +1,17 @@
+current progress  
+- Base image set to ubuntu:22.04 with explicit linux/amd64 platform.  
+- Installed system dependencies: git, curl, build-essential, cmake, python3 (3.10 default on Ubuntu 22.04), python3-venv, pip, setuptools, wheel.  
+- Created required requirements.txt files for /tools/serve_header, /tools/generate_natvis, /tools/astyle, and /docs/mkdocs with exact pinned versions.  
+- Created virtual environments inside each pip directory and installed dependencies successfully.  
+- Installed GitHub CLI latest stable version.  
+- Updated PATH environment to include all virtualenv bin directories for tools.  
+- Verified python3 and python symlink consistency.  
+
+next step  
+- Add verification commands for installed tools and dependencies in each environment (e.g., run mkdocs build in /docs/mkdocs, run sample commands/tests for astyle, generate_natvis, serve_header tools).  
+- Include basic test execution steps for verifying each tool's functionality inside the Dockerfile or as part of the container startup.  
+- Add creation or copying of GitHub Actions workflow files and Dependabot config if required inside the container or repository.  
+- Include documentation files (README.md or setup guides) or ensure they are copied into the image if relevant for development environment.  
+- Implement error handling or logging enhancements during dependency installation.  
+- Consider adding cleanup steps or reducing image size by removing build caches after installations.  
+- Optionally, add integration test scripts or commands to be run within the container for CI validation.

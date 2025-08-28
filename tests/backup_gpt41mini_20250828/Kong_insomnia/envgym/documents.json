@@ -1,0 +1,17 @@
+[
+  "README.md",
+  "packages/insomnia/README.md",
+  "packages/insomnia-inso/README.md",
+  "packages/insomnia-smoke-test/README.md",
+  "CHANGELOG.md",
+  "CODE_OF_CONDUCT.md",
+  "CONTRIBUTING.md",
+  "DEVELOPMENT.md",
+  "SECURITY.md",
+  "packages/insomnia-inso/Dockerfile",
+  "package.json",
+  "packages/insomnia/package.json",
+  "packages/insomnia-inso/package.json",
+  "packages/insomnia-smoke-test/package.json",
+  "packages/insomnia-testing/package.json"
+]

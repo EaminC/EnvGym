@@ -1,0 +1,200 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR CURRENT HARDWARE) ===
+
+**Context:**  
+- Hardware: x86_64 CPU architecture, standard Linux filesystem  
+- No NVIDIA GPU detected → CPU-only environment  
+- Use amd64-compatible base images if containerized (e.g., ubuntu, debian, official python amd64 images)  
+- Docker 28.3.2 available with BuildKit, but no GPU build needed  
+- Standard Linux filesystem paths, no special volume mounts or userxattr support  
+- Project working directory: `/home/cc/EnvGym/data-gpt-4.1mini/TabPFN`  
+
+---
+
+### 1. DOWNLOADS NEEDED (ADJUSTED)
+
+- **Python:**  
+  - Use Python 3.9, 3.10, 3.11, 3.12, or 3.13 (minimum 3.9)  
+  - Confirm installation for amd64 Linux environment  
+- **Git:** AMD64 Linux-compatible version  
+- **pip, setuptools, wheel:** Latest versions compatible with Python 3.9+ on Linux amd64  
+- **CUDA Toolkit:** **NOT required nor applicable** (No NVIDIA GPU detected)  
+- **PyTorch:**  
+  - Install CPU-only PyTorch version >=2.1 and <3 for Linux amd64  
+  - Example install command:  
+    ```bash
+    pip install torch torchvision torchaudio
+    ```  
+  - Do NOT install CUDA-enabled PyTorch packages or CUDA toolkit  
+- **TabPFN package version 2.1.3 (or latest):** Install as normal on CPU-only environment  
+- **Python dependencies:** As per pyproject.toml, no changes needed  
+- **eval-type-backport:** Only if using Python 3.9; can omit if Python ≥3.10  
+- **pre-commit framework:** Install latest compatible version (e.g., 3.3.3)  
+- **Ruff (v0.8.6), mypy (v1.17.0), types-pyyaml, types-psutil:** Install as specified  
+- **Optional packages:** TabPFN Extensions, TabPFN Client, pre-trained model checkpoints - install as needed  
+- **Virtual environment tooling:** Use `python -m venv` from installed Python 3.9+ on amd64 Linux  
+
+---
+
+### 2. FILES TO CREATE (NO CHANGES REQUIRED)
+
+- `.env` with environment variables as recommended (paths should be absolute and correct for Linux filesystem)  
+- `requirements.txt` or preferably `pyproject.toml` with dependencies and dev dependencies as specified  
+- `.pre-commit-config.yaml` configured as specified  
+- `.gitignore` with Linux-appropriate exclusions (no changes)  
+- `scripts/download_all_models.py` and `tests/` folder (no changes)  
+- Virtual environment folder (e.g., `venv/`) inside project, gitignored  
+- Documentation files (`README.md`, `LICENSE`, optional `mkdocs.yml`)  
+- Linter and type checker config files remain unchanged  
+
+---
+
+### 3. NECESSARY TEST CASES (NO CHANGES REQUIRED)
+
+- All tests for TabPFNClassifier, TabPFNRegressor, model saving/loading, environment variable effects, offline mode, error handling, pre-commit hooks, linting, type checking, `.gitignore` effectiveness, and optionally docs build remain the same  
+
+---
+
+### 4. COMPLETE TODO LIST (ADJUSTED STEPS)
+
+1. **Install Python**  
+   - Download and install Python 3.9+ for Linux amd64 (e.g., from official python.org or system package manager)  
+   - Verify with `python --version` (should be ≥3.9)  
+2. **Set up virtual environment**  
+   - Run:  
+     ```bash
+     python -m venv venv
+     ```  
+   - Activate environment:  
+     ```bash
+     source venv/bin/activate
+     ```  
+   - Upgrade pip, setuptools, wheel inside venv:  
+     ```bash
+     pip install --upgrade pip setuptools wheel
+     ```  
+   - Verify Python interpreter version in venv  
+   - Ensure `venv/` is in `.gitignore`  
+3. **Install Git**  
+   - Install Git for Linux amd64, verify with `git --version`  
+4. **Create and commit `.gitignore`**  
+   - Include all Linux-relevant exclusions (no changes)  
+5. **Install PyTorch (CPU-only)**  
+   - **Do NOT install CUDA or CUDA-enabled PyTorch**  
+   - Install CPU-only PyTorch version compatible with Python 3.9+ on Linux amd64:  
+     ```bash
+     pip install torch torchvision torchaudio
+     ```  
+   - Verify PyTorch installation and confirm CUDA unavailable:  
+     ```python
+     import torch
+     print(torch.cuda.is_available())  # Should print False
+     ```  
+6. **Install TabPFN and dependencies**  
+   - Install stable TabPFN version 2.1.3 or latest:  
+     ```bash
+     pip install tabpfn==2.1.3
+     ```  
+   - Or install from source with dev dependencies if needed  
+   - If Python 3.9 used, ensure `eval-type-backport` is installed for compatibility  
+   - Verify import:  
+     ```bash
+     python -c "import tabpfn"
+     ```  
+7. **Install pre-commit and configure hooks**  
+   - Install pre-commit inside venv:  
+     ```bash
+     pip install pre-commit==3.3.3
+     ```  
+   - Place `.pre-commit-config.yaml` in project root  
+   - Install git hooks:  
+     ```bash
+     pre-commit install
+     ```  
+   - Run hooks on all files once:  
+     ```bash
+     pre-commit run --all-files
+     ```  
+   - Ensure ruff 0.8.6, mypy 1.17.0, and additional types packages installed  
+8. **(Optional) Install TabPFN Extensions**  
+   - Clone and install extensions if needed (no changes)  
+9. **Configure environment variables**  
+   - Create `.env` file with Linux paths, e.g.:  
+     ```
+     TABPFN_MODEL_CACHE_DIR=/home/cc/EnvGym/data-gpt-4.1mini/TabPFN/model_cache
+     TABPFN_ALLOW_CPU_LARGE_DATASET=true
+     PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+     ```  
+   - Ensure `.env` is in `.gitignore`  
+   - Use `dotenv` or shell environment to load variables  
+10. **Download pre-trained models for offline use**  
+    - Run:  
+      ```bash
+      python scripts/download_all_models.py
+      ```  
+    - Or manually download to cache or `TABPFN_MODEL_CACHE_DIR`  
+    - Cache default paths for Linux: `~/.cache/tabpfn/`  
+11. **Run initial test scripts**  
+    - Run classification and regression examples on CPU  
+    - Confirm output correctness and reasonable metrics  
+12. **Write and run automated tests**  
+    - Run tests with:  
+      ```bash
+      pytest tests/
+      ```  
+    - Fix any issues  
+13. **Run pre-commit hooks regularly**  
+    - Run:  
+      ```bash
+      pre-commit run --all-files
+      ```  
+    - Integrate into CI pipelines if applicable  
+14. **Setup development tooling**  
+    - Use `ruff` (v0.8.6) and `mypy` (v1.17.0) as configured  
+    - Run manually as needed for linting and type checking  
+15. **Verify offline mode and error handling**  
+    - Confirm models load from cache offline  
+    - Simulate corrupted model files and verify error messages are informative  
+16. **Document environment setup and usage**  
+    - Maintain `README.md` with Linux amd64 CPU-only instructions  
+    - Document no-GPU setup and CPU-only PyTorch install  
+    - Document environment variables and offline usage  
+17. **Backup and version control**  
+    - Commit all config files excluding secrets in `.env`  
+    - Tag stable setups  
+18. **Regular maintenance**  
+    - Periodically upgrade packages safely:  
+      ```bash
+      pip install --upgrade tabpfn torch pre-commit ruff mypy
+      ```  
+    - Re-run tests and hooks after upgrades  
+
+---
+
+### ADDITIONAL NOTES FOR CPU-ONLY LINUX AMD64 SETUP
+
+- **Do NOT attempt CUDA or GPU-specific installs or configurations.**  
+- **Ensure all commands and paths use Linux filesystem conventions.**  
+- **Dockerfile or container builds (if used) should be based on amd64-compatible Linux images without CUDA.**  
+- **If using Docker, COPY or ADD commands should use paths relative to `/home/cc/EnvGym/data-gpt-4.1mini/TabPFN`.**  
+- **No userxattr support—ensure storage driver compatibility (overlay2 recommended).**  
+- **Memory and storage requirements unchanged; monitor actual usage during model loading and training.**  
+- **If running in CI or cloud, ensure environment matches amd64 Linux CPU-only setup.**  
+
+---
+
+### VERIFICATION METHODS (UNCHANGED)
+
+- Successful package imports without errors on Linux amd64 CPU-only environment  
+- Model fitting and prediction complete without exceptions on CPU  
+- Metrics in expected ranges on example datasets  
+- Environment variables correctly read and applied  
+- `torch.cuda.is_available()` returns False as expected  
+- Offline model loading works without internet  
+- Pre-commit hooks pass and fix issues as configured  
+- Automated tests pass on Linux amd64 CPU environment  
+- `.gitignore` excludes specified files and folders, verified by `git status` after creating artifacts  
+- Documentation builds successfully if mkdocs used  
+
+---
+
+This completes the adjusted environment setup plan tailored specifically for your Linux x86_64 CPU-only hardware environment with no NVIDIA GPU. All GPU/CUDA-related instructions are removed or flagged as not applicable. Paths and tooling are confirmed compatible with standard Linux amd64 setups.

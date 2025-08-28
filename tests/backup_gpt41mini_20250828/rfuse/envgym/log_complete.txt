@@ -1,0 +1,66 @@
+=== Docker Execution Log - 20250828_024123 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756348883
+
+=== Build Log ===
+Build Status: Failed
+Build Output:
+
+
+Build Error:
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from envgym.dockerfile
+#1 transferring dockerfile: 625B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0
+#4 CACHED
+
+#5 [internal] load build context
+#5 transferring context: 2B done
+#5 DONE 0.0s
+
+#6 [2/6] RUN apt-get update &&     apt-get install -y --no-install-recommends     build-essential     ca-certificates     curl     git     python3     python3-pip     python3-venv     && rm -rf /var/lib/apt/lists/*
+#6 ...
+
+#7 [3/6] WORKDIR /app
+#7 CACHED
+
+#8 [4/6] COPY ./rfuse /app/rfuse
+#8 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::v7g9yeh4wxizyub9lo4idgmyu: "/rfuse": not found
+
+#6 [2/6] RUN apt-get update &&     apt-get install -y --no-install-recommends     build-essential     ca-certificates     curl     git     python3     python3-pip     python3-venv     && rm -rf /var/lib/apt/lists/*
+#6 0.301 runc run failed: container process is already dead
+#6 CANCELED
+------
+ > [4/6] COPY ./rfuse /app/rfuse:
+------
+envgym.dockerfile:18
+--------------------
+  16 |     WORKDIR /app
+  17 |     
+  18 | >>> COPY ./rfuse /app/rfuse
+  19 |     
+  20 |     WORKDIR /app/rfuse
+--------------------
+ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::v7g9yeh4wxizyub9lo4idgmyu: "/rfuse": not found
+
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Output:
+
+
+Runtime Error:
+
+
+=== Execution End ===
+

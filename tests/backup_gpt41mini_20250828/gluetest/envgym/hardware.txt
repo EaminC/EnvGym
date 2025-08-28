@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/gluetest; project located in user home under EnvGym/data-gpt-4.1mini
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: x86_64 compatible images (e.g., ubuntu, debian, alpine for amd64)
+- GPU: No NVIDIA GPU detected; no CUDA base image recommended
+- Instruction Notes: Use standard Linux amd64 instructions; no GPU-specific Dockerfile directives; large memory and CPU resources available for multi-stage builds or parallel builds if needed
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU builds not applicable due to lack of NVIDIA GPU

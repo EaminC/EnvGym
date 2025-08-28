@@ -1,0 +1,14 @@
+[
+  "README.md",
+  "crates/cli/README.md",
+  "crates/core/README.md",
+  "crates/globset/README.md",
+  "crates/grep/README.md",
+  "crates/ignore/README.md",
+  "crates/matcher/README.md",
+  "crates/pcre2/README.md",
+  "crates/printer/README.md",
+  "crates/regex/README.md",
+  "crates/searcher/README.md",
+  "pkg/windows/README.md"
+]

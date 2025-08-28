@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/clap-rs_clap; project appears local with no special volume mounting needed by default  
+- Architecture: x86_64; recommended --platform linux/amd64  
+- Base Image: Use x86_64 compatible Linux base images (e.g., ubuntu, debian, alpine for amd64)  
+- GPU: No NVIDIA GPU detected; no CUDA base image needed  
+- Instruction Notes: No GPU-related instructions required; leverage multi-core CPU for parallel builds; ensure paths in Dockerfile match project structure under current working directory  
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU build features available but not applicable here due to no NVIDIA GPU

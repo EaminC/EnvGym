@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/expressjs_express; typical Node.js/Express project structure implied  
+- Architecture: x86_64; --platform=linux/amd64 recommended  
+- Base Image: Linux AMD64 compatible images (e.g., node:alpine, ubuntu:22.04)  
+- GPU: No NVIDIA GPU detected; no CUDA base image required  
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU-specific instructions needed; large memory available allows multi-stage builds without memory constraints  
+- Docker Version: 28.3.2; supports BuildKit and Docker Buildx; GPU build support present but not applicable due to no NVIDIA GPU

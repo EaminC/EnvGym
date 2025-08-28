@@ -1,0 +1,19 @@
+current progress  
+- Base image set to Ubuntu 22.04 with non-interactive frontend.  
+- Environment variables `RUST_MIN_STACK`, `RUSTUP_HOME`, `CARGO_HOME`, and updated `PATH` configured.  
+- Installed essential packages: curl, ca-certificates, git, build-essential, gcc-multilib, jq, bash, pkg-config, libssl-dev, python3, and python3-distutils.  
+- Installed Rust toolchain version 1.80.0 via rustup with default toolchain set and updated.  
+- Added rustfmt and clippy components.  
+- Verified installation of cargo, rustc, git, jq, and curl.  
+- Working directory set to `/rayon`.  
+- Default command set to launch bash shell.  
+
+next step  
+- Add installation of optional WebAssembly tools (wasm-pack, wasm-bindgen CLI) if WASM support is needed.  
+- Ensure `./ci/highlander.sh` script is copied into the image and marked executable.  
+- Add copying of project files including `Cargo.toml`, workspace members, source files, and CI workflows for build/test steps.  
+- Implement build and test commands (`cargo build`, `cargo test`) within the Dockerfile or entrypoint for validation.  
+- Confirm presence and configuration of `.github/workflows` files and `.github/dependabot.yml` inside the image or mounted volume for CI compatibility.  
+- Add any necessary setup for Node.js/npm if WebAssembly demo support is planned.  
+- Configure shell scripts and set executable permissions as required.  
+- Optionally add cleanup steps to reduce image size after installations.

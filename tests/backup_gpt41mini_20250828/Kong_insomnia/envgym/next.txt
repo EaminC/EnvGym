@@ -1,0 +1,21 @@
+current progress  
+- Base image set to Ubuntu 22.04 amd64, matching plan requirements.  
+- Installed necessary system packages including libfontconfig-dev, xz-utils, libstdc++6, git, build-essential, python3 and related tools, xvfb for headless testing.  
+- Installed nvm and Node.js version 22.17.1 per plan, with npm upgraded to version 10 globally.  
+- Electron 37.2.6 and Playwright 1.51.1 installed globally.  
+- Project dependencies installed via `npm install`, including native modules.  
+- Node-libcurl native binary fixes applied with node-pre-gyp and Electron-specific libcurl binaries installed using npm script with target environment variable.  
+- Built insomnia-inso CLI binaries with prepackage, package, postpackage, and artifacts steps confirmed in Dockerfile.  
+- Electron cache clearing step implemented.  
+- Environment variable DISPLAY set for Playwright headless tests with xvfb.  
+- Entrypoint set to bash shell in /workspace directory for interactive or scripted use.  
+- Docker build and runtime logs indicate successful build and execution.
+
+next step  
+- Modify Dockerfile to ensure execution of npm scripts (like `install-libcurl-electron`) runs in the correct project context (e.g., ensure working directory is set appropriately before running these scripts).  
+- Add explicit verification steps or checks after native module installation to fail build early if node-libcurl binaries are not properly installed.  
+- Consider adding caching layers for npm dependencies and nvm installation to speed up rebuilds.  
+- Include steps to run linting, type-checking, and tests inside the Docker build or as separate CI steps to verify code quality and correctness within the container.  
+- Add cleanup steps to reduce image size by removing unnecessary build dependencies if final image size is a concern.  
+- Document environment variables and usage instructions in Dockerfile or README to facilitate developer use.  
+- Optionally add user non-root creation and permissions management for improved security and best practices in container.

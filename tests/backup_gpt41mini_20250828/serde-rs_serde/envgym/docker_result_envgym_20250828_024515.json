@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250828_024515",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756349113",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 2.11kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/12] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [ 5/12] RUN rustc --version && cargo --version\n#5 CACHED\n\n#6 [ 2/12] RUN apt-get update && apt-get install -y --no-install-recommends     curl     git     build-essential     pkg-config     libssl-dev     ca-certificates     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [ 3/12] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde\n#7 CACHED\n\n#8 [ 4/12] RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y     && /root/.cargo/bin/rustup default stable     && /root/.cargo/bin/rustup target add x86_64-unknown-linux-gnu\n#8 CACHED\n\n#9 [ 6/12] RUN curl -L https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-linux -o /usr/local/bin/rust-analyzer     && chmod +x /usr/local/bin/rust-analyzer\n#9 CACHED\n\n#10 [ 7/12] RUN mkdir -p .cargo &&     echo '[build]\\nrustflags = []\\n[features]\\ndefault = []\\nserde_derive = [\"proc-macro2\", \"quote\", \"syn\", \"libc\"]' > .cargo/config.toml\n#10 DONE 0.2s\n\n#11 [ 8/12] RUN echo 'target/\\n**/*.rs.bk\\nCargo.lock\\n' > .gitignore\n#11 DONE 0.4s\n\n#12 [ 9/12] RUN echo '# Optional rustfmt config' > rustfmt.toml &&     echo '# Optional clippy config' > clippy.toml &&     echo '# crates-io.md placeholder' > crates-io.md\n#12 DONE 0.4s\n\n#13 [10/12] RUN chown -R root:root /home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde\n#13 DONE 0.5s\n\n#14 [11/12] RUN cargo build --workspace --jobs $(nproc) --verbose\n#14 0.511 error: could not find `Cargo.toml` in `/home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde` or any parent directory\n#14 ERROR: process \"/bin/bash -c cargo build --workspace --jobs $(nproc) --verbose\" did not complete successfully: exit code: 101\n------\n > [11/12] RUN cargo build --workspace --jobs $(nproc) --verbose:\n0.511 error: could not find `Cargo.toml` in `/home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde` or any parent directory\n------\nenvgym.dockerfile:51\n--------------------\n  49 |     \n  50 |     # Run build and test separately with verbose output to isolate errors\n  51 | >>> RUN cargo build --workspace --jobs $(nproc) --verbose\n  52 |     RUN cargo test --workspace --jobs $(nproc) --verbose\n  53 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/bash -c cargo build --workspace --jobs $(nproc) --verbose\" did not complete successfully: exit code: 101\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

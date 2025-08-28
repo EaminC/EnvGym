@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250828_044017",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756356016",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 1.51kB done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [ 1/17] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 DONE 0.0s\n\n#5 [ 2/17] RUN apt-get update && apt-get install -y --no-install-recommends     curl     git     build-essential     ca-certificates     pkg-config     libssl-dev     llvm     clang     cmake     && rm -rf /var/lib/apt/lists/*\n#5 CACHED\n\n#6 [ 7/17] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_bytes\n#6 CACHED\n\n#7 [ 4/17] RUN rustup install nightly\n#7 CACHED\n\n#8 [ 5/17] RUN rustc --version && cargo --version && rustc +nightly --version\n#8 CACHED\n\n#9 [ 6/17] RUN useradd -m cc\n#9 CACHED\n\n#10 [ 3/17] RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable\n#10 CACHED\n\n#11 [ 8/17] RUN chown -R cc:cc /home/cc\n#11 CACHED\n\n#12 [ 9/17] WORKDIR /home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_bytes\n#12 DONE 0.0s\n\n#13 [10/17] RUN cargo update\n#13 0.282 error: could not find `Cargo.toml` in `/home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_bytes` or any parent directory\n#13 ERROR: process \"/bin/bash -c cargo update\" did not complete successfully: exit code: 101\n------\n > [10/17] RUN cargo update:\n0.282 error: could not find `Cargo.toml` in `/home/cc/EnvGym/data-gpt-4.1mini/tokio-rs_bytes` or any parent directory\n------\nenvgym.dockerfile:41\n--------------------\n  39 |     WORKDIR $WORKDIR\n  40 |     \n  41 | >>> RUN cargo update\n  42 |     \n  43 |     RUN echo 'msrv = \"1.57\"' > clippy.toml\n--------------------\nERROR: failed to build: failed to solve: process \"/bin/bash -c cargo update\" did not complete successfully: exit code: 101\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

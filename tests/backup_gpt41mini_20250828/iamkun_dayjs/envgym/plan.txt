@@ -1,0 +1,145 @@
+=== ENVIRONMENT SETUP PLAN (ADJUSTED FOR x86_64 LINUX ENVIRONMENT) ===
+
+**HARDWARE/ENVIRONMENT CONTEXT**  
+- Working Directory: `/home/cc/EnvGym/data-gpt-4.1mini/iamkun_dayjs` (project located under user home; all paths relative and accessible)  
+- Architecture: x86_64 (amd64) — All base images, tools, and binaries must be compatible with amd64 architecture; no ARM or other architectures needed  
+- GPU: No NVIDIA GPU present; no GPU or CUDA-specific instructions or base images required  
+- Docker: Version 28.3.2 with BuildKit and Buildx enabled; GPU build flags (--gpus) not applicable  
+- OS: Linux-compatible tools and binaries, no Windows or macOS-specific dependencies  
+- CPU: Multi-core CPU available; leverage parallel builds where possible but no GPU acceleration  
+- Storage: Ensure build and dependency installs are mindful of storage usage within typical Linux user home environment  
+
+---
+
+### 1. DOWNLOADS NEEDED
+
+- **Node.js:**  
+  - Download and install official Node.js binaries for Linux x86_64 platform from https://nodejs.org/  
+  - Minimum version: 10.x or higher (recommended to use latest LTS such as 18.x or 20.x for better compatibility and security)  
+  - Verify architecture compatibility: use linux-x64 binaries or package manager versions targeting amd64 architecture  
+- **npm:**  
+  - Bundled with Node.js; no separate install needed  
+- **Code Editor:**  
+  - Visual Studio Code or other modern editors compatible with Linux x86_64  
+  - Ensure editor plugins for EditorConfig and Prettier are compatible with Linux version  
+- **Git:**  
+  - Install Linux x86_64-compatible Git client via package manager (`apt`, `yum`, or manual install)  
+- **Browsers:**  
+  - Chrome, Firefox, or other browsers installed on Linux for testing/debugging  
+- **npm devDependencies:**  
+  - All npm packages will be installed for amd64 architecture; ensure no native modules requiring ARM or GPU-specific binaries  
+  - Babel, Rollup, ESLint, Jest, Karma, Sauce Labs packages compatible with Node.js and Linux amd64  
+- **Sauce Labs:**  
+  - Sauce Connect Proxy and related tools compatible with Linux amd64  
+- **Pre-commit, TypeScript, Semantic Release, and utilities:**  
+  - All standard Node.js packages compatible with Linux amd64 environment  
+
+---
+
+### 2. FILES TO CREATE (No architecture changes needed)
+
+- All configuration files (`package.json`, `.gitignore`, `.npmignore`, `.editorconfig`, `.releaserc`, Babel config, ESLint, Prettier, Rollup, Karma Sauce Labs config, `tsconfig.json`) remain as specified  
+- Paths remain relative and Linux-style (forward slashes `/`) as per working directory  
+- No Windows-specific path or line ending adjustments required (LF line endings enforced via `.editorconfig`)  
+- Ensure no binaries or scripts included that are platform-specific or use Windows/macOS line endings  
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE
+
+- Testing remains unchanged; ensure test scripts run in Linux environment without platform-specific assumptions  
+- Karma Sauce Labs runs and browser tests assume Linux-based CI or local environment with Sauce Labs credentials configured  
+- Timezone tests assume Linux environment with correct TZ environment variable usage (e.g., `TZ=Pacific/Auckland`)  
+- Pre-commit hooks and linting run under Linux shell environment  
+- No GPU or ARM-specific tests required  
+
+---
+
+### 4. COMPLETE TODO LIST (Adjusted notes)
+
+**Step 1: Install Node.js and npm**  
+- Use official Linux x64 binaries or package manager versions for amd64  
+- Verify with `node -v` and `npm -v` in Linux shell  
+- PATH environment variable setup for Linux shell (bash, zsh) as needed  
+
+**Step 2: Clone or initialize project repository**  
+- Use Linux shell Git commands (`git clone ...`) in `/home/cc/EnvGym/data-gpt-4.1mini/iamkun_dayjs`  
+- Permissions and ownership consistent with Linux user environment  
+
+**Step 3: Place configuration files**  
+- Place all files exactly as specified in project root under Linux filesystem  
+- Use LF line endings (enforced by `.editorconfig`)  
+- Confirm file permissions allow read/write as needed for Linux user  
+
+**Step 4: Install dependencies**  
+- Run `npm ci` or `npm install` in Linux shell environment  
+- Confirm no native modules fail to compile on Linux amd64  
+- No GPU or ARM-specific native modules expected; if any native bindings, ensure Linux amd64 compatibility  
+
+**Step 5: Configure Sauce Labs credentials**  
+- Set environment variables in Linux shell or CI environment:  
+  - `export SAUCE_USERNAME=your_username`  
+  - `export SAUCE_ACCESS_KEY=your_access_key`  
+- For Sauce Connect Proxy, use Linux amd64 binary  
+- Verify connectivity and credentials from Linux environment  
+
+**Step 6: Verify build system**  
+- Babel CLI commands tested under Linux shell, setting environment variables as:  
+  - `BABEL_ENV=test npm run babel`  
+  - `BABEL_ENV=build npm run babel`  
+- Rollup and Terser run under Linux amd64 environment without GPU acceleration  
+- Check `npm run build` completes successfully  
+
+**Step 7: Setup linting and formatting**  
+- Run ESLint and Prettier with Linux shell commands  
+- Editor support for `.editorconfig` and `prettier.config.js` confirmed on Linux editor installation  
+- Pre-commit hooks configured for Linux Git environment (bash scripts)  
+
+**Step 8: Setup testing environment**  
+- Run Jest tests and Karma Sauce Labs tests under Linux shell environment  
+- Ensure browser testing on Sauce Labs uses defined browser batches; Sauce Labs infrastructure handles cross-OS browser compatibility  
+- No local browser GPU acceleration expected or required  
+
+**Step 9: Setup and verify automated release process**  
+- Semantic-release runs in Linux environment or CI with Linux runners  
+- CI environment must provide Linux x86_64 runners  
+- Tokens and environment variables configured in Linux-compatible manner  
+
+**Step 10: Verify npm package publishing excludes unwanted files**  
+- Use `npm pack` in Linux shell to inspect tarball content  
+- Confirm `.npmignore` excludes all development/test/config files as specified  
+
+**Step 11: Verify `.gitignore` effectiveness**  
+- Run `git status` in Linux shell to confirm ignored files are excluded  
+- Ensure no Windows/macOS-specific files accidentally included  
+
+**Step 12: Continuous Integration (optional)**  
+- Configure CI pipelines with Linux x86_64 runners (e.g., GitHub Actions `runs-on: ubuntu-latest`)  
+- Setup environment variables securely for Sauce Labs and semantic-release  
+- Monitor build/test/release pipelines on Linux environment  
+
+**Step 13: Documentation and maintenance**  
+- Documentation remains unchanged; ensure Linux shell commands and paths documented with forward slashes `/`  
+- Prettier formatting enforced on documentation files  
+
+---
+
+### ADDITIONAL RECOMMENDATIONS BASED ON HARDWARE
+
+- **No GPU-specific instructions or Docker flags**: Avoid any `--gpus` flags in Docker builds or commands, since no NVIDIA GPU detected  
+- **Docker base images**: Use official Linux amd64 base images (e.g., `node:<version>-buster` or `node:<version>-bullseye`) for Docker builds to ensure compatibility with x86_64 CPU  
+- **Build performance**: Leverage multi-core CPU by enabling parallel builds where supported by Babel, Rollup, and test runners  
+- **Storage considerations**: Monitor node_modules and build artifact sizes to avoid large storage usage; prune unused dependencies if possible  
+- **Path correctness**: All paths relative and use Linux conventions; no drive letters or backslashes  
+- **Environment variables**: Export and use environment variables via Linux shell syntax (`export VAR=VALUE`)  
+- **Script shebangs**: If any shell scripts are included, ensure shebang lines use `/bin/bash` or `/usr/bin/env bash` and have executable permissions in Linux environment  
+
+---
+
+### SUMMARY
+
+The existing environment setup plan is fully compatible with the provided Linux x86_64 environment with no fundamental changes necessary beyond confirming that all tools, binaries, and dependencies are aligned with amd64 architecture and Linux OS conventions. The plan should explicitly avoid any GPU or ARM architecture assumptions and use Linux-compatible paths, environment variable syntax, and tooling. Docker images and CI runners should target linux/amd64 platform. All file encodings, line endings, and executable permissions should conform to Linux standards. With these considerations, the plan as detailed will ensure a smooth and reproducible setup on the specified hardware environment.
+
+---
+
+**End of adjusted environment setup plan.**

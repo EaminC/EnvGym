@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/facebook_zstd, project likely CPU-bound, no GPU dependencies detected  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, alpine) compatible; no ARM or GPU-specific base images required  
+- GPU: No NVIDIA GPU detected; no CUDA or GPU-specific base images needed  
+- Instruction Notes: Use CPU-optimized instructions, no need for NVIDIA runtime or GPU flags; ensure no GPU-dependent software in Dockerfile; leverage overlay2 storage driver optimizations, compatible with cgroup v2  
+- Docker Version: 28.3.2, supports BuildKit and docker buildx, no native GPU build support needed due to lack of NVIDIA GPU

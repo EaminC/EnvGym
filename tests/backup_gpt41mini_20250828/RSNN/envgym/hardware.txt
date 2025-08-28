@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/RSNN; typical Linux project structure, ensure COPY paths are relative and context-aware  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: Use amd64 compatible Linux base images (e.g., ubuntu, debian, python official images tagged with amd64)  
+- GPU: No NVIDIA GPU detected, no CUDA base image needed or GPU-specific instructions  
+- Instruction Notes: Avoid GPU-specific Dockerfile instructions; consider large memory available for heavy builds; ensure storage constraints (45.6 GB free) are managed for image size  
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; no native GPU build support since no GPU present

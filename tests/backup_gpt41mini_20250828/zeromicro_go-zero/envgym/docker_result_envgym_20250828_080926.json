@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250828_080926",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756368565",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 431B done\n#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/golang:1.20\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 111B done\n#3 DONE 0.0s\n\n#4 [1/8] FROM docker.io/library/golang:1.20@sha256:8f9af7094d0cb27cc783c697ac5ba25efdc4da35f8526db21f7aebb0b0b4f18a\n#4 DONE 0.0s\n\n#5 [internal] load build context\n#5 transferring context: 141.15kB 0.1s done\n#5 DONE 0.1s\n\n#6 [2/8] RUN apt-get update && apt-get install -y --no-install-recommends     bash     ca-certificates     git     build-essential     && rm -rf /var/lib/apt/lists/*\n#6 CACHED\n\n#7 [3/8] WORKDIR /zeromicro_go-zero\n#7 CACHED\n\n#8 [4/8] COPY go.mod go.sum ./\n#8 CACHED\n\n#9 [5/8] RUN go mod download\n#9 CACHED\n\n#10 [6/8] COPY . .\n#10 DONE 0.2s\n\n#11 [7/8] RUN go mod tidy -v\n#11 0.227 go: go.mod file indicates go 1.21, but maximum version supported by tidy is 1.20\n#11 ERROR: process \"/bin/sh -c go mod tidy -v\" did not complete successfully: exit code: 1\n------\n > [7/8] RUN go mod tidy -v:\n0.227 go: go.mod file indicates go 1.21, but maximum version supported by tidy is 1.20\n------\n\n \u001b[33m1 warning found (use docker --debug to expand):\n\u001b[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value \"linux/amd64\" (line 1)\nenvgym.dockerfile:19\n--------------------\n  17 |     COPY . .\n  18 |     \n  19 | >>> RUN go mod tidy -v\n  20 |     RUN go build -v ./...\n  21 |     \n--------------------\nERROR: failed to build: failed to solve: process \"/bin/sh -c go mod tidy -v\" did not complete successfully: exit code: 1\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

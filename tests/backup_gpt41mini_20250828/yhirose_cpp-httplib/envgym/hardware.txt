@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib, project located under yhirose_cpp-httplib directory within a multi-level path
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: x86_64 compatible images, prefer official Ubuntu 22.04 or Debian-based images matching host OS for compatibility
+- GPU: No NVIDIA GPU detected, no CUDA or NVIDIA GPU base image recommended
+- Instruction Notes: Use overlay2 storage driver compatible instructions, ensure Dockerfile paths relative to /home/cc/EnvGym/data-gpt-4.1mini/yhirose_cpp-httplib; no GPU-specific instructions needed
+- Docker Version: 28.3.2, supports BuildKit and Docker Buildx, no native GPU build support needed due to lack of NVIDIA GPU

@@ -1,0 +1,20 @@
+current progress  
+- Base Ubuntu 22.04 image setup with necessary tools (curl, git, openssl, etc.) installed.  
+- Go 1.21.0 for linux/amd64 successfully downloaded and installed.  
+- User "appuser" created and source code copied with correct permissions.  
+- Network connectivity tests to golang.org and proxy.golang.org performed with fallbacks.  
+- Attempted multiple retries for `go mod download` with verbose logging and fallbacks.  
+- `go mod verify` failed causing build failure.  
+- `go mod tidy` with verbose logging is prepared but not reached due to earlier failure.  
+- Environment variables for grpc logging set.  
+- Dockerfile uses multi-stage style with proper environment and working directories set.
+
+next step  
+- Investigate cause of `go mod verify` failure by adding a step before to output `go.sum` and `go.mod` contents and check for inconsistencies or corrupted module files.  
+- Add `go mod tidy` before `go mod verify` to ensure module files are consistent and dependencies resolved.  
+- Consider removing user switch to `appuser` before module verification steps to avoid permission issues during module caching and downloads.  
+- Verify network access and proxy settings explicitly within the container environment and add fallback environment variables like `GOPROXY=direct` or `GONOSUMDB` if needed.  
+- Add a step to clean Go module cache (`go clean -modcache`) if corrupted modules suspected.  
+- Confirm that the source directory contains valid and complete `go.mod` and `go.sum` files before running `go mod verify`.  
+- Optionally run `go mod download` and `go mod verify` as root or with elevated permissions if permission errors suspected.  
+- Add diagnostics to print Go environment variables related to module proxies and sumdb before verification.

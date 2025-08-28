@@ -1,0 +1,21 @@
+current progress  
+- Base Ubuntu 22.04 image with essential system packages installed.  
+- Miniconda installed to /home/cc/miniconda3; conda available in PATH.  
+- Conda channels configured with conda-forge and strict priority.  
+- Attempted to create conda environment flex_r_env with r-base, then install r-eva package; this step failed during docker build.  
+- Created Python 3.8 environment flex_py_env and installed required Python packages from requirements.txt.  
+- Environment variables R_HOME and PATH updated to include flex_r_env.  
+- User cc created and ownership of project files set properly.  
+- Shell scripts converted to Unix line endings and permissions set.  
+- Final working directory and environment variables set for flex_py_env.
+
+next step  
+- Investigate and fix the failure in the RUN command creating flex_r_env and installing r-eva. Possible actions:  
+  - Split the RUN command to isolate which step fails (environment creation vs r-eva install).  
+  - Add debugging commands (e.g., conda list, conda info) inside the Dockerfile after environment creation.  
+  - Confirm network connectivity and conda channel access inside the build context.  
+  - Try creating flex_r_env with both r-base and r-eva in one conda create command to avoid separate install step.  
+  - Ensure conda activation or environment variables are correctly set for the install step.  
+- Once fixed, re-test docker build to confirm success of R environment setup.  
+- Consider adding explicit installation of R dependencies or pinning package versions if needed.  
+- Verify that environment variables for R_HOME and PATH are correctly set for both build and runtime.

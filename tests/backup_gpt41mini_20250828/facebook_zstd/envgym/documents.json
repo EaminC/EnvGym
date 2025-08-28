@@ -1,0 +1,12 @@
+[
+  "README.md",
+  "CONTRIBUTING.md",
+  "CODE_OF_CONDUCT.md",
+  "SECURITY.md",
+  "TESTING.md",
+  "Makefile",
+  "Package.swift",
+  "contrib/docker/Dockerfile",
+  "contrib/snap/snapcraft.yaml",
+  "tests/gzip/init.cfg"
+]

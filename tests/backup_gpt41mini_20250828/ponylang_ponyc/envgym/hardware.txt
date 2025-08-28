@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/ponylang_ponyc; project likely CPU-bound given no GPU support detected
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, alpine); no GPU-specific base image required
+- GPU: No NVIDIA GPU detected; no CUDA base image needed
+- Instruction Notes: Optimize for high CPU core count; avoid GPU-specific instructions; consider overlay2 storage driver compatibility; ensure paths use Linux filesystem conventions
+- Docker Version: 28.3.2; supports BuildKit and docker buildx; GPU builds not applicable due to no GPU detected

@@ -1,0 +1,15 @@
+{
+  "timestamp": "20250828_024102",
+  "dockerfile_path": "envgym/envgym.dockerfile",
+  "image_name": "envgym_test_1756348861",
+  "build": {
+    "success": false,
+    "stdout": "",
+    "stderr": "#0 building with \"default\" instance using docker driver\n\n#1 [internal] load build definition from envgym.dockerfile\n#1 transferring dockerfile: 625B done\n#1 DONE 0.0s\n\n#2 [internal] load metadata for docker.io/library/ubuntu:22.04\n#2 DONE 0.1s\n\n#3 [internal] load .dockerignore\n#3 transferring context: 2B done\n#3 DONE 0.0s\n\n#4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:1aa979d85661c488ce030ac292876cf6ed04535d3a237e49f61542d8e5de5ae0\n#4 CACHED\n\n#5 [internal] load build context\n#5 transferring context: 2B done\n#5 DONE 0.0s\n\n#6 [2/6] RUN apt-get update &&     apt-get install -y --no-install-recommends     build-essential     ca-certificates     curl     git     python3     python3-pip     python3-venv     && rm -rf /var/lib/apt/lists/*\n#6 ...\n\n#7 [3/6] WORKDIR /app\n#7 CACHED\n\n#8 [4/6] COPY ./rfuse /app/rfuse\n#8 ERROR: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::rtfyrgp88ewn46t3hq09vxtpd: \"/rfuse\": not found\n\n#6 [2/6] RUN apt-get update &&     apt-get install -y --no-install-recommends     build-essential     ca-certificates     curl     git     python3     python3-pip     python3-venv     && rm -rf /var/lib/apt/lists/*\n#6 CANCELED\n------\n > [4/6] COPY ./rfuse /app/rfuse:\n------\nenvgym.dockerfile:18\n--------------------\n  16 |     WORKDIR /app\n  17 |     \n  18 | >>> COPY ./rfuse /app/rfuse\n  19 |     \n  20 |     WORKDIR /app/rfuse\n--------------------\nERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 111b0f74-95ac-4c4c-99e1-f8e374feb237::rtfyrgp88ewn46t3hq09vxtpd: \"/rfuse\": not found\n"
+  },
+  "run": {
+    "success": false,
+    "stdout": "",
+    "stderr": ""
+  }
+}

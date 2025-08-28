@@ -1,0 +1,25 @@
+current progress  
+- Base image set to Ubuntu 22.04 with essential build tools and dependencies installed.  
+- Rust 1.70 installed as default toolchain via rustup, plus nightly-2025-01-25 with minimal profile.  
+- FreeBSD cross-compilation targets (i686 and x86_64) added.  
+- Cargo upgraded with rustup component add cargo (though cargo is installed by default).  
+- cargo-deny installed with retry logic and verbosity enabled.  
+- spellcheck tool installed with cargo.  
+- RUSTFLAGS temporarily disabled during installs, then set to "-D warnings".  
+- RUSTDOCFLAGS set to "-D warnings".  
+- Workspace set to /workspace with source copied in.  
+- Cargo config created to enforce rustflags during builds.  
+- Environment variable CROSS_BUILD_ENV_PASS set for passthrough variables.  
+- Default command set to bash shell.  
+
+next step  
+- Add installation of Git explicitly if needed by some build steps or CI. (Git is installed currently, so verify if version meets needs.)  
+- Ensure presence of spellcheck.dic file in /workspace root or copy it explicitly in Dockerfile.  
+- Add configuration or script steps to run cargo-deny check and spellcheck during image build or CI runs for validation.  
+- Integrate Cross.toml environment passthrough by copying Cross.toml into /workspace and linking or configuring cross build tools if used.  
+- Add copying and setup of other config files (deny.toml, netlify.toml, spellcheck.toml, .cirrus.yml, .github directory) as required for full environment.  
+- Consider adding rust-toolchain.toml to pin Rust version explicitly in workspace.  
+- Verify environment variables RUSTFLAGS, RUST_BACKTRACE, and RUSTDOCFLAGS propagate correctly in all build and run steps.  
+- Optionally add USER and permissions adjustments for non-root builds if security is a concern.  
+- Add build steps to compile the tokio echo server example and run tests as part of container build or CI pipeline.  
+- Document or script the usage of this Docker image to run the Tokio development and test environment.

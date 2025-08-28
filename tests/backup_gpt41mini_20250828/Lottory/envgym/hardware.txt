@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/Lottory; project likely user-space, no special volume mounts specified  
+- Architecture: x86_64; recommended --platform=linux/amd64  
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, alpine for x86_64); no ARM or other arch needed  
+- GPU: No functional NVIDIA GPU detected; no CUDA base image required or recommended  
+- Instruction Notes: Use standard Linux instructions; no GPU-specific instructions; large CPU core count irrelevant to Dockerfile but useful for build parallelism outside Dockerfile  
+- Docker Version: 28.3.2; supports BuildKit and --platform; GPU build support present but unused due to no NVIDIA GPU detected

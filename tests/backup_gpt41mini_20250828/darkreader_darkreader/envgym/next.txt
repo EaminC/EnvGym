@@ -1,0 +1,23 @@
+current progress  
+- Base image set to Ubuntu 22.04 with locale and environment configured for en_US.UTF-8.  
+- Installed Node.js 18.17.1 from NodeSource, verified Node.js and npm versions.  
+- Installed global npm packages: typescript, ts-node, yarn with verified versions.  
+- Installed Python 3.10 and essential build tools.  
+- Installed browsers (chromium-browser, firefox) and Thunderbird for extension testing.  
+- Installed Deno 1.42.3 and linked binary correctly, verified version.  
+- Increased file-max limit via sysctl config.  
+- Project source copied to `/darkreader_darkreader` with root ownership and read/write permissions for user.  
+- Used `npm ci` with increased memory (`--max-old-space-size=4096`) for dependency installation.  
+- Set `NODE_OPTIONS` environment variable to leverage 4GB max old space size.  
+- Entrypoint uses dumb-init for signal handling and CMD uses bash shell for interactive use.  
+- Dockerfile aligns with Linux x86_64 environment, no GPU dependencies, uses Linux-style paths and permissions.
+
+next step  
+- Verify that Node.js scripts in `tasks/` and `tests/` run correctly under ESM mode inside the container; adjust Node.js invocation commands if needed to avoid CommonJS flags.  
+- Confirm that test runners (e.g., Jest or Node.js test runner) are configured for ESM in this Docker environment.  
+- Add ulimit configuration or wrapper scripts to increase open file descriptors inside container if build or tests fail due to file limits.  
+- Validate the build process (`npm run build`) inside the container with `--max-old-space-size=4096` environment variable effective.  
+- Optionally, add missing tools or dependencies if any build/test step fails (e.g., additional locales, fonts, or debugging utilities).  
+- Consider cleaning up or optimizing layer caching if image size or build time is a concern.  
+- Add explicit user and permission management if running container processes as non-root is desired.  
+- Test loading and running extension builds in the container's browser installations for full validation.

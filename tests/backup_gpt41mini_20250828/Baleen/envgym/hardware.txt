@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/Baleen, project likely Linux-based environment, use absolute paths cautiously for volume mounts
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: Linux AMD64 compatible images (e.g., ubuntu, debian, alpine x86_64 tags)
+- GPU: No NVIDIA GPU detected, no CUDA base image recommended
+- Instruction Notes: No GPU-specific instructions; leverage multi-core CPU for parallel builds if needed; ensure storage constraints considered (46.9GB free); use overlay2 storage driver compatible instructions
+- Docker Version: 28.3.2, supports BuildKit and Docker Buildx, GPU build flags (--gpus) available but irrelevant due to missing NVIDIA GPU

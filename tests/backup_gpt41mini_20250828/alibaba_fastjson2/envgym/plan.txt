@@ -1,0 +1,222 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context:**  
+- Hardware: x86_64 (amd64) architecture  
+- OS base image: Linux-based (Ubuntu/Debian/Alpine) recommended for amd64  
+- No GPU present; no CUDA or GPU-specific setup needed  
+- Docker Version: 28.3.2 with BuildKit/Buildx, supports multi-platform builds (amd64 supported)  
+- Project path: `/home/cc/EnvGym/data-gpt-4.1mini/alibaba_fastjson2`  
+- Use of native image builds recommended on Linux/WSL2 for best compatibility  
+
+---
+
+### 1. DOWNLOADS NEEDED:
+
+- **Java Development Kit (JDK):**  
+  - Use JDK 11, 17, or 21 distributions compatible with x86_64 Linux environment.  
+  - GraalVM versions must match chosen JDK version and support amd64 Linux architecture.  
+  - Download from official sources (e.g., https://openjdk.java.net/, AdoptOpenJDK, Amazon Corretto, GraalVM releases) for amd64 Linux.  
+  - Verify `JAVA_HOME` points to the GraalVM directory before native image builds.  
+  - Install native-image tool with:  
+    ```bash
+    gu install native-image
+    ```  
+  - Confirm `native-image --version` works in the target environment.
+
+- **Build Tools:**  
+  - Maven 3.6+ or Gradle 6.0+ installed on Linux amd64 host.  
+  - Confirm `mvn -v` or `gradle -v` outputs show amd64-compatible Java version.  
+  - Configure build tools to use GraalVM JDK for native image builds.
+
+- **Kotlin (optional):**  
+  - Kotlin compiler/sdk matching your Kotlin version (e.g., 1.8.x).  
+  - Verify `kotlinc -version` on amd64 Linux system.
+
+- **IDE (optional):**  
+  - IntelliJ IDEA, Eclipse, VSCode with Java/Kotlin plugins compatible with amd64 Linux.
+
+- **Git:**  
+  - Ensure Git is installed and configured in the Linux environment for cloning and version control.
+
+- **Network Access:**  
+  - Ensure internet access for Maven Central and other repositories to download dependencies.
+
+- **Docker (optional for native builds):**  
+  - Use amd64 Linux-based Docker images (e.g., `ubuntu:latest`, `debian:latest`, or `alpine:latest` for lightweight builds).  
+  - No GPU support needed; skip CUDA-related setup.  
+  - Leverage Docker BuildKit and Buildx for optimized image builds.
+
+- **Additional Tools:**  
+  - Linux environment or WSL2 on Windows recommended for native image builds due to better GraalVM compatibility.  
+  - Utilize high CPU core count for parallel builds (e.g., `mvn -T 1C` or `gradle --parallel`) to speed up compilation.
+
+---
+
+### 2. FILES TO CREATE:
+
+- **Project Directory Structure:**  
+  - Root project at `/home/cc/EnvGym/data-gpt-4.1mini/alibaba_fastjson2` following Maven/Gradle conventions.  
+  - Source folders:  
+    - `src/main/java` or `src/main/kotlin`  
+    - `src/test/java` or `src/test/kotlin`  
+  - Subproject folders:  
+    - `example-solon-test/src/main/java` and `example-solon-test/src/main/resources` (with `app.properties`)  
+    - `example-spring-test/src/main/java` and `example-spring-test/src/main/resources` (with `application.yaml`, `logback-spring.xml`, and static resource `hello.html`)  
+
+- **Build Configuration:**  
+  - `pom.xml` or `build.gradle` / `build.gradle.kts` with dependencies:  
+    - Core `fastjson2` version `2.0.58` or latest stable.  
+    - Compatibility module if migrating from fastjson 1.x.  
+    - Kotlin integration modules if Kotlin is used.  
+    - Extension modules for Solon and Spring (`fastjson2-extension-spring5` or `spring6`, `fastjson2-extension-solon`).  
+    - Spring Boot starters for web, websocket, JDBC, MyBatis-Plus, H2 driver, logging (transitive).  
+    - Maven profile `native` for GraalVM native image build configured with plugin suitable for amd64 Linux environment.  
+    - Gradle native image build task configured if applicable.
+
+- **Source Code Files:**  
+  - Java/Kotlin classes using `com.alibaba.fastjson2` API.  
+  - Main application classes with `public static void main(String[] args)` entry points for native build compatibility.  
+  - Solon integration classes and `app.properties` with content:  
+    ```
+    server.port=8080
+    solon.logging.logger.root.level=INFO
+    ```  
+  - Spring integration classes including controllers, websocket config, error handling, etc.  
+  - Static resource file `hello.html` placed under `example-spring-test/src/main/resources/` or `src/main/resources/static` for Spring Boot static serving compatibility.  
+  - Logging config file `logback-spring.xml` placed under `example-spring-test/src/main/resources/` with profile-based console and file appenders, colorized output, and 60-second config scanning.  
+  - Spring config file `application.yaml` containing datasource, MyBatis-Plus, H2 console, websocket, logging settings.  
+  - SQL scripts `schema.sql` and `data.sql` in classpath for H2 database initialization.
+
+- **Native Image Config Files:**  
+  - `reflect-config.json`, `resource-config.json` for GraalVM native image to support required reflection and resource loading by Fastjson2.
+
+---
+
+### 3. NECESSARY TEST CASES:
+
+- JSON parsing and serialization tests for strings, byte arrays, JSONB, JSONPath, including Kotlin-specific features if used.
+
+- Compatibility tests on Java 8+ runtime on amd64 Linux.
+
+- Extension module tests for Solon and Spring integrations.
+
+- Websocket endpoint `/hello` tests verifying `hello.html` UI loads correctly and websocket messages send/receive as expected.
+
+- H2 database connectivity and MyBatis-Plus mapper tests.
+
+- Logging output verification under `dev` and `prod/default` Spring profiles as per `logback-spring.xml`.
+
+- Native image build and runtime tests on amd64 Linux environment.
+
+- Error handling tests for invalid JSON inputs.
+
+- CI integration tests including native image build verification on amd64 Linux runners.
+
+---
+
+### 4. COMPLETE TODO LIST:
+
+1. **Install JDK and GraalVM on amd64 Linux:**  
+   - Install JDK 11, 17, or 21 from trusted amd64 Linux distributions.  
+   - Install GraalVM for amd64 Linux matching chosen JDK version.  
+   - Set `JAVA_HOME` to GraalVM directory.  
+   - Install native-image tool via `gu install native-image`.  
+   - Confirm `java -version` and `native-image --version` output for amd64 compatibility.
+
+2. **Install Maven or Gradle on amd64 Linux:**  
+   - Verify `mvn -v` or `gradle -v` show correct Java and platform info.  
+   - Configure to use GraalVM JDK for native builds.
+
+3. **(Optional) Install Kotlin SDK on amd64 Linux:**  
+   - Verify `kotlinc -version`.
+
+4. **Create Project Directory Structure:**  
+   - Ensure all source and resource files reside under `/home/cc/EnvGym/data-gpt-4.1mini/alibaba_fastjson2` following Maven/Gradle conventions.  
+   - Place Solon and Spring test app files in respective subdirectories.  
+   - Place `hello.html` in Spring resource directory so Spring Boot serves it statically without interference.
+
+5. **Create Build Configuration Files:**  
+   - Add dependencies as per original plan, ensuring compatibility with amd64 Linux environment.  
+   - Configure native image build profile for amd64 Linux GraalVM.  
+   - Use proper plugin versions validated on amd64 Linux.
+
+6. **Write/Import Source Code:**  
+   - Use `com.alibaba.fastjson2` package.  
+   - Provide main application classes with main methods.  
+   - Include native image config files for GraalVM on amd64 Linux.  
+   - Add Solon and Spring integration classes and resources.
+
+7. **Write Unit and Integration Tests:**  
+   - Cover JSON parsing, serialization, JSONB, JSONPath.  
+   - Test Solon endpoints and logging.  
+   - Test Spring endpoints, websocket functionality, static resource serving (`hello.html`), database connectivity, and logging behavior.  
+   - Verify native image build and runtime on amd64 Linux.
+
+8. **Build Project:**  
+   - Use `mvn clean compile` or `gradle clean build`.  
+   - For native image, run `mvn clean package -Pnative -DskipTests` or corresponding Gradle command, executing on amd64 Linux system or container.  
+   - Fix any build or dependency issues.
+
+9. **Run All Tests:**  
+   - Use `mvn test` or `gradle test`.  
+   - Run native executable generated by GraalVM on amd64 Linux.  
+   - Run Solon test app and verify web endpoints on `localhost:8080`.  
+   - Run Spring test app, verify `/test`, `/hello` websocket UI (`hello.html`), unknown URL error page, and H2 console `/h2-console`.  
+   - Check logging output respects Spring profiles and `logback-spring.xml` configuration.
+
+10. **(Optional) Integrate Spring Framework:**  
+    - Add Fastjson2 Spring extension modules.  
+    - Configure Spring beans and test JSON serialization.
+
+11. **IDE Configuration:**  
+    - Configure IDE SDKs and build tools for amd64 Linux environment.  
+    - Configure Kotlin support if used.  
+    - Set up run/debug configurations for main classes and tests.
+
+12. **Documentation:**  
+    - Document environment setup with emphasis on amd64 Linux compatibility.  
+    - Document native image build and run instructions for amd64 Linux.  
+    - Document Solon and Spring usage instructions including `hello.html` serving and websocket functionality.  
+    - Document logging configuration and profiles.
+
+13. **Continuous Integration (CI):**  
+    - Configure CI pipelines on amd64 Linux runners.  
+    - Install JDK, Maven/Gradle, GraalVM, native-image tool in CI environment.  
+    - Automate build, test, native image build, Solon and Spring integration tests.  
+    - Report coverage and test results.
+
+---
+
+### VERIFICATION METHODS (amd64 Linux environment):
+
+- Commands `java -version`, `mvn -v` / `gradle -v`, `native-image --version` confirm correct tool installation on amd64 Linux.
+
+- Successful project build and native image build on amd64 Linux or compatible Docker container.
+
+- Passing all unit and integration tests including websocket and database tests on amd64 Linux host.
+
+- Static resource `hello.html` served correctly by Spring Boot on amd64 Linux.
+
+- Native executable runs without errors on amd64 Linux.
+
+- Logging output matches configured profiles and outputs to console and file as expected.
+
+- CI pipeline runs successfully on amd64 Linux runners.
+
+---
+
+### NOTES:
+
+- **CPU Architecture:** All components and dependencies must be compatible with x86_64/amd64 Linux. Avoid ARM or other architectures.
+
+- **Storage and Memory:** Ensure sufficient disk space and RAM on the host system for build and native image compilation (native-image builds can be memory intensive).
+
+- **Paths:** Use absolute or relative paths consistent with `/home/cc/EnvGym/data-gpt-4.1mini/alibaba_fastjson2` working directory.
+
+- **Docker:** Use amd64 base images for container builds. No GPU-related setup needed.
+
+- **Native Image Builds:** Prefer Linux or WSL2 environments on amd64 for GraalVM native-image compatibility; Windows native image builds without WSL2 may be problematic.
+
+---
+
+This adjusted plan ensures full compatibility, correctness, and efficiency on your x86_64 Linux environment, leveraging your Docker and hardware capabilities optimally, while maintaining all original functional and integration requirements.

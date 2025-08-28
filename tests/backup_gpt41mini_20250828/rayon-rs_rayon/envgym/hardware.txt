@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/rayon-rs_rayon; typical Linux project structure, local context for COPY instructions
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: linux/amd64 compatible images (e.g., official Ubuntu, Debian, Alpine base images)
+- GPU: No NVIDIA GPU detected; no CUDA base image needed or GPU-specific instructions
+- Instruction Notes: Use overlay2 storage driver compatible instructions; ensure file paths respect Linux filesystem; no GPU-specific Dockerfile instructions required
+- Docker Version: 28.3.2; supports BuildKit and --gpus but GPU not applicable here

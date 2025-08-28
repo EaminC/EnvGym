@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde, project likely CPU-bound, no GPU dependencies detected  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: Use amd64-compatible base images (e.g., ubuntu:22.04, debian, alpine x86_64)  
+- GPU: No NVIDIA GPU detected, no CUDA base image required  
+- Instruction Notes: No GPU-specific instructions needed; leverage multi-core CPU for parallel builds if applicable; ensure paths in COPY/ADD use absolute or relative paths within /home/cc/EnvGym/data-gpt-4.1mini/serde-rs_serde  
+- Docker Version: 28.3.2, supports BuildKit and advanced features, but GPU build features not applicable without NVIDIA GPU

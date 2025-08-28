@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250828_025856 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756349902
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+49 |     RUN rustc --version && cargo --version
+50 |
+51 | >>> RUN cargo check --workspace --verbose || { echo "Cargo check failed. Showing logs:"; cat target/debug/deps/*.log || true; exit 1; }
+52 |
+53 |     RUN cargo clean
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/bash -c cargo check --workspace --verbose || { echo \"Cargo check failed. Showing logs:\"; cat target/debug/deps/*.log || true; exit 1; }" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/anvil, project likely Linux-based, use relative paths carefully
+- Architecture: x86_64, recommended --platform=linux/amd64
+- Base Image: Linux x86_64 compatible images, no GPU-specific base required
+- GPU: No NVIDIA GPU detected, no CUDA base image needed
+- Instruction Notes: Use overlay2 storage driver compatible instructions; no GPU-specific instructions; watch for large image sizes due to storage limits
+- Docker Version: 28.3.2, supports BuildKit and Buildx, supports --gpus but no GPU available on host

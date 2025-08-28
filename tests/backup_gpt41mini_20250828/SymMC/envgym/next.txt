@@ -1,0 +1,18 @@
+current progress  
+- Base image set to Ubuntu 20.04 with necessary packages installed including openjdk-8-jdk, ant, build-essential, cmake, git, ninja-build, and various development libraries.  
+- Environment variables JAVA_HOME and PATH configured for Java 8.  
+- Attempted to clone Minisat repo, checkout specific commit, create build directory, configure with CMake using Ninja generator, and build using ninja.  
+- Build failed at ninja build step inside Minisat build process (ninja: build stopped: subcommand failed).  
+- Created basic build and run scripts for Enhanced_Kodkod and Enumerator_Estimator with executable permissions.  
+- Configured .gitignore and environment setup script.  
+- Working directory set to /SymMC with final CMD as /bin/bash.
+
+next step  
+- Investigate and fix the Minisat build failure by:  
+  - Checking the exact error messages from the failed ninja build (add verbose output or log capture to Dockerfile).  
+  - Verify if any required dependencies or build flags are missing for Minisat when building with Ninja on Ubuntu 20.04.  
+  - Consider switching from Ninja to Unix Makefiles if Ninja build issues persist by changing CMake generator to "Unix Makefiles".  
+  - Ensure C++11 standard support and compiler versions are compatible with Minisat source.  
+  - Add any missing development packages or libraries required by Minisat.  
+- After resolving Minisat build, confirm Minisat binary installation and test `minisat --version`.  
+- Validate that subsequent build steps for Enhanced_Kodkod and Enumerator_Estimator work as expected.

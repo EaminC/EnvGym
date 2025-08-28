@@ -1,0 +1,214 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN ===
+
+**Context:**  
+- Host architecture: x86_64 (amd64) compatible  
+- No NVIDIA GPU present → No CUDA or GPU-specific setup needed  
+- Working directory: `/home/cc/EnvGym/data-gpt-4.1mini/P4Ctl` (use relative paths inside this)  
+- Docker version 28.3.2 with BuildKit/Buildx support but no GPU features needed  
+- CPU-bound build environment, leverage multi-core CPU for parallel builds  
+- Linux OS recommended; Ubuntu 20.04.1 LTS or compatible with Linux kernel 5.15.0  
+
+---
+
+### 1. DOWNLOADS NEEDED (UPDATED)
+
+- Python 3.7 or later (ensure compatibility with code)  
+- Intel Tofino Switch SDE 9.7.0 (Linux amd64 version)  
+- BCC (BPF Compiler Collection) compatible with Linux kernel 5.15.0 (amd64)  
+- Bison 3.8.2 (amd64 Linux binary or build from source)  
+- Flex 2.6.4 (amd64 Linux binary or build from source)  
+- Scapy 2.4.5 (via pip3 for amd64 Linux)  
+- ncat (part of Nmap suite, amd64 Linux package)  
+- Ubuntu 20.04.1 LTS or compatible Linux OS (kernel 5.15.0 recommended)  
+- GNU Make (amd64 Linux) for building NetCL compiler (usually pre-installed)  
+
+**Notes:**  
+- Ensure all packages and binaries are amd64 compatible (default on x86_64 Linux)  
+- Avoid GPU-specific downloads or instructions  
+- Use overlay2 Docker storage driver optimizations if containerizing builds  
+
+---
+
+### 2. FILES TO CREATE (NO CHANGE)
+
+- Environment variable config file (`~/.bashrc` or `~/.profile`):  
+  ```bash
+  export SDE=~/bf-sde-9.7.0/
+  export SDE_INSTALL=~/bf-sde-9.7.0/install
+  ```  
+- `host_agent/host_agent_ebpf.c`: set `TAGGED_TERMINAL` to bash PID  
+- `switch/netcl.py`: place compiled NetCL rules here after compilation  
+- Optional: systemd or startup scripts for automation  
+
+---
+
+### 3. NECESSARY TEST CASES IN THE CODEBASE (NO CHANGE)
+
+- P4 program compilation and loading  
+- Control plane functionality  
+- eBPF host agent functionality  
+- Cross-host attack prevention  
+- NetCL rules compilation and rebuild  
+- Custom Scapy tools test  
+
+---
+
+### 4. COMPLETE TODO LIST (ADJUSTED FOR HOST ENVIRONMENT)
+
+**Step 1: Prepare Host OS environment**  
+- Install Ubuntu 20.04.1 LTS or compatible Linux kernel 5.15.0 (amd64) on all hosts  
+- Update system packages:  
+  ```bash
+  sudo apt update && sudo apt upgrade -y
+  ```  
+- Install dependencies:  
+  - Python 3.7+ and pip3 (amd64)  
+  - Bison 3.8.2 (verify with `bison --version`)  
+  - Flex 2.6.4 (verify with `flex --version`)  
+  - Install BCC for kernel 5.15.0 following https://github.com/iovisor/bcc/blob/master/INSTALL.md (amd64 Linux)  
+  - Install Scapy 2.4.5:  
+    ```bash
+    pip3 install scapy==2.4.5
+    ```  
+  - Install ncat:  
+    ```bash
+    sudo apt install nmap
+    ```  
+  - Verify GNU Make installed (usually pre-installed):  
+    ```bash
+    make --version
+    ```  
+- Verify all installed software versions for amd64 compatibility  
+- If using Docker builds, leverage multi-core CPU by running `make -j$(nproc)` or equivalent  
+
+**Step 2: Set up Intel Tofino SDE 9.7.0**  
+- Download amd64 Linux version of Tofino SDE 9.7.0 from Intel website  
+- Install following official instructions on amd64 Linux host  
+- Export environment variables in your shell:  
+  ```bash
+  export SDE=~/bf-sde-9.7.0/
+  export SDE_INSTALL=~/bf-sde-9.7.0/install
+  ```  
+- Verify environment variables:  
+  ```bash
+  echo $SDE
+  echo $SDE_INSTALL
+  ```  
+
+**Step 3: Build and run P4 program on Tofino switch**  
+- Navigate to project directory or SDE directory inside `/home/cc/EnvGym/data-gpt-4.1mini/P4Ctl`  
+- Run:  
+  ```bash
+  ./p4_build.sh -p switch/p4control.p4
+  ```  
+- On failure, check logs; make sure compiler is amd64 compatible  
+- Run switch daemon:  
+  ```bash
+  ./run_switchd.sh -p p4control
+  ```  
+- Verify with:  
+  ```bash
+  ps aux | grep switchd
+  ```  
+
+**Step 4: Start the control plane**  
+- Run control plane:  
+  ```bash
+  python3 switch/controller.py
+  ```  
+- Confirm no errors and policies loaded  
+
+**Step 5: Configure eBPF host agent**  
+- Find bash PID in each host terminal:  
+  ```bash
+  ps
+  ```  
+- Set `TAGGED_TERMINAL` in `host_agent/host_agent_ebpf.c` to bash PID  
+- Compile/prep eBPF code if needed (ensure compiler is amd64 Linux compatible)  
+- Run host agent:  
+  ```bash
+  python3 host_agent/host_agent.py
+  ```  
+- Verify eBPF programs loaded:  
+  ```bash
+  sudo bpftool prog show
+  ```  
+
+**Step 6: Verify cross-host attack prevention**  
+- On Host2 and Host3, start ncat listeners:  
+  ```bash
+  sudo ncat -nlvp 9999 -e /bin/bash
+  ```  
+- On Host1, test connections:  
+  ```bash
+  sudo ncat 10.0.0.2 9999   # Should succeed  
+  ncat 10.0.0.3 9999        # Should be blocked  
+  ```  
+- Confirm behavior matches policy  
+
+**Step 7: Compile and update NetCL rules**  
+- If modifying NetCL compiler source:  
+  ```bash
+  make clean
+  make netcl -j$(nproc)
+  ```  
+- Run NetCL compilation:  
+  ```bash
+  ./netcl-compile -i <netcl_rules> -o <compiled_rules>
+  ```  
+- Copy contents of `<compiled_rules>` into `switch/netcl.py`  
+- Restart control plane:  
+  ```bash
+  python3 switch/controller.py
+  ```  
+- Verify updated policies active  
+
+**Step 8: Test custom Scapy tools**  
+- On receiving host:  
+  ```bash
+  python3 custom-receive.py
+  ```  
+- On sending host:  
+  ```bash
+  python3 custom-send.py <destination_IP> <label> <tracker> <message>
+  ```  
+- Verify packets processed correctly  
+
+**Step 9: Optional automation and monitoring**  
+- Create systemd service files or startup scripts for switch daemon, control plane, and host agent  
+- Enable logging, alerting, and recovery procedures  
+
+---
+
+### VERIFICATION METHODS (NO CHANGE)
+
+- Version checks (Python, Bison, Flex, BCC, Scapy, ncat, make) on amd64 Linux  
+- Process status checks (`ps`, `bpftool`)  
+- Network connectivity and policy tests with ncat  
+- Check logs and runtime outputs of Python scripts  
+- Confirm successful NetCL compiler rebuilds  
+
+---
+
+### ERROR HANDLING (NO CHANGE)
+
+- Follow official docs on failures  
+- Restart services and check logs  
+- Validate config syntax before applying  
+- Use isolated VMs or containers to avoid host disruption  
+
+---
+
+### CROSS-OS AND HARDWARE NOTES (UPDATED)
+
+- Host agent and BCC require Linux kernel 5.15.0 on amd64, Ubuntu 20.04.1 LTS recommended  
+- Intel Tofino SDE supports amd64 Linux only and requires corresponding hardware  
+- Windows/macOS hosts must run Linux VM or containers for host agents and control plane  
+- No GPU or CUDA dependencies—skip GPU-related instructions  
+- Use multi-core CPU parallelism for build steps (`make -j$(nproc)`)  
+- Use overlay2 Docker storage driver if using containers for better performance  
+- Ensure all paths and context inside `/home/cc/EnvGym/data-gpt-4.1mini/P4Ctl` for consistency  
+
+---
+
+This adjusted plan aligns with your hardware environment (x86_64 amd64 Linux, no GPU, docker 28.3.2) and ensures compatibility, performance, and correctness during environment setup, build, testing, and deployment.

@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/SymMC; project likely code/data located here, use relative paths accordingly
+- Architecture: x86_64; recommended --platform=linux/amd64
+- Base Image: use amd64 compatible base images (e.g., ubuntu, debian, python official images with amd64 tags)
+- GPU: No NVIDIA GPU detected; no CUDA base image required or recommended
+- Instruction Notes: No GPU-specific instructions needed; leverage large memory if needed; consider overlay2 storage driver compatibility; use local volumes for data persistence under Docker Root Dir /var/lib/docker
+- Docker Version: 28.3.2; supports BuildKit, Docker Compose v2.38.2, but GPU build support is irrelevant without NVIDIA hardware

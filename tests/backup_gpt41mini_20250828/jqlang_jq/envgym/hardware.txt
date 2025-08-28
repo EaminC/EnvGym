@@ -1,0 +1,6 @@
+- Working Directory: /home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq, project likely local source context at this path  
+- Architecture: x86_64, recommended --platform=linux/amd64  
+- Base Image: amd64 Linux base images (e.g., ubuntu, debian, alpine) without GPU-specific variants  
+- GPU: No NVIDIA GPU detected, no CUDA base image recommended  
+- Instruction Notes: Use standard Linux instructions, no GPU-specific setup; ensure paths relative to /home/cc/EnvGym/data-gpt-4.1mini/jqlang_jq; overlay2 storage driver supports typical Docker layering well  
+- Docker Version: 28.3.2, supports BuildKit and Buildx; GPU builds via --gpus flag not applicable due to lack of NVIDIA drivers

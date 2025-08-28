@@ -1,0 +1,170 @@
+=== ADJUSTED ENVIRONMENT SETUP PLAN BASED ON HARDWARE INFORMATION ===
+
+**Context:**  
+- Host architecture: x86_64 (AMD64)  
+- Working directory: `/home/cc/EnvGym/data-gpt-4.1mini/ELECT` (project inside user home directory)  
+- No NVIDIA GPU present → no CUDA or GPU-specific dependencies  
+- Docker version 28.3.2 available (supports BuildKit), but plan assumes native Linux environment setup  
+- Standard Linux filesystem, typical Ubuntu/Debian-compatible environment assumed  
+
+---
+
+### 1. DOWNLOADS AND PACKAGE INSTALLATION ADJUSTMENTS
+
+- **Architecture Compatibility:**  
+  All packages and binaries targeted for x86_64 (AMD64), matching host architecture. Use standard Ubuntu/Debian packages (`apt-get install`) for amd64 architecture. No cross-architecture adjustments needed.
+
+- **Java:**  
+  OpenJDK 11 packages (`openjdk-11-jdk`, `openjdk-11-jre`) are fully compatible with x86_64. Confirm installation from native apt repositories.
+
+- **Intel ISA-L Libraries and Dependencies:**  
+  Packages `clang`, `llvm`, `libisal-dev` are available for amd64; no changes needed.
+
+- **Python 3 and Tools:**  
+  Use Python 3 and pip3 as usual; ensure pip corresponds to Python 3 environment. Confirm `python3` and `pip3` commands exist and are consistent.
+
+- **Utilities and Network Tools:**  
+  All utilities (`bc`, `iproute2`, `rsync`, `curl`, `jq`, `ssh`, `ssh-keygen`, `ssh-copy-id`, `ssh-keyscan`, `scp`, `sshpass`) are standard and available for amd64 Linux distros.
+
+- **Systemd Utilities:**  
+  `systemctl` is assumed available on all nodes (typical for Ubuntu/Debian amd64 systems).
+
+- **No GPU-specific tools or libraries needed:**  
+  No CUDA or GPU drivers are installed or required.
+
+- **Maven Proxy Settings:**  
+  Proxy settings remain optional and unchanged, ensure `.m2/settings.xml` is properly configured if behind a proxy.
+
+---
+
+### 2. FILE PATH AND DIRECTORY NOTES
+
+- The project path is inside user home directory `/home/cc/EnvGym/data-gpt-4.1mini/ELECT`.  
+  - All relative and absolute paths in `scripts/settings.sh` and other scripts must reflect this base path.  
+  - Review and adjust all path variables in `scripts/settings.sh` accordingly:  
+    - `PathToSSHPrivateKeyFile` → e.g., `/home/cc/.ssh/id_rsa` or specified private key path  
+    - `PathToArtifact` → `/home/cc/EnvGym/data-gpt-4.1mini/ELECT/artifacts` or as appropriate  
+    - `PathToScripts` → `/home/cc/EnvGym/data-gpt-4.1mini/ELECT/scripts`  
+    - `PathToELECTPrototype`, `PathToColdTier`, `PathToYCSB`, etc., must be absolute or relative to working directory and consistent across all nodes.
+
+- Ensure directory permissions and ownership allow `cc` user to read/write.
+
+- The `src/coldTier/data/` directory on the cold tier node must exist before running `OSSServer`.
+
+- Experiment backup/log/result directories on control node (`PathToELECTExpDBBackup`, `PathToELECTLog`, `PathToELECTResultSummary`) must be created and cleaned as per plan.
+
+---
+
+### 3. ENVIRONMENT AND TOOLCHAIN ADJUSTMENTS
+
+- **Java Home:**  
+  Confirm Java 11 installation path on amd64 system, likely `/usr/lib/jvm/java-1.11.0-openjdk-amd64`.  
+  Export `JAVA_HOME` accordingly before builds.
+
+- **Python Environment:**  
+  Use `python3` and `pip3` explicitly if `pip` does not point to Python 3 environment. Adjust `scripts/setup.sh` to call `pip3 install` if needed.
+
+- **SSH Key Handling:**  
+  No architecture-specific changes needed, but ensure SSH key files have correct permissions (`chmod 600`) and ownership for user `cc`.
+
+- **Rsync and SSH Parallelization:**  
+  With potentially high CPU core count on x86_64, parallel rsync and ssh commands can leverage concurrency effectively.
+
+- **No GPU-dependent build steps:**  
+  Remove any conditional GPU-specific build or runtime instructions if present.
+
+---
+
+### 4. BUILD AND RUN PROCEDURES
+
+- **Erasure Coding Library Build:**  
+  The Intel ISA-L JNI library build steps remain the same; compatible with amd64.
+
+- **ELECT Prototype Build:**  
+  Apache Ant and Maven builds proceed normally on amd64; confirm JDK11 is used.
+
+- **OSSServer Build and Run:**  
+  Build and run on cold tier node as planned; no architecture-specific changes.
+
+- **YCSB Benchmark Build and Run:**  
+  Build with Maven on client node (amd64) remains unchanged.
+
+- **Java and native library compatibility:**  
+  Ensure native libraries (`libec.so`) are built for amd64 and linked correctly.
+
+---
+
+### 5. SCRIPT AND AUTOMATION NOTES
+
+- **`scripts/setup.sh`**:  
+  - Explicitly source `/etc/profile` to ensure environment variables load correctly on amd64 systems.  
+  - Implement recommended optimization: copy SSH private key for user `cc` once **outside** the per-node loop to avoid redundant copies and permission issues.  
+  - Use `pip3` explicitly if `pip` is ambiguous on amd64 nodes.  
+  - Validate sudo password handling remains secure and functional on typical amd64 Ubuntu/Debian environments.  
+  - Ensure `jq` and `curl` are installed on all nodes for time synchronization and JSON parsing.  
+  - Confirm `rsync` version supports `--progress` on amd64; standard Ubuntu/Debian versions do.
+
+- **`scripts/settings.sh`**:  
+  - Verify all IP addresses and node lists are correct and sorted ascending.  
+  - Confirm network interface detection script correctly detects interfaces on amd64 Linux nodes.
+
+- **`setupOnEachNode.sh`**:  
+  - Confirm executable permissions and compatibility with bash on amd64 Linux.  
+  - Validate package installation commands (apt-get) work without issues on amd64.
+
+---
+
+### 6. TEST CASES AND VALIDATION
+
+- All listed test cases remain valid and applicable to amd64 hardware; no changes needed.
+
+- Additional recommendation:  
+  - Validate that all native binaries and libraries are built for amd64 by running:  
+    ```shell
+    file path/to/binary_or_library
+    ```  
+    Expected output should mention "x86-64" architecture.  
+
+- Verify environment variables and paths resolve correctly on amd64 nodes.
+
+---
+
+### 7. STORAGE AND RESOURCE CONSIDERATIONS
+
+- No special storage constraints noted; verify sufficient disk space on all nodes to hold artifacts, build outputs, data directories.
+
+- No memory or CPU limits specified; leverage available CPU cores on amd64 hosts for parallel builds and synchronization.
+
+---
+
+### 8. SUMMARY OF KEY ADJUSTMENTS
+
+| Aspect                             | Adjustment/Note                                                                                   |
+|----------------------------------|-------------------------------------------------------------------------------------------------|
+| Architecture                     | Confirm all binaries and libraries built for amd64 (x86_64). No cross-arch changes needed.       |
+| Paths and Directories            | Adjust all configured paths in `scripts/settings.sh` and scripts to reflect `/home/cc/...` base. |
+| Python pip usage                 | Prefer explicit `pip3` usage if `pip` is ambiguous on amd64 nodes.                               |
+| SSH Private Key Copy Optimization| Move SSH private key copy for user `cc` outside per-node loop in `scripts/setup.sh` (TODO).     |
+| Package Installation            | Use apt packages for amd64; no changes needed.                                                  |
+| Java Home                       | Confirm and export correct `JAVA_HOME` for OpenJDK 11 on amd64.                                 |
+| Utilities                      | Ensure `jq`, `curl`, `ssh*` utilities installed on all nodes, amd64-compatible versions.       |
+| Build Tools                    | Ant, Maven, Make use standard amd64 binaries.                                                  |
+| No GPU/CUDA                    | Skip GPU-specific steps; no CUDA dependencies.                                                 |
+| Systemd and service management | `systemctl` commands standard on amd64 Ubuntu/Debian; no change needed.                        |
+| Parallel rsync and ssh         | Leverage amd64 multi-core CPUs for concurrency.                                                |
+| Docker                         | Docker available but plan targets native environment; no container-specific adjustments.       |
+
+---
+
+### 9. FINAL REMARKS
+
+- The existing environment setup plan is well-aligned with the hardware environment (x86_64 Linux).  
+- The main actionable adjustment is to verify and correct paths to absolute paths under `/home/cc/EnvGym/data-gpt-4.1mini/ELECT` to avoid relative path issues.  
+- Implement the SSH private key copy optimization in `scripts/setup.sh` for user `cc` to improve efficiency and avoid permission problems.  
+- Confirm Python `pip` commands correspond to Python 3; modify scripts to use `pip3` explicitly if needed.  
+- No GPU or CUDA changes required.  
+- Test all build and deployment steps in the amd64 environment to confirm compatibility before production use.
+
+---
+
+**This adjusted plan ensures full compatibility and operational correctness on your specified x86_64 (amd64) Linux environment with the project located in your home directory.**

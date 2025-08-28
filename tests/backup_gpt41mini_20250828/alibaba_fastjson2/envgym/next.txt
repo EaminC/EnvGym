@@ -1,0 +1,14 @@
+current progress  
+- Base Ubuntu 22.04 image set with required common packages installed.  
+- Network connectivity to github.com tested (ping and nslookup).  
+- GraalVM version and URL environment variables set to version 22.3.4 for amd64 Linux.  
+- Download step for GraalVM tarball fails with 404 Not Found error due to invalid/missing release URL.  
+- Maven, Gradle, Kotlin SDK, and Git installed and verified in the image.  
+- JAVA_HOME and PATH configured for GraalVM, but GraalVM itself not installed due to failed download.  
+- Native-image tool installation step present but not reached successfully because of failed GraalVM download.  
+
+next step  
+- Verify the correct, existing GraalVM release URL for version 22.3.4 (or consider updating to a newer stable version) on GitHub GraalVM CE releases page.  
+- Update the GRAALVM_URL environment variable in the Dockerfile to point to a valid downloadable GraalVM tarball for amd64 Linux.  
+- Rebuild the image to confirm successful GraalVM download and extraction.  
+- Proceed with native-image tool installation and validation after successful GraalVM installation.

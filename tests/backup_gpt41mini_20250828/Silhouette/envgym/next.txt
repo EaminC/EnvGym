@@ -1,0 +1,17 @@
+current progress  
+- Base image set to Ubuntu 22.04 with environment variables configured.  
+- Core packages and dependencies installed including python3.10, qemu-system-x86, clang-15, llvm-15, build-essential, and utilities aligned with the adjusted plan.  
+- Python3.10 set as default python interpreter and verified required modules (ctypes, readline).  
+- Silhouette and PMFS repositories cloned into expected directory structure.  
+- Executable permissions set on key scripts where possible.  
+- Deferred running of install_dep.sh, prepare.sh, and build commands to runtime to avoid build timeouts.  
+- Instructions for manual download of large guest VM image included.  
+- Default command set to open bash shell in Silhouette root directory.  
+
+next step  
+- Automate or script the execution of `install_dep.sh` and `prepare.sh` at container runtime or via an entrypoint script to streamline environment preparation.  
+- Add steps to build tools inside `codebase/tools` automatically or via a helper script after dependencies are installed.  
+- Incorporate verification or checks for sufficient disk space and resources within the container or documented usage instructions.  
+- Provide clear mounting or volume instructions for the large guest VM image to be accessible inside the container.  
+- Optionally, add user and permission management to avoid running as root inside the container for better security and compatibility.  
+- Consider adding health checks or test scripts for VM startup and SSH connectivity to validate container readiness.

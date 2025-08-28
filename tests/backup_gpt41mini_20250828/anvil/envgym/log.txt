@@ -1,0 +1,22 @@
+=== Docker Execution Log - 20250827_143119 ===
+Dockerfile: envgym/envgym.dockerfile
+Image Name: envgym_test_1756305070
+
+=== Build Log ===
+Build Status: Failed
+Build Error:
+--------------------
+62 |     RUN cargo update --verbose || true
+63 |
+64 | >>> RUN cargo fetch --verbose > /workspace/cargo_fetch.log 2>&1 || (cat /workspace/cargo_fetch.log && false)
+65 |
+66 |     RUN cargo check --verbose
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c cargo fetch --verbose > /workspace/cargo_fetch.log 2>&1 || (cat /workspace/cargo_fetch.log && false)" did not complete successfully: exit code: 1
+
+=== Runtime Log ===  
+Runtime Status: Failed
+Runtime Error:
+
+
+=== Execution End ===

@@ -1,0 +1,20 @@
+current progress  
+- The Dockerfile uses the official Rust latest image on x86_64 Linux as planned.  
+- Necessary tools (git, procps, curl, ca-certificates) are installed.  
+- Inferno tool installed via `cargo install inferno`.  
+- Project files copied into container with correct working directory.  
+- Environment variable `RUST_LOG=info` set as per plan.  
+- Project built in release mode using cargo with parallel jobs implied.  
+- Non-root user created and ownership of project directory assigned to avoid cgroupns and apparmor permission issues.  
+- User switched to non-root user before final CMD.  
+- Default command set to bash shell.  
+- Docker build and runtime logs show success.
+
+next step  
+- Explicitly specify `cargo build` parallelism with `-j` flag to leverage large CPU resources.  
+- Verify mounting or accessibility of `/run/systemd/journal` if journald integration tests are to run inside the container; consider adding volume mount instructions or mocking strategies.  
+- Consider adding `.cargo/config.toml` or environment variables inside Docker for build profile tuning or target specification if cross-compilation or optimization needed.  
+- Add commands or scripts to run test suite (`cargo test`) inside the container and document usage.  
+- Optionally add CI integration scripts or badges referencing this Docker setup.  
+- Document and verify that environment variables and permissions conform fully with cgroupns and apparmor for container runtime.  
+- Clean up unnecessary packages after install to reduce image size if desired.
