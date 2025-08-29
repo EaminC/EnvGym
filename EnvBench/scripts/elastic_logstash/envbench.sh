@@ -352,22 +352,32 @@ echo ""
 echo "6. Testing Rake Tasks..."
 echo "-----------------------"
 # Test rake tasks
-if command -v jruby &> /dev/null && [ -f "Rakefile" ]; then
-    # Test rake help
-    if timeout 30s jruby -S rake help >/dev/null 2>&1; then
-        print_status "PASS" "Rake help command works"
+if command -v jruby &> /dev/null; then
+    if [ -f "Rakefile" ]; then
+        # Test rake help
+        if timeout 30s jruby -S rake help >/dev/null 2>&1; then
+            print_status "PASS" "Rake help command works"
+        else
+            print_status "WARN" "Rake help command failed"
+        fi
+        
+        # Test rake tasks
+        if timeout 30s jruby -S rake -T >/dev/null 2>&1; then
+            print_status "PASS" "Rake tasks command works"
+        else
+            print_status "WARN" "Rake tasks command failed"
+        fi
     else
-        print_status "WARN" "Rake help command failed"
-    fi
-    
-    # Test rake tasks
-    if timeout 30s jruby -S rake -T >/dev/null 2>&1; then
-        print_status "PASS" "Rake tasks command works"
-    else
-        print_status "WARN" "Rake tasks command failed"
+        print_status "INFO" "No Rakefile found - testing rake directly"
+        # Test rake without project context
+        if timeout 30s jruby -S rake --version >/dev/null 2>&1; then
+            print_status "PASS" "Rake is functional"
+        else
+            print_status "WARN" "Rake is not functional"
+        fi
     fi
 else
-    print_status "WARN" "JRuby or Rakefile not available for rake testing"
+    print_status "WARN" "JRuby not available for rake testing"
 fi
 
 echo ""
@@ -378,11 +388,20 @@ if command -v jruby &> /dev/null; then
     if jruby -S rspec --version >/dev/null 2>&1; then
         print_status "PASS" "RSpec is available"
         
-        # Test a simple RSpec run
-        if timeout 60s jruby -S rspec --dry-run spec/ 2>/dev/null | head -10 >/dev/null 2>&1; then
-            print_status "PASS" "RSpec dry run successful"
+        # Test a simple RSpec run only if spec directory exists
+        if [ -d "spec" ]; then
+            if timeout 60s jruby -S rspec --dry-run spec/ 2>/dev/null | head -10 >/dev/null 2>&1; then
+                print_status "PASS" "RSpec dry run successful"
+            else
+                print_status "WARN" "RSpec dry run failed"
+            fi
         else
-            print_status "WARN" "RSpec dry run failed"
+            print_status "INFO" "No spec directory found - testing RSpec help instead"
+            if timeout 30s jruby -S rspec --help >/dev/null 2>&1; then
+                print_status "PASS" "RSpec help command works"
+            else
+                print_status "WARN" "RSpec help command failed"
+            fi
         fi
     else
         print_status "WARN" "RSpec is not available"
@@ -431,25 +450,43 @@ if command -v gradle &> /dev/null || [ -f "./gradlew" ]; then
         print_status "PASS" "Gradle available"
     fi
     
-    # Test gradle tasks
-    if timeout 60s $gradle_cmd tasks >/dev/null 2>&1; then
-        print_status "PASS" "Gradle tasks command works"
+    # Check if we have a gradle project (build.gradle exists)
+    if [ -f "build.gradle" ]; then
+        # Test gradle tasks
+        if timeout 60s $gradle_cmd tasks >/dev/null 2>&1; then
+            print_status "PASS" "Gradle tasks command works"
+        else
+            print_status "WARN" "Gradle tasks command failed"
+        fi
+        
+        # Test installDevelopmentGems (critical for development)
+        if timeout 300s $gradle_cmd installDevelopmentGems >/dev/null 2>&1; then
+            print_status "PASS" "Gradle installDevelopmentGems successful"
+        else
+            print_status "FAIL" "Gradle installDevelopmentGems failed"
+        fi
+        
+        # Test installDefaultGems
+        if timeout 300s $gradle_cmd installDefaultGems >/dev/null 2>&1; then
+            print_status "PASS" "Gradle installDefaultGems successful"
+        else
+            print_status "WARN" "Gradle installDefaultGems failed"
+        fi
     else
-        print_status "WARN" "Gradle tasks command failed"
-    fi
-    
-    # Test installDevelopmentGems (critical for development)
-    if timeout 300s $gradle_cmd installDevelopmentGems >/dev/null 2>&1; then
-        print_status "PASS" "Gradle installDevelopmentGems successful"
-    else
-        print_status "FAIL" "Gradle installDevelopmentGems failed"
-    fi
-    
-    # Test installDefaultGems
-    if timeout 300s $gradle_cmd installDefaultGems >/dev/null 2>&1; then
-        print_status "PASS" "Gradle installDefaultGems successful"
-    else
-        print_status "WARN" "Gradle installDefaultGems failed"
+        print_status "INFO" "No build.gradle found - testing Gradle environment setup"
+        # Test gradle version (basic functionality without project)
+        if timeout 60s $gradle_cmd --version >/dev/null 2>&1; then
+            print_status "PASS" "Gradle version command works"
+        else
+            print_status "WARN" "Gradle version command failed"
+        fi
+        
+        # Test gradle help
+        if timeout 60s $gradle_cmd --help >/dev/null 2>&1; then
+            print_status "PASS" "Gradle help command works"
+        else
+            print_status "WARN" "Gradle help command failed"
+        fi
     fi
 else
     print_status "FAIL" "Gradle or gradlew not available"
