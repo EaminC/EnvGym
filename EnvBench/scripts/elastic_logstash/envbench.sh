@@ -392,6 +392,127 @@ else
 fi
 
 echo ""
+echo "8. Testing Bundle Install..."
+echo "---------------------------"
+# Test bundle install functionality
+if command -v jruby &> /dev/null; then
+    if jruby -S bundle -v >/dev/null 2>&1; then
+        print_status "PASS" "Bundler is available"
+        
+        # Test bundle install (critical for development environment)
+        if [ -f "Gemfile" ]; then
+            print_status "PASS" "Gemfile exists"
+            
+            if timeout 300s jruby -S bundle install >/dev/null 2>&1; then
+                print_status "PASS" "Bundle install successful"
+            else
+                print_status "FAIL" "Bundle install failed"
+            fi
+        else
+            print_status "WARN" "Gemfile not found"
+        fi
+    else
+        print_status "FAIL" "Bundler is not available"
+    fi
+else
+    print_status "FAIL" "JRuby not available for bundle testing"
+fi
+
+echo ""
+echo "9. Testing Gradle Build System..."
+echo "--------------------------------"
+# Test actual gradle functionality (not just presence)
+if command -v gradle &> /dev/null || [ -f "./gradlew" ]; then
+    gradle_cmd="gradle"
+    if [ -f "./gradlew" ]; then
+        gradle_cmd="./gradlew"
+        print_status "PASS" "Gradle wrapper available"
+    else
+        print_status "PASS" "Gradle available"
+    fi
+    
+    # Test gradle tasks
+    if timeout 60s $gradle_cmd tasks >/dev/null 2>&1; then
+        print_status "PASS" "Gradle tasks command works"
+    else
+        print_status "WARN" "Gradle tasks command failed"
+    fi
+    
+    # Test installDevelopmentGems (critical for development)
+    if timeout 300s $gradle_cmd installDevelopmentGems >/dev/null 2>&1; then
+        print_status "PASS" "Gradle installDevelopmentGems successful"
+    else
+        print_status "FAIL" "Gradle installDevelopmentGems failed"
+    fi
+    
+    # Test installDefaultGems
+    if timeout 300s $gradle_cmd installDefaultGems >/dev/null 2>&1; then
+        print_status "PASS" "Gradle installDefaultGems successful"
+    else
+        print_status "WARN" "Gradle installDefaultGems failed"
+    fi
+else
+    print_status "FAIL" "Gradle or gradlew not available"
+fi
+
+echo ""
+echo "10. Testing Logstash Plugin Functionality..."
+echo "-------------------------------------------"
+# Test logstash-plugin actual functionality
+if [ -f "bin/logstash-plugin" ] && [ -x "bin/logstash-plugin" ]; then
+    print_status "PASS" "logstash-plugin binary is available"
+    
+    # Test logstash-plugin list (core functionality)
+    if timeout 60s bin/logstash-plugin list >/dev/null 2>&1; then
+        print_status "PASS" "logstash-plugin list works"
+    else
+        print_status "FAIL" "logstash-plugin list failed"
+    fi
+    
+    # Test logstash-plugin help
+    if timeout 30s bin/logstash-plugin --help >/dev/null 2>&1; then
+        print_status "PASS" "logstash-plugin help works"
+    else
+        print_status "WARN" "logstash-plugin help failed"
+    fi
+else
+    print_status "FAIL" "logstash-plugin binary not available"
+fi
+
+echo ""
+echo "11. Testing Logstash Startup (Primary Verification)..."
+echo "----------------------------------------------------"
+# Test the primary verification from documentation
+if [ -f "bin/logstash" ] && [ -x "bin/logstash" ]; then
+    print_status "PASS" "logstash binary is available"
+    
+    # Test logstash help first
+    if timeout 30s bin/logstash --help >/dev/null 2>&1; then
+        print_status "PASS" "logstash help works"
+    else
+        print_status "WARN" "logstash help failed"
+    fi
+    
+    # Test the primary verification command from docs (non-interactive)
+    # bin/logstash -e 'input { stdin { } } output { stdout {} }'
+    # We'll test this by starting it and checking if it initializes properly
+    if timeout 120s bin/logstash -e 'input { generator { count => 1 } } output { stdout {} }' >/dev/null 2>&1; then
+        print_status "PASS" "Logstash startup and basic pipeline execution successful"
+    else
+        print_status "FAIL" "Logstash startup or pipeline execution failed"
+    fi
+    
+    # Test logstash version
+    if timeout 30s bin/logstash --version >/dev/null 2>&1; then
+        print_status "PASS" "logstash version command works"
+    else
+        print_status "WARN" "logstash version command failed"
+    fi
+else
+    print_status "FAIL" "logstash binary not available"
+fi
+
+echo ""
 echo "=========================================="
 echo "Environment Benchmark Test Complete"
 echo "=========================================="
@@ -406,6 +527,10 @@ echo "- JRuby and Ruby gems (jruby, gem, bundler, rake, rspec)"
 echo "- Logstash binaries (logstash, logstash-plugin, rspec)"
 echo "- Rake tasks (help, task listing)"
 echo "- Testing framework (RSpec)"
+echo "- Bundle install functionality (critical for development)"
+echo "- Gradle build system (tasks, installDevelopmentGems, installDefaultGems)"
+echo "- Logstash plugin functionality (list, help commands)"
+echo "- Logstash startup and pipeline execution (primary verification test)"
 echo "- Dockerfile structure (if Docker build failed)"
 # Save final counts before any additional print_status calls
 FINAL_PASS_COUNT=$PASS_COUNT
@@ -442,4 +567,4 @@ print_status "INFO" "Example: ./gradlew installDevelopmentGems && ./gradlew inst
 echo ""
 print_status "INFO" "For more information, see README.md"
 
-print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/elastic_logstash elastic-logstash-env-test /bin/bash" 
+print_status "INFO" "To start interactive container: docker run -it --rm -v \$(pwd):/home/cc/EnvGym/data/elastic_logstash elastic-logstash-env-test /bin/bash"
