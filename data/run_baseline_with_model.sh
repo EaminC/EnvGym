@@ -34,6 +34,10 @@ PROJECT_DIRS=()
 for project_dir in "$ABS_MODEL_PATH"/*; do
     if [ -d "$project_dir" ]; then
         project_name=$(basename "$project_dir")
+        # Skip metadata directories
+        if [ "$project_name" = "collected_stats" ]; then
+            continue
+        fi
         PROJECT_DIRS+=("$project_name")
     fi
 done
