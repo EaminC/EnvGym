@@ -45,6 +45,34 @@ fi
 
 echo "Found ${#PROJECT_DIRS[@]} project directories"
 
+# DETECT DOCKERFILE STRUCTURE: Check if dockerfiles are at <project>/envgym.dockerfile or <project>/envgym/envgym.dockerfile
+echo ""
+echo "=== DETECTING DOCKERFILE STRUCTURE ==="
+FIRST_PROJECT="${PROJECT_DIRS[0]}"
+HAS_ENVGYM_SUBDIR=false
+
+if [ -f "$ABS_MODEL_PATH/$FIRST_PROJECT/envgym/envgym.dockerfile" ]; then
+    HAS_ENVGYM_SUBDIR=true
+    echo "Detected structure: <project>/envgym/envgym.dockerfile"
+elif [ -f "$ABS_MODEL_PATH/$FIRST_PROJECT/envgym.dockerfile" ]; then
+    HAS_ENVGYM_SUBDIR=false
+    echo "Detected structure: <project>/envgym.dockerfile"
+else
+    echo "Error: Cannot determine dockerfile structure for $FIRST_PROJECT"
+    echo "Expected either $MODEL_PATH/$FIRST_PROJECT/envgym.dockerfile or $MODEL_PATH/$FIRST_PROJECT/envgym/envgym.dockerfile"
+    exit 1
+fi
+
+# Helper function to get dockerfile path based on detected structure
+get_dockerfile_path() {
+    local project_name="$1"
+    if [ "$HAS_ENVGYM_SUBDIR" = true ]; then
+        echo "$ABS_MODEL_PATH/$project_name/envgym/envgym.dockerfile"
+    else
+        echo "$ABS_MODEL_PATH/$project_name/envgym.dockerfile"
+    fi
+}
+
 # VALIDATION PHASE: Check ALL dependencies before running ANY scoring scripts
 echo ""
 echo "=== VALIDATION PHASE ==="
@@ -55,13 +83,17 @@ for project_name in "${PROJECT_DIRS[@]}"; do
     echo "Validating project: $project_name"
     
     # Define paths for this project
-    MODEL_DOCKERFILE="$ABS_MODEL_PATH/$project_name/envgym.dockerfile"
+    MODEL_DOCKERFILE=$(get_dockerfile_path "$project_name")
     ENVBENCH_SCRIPT="$ENVGYM_ROOT/EnvBench/scripts/$project_name/envbench.sh"
     DATA_DIR="$ENVGYM_ROOT/data/$project_name"
     
     # Check if model dockerfile exists
     if [ ! -f "$MODEL_DOCKERFILE" ]; then
-        echo "  ❌ Missing: $MODEL_PATH/$project_name/envgym.dockerfile"
+        if [ "$HAS_ENVGYM_SUBDIR" = true ]; then
+            echo "  ❌ Missing: $MODEL_PATH/$project_name/envgym/envgym.dockerfile"
+        else
+            echo "  ❌ Missing: $MODEL_PATH/$project_name/envgym.dockerfile"
+        fi
         VALIDATION_FAILED=true
         continue
     fi
@@ -114,7 +146,7 @@ for project_name in "${VALID_PROJECTS[@]}"; do
     echo ">>> Processing project: $project_name"
     
     # Define paths for this project
-    MODEL_DOCKERFILE="$ABS_MODEL_PATH/$project_name/envgym.dockerfile"
+    MODEL_DOCKERFILE=$(get_dockerfile_path "$project_name")
     ENVBENCH_SCRIPT="$ENVGYM_ROOT/EnvBench/scripts/$project_name/envbench.sh"
     DATA_DIR="$ENVGYM_ROOT/data/$project_name"
     LOG_FILE="$ABS_MODEL_PATH/$project_name/scoring.log"
@@ -155,6 +187,10 @@ for project_name in "${VALID_PROJECTS[@]}"; do
         echo "❌ Failed: $project_name (check log for details)"
         ((FAILED_RUNS++))
     fi
+    
+    # Clean up Docker artifacts after each project to prevent disk space issues
+    echo "Cleaning up Docker artifacts..."
+    docker system prune -af --volumes >/dev/null 2>&1
 done
 
 # Final summary
